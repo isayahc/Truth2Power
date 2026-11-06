@@ -1,0 +1,65 @@
+{
+  "source": {
+    "review_month": "2025-09",
+    "row_url": "https://docs.google.com/spreadsheets/d/17S2EheUVVr1g911fPpBQJqRpy18pkUlaEEnvGM0LB1o/edit#gid=504145376&range=A18:AQ18"
+  },
+  "hospital": {
+    "name": "Brooklyn Hospital Center - Downtown Campus",
+    "linked_name": "Brooklyn Hospital Center - Downtown Campus",
+    "address": "121 DEKALB AVENUE",
+    "city": "Brooklyn",
+    "nyc_designation": "NYC",
+    "state": "NY",
+    "zip_code": "11201",
+    "operating_certificate_number": "7001003H",
+    "cms_certification_number": "330056",
+    "permanent_facility_identifier": "1288",
+    "ocn_num": "7001003",
+    "ocn_pfi": "7001003-1288",
+    "system": "Brooklyn Hopsital Center (affiliate of Mount Sinai)",
+    "financial_assistance_link_text": "https://www.tbh.org/visitor-information/billing/financial-assistance"
+  },
+  "assessment": {
+    "grade": "B",
+    "automatic_fail": false,
+    "noncompliant_categories_count": 1
+  },
+  "posted_materials": {
+    "application_posted": true,
+    "policy_summary_posted": true,
+    "policy_statement_posted": true,
+    "consistent_across_documents": true,
+    "primary_service_area_boundaries_compliant": true,
+    "no_submission_time_limit": true,
+    "submission_timeframe_notes": "\"Encouraged to apply\" within 90 days, but there is no technical limit",
+    "no_evidence_of_asset_checks": true,
+    "no_immigration_status_barrier": true,
+    "inconsistency_notes": null,
+    "languages_available": "English",
+    "other_materials_notes": "Have a link to an online application but it just cycles back to the financial assistance landing page. Plain language summary has spaces that need to be filled in (for example, there should be information filled in on how to get translations for the posted financial aid documents. "
+  },
+  "application": {
+    "entire_uniform_application": true,
+    "contact_information_included": true,
+    "contact_phone": "718-250-8080",
+    "income_and_discount_tables_included": true,
+    "uses_2025_fpl_guidelines": true,
+    "maximum_fpl": "400%",
+    "installments_capped_at_five_percent": true,
+    "notes": null
+  },
+  "policy_summary": {
+    "primary_service_area_described": false,
+    "means_of_applying_explained": true,
+    "income_levels_included": true,
+    "notes": null
+  },
+  "review_notes": {
+    "september_pdf_in_folder": true,
+    "other_notes": "PSA = \"New York State residents are eligible for financial assistance if (a) they receive emergency medical care or other medically necessary services at TBHC and (b) are uninsured, underinsured, ineligible for Medicaid or other insurance programs and (c) meet the financial assistance guidelines related to this Policy.\""
+  },
+  "hyperlinks": {
+    "hospital_name": "https://www.tbh.org/visitor-information/billing/financial-assistance",
+    "financial_assistance": "https://www.tbh.org/visitor-information/billing/financial-assistance"
+  }
+}

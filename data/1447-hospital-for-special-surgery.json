@@ -1,0 +1,65 @@
+{
+  "source": {
+    "review_month": "2025-09",
+    "row_url": "https://docs.google.com/spreadsheets/d/17S2EheUVVr1g911fPpBQJqRpy18pkUlaEEnvGM0LB1o/edit#gid=504145376&range=A63:AQ63"
+  },
+  "hospital": {
+    "name": "Hospital for Special Surgery",
+    "linked_name": "Hospital for Special Surgery",
+    "address": "535 E 70th Street",
+    "city": "New York",
+    "nyc_designation": "NYC",
+    "state": "NY",
+    "zip_code": "10021",
+    "operating_certificate_number": "7002012H",
+    "cms_certification_number": "330270",
+    "permanent_facility_identifier": "1447",
+    "ocn_num": "7002012",
+    "ocn_pfi": "7002012-1447",
+    "system": "Hospital for Special Surgery",
+    "financial_assistance_link_text": "https://www.hss.edu/patient-care/paying-for-care/financial-assistance"
+  },
+  "assessment": {
+    "grade": "B",
+    "automatic_fail": false,
+    "noncompliant_categories_count": 2
+  },
+  "posted_materials": {
+    "application_posted": true,
+    "policy_summary_posted": true,
+    "policy_statement_posted": true,
+    "consistent_across_documents": false,
+    "primary_service_area_boundaries_compliant": true,
+    "no_submission_time_limit": true,
+    "submission_timeframe_notes": "\"A request for Financial Assistance may be made at any time.\"",
+    "no_evidence_of_asset_checks": false,
+    "no_immigration_status_barrier": true,
+    "inconsistency_notes": "Plain language summary has FPL eligibility up to 700%, while application has eligibility up to 400%. Policy also states up to 7x the FPL is eligible.",
+    "languages_available": " English, Spanish, Arabic, Chinese, Russian",
+    "other_materials_notes": "ASSET CHECK for above 400% FPL (from policy): \"Available assets for those individuals with income above 400% of the FPL\""
+  },
+  "application": {
+    "entire_uniform_application": true,
+    "contact_information_included": true,
+    "contact_phone": "212-606-1505",
+    "income_and_discount_tables_included": true,
+    "uses_2025_fpl_guidelines": true,
+    "maximum_fpl": "400%",
+    "installments_capped_at_five_percent": true,
+    "notes": "N/A"
+  },
+  "policy_summary": {
+    "primary_service_area_described": true,
+    "means_of_applying_explained": true,
+    "income_levels_included": true,
+    "notes": "Goes up to 700%, while application only goes up to 400%"
+  },
+  "review_notes": {
+    "september_pdf_in_folder": true,
+    "other_notes": "PSA (see methodology for more notes): The policy applies to services provided in NY, NJ, and Connecticut Locations. The Policy will be applied consistently regardless of race, color, creed, sexual orientation, ethnic origin or immigration status.\""
+  },
+  "hyperlinks": {
+    "hospital_name": "https://www.hss.edu/patient-care/paying-for-care/financial-assistance",
+    "financial_assistance": "https://www.hss.edu/patient-care/paying-for-care/financial-assistance"
+  }
+}

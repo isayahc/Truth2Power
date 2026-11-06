@@ -1,0 +1,65 @@
+{
+  "source": {
+    "review_month": "2025-09",
+    "row_url": "https://docs.google.com/spreadsheets/d/17S2EheUVVr1g911fPpBQJqRpy18pkUlaEEnvGM0LB1o/edit#gid=504145376&range=A83:AQ83"
+  },
+  "hospital": {
+    "name": "Maimonides Medical Center",
+    "linked_name": "Maimonides Medical Center",
+    "address": "4802 TENTH AVENUE",
+    "city": "Brooklyn",
+    "nyc_designation": "NYC",
+    "state": "NY",
+    "zip_code": "11219",
+    "operating_certificate_number": "7001020H",
+    "cms_certification_number": "330194",
+    "permanent_facility_identifier": "1305",
+    "ocn_num": "7001020",
+    "ocn_pfi": "7001020-1305",
+    "system": "Maimonides Health",
+    "financial_assistance_link_text": "https://maimo.org/patients-visitors/paying-for-care/"
+  },
+  "assessment": {
+    "grade": "B",
+    "automatic_fail": false,
+    "noncompliant_categories_count": 3
+  },
+  "posted_materials": {
+    "application_posted": true,
+    "policy_summary_posted": true,
+    "policy_statement_posted": true,
+    "consistent_across_documents": false,
+    "primary_service_area_boundaries_compliant": true,
+    "no_submission_time_limit": false,
+    "submission_timeframe_notes": "FROM WEBSITE: \" You must request financial assistance within 240 days of the date you receive your 1st post-discharge bill for the services for which you need assistance.\"",
+    "no_evidence_of_asset_checks": false,
+    "no_immigration_status_barrier": true,
+    "inconsistency_notes": "PSA is different in PLS and policy (is compliant w 2007 guidelines for both, though). Application caps installments at 5% but policy caps them at 10%.",
+    "languages_available": "English, Arabic, Bengali, Chinese, Creole, French, Hebrew, Hindi, Italian, Polish, Russian, Spanish, Urdu, Uzbek, Yiddish",
+    "other_materials_notes": "ASSET TEST in the policy: \"Each patient’s liquid assets will be calculated based on the total value of the patient’s and his or her spouse’s assets (whether held individually or jointly)\""
+  },
+  "application": {
+    "entire_uniform_application": true,
+    "contact_information_included": true,
+    "contact_phone": "718-283-7790 or 718-283-8177",
+    "income_and_discount_tables_included": true,
+    "uses_2025_fpl_guidelines": true,
+    "maximum_fpl": "400%",
+    "installments_capped_at_five_percent": true,
+    "notes": null
+  },
+  "policy_summary": {
+    "primary_service_area_described": true,
+    "means_of_applying_explained": true,
+    "income_levels_included": true,
+    "notes": null
+  },
+  "review_notes": {
+    "september_pdf_in_folder": true,
+    "other_notes": "PSA in summary: \"The program is open to all New York State residents, regardless of immigration status\" & PSA in policy: \"For medically necessary non-emergency services, low income residents of\nthe five boroughs of New York City (Kings, New York, Queens, Richmond and Bronx counties) who are uninsured or who have exhausted their health insurance benefits are eligible for financial assistance.\""
+  },
+  "hyperlinks": {
+    "hospital_name": "https://maimo.org/patients-visitors/paying-for-care/",
+    "financial_assistance": "https://maimo.org/patients-visitors/paying-for-care/"
+  }
+}

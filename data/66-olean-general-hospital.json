@@ -1,0 +1,65 @@
+{
+  "source": {
+    "review_month": "2025-09",
+    "row_url": "https://docs.google.com/spreadsheets/d/17S2EheUVVr1g911fPpBQJqRpy18pkUlaEEnvGM0LB1o/edit#gid=504145376&range=A138:AQ138"
+  },
+  "hospital": {
+    "name": "Olean General Hospital",
+    "linked_name": "Olean General Hospital",
+    "address": "515 Main Street",
+    "city": "Olean",
+    "nyc_designation": null,
+    "state": "NY",
+    "zip_code": "14760",
+    "operating_certificate_number": "0401001H",
+    "cms_certification_number": "330103",
+    "permanent_facility_identifier": "66",
+    "ocn_num": "401001",
+    "ocn_pfi": "0401001-0066",
+    "system": "Kaleida Health",
+    "financial_assistance_link_text": "https://www.brmc-ogh.org/visitors/financial-assistance/"
+  },
+  "assessment": {
+    "grade": "C",
+    "automatic_fail": false,
+    "noncompliant_categories_count": 4
+  },
+  "posted_materials": {
+    "application_posted": true,
+    "policy_summary_posted": true,
+    "policy_statement_posted": true,
+    "consistent_across_documents": false,
+    "primary_service_area_boundaries_compliant": false,
+    "no_submission_time_limit": true,
+    "submission_timeframe_notes": "\"Patients may apply for financial assistance at any point in the collection process.\" (from policy)",
+    "no_evidence_of_asset_checks": true,
+    "no_immigration_status_barrier": true,
+    "inconsistency_notes": "Installments capped at 5% in application but 10% in policy.",
+    "languages_available": "English",
+    "other_materials_notes": null
+  },
+  "application": {
+    "entire_uniform_application": true,
+    "contact_information_included": true,
+    "contact_phone": "716-375-6080 ",
+    "income_and_discount_tables_included": true,
+    "uses_2025_fpl_guidelines": true,
+    "maximum_fpl": "400%",
+    "installments_capped_at_five_percent": true,
+    "notes": null
+  },
+  "policy_summary": {
+    "primary_service_area_described": false,
+    "means_of_applying_explained": true,
+    "income_levels_included": false,
+    "notes": null
+  },
+  "review_notes": {
+    "september_pdf_in_folder": true,
+    "other_notes": null
+  },
+  "hyperlinks": {
+    "hospital_name": "https://www.brmc-ogh.org/visitors/financial-assistance/",
+    "financial_assistance": "https://www.brmc-ogh.org/visitors/financial-assistance/"
+  }
+}

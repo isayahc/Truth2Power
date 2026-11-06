@@ -1,0 +1,65 @@
+{
+  "source": {
+    "review_month": "2025-09",
+    "row_url": "https://docs.google.com/spreadsheets/d/17S2EheUVVr1g911fPpBQJqRpy18pkUlaEEnvGM0LB1o/edit#gid=504145376&range=A27:AQ27"
+  },
+  "hospital": {
+    "name": "Claxton-Hepburn Medical Center",
+    "linked_name": "Claxton-Hepburn Medical Center",
+    "address": "214 King Street",
+    "city": "Ogdensburg",
+    "nyc_designation": null,
+    "state": "NY",
+    "zip_code": "13669",
+    "operating_certificate_number": "4401000H",
+    "cms_certification_number": "330211",
+    "permanent_facility_identifier": "798",
+    "ocn_num": "4401000",
+    "ocn_pfi": "4401000-0798",
+    "system": "Claxton-Hepburn Medical Center",
+    "financial_assistance_link_text": "https://www.claxtonhepburn.org/patient-visitors/financial-assistance/"
+  },
+  "assessment": {
+    "grade": "F",
+    "automatic_fail": true,
+    "noncompliant_categories_count": 10
+  },
+  "posted_materials": {
+    "application_posted": true,
+    "policy_summary_posted": true,
+    "policy_statement_posted": true,
+    "consistent_across_documents": false,
+    "primary_service_area_boundaries_compliant": false,
+    "no_submission_time_limit": false,
+    "submission_timeframe_notes": "\"The patient/guarantor may apply for Financial Assistance within 90 days of date of service/discharge and must return the completed application and all requested supporting documentation within 30 days of receiving the application. Those outside of this range will be reviewed on a case to case basis.\"",
+    "no_evidence_of_asset_checks": false,
+    "no_immigration_status_barrier": true,
+    "inconsistency_notes": "PLS says 15% discount is the minimum, but policy lists 20% discount (paying 80%) as the minimum discount. Also good to note that these are both WRONG.",
+    "languages_available": "English",
+    "other_materials_notes": "Asks for last two bank statements \"where applicable\""
+  },
+  "application": {
+    "entire_uniform_application": false,
+    "contact_information_included": true,
+    "contact_phone": "315-393-3600",
+    "income_and_discount_tables_included": false,
+    "uses_2025_fpl_guidelines": false,
+    "maximum_fpl": "300%",
+    "installments_capped_at_five_percent": false,
+    "notes": "The income and discount tables are not included in the application. Installments capped at 10% instead of 5%."
+  },
+  "policy_summary": {
+    "primary_service_area_described": false,
+    "means_of_applying_explained": true,
+    "income_levels_included": false,
+    "notes": null
+  },
+  "review_notes": {
+    "september_pdf_in_folder": true,
+    "other_notes": "There is a lot wrong, when looking at all the documents as a whole"
+  },
+  "hyperlinks": {
+    "hospital_name": "https://www.claxtonhepburn.org/patient-visitors/financial-assistance/",
+    "financial_assistance": "https://www.claxtonhepburn.org/patient-visitors/financial-assistance/"
+  }
+}

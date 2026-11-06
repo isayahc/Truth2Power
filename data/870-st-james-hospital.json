@@ -1,0 +1,65 @@
+{
+  "source": {
+    "review_month": "2025-09",
+    "row_url": "https://docs.google.com/spreadsheets/d/17S2EheUVVr1g911fPpBQJqRpy18pkUlaEEnvGM0LB1o/edit#gid=504145376&range=A173:AQ173"
+  },
+  "hospital": {
+    "name": "St. James Hospital",
+    "linked_name": "St. James Hospital",
+    "address": "7329 Seneca Road North",
+    "city": "Hornell",
+    "nyc_designation": null,
+    "state": "NY",
+    "zip_code": "14843",
+    "operating_certificate_number": "5002001H",
+    "cms_certification_number": "330151",
+    "permanent_facility_identifier": "870",
+    "ocn_num": "5002001",
+    "ocn_pfi": "5002001-0870",
+    "system": "University of Rochester Medicine",
+    "financial_assistance_link_text": "St. James Hospital Financial Assistance | Financial Assistance | Pay a Bill | UR Medicine"
+  },
+  "assessment": {
+    "grade": "B",
+    "automatic_fail": false,
+    "noncompliant_categories_count": 2
+  },
+  "posted_materials": {
+    "application_posted": true,
+    "policy_summary_posted": true,
+    "policy_statement_posted": true,
+    "consistent_across_documents": true,
+    "primary_service_area_boundaries_compliant": false,
+    "no_submission_time_limit": true,
+    "submission_timeframe_notes": "\"Patients are encouraged to apply for Financial Assistance within ninety (90) days from the date noted on the first post-discharge billing statement; however, Jones will accept Financial Assistance Applications at any time a patient has an outstanding balance for Emergency Medical Care or other Medically Necessary Services.\"",
+    "no_evidence_of_asset_checks": true,
+    "no_immigration_status_barrier": true,
+    "inconsistency_notes": "N/A",
+    "languages_available": "English, Spanish",
+    "other_materials_notes": null
+  },
+  "application": {
+    "entire_uniform_application": true,
+    "contact_information_included": true,
+    "contact_phone": "585-396-6515",
+    "income_and_discount_tables_included": true,
+    "uses_2025_fpl_guidelines": true,
+    "maximum_fpl": "400%",
+    "installments_capped_at_five_percent": true,
+    "notes": null
+  },
+  "policy_summary": {
+    "primary_service_area_described": false,
+    "means_of_applying_explained": true,
+    "income_levels_included": true,
+    "notes": null
+  },
+  "review_notes": {
+    "september_pdf_in_folder": true,
+    "other_notes": "\" St James also provides Financial Assistance to patients, who reside in our primary service areas, including Allegany, Livingston and Steuben counties\" <<missing counties"
+  },
+  "hyperlinks": {
+    "hospital_name": "http://St. James Hospital Financial Assistance | Financial Assistance | Pay a Bill | UR Medicine",
+    "financial_assistance": "https://www.urmc.rochester.edu/pay-a-bill/financial-assistance/st-james-hospital-financial-assistance"
+  }
+}

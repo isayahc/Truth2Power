@@ -1,0 +1,65 @@
+{
+  "source": {
+    "review_month": "2025-09",
+    "row_url": "https://docs.google.com/spreadsheets/d/17S2EheUVVr1g911fPpBQJqRpy18pkUlaEEnvGM0LB1o/edit#gid=504145376&range=A5:AQ5"
+  },
+  "hospital": {
+    "name": "Adirondack Medical Center-Lake Placid Site",
+    "linked_name": "Adirondack Medical Center-Lake Placid Site",
+    "address": "203 Old Military Road",
+    "city": "Lake Placid",
+    "nyc_designation": null,
+    "state": "NY",
+    "zip_code": "12946",
+    "operating_certificate_number": "1623001H",
+    "cms_certification_number": "330079",
+    "permanent_facility_identifier": "306",
+    "ocn_num": "1623001",
+    "ocn_pfi": "1623001-0306",
+    "system": "Adirondack Health",
+    "financial_assistance_link_text": "https://www.adirondackhealth.org/financial-assistance-policies"
+  },
+  "assessment": {
+    "grade": "B",
+    "automatic_fail": false,
+    "noncompliant_categories_count": 2
+  },
+  "posted_materials": {
+    "application_posted": true,
+    "policy_summary_posted": true,
+    "policy_statement_posted": true,
+    "consistent_across_documents": false,
+    "primary_service_area_boundaries_compliant": true,
+    "no_submission_time_limit": false,
+    "submission_timeframe_notes": "\"You have up to 240 days after receiving services to request, complete and return your application.\"",
+    "no_evidence_of_asset_checks": true,
+    "no_immigration_status_barrier": true,
+    "inconsistency_notes": "Policy statement mentions that HFAL guidance is medical costs exceeding 5% of income (not 10%, and in the UA)",
+    "languages_available": "English",
+    "other_materials_notes": "Still uses language of \"charity care\""
+  },
+  "application": {
+    "entire_uniform_application": true,
+    "contact_information_included": true,
+    "contact_phone": "518-897-2217",
+    "income_and_discount_tables_included": true,
+    "uses_2025_fpl_guidelines": true,
+    "maximum_fpl": "400%",
+    "installments_capped_at_five_percent": true,
+    "notes": null
+  },
+  "policy_summary": {
+    "primary_service_area_described": true,
+    "means_of_applying_explained": true,
+    "income_levels_included": true,
+    "notes": null
+  },
+  "review_notes": {
+    "september_pdf_in_folder": true,
+    "other_notes": "PSA defined as NYS residents: \"Adirondack Health provides financial aid to uninsured/underinsured patients who are residents of New York state\""
+  },
+  "hyperlinks": {
+    "hospital_name": "https://www.adirondackhealth.org/financial-assistance-policies",
+    "financial_assistance": "https://www.adirondackhealth.org/financial-assistance-policies"
+  }
+}

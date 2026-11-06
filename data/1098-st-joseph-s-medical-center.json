@@ -1,0 +1,65 @@
+{
+  "source": {
+    "review_month": "2025-09",
+    "row_url": "https://docs.google.com/spreadsheets/d/17S2EheUVVr1g911fPpBQJqRpy18pkUlaEEnvGM0LB1o/edit#gid=504145376&range=A178:AQ178"
+  },
+  "hospital": {
+    "name": "St. Joseph's Medical Center",
+    "linked_name": "St. Joseph's Medical Center",
+    "address": "127 South Broadway",
+    "city": "Yonkers",
+    "nyc_designation": null,
+    "state": "NY",
+    "zip_code": "10701",
+    "operating_certificate_number": "5907002H",
+    "cms_certification_number": "330006",
+    "permanent_facility_identifier": "1098",
+    "ocn_num": "5907002",
+    "ocn_pfi": "5907002-1098",
+    "system": "Saint Joseph's Medical Center",
+    "financial_assistance_link_text": "https://saintjosephs.org/financial-information/assistance/"
+  },
+  "assessment": {
+    "grade": "F",
+    "automatic_fail": true,
+    "noncompliant_categories_count": 9
+  },
+  "posted_materials": {
+    "application_posted": true,
+    "policy_summary_posted": true,
+    "policy_statement_posted": true,
+    "consistent_across_documents": false,
+    "primary_service_area_boundaries_compliant": true,
+    "no_submission_time_limit": true,
+    "submission_timeframe_notes": "N/A",
+    "no_evidence_of_asset_checks": false,
+    "no_immigration_status_barrier": false,
+    "inconsistency_notes": "Sample app at bottom of summary different than actual app",
+    "languages_available": "English",
+    "other_materials_notes": "Lots of use of chairty care language. Uses 300% as the FPL cutoff. Asks for bank info and SSN."
+  },
+  "application": {
+    "entire_uniform_application": false,
+    "contact_information_included": false,
+    "contact_phone": "N/A",
+    "income_and_discount_tables_included": false,
+    "uses_2025_fpl_guidelines": false,
+    "maximum_fpl": "no",
+    "installments_capped_at_five_percent": false,
+    "notes": "Does not use uniform application. App asks for SSN and name of bank and current balance. Also asks for credit card and balance due."
+  },
+  "policy_summary": {
+    "primary_service_area_described": true,
+    "means_of_applying_explained": true,
+    "income_levels_included": true,
+    "notes": "Income levels are 2017 FPL (very outdated)"
+  },
+  "review_notes": {
+    "september_pdf_in_folder": true,
+    "other_notes": "PSA: \"Everyone in New York State who needs medically necessary services can receive care and get a discount if they meet the income limits.\""
+  },
+  "hyperlinks": {
+    "hospital_name": "https://saintjosephs.org/financial-information/assistance/",
+    "financial_assistance": "https://saintjosephs.org/financial-information/assistance/"
+  }
+}

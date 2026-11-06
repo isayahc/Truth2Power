@@ -1,0 +1,65 @@
+{
+  "source": {
+    "review_month": "2025-09",
+    "row_url": "https://docs.google.com/spreadsheets/d/17S2EheUVVr1g911fPpBQJqRpy18pkUlaEEnvGM0LB1o/edit#gid=504145376&range=A32:AQ32"
+  },
+  "hospital": {
+    "name": "Columbia Memorial Hospital",
+    "linked_name": "Columbia Memorial Hospital",
+    "address": "71 Prospect Ave",
+    "city": "Hudson",
+    "nyc_designation": null,
+    "state": "NY",
+    "zip_code": "12534",
+    "operating_certificate_number": "1001000H",
+    "cms_certification_number": "330094",
+    "permanent_facility_identifier": "146",
+    "ocn_num": "1001000",
+    "ocn_pfi": "1001000-0146",
+    "system": "Albany Med Health System",
+    "financial_assistance_link_text": "https://www.albanymed.org/patients-visitors/billing-insurance/financial-assistance-programs/"
+  },
+  "assessment": {
+    "grade": "D",
+    "automatic_fail": false,
+    "noncompliant_categories_count": 7
+  },
+  "posted_materials": {
+    "application_posted": true,
+    "policy_summary_posted": false,
+    "policy_statement_posted": true,
+    "consistent_across_documents": false,
+    "primary_service_area_boundaries_compliant": false,
+    "no_submission_time_limit": true,
+    "submission_timeframe_notes": null,
+    "no_evidence_of_asset_checks": false,
+    "no_immigration_status_barrier": true,
+    "inconsistency_notes": "Policy asks for bank statements, which are not on the approved list of documents in the Uniform App (which this system is using)",
+    "languages_available": "English, Spanish",
+    "other_materials_notes": "The posted policy lists that those applying for financial assistance will need to provide 2 bank statements, and a completed Medicaid application"
+  },
+  "application": {
+    "entire_uniform_application": true,
+    "contact_information_included": true,
+    "contact_phone": "518-264-7729",
+    "income_and_discount_tables_included": true,
+    "uses_2025_fpl_guidelines": true,
+    "maximum_fpl": "400%",
+    "installments_capped_at_five_percent": true,
+    "notes": "Using 2025 FPL Guidelines for Alaska"
+  },
+  "policy_summary": {
+    "primary_service_area_described": false,
+    "means_of_applying_explained": false,
+    "income_levels_included": false,
+    "notes": null
+  },
+  "review_notes": {
+    "september_pdf_in_folder": true,
+    "other_notes": "No primary service area listed or described in any posted documents"
+  },
+  "hyperlinks": {
+    "hospital_name": "https://www.albanymed.org/patients-visitors/billing-insurance/financial-assistance-programs/",
+    "financial_assistance": "https://www.albanymed.org/patients-visitors/billing-insurance/financial-assistance-programs/"
+  }
+}

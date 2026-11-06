@@ -1,0 +1,65 @@
+{
+  "source": {
+    "review_month": "2025-09",
+    "row_url": "https://docs.google.com/spreadsheets/d/17S2EheUVVr1g911fPpBQJqRpy18pkUlaEEnvGM0LB1o/edit#gid=504145376&range=A84:AQ84"
+  },
+  "hospital": {
+    "name": "Maimonides Midwood Community Hospital",
+    "linked_name": "Maimonides Midwood Community Hospital",
+    "address": "2525 Kings Highway",
+    "city": "Brooklyn",
+    "nyc_designation": "NYC",
+    "state": "NY",
+    "zip_code": "11229",
+    "operating_certificate_number": "7001008H",
+    "cms_certification_number": "330019",
+    "permanent_facility_identifier": "1293",
+    "ocn_num": "7001008",
+    "ocn_pfi": "7001008-1293",
+    "system": "Maimonides Health",
+    "financial_assistance_link_text": "https://nych.com/about-us/financial-aidcharity-care/"
+  },
+  "assessment": {
+    "grade": "C",
+    "automatic_fail": false,
+    "noncompliant_categories_count": 6
+  },
+  "posted_materials": {
+    "application_posted": true,
+    "policy_summary_posted": false,
+    "policy_statement_posted": true,
+    "consistent_across_documents": true,
+    "primary_service_area_boundaries_compliant": false,
+    "no_submission_time_limit": true,
+    "submission_timeframe_notes": "\"Patients may apply for assistance by requesting an application form and submitting a complete application at any time during the billing and collection process.\"",
+    "no_evidence_of_asset_checks": true,
+    "no_immigration_status_barrier": true,
+    "inconsistency_notes": "N/A",
+    "languages_available": "English, Russian, Spanish",
+    "other_materials_notes": "Using language of charity care. Says PSA is defined in plain language summary but no plain language summary posted"
+  },
+  "application": {
+    "entire_uniform_application": true,
+    "contact_information_included": true,
+    "contact_phone": "516-326-0808",
+    "income_and_discount_tables_included": true,
+    "uses_2025_fpl_guidelines": false,
+    "maximum_fpl": "400%",
+    "installments_capped_at_five_percent": true,
+    "notes": "Application uses 2024 FPL"
+  },
+  "policy_summary": {
+    "primary_service_area_described": false,
+    "means_of_applying_explained": false,
+    "income_levels_included": false,
+    "notes": null
+  },
+  "review_notes": {
+    "september_pdf_in_folder": true,
+    "other_notes": "PSA: \" This Policy applies to emergency services rendered to residents of New York State (including EMTALA transfers) and non-emergency, medically necessary services provided to any qualified resident of the Hospital’s primary service area.\""
+  },
+  "hyperlinks": {
+    "hospital_name": "https://nych.com/about-us/financial-aidcharity-care/",
+    "financial_assistance": "https://nych.com/about-us/financial-aidcharity-care/"
+  }
+}

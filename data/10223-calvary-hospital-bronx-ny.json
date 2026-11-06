@@ -1,0 +1,65 @@
+{
+  "source": {
+    "review_month": "2025-09",
+    "row_url": "https://docs.google.com/spreadsheets/d/17S2EheUVVr1g911fPpBQJqRpy18pkUlaEEnvGM0LB1o/edit#gid=504145376&range=A21:AQ21"
+  },
+  "hospital": {
+    "name": "Calvary Hospital Bronx NY",
+    "linked_name": "Calvary Hospital Bronx NY",
+    "address": "150 55th Street",
+    "city": "Brooklyn",
+    "nyc_designation": "NYC",
+    "state": "NY",
+    "zip_code": "11220",
+    "operating_certificate_number": "7000011H",
+    "cms_certification_number": null,
+    "permanent_facility_identifier": "10223",
+    "ocn_num": "7000011",
+    "ocn_pfi": "7000011-10223",
+    "system": "Calvary Hospital",
+    "financial_assistance_link_text": "https://www.calvaryhospital.org/patients-families/patient-financial-information/"
+  },
+  "assessment": {
+    "grade": "B",
+    "automatic_fail": false,
+    "noncompliant_categories_count": 2
+  },
+  "posted_materials": {
+    "application_posted": true,
+    "policy_summary_posted": true,
+    "policy_statement_posted": true,
+    "consistent_across_documents": false,
+    "primary_service_area_boundaries_compliant": true,
+    "no_submission_time_limit": false,
+    "submission_timeframe_notes": "\"e. In order to determine Financial Assistance, the patient will need to request an application within 240 days after discharge. Applicants must return a signed application with the supporting documents as described in the application within 30 days of the date of request. Calvary Hospital reserves the right to extend this period on a case-by-case basis\" <<FROM POLICY",
+    "no_evidence_of_asset_checks": true,
+    "no_immigration_status_barrier": true,
+    "inconsistency_notes": "The policy says 30 days to complete the application after request, but the plain language summary says 20 days.",
+    "languages_available": "English, Russian, Spanish",
+    "other_materials_notes": "Application and plain language summary are in the same PDF."
+  },
+  "application": {
+    "entire_uniform_application": true,
+    "contact_information_included": true,
+    "contact_phone": "718-518-2048",
+    "income_and_discount_tables_included": true,
+    "uses_2025_fpl_guidelines": true,
+    "maximum_fpl": "400%",
+    "installments_capped_at_five_percent": true,
+    "notes": null
+  },
+  "policy_summary": {
+    "primary_service_area_described": true,
+    "means_of_applying_explained": true,
+    "income_levels_included": true,
+    "notes": null
+  },
+  "review_notes": {
+    "september_pdf_in_folder": true,
+    "other_notes": "PSA defined: \"Every New York State resident who needs medically necessary services at Calvary Hospital can get a discount if they meet the income limits.\""
+  },
+  "hyperlinks": {
+    "hospital_name": "https://www.calvaryhospital.org/patients-families/patient-financial-information/",
+    "financial_assistance": "https://www.calvaryhospital.org/patients-families/patient-financial-information/"
+  }
+}

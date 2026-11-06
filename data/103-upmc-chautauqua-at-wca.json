@@ -1,0 +1,65 @@
+{
+  "source": {
+    "review_month": "2025-09",
+    "row_url": "https://docs.google.com/spreadsheets/d/17S2EheUVVr1g911fPpBQJqRpy18pkUlaEEnvGM0LB1o/edit#gid=504145376&range=A203:AQ203"
+  },
+  "hospital": {
+    "name": "UPMC Chautauqua at WCA",
+    "linked_name": "UPMC Chautauqua at WCA",
+    "address": "207 Foote Avenue",
+    "city": "Jamestown",
+    "nyc_designation": null,
+    "state": "NY",
+    "zip_code": "14701",
+    "operating_certificate_number": "0602001H",
+    "cms_certification_number": "330239",
+    "permanent_facility_identifier": "103",
+    "ocn_num": "602001",
+    "ocn_pfi": "0602001-0103",
+    "system": "University of Pittsburgh Medical Center (?)",
+    "financial_assistance_link_text": "https://www.upmc.com/patients-visitors/paying-bill/services/apply"
+  },
+  "assessment": {
+    "grade": "B",
+    "automatic_fail": false,
+    "noncompliant_categories_count": 3
+  },
+  "posted_materials": {
+    "application_posted": true,
+    "policy_summary_posted": true,
+    "policy_statement_posted": true,
+    "consistent_across_documents": true,
+    "primary_service_area_boundaries_compliant": true,
+    "no_submission_time_limit": true,
+    "submission_timeframe_notes": "N/A",
+    "no_evidence_of_asset_checks": true,
+    "no_immigration_status_barrier": true,
+    "inconsistency_notes": "N/A",
+    "languages_available": "English, Arabic, Nepali, Chinese, Russian, French, Spanish, Italian",
+    "other_materials_notes": "N/A"
+  },
+  "application": {
+    "entire_uniform_application": true,
+    "contact_information_included": false,
+    "contact_phone": "N/A",
+    "income_and_discount_tables_included": true,
+    "uses_2025_fpl_guidelines": false,
+    "maximum_fpl": "400%",
+    "installments_capped_at_five_percent": true,
+    "notes": "Application using 2024 FPL guidelines."
+  },
+  "policy_summary": {
+    "primary_service_area_described": false,
+    "means_of_applying_explained": true,
+    "income_levels_included": true,
+    "notes": null
+  },
+  "review_notes": {
+    "september_pdf_in_folder": true,
+    "other_notes": "PSA in policy: \"The service area includes all counties contiguous to a UPMC facility.\""
+  },
+  "hyperlinks": {
+    "hospital_name": "https://www.upmc.com/patients-visitors/paying-bill/services/apply",
+    "financial_assistance": "https://www.upmc.com/patients-visitors/paying-bill/services/apply"
+  }
+}

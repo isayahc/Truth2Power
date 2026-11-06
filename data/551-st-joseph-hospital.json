@@ -1,0 +1,65 @@
+{
+  "source": {
+    "review_month": "2025-09",
+    "row_url": "https://docs.google.com/spreadsheets/d/17S2EheUVVr1g911fPpBQJqRpy18pkUlaEEnvGM0LB1o/edit#gid=504145376&range=A174:AQ174"
+  },
+  "hospital": {
+    "name": "St. Joseph Hospital",
+    "linked_name": "St. Joseph Hospital",
+    "address": "4295 HEMPSTEAD TURNPIKE",
+    "city": "Bethpage",
+    "nyc_designation": null,
+    "state": "NY",
+    "zip_code": "11714",
+    "operating_certificate_number": "2952006H",
+    "cms_certification_number": "330332",
+    "permanent_facility_identifier": "551",
+    "ocn_num": "2952006",
+    "ocn_pfi": "2952006-0551",
+    "system": "Catholic Health (LI)",
+    "financial_assistance_link_text": "Financial Assistance | Catholic Health (LI) Long Island"
+  },
+  "assessment": {
+    "grade": "F",
+    "automatic_fail": true,
+    "noncompliant_categories_count": 3
+  },
+  "posted_materials": {
+    "application_posted": true,
+    "policy_summary_posted": true,
+    "policy_statement_posted": true,
+    "consistent_across_documents": true,
+    "primary_service_area_boundaries_compliant": true,
+    "no_submission_time_limit": true,
+    "submission_timeframe_notes": "\"Catholic Health will accept applications any time during the collection process. The financial assistance eligibility is assessed as of the date the application was received.\"",
+    "no_evidence_of_asset_checks": true,
+    "no_immigration_status_barrier": true,
+    "inconsistency_notes": null,
+    "languages_available": "English, Spanish",
+    "other_materials_notes": "Missing income tables (only have discount tables). Fully waives payment for those under 300% of the FPL. Income tables are in a separate document."
+  },
+  "application": {
+    "entire_uniform_application": false,
+    "contact_information_included": true,
+    "contact_phone": "631-465-6321 or 631-396-4239",
+    "income_and_discount_tables_included": false,
+    "uses_2025_fpl_guidelines": false,
+    "maximum_fpl": "400%",
+    "installments_capped_at_five_percent": true,
+    "notes": null
+  },
+  "policy_summary": {
+    "primary_service_area_described": true,
+    "means_of_applying_explained": true,
+    "income_levels_included": true,
+    "notes": "Uses FPL % to determine assiatnce in PLS."
+  },
+  "review_notes": {
+    "september_pdf_in_folder": true,
+    "other_notes": "PSA -- \"CH shall extend free or discounted care to eligible individuals, residing in the United States, for medically necessary services. The medical condition of the patient shall not be a factor in determining eligibility.\""
+  },
+  "hyperlinks": {
+    "hospital_name": "http://Financial Assistance | Catholic Health (LI) Long Island",
+    "financial_assistance": "https://www.catholichealthli.org/paying-your-care/financial-assistance"
+  }
+}

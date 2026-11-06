@@ -1,0 +1,65 @@
+{
+  "source": {
+    "review_month": "2025-09",
+    "row_url": "https://docs.google.com/spreadsheets/d/17S2EheUVVr1g911fPpBQJqRpy18pkUlaEEnvGM0LB1o/edit#gid=504145376&range=A210:AQ210"
+  },
+  "hospital": {
+    "name": "Winifred Masterson Burke Rehabilitation Hospital",
+    "linked_name": "Winifred Masterson Burke Rehabilitation Hospital",
+    "address": "785 Mamaroneck Avenue",
+    "city": "White Plains",
+    "nyc_designation": null,
+    "state": "NY",
+    "zip_code": "10605",
+    "operating_certificate_number": "5902002H",
+    "cms_certification_number": "330404",
+    "permanent_facility_identifier": "1046",
+    "ocn_num": "5902002",
+    "ocn_pfi": "5902002-1046",
+    "system": "Montefiore Health System",
+    "financial_assistance_link_text": "https://www.burke.org/patients-visitors/financial-assistance/"
+  },
+  "assessment": {
+    "grade": "F",
+    "automatic_fail": true,
+    "noncompliant_categories_count": 9
+  },
+  "posted_materials": {
+    "application_posted": true,
+    "policy_summary_posted": true,
+    "policy_statement_posted": false,
+    "consistent_across_documents": true,
+    "primary_service_area_boundaries_compliant": false,
+    "no_submission_time_limit": true,
+    "submission_timeframe_notes": "N/A",
+    "no_evidence_of_asset_checks": true,
+    "no_immigration_status_barrier": true,
+    "inconsistency_notes": "N/A",
+    "languages_available": "English, Spanish",
+    "other_materials_notes": "Policy link just links to a second plain langauge summary"
+  },
+  "application": {
+    "entire_uniform_application": false,
+    "contact_information_included": false,
+    "contact_phone": "N/A",
+    "income_and_discount_tables_included": false,
+    "uses_2025_fpl_guidelines": false,
+    "maximum_fpl": "no",
+    "installments_capped_at_five_percent": false,
+    "notes": "Different app than UA, very sparse"
+  },
+  "policy_summary": {
+    "primary_service_area_described": false,
+    "means_of_applying_explained": true,
+    "income_levels_included": true,
+    "notes": "FPL is wrong year (not 2025)"
+  },
+  "review_notes": {
+    "september_pdf_in_folder": true,
+    "other_notes": null
+  },
+  "hyperlinks": {
+    "hospital_name": "https://www.burke.org/patients-visitors/financial-assistance/",
+    "financial_assistance": "https://www.burke.org/patients-visitors/financial-assistance/"
+  }
+}

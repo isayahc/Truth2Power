@@ -1,0 +1,65 @@
+{
+  "source": {
+    "review_month": "2025-09",
+    "row_url": "https://docs.google.com/spreadsheets/d/17S2EheUVVr1g911fPpBQJqRpy18pkUlaEEnvGM0LB1o/edit#gid=504145376&range=A12:AQ12"
+  },
+  "hospital": {
+    "name": "Bertrand Chaffee Hospital",
+    "linked_name": "Bertrand Chaffee Hospital",
+    "address": "224 East Main St",
+    "city": "Springville",
+    "nyc_designation": null,
+    "state": "NY",
+    "zip_code": "14141",
+    "operating_certificate_number": "1427000H",
+    "cms_certification_number": "330111",
+    "permanent_facility_identifier": "280",
+    "ocn_num": "1427000",
+    "ocn_pfi": "1427000-0280",
+    "system": "Bertrand Chaffee Hospital",
+    "financial_assistance_link_text": "https://bertrandchaffee.com/patients-and-families/financial-assistance/"
+  },
+  "assessment": {
+    "grade": "F",
+    "automatic_fail": true,
+    "noncompliant_categories_count": 6
+  },
+  "posted_materials": {
+    "application_posted": true,
+    "policy_summary_posted": true,
+    "policy_statement_posted": true,
+    "consistent_across_documents": true,
+    "primary_service_area_boundaries_compliant": false,
+    "no_submission_time_limit": true,
+    "submission_timeframe_notes": null,
+    "no_evidence_of_asset_checks": true,
+    "no_immigration_status_barrier": true,
+    "inconsistency_notes": "N/A",
+    "languages_available": "English, Spanish",
+    "other_materials_notes": "The application and the plain language summary are within the same document. Technically the cotact information is in the plain language summary section of the document, but still giving credit because of its nature as an addendum to the application. "
+  },
+  "application": {
+    "entire_uniform_application": false,
+    "contact_information_included": true,
+    "contact_phone": "716-592-2871",
+    "income_and_discount_tables_included": false,
+    "uses_2025_fpl_guidelines": true,
+    "maximum_fpl": "400%",
+    "installments_capped_at_five_percent": false,
+    "notes": "Application/summary does not include minimum eligibility guidelines nor the income table. In a separate document with FPL that are 2025 and that goes up to 400% FPL, with proper dicount information. Information on installment caps is also missing from Uniform App."
+  },
+  "policy_summary": {
+    "primary_service_area_described": false,
+    "means_of_applying_explained": true,
+    "income_levels_included": false,
+    "notes": null
+  },
+  "review_notes": {
+    "september_pdf_in_folder": true,
+    "other_notes": null
+  },
+  "hyperlinks": {
+    "hospital_name": "https://bertrandchaffee.com/patients-and-families/financial-assistance/",
+    "financial_assistance": "https://bertrandchaffee.com/patients-and-families/financial-assistance/"
+  }
+}

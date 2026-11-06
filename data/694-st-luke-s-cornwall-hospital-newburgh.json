@@ -1,0 +1,65 @@
+{
+  "source": {
+    "review_month": "2025-09",
+    "row_url": "https://docs.google.com/spreadsheets/d/17S2EheUVVr1g911fPpBQJqRpy18pkUlaEEnvGM0LB1o/edit#gid=504145376&range=A170:AQ170"
+  },
+  "hospital": {
+    "name": "St Luke's Cornwall Hospital - Newburgh",
+    "linked_name": "St Luke's Cornwall Hospital - Newburgh",
+    "address": "70 Dubois Street",
+    "city": "Newburgh",
+    "nyc_designation": null,
+    "state": "NY",
+    "zip_code": "12550",
+    "operating_certificate_number": "3522000H",
+    "cms_certification_number": "330264",
+    "permanent_facility_identifier": "694",
+    "ocn_num": "3522000",
+    "ocn_pfi": "3522000-0694",
+    "system": "Montefiore Health System",
+    "financial_assistance_link_text": "Billing & Insurance | Montefiore St. Luke’s Cornwall Hospital"
+  },
+  "assessment": {
+    "grade": "C",
+    "automatic_fail": false,
+    "noncompliant_categories_count": 4
+  },
+  "posted_materials": {
+    "application_posted": true,
+    "policy_summary_posted": true,
+    "policy_statement_posted": true,
+    "consistent_across_documents": false,
+    "primary_service_area_boundaries_compliant": true,
+    "no_submission_time_limit": false,
+    "submission_timeframe_notes": "FROM POLICY: \"A patient requesting such assistance has 240 days to request an application during the notification process, and 30 days to submit a completed application.\"",
+    "no_evidence_of_asset_checks": false,
+    "no_immigration_status_barrier": true,
+    "inconsistency_notes": "App has installments at 5%, PLS has installments at 10%. Discount cutoffs are wrong in the policy (says 300% FPL eligible for 50% discount)",
+    "languages_available": "English, Spanish",
+    "other_materials_notes": "ASSETS: They require at least 3 bank statements, if chosen as a documentation option."
+  },
+  "application": {
+    "entire_uniform_application": true,
+    "contact_information_included": true,
+    "contact_phone": "845-458-4900",
+    "income_and_discount_tables_included": true,
+    "uses_2025_fpl_guidelines": true,
+    "maximum_fpl": "400%",
+    "installments_capped_at_five_percent": true,
+    "notes": "Uniform App, has an added letter at the top."
+  },
+  "policy_summary": {
+    "primary_service_area_described": false,
+    "means_of_applying_explained": true,
+    "income_levels_included": true,
+    "notes": null
+  },
+  "review_notes": {
+    "september_pdf_in_folder": true,
+    "other_notes": "PSA in policy: \"ith the exception of Emergency Services, patients must reside in MSLC’s primary service area to be eligible for financial aid consideration. MSLC’s primary service area is New York State.\""
+  },
+  "hyperlinks": {
+    "hospital_name": "http://Billing & Insurance | Montefiore St. Luke’s Cornwall Hospital",
+    "financial_assistance": "https://www.montefioreslc.org/patients/billing-insurance-information/"
+  }
+}

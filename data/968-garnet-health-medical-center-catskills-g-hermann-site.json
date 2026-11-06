@@ -1,0 +1,65 @@
+{
+  "source": {
+    "review_month": "2025-09",
+    "row_url": "https://docs.google.com/spreadsheets/d/17S2EheUVVr1g911fPpBQJqRpy18pkUlaEEnvGM0LB1o/edit#gid=504145376&range=A50:AQ50"
+  },
+  "hospital": {
+    "name": "Garnet Health Medical Center - Catskills - G. Hermann Site",
+    "linked_name": "Garnet Health Medical Center - Catskills - G. Hermann Site",
+    "address": "8881 State Route 97",
+    "city": "Callicoon",
+    "nyc_designation": null,
+    "state": "NY",
+    "zip_code": "12723",
+    "operating_certificate_number": "5263700C",
+    "cms_certification_number": "331303",
+    "permanent_facility_identifier": "968",
+    "ocn_num": "5263700",
+    "ocn_pfi": "5263700-0968",
+    "system": "Garnet Health",
+    "financial_assistance_link_text": "https://www.garnethealth.org/patients-visitors/billing-insurance/financial-assistance"
+  },
+  "assessment": {
+    "grade": "F",
+    "automatic_fail": true,
+    "noncompliant_categories_count": 8
+  },
+  "posted_materials": {
+    "application_posted": true,
+    "policy_summary_posted": true,
+    "policy_statement_posted": true,
+    "consistent_across_documents": true,
+    "primary_service_area_boundaries_compliant": false,
+    "no_submission_time_limit": true,
+    "submission_timeframe_notes": null,
+    "no_evidence_of_asset_checks": true,
+    "no_immigration_status_barrier": true,
+    "inconsistency_notes": "N/A",
+    "languages_available": "English",
+    "other_materials_notes": "Website still uses charity care language"
+  },
+  "application": {
+    "entire_uniform_application": false,
+    "contact_information_included": false,
+    "contact_phone": "N/A",
+    "income_and_discount_tables_included": false,
+    "uses_2025_fpl_guidelines": false,
+    "maximum_fpl": "no",
+    "installments_capped_at_five_percent": false,
+    "notes": "Uniform App, but missing pages"
+  },
+  "policy_summary": {
+    "primary_service_area_described": false,
+    "means_of_applying_explained": true,
+    "income_levels_included": true,
+    "notes": null
+  },
+  "review_notes": {
+    "september_pdf_in_folder": true,
+    "other_notes": "PSA mentioned in the policy, but never actually defined"
+  },
+  "hyperlinks": {
+    "hospital_name": "https://www.garnethealth.org/patients-visitors/billing-insurance/financial-assistance",
+    "financial_assistance": "https://www.garnethealth.org/patients-visitors/billing-insurance/financial-assistance"
+  }
+}

@@ -1,0 +1,65 @@
+{
+  "source": {
+    "review_month": "2025-09",
+    "row_url": "https://docs.google.com/spreadsheets/d/17S2EheUVVr1g911fPpBQJqRpy18pkUlaEEnvGM0LB1o/edit#gid=504145376&range=A214:AQ214"
+  },
+  "hospital": {
+    "name": "Wyoming County Community Hospital",
+    "linked_name": "Wyoming County Community Hospital",
+    "address": "400 North Main Street",
+    "city": "Warsaw",
+    "nyc_designation": null,
+    "state": "NY",
+    "zip_code": "14569",
+    "operating_certificate_number": "6027700C",
+    "cms_certification_number": null,
+    "permanent_facility_identifier": "15620",
+    "ocn_num": "6027700",
+    "ocn_pfi": "6027700-15620",
+    "system": "Wyoming County Community Health System",
+    "financial_assistance_link_text": "https://www.wcchs.net/patients-guests/billing-information/"
+  },
+  "assessment": {
+    "grade": "C",
+    "automatic_fail": false,
+    "noncompliant_categories_count": 6
+  },
+  "posted_materials": {
+    "application_posted": true,
+    "policy_summary_posted": false,
+    "policy_statement_posted": true,
+    "consistent_across_documents": false,
+    "primary_service_area_boundaries_compliant": true,
+    "no_submission_time_limit": false,
+    "submission_timeframe_notes": "FROM POLICY: \"As referenced in Community Care Discount Program Guidelines above, all self-pay patients who receive the Community Care discount will be encouraged to apply for Financial Aid through the Sliding Fee Application process within 90 days from the date of service.\"",
+    "no_evidence_of_asset_checks": true,
+    "no_immigration_status_barrier": true,
+    "inconsistency_notes": "Tail end of policy has an application attached that is the old app, even though main app is now the UA. ",
+    "languages_available": "English",
+    "other_materials_notes": "No PLS posted."
+  },
+  "application": {
+    "entire_uniform_application": true,
+    "contact_information_included": true,
+    "contact_phone": "585-786-8940",
+    "income_and_discount_tables_included": true,
+    "uses_2025_fpl_guidelines": true,
+    "maximum_fpl": "400%",
+    "installments_capped_at_five_percent": true,
+    "notes": "Uniform application but they reformatted to make it \"pretty.\" one of the pages in the wrong order."
+  },
+  "policy_summary": {
+    "primary_service_area_described": false,
+    "means_of_applying_explained": false,
+    "income_levels_included": false,
+    "notes": "No PLS posted"
+  },
+  "review_notes": {
+    "september_pdf_in_folder": true,
+    "other_notes": "PSA in policy: \"For non-emergent care services, a patient must reside within New York State.  Any nonemergent care services requested by residents outside the primary service area must be reviewed and approved by the Revenue Cycle/Business Office Manager.\""
+  },
+  "hyperlinks": {
+    "hospital_name": "https://www.wcchs.net/patients-guests/billing-information/",
+    "financial_assistance": "https://www.wcchs.net/patients-guests/billing-information/"
+  }
+}

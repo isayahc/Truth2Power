@@ -1,0 +1,65 @@
+{
+  "source": {
+    "review_month": "2025-09",
+    "row_url": "https://docs.google.com/spreadsheets/d/17S2EheUVVr1g911fPpBQJqRpy18pkUlaEEnvGM0LB1o/edit#gid=504145376&range=A13:AQ13"
+  },
+  "hospital": {
+    "name": "Blythedale Children's Hospital",
+    "linked_name": "Blythedale Children's Hospital",
+    "address": "95 Bradhurst Avenue",
+    "city": "Valhalla",
+    "nyc_designation": null,
+    "state": "NY",
+    "zip_code": "10595",
+    "operating_certificate_number": "5957000H",
+    "cms_certification_number": "333301",
+    "permanent_facility_identifier": "1138",
+    "ocn_num": "5957000",
+    "ocn_pfi": "5957000-1138",
+    "system": "Blythedale",
+    "financial_assistance_link_text": "https://www.blythedale.org/new-patients/finances-insurance"
+  },
+  "assessment": {
+    "grade": "B",
+    "automatic_fail": false,
+    "noncompliant_categories_count": 3
+  },
+  "posted_materials": {
+    "application_posted": true,
+    "policy_summary_posted": true,
+    "policy_statement_posted": true,
+    "consistent_across_documents": true,
+    "primary_service_area_boundaries_compliant": false,
+    "no_submission_time_limit": true,
+    "submission_timeframe_notes": null,
+    "no_evidence_of_asset_checks": true,
+    "no_immigration_status_barrier": true,
+    "inconsistency_notes": "N/A",
+    "languages_available": "English, Spanish",
+    "other_materials_notes": "Explicitly states there are NO asset checks. Also has the interpretation of the law correct, and is defining eligibility for financial aid based on ACCRUED expenses."
+  },
+  "application": {
+    "entire_uniform_application": true,
+    "contact_information_included": true,
+    "contact_phone": "914-831-1786",
+    "income_and_discount_tables_included": true,
+    "uses_2025_fpl_guidelines": false,
+    "maximum_fpl": "400%",
+    "installments_capped_at_five_percent": true,
+    "notes": "**WHEN we did the audit over the summer Blythedale was noted as not using the Uniform App. Now they do, as of Sept 2025.**"
+  },
+  "policy_summary": {
+    "primary_service_area_described": false,
+    "means_of_applying_explained": true,
+    "income_levels_included": true,
+    "notes": null
+  },
+  "review_notes": {
+    "september_pdf_in_folder": true,
+    "other_notes": "They have a financial assistance WAIVER, which is a little odd. Added into the documents folder for reference."
+  },
+  "hyperlinks": {
+    "hospital_name": "https://www.blythedale.org/new-patients/finances-insurance",
+    "financial_assistance": "https://www.blythedale.org/new-patients/finances-insurance"
+  }
+}

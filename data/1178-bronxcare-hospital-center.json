@@ -1,0 +1,65 @@
+{
+  "source": {
+    "review_month": "2025-09",
+    "row_url": "https://docs.google.com/spreadsheets/d/17S2EheUVVr1g911fPpBQJqRpy18pkUlaEEnvGM0LB1o/edit#gid=504145376&range=A16:AQ16"
+  },
+  "hospital": {
+    "name": "BronxCare Hospital Center",
+    "linked_name": "BronxCare Hospital Center",
+    "address": "1650 Grand Concourse",
+    "city": "Bronx",
+    "nyc_designation": "NYC",
+    "state": "NY",
+    "zip_code": "10457",
+    "operating_certificate_number": "7000001H",
+    "cms_certification_number": "330009",
+    "permanent_facility_identifier": "1178",
+    "ocn_num": "7000001",
+    "ocn_pfi": "7000001-1178",
+    "system": "BronxCare Health System",
+    "financial_assistance_link_text": "https://www.bronxcare.org/about-us/charity-care-policy"
+  },
+  "assessment": {
+    "grade": "F",
+    "automatic_fail": true,
+    "noncompliant_categories_count": 13
+  },
+  "posted_materials": {
+    "application_posted": false,
+    "policy_summary_posted": false,
+    "policy_statement_posted": true,
+    "consistent_across_documents": true,
+    "primary_service_area_boundaries_compliant": true,
+    "no_submission_time_limit": true,
+    "submission_timeframe_notes": null,
+    "no_evidence_of_asset_checks": false,
+    "no_immigration_status_barrier": true,
+    "inconsistency_notes": "N/A",
+    "languages_available": "English",
+    "other_materials_notes": "The policy says assets will not be taken into consideration but then a bank statement is listed as one of the documents that could be used to verify income.PSA correctly defined in policy."
+  },
+  "application": {
+    "entire_uniform_application": false,
+    "contact_information_included": false,
+    "contact_phone": "no",
+    "income_and_discount_tables_included": false,
+    "uses_2025_fpl_guidelines": false,
+    "maximum_fpl": "no",
+    "installments_capped_at_five_percent": false,
+    "notes": "No application posted"
+  },
+  "policy_summary": {
+    "primary_service_area_described": false,
+    "means_of_applying_explained": false,
+    "income_levels_included": false,
+    "notes": null
+  },
+  "review_notes": {
+    "september_pdf_in_folder": true,
+    "other_notes": "The policy is extensive and includes some information typically in the App (for example, \"Appendix A\" has income and discount tables, but there is ultimately no application available"
+  },
+  "hyperlinks": {
+    "hospital_name": "https://www.bronxcare.org/about-us/charity-care-policy",
+    "financial_assistance": "https://www.bronxcare.org/about-us/charity-care-policy"
+  }
+}

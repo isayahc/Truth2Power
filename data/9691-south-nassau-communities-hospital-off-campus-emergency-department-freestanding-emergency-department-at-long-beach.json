@@ -1,0 +1,65 @@
+{
+  "source": {
+    "review_month": "2025-09",
+    "row_url": "https://docs.google.com/spreadsheets/d/17S2EheUVVr1g911fPpBQJqRpy18pkUlaEEnvGM0LB1o/edit#gid=504145376&range=A165:AQ165"
+  },
+  "hospital": {
+    "name": "South Nassau Communities Hospital Off-Campus Emergency Department (Freestanding Emergency Department at Long Beach)",
+    "linked_name": "South Nassau Communities Hospital Off-Campus Emergency Department (Freestanding Emergency Department at Long Beach)",
+    "address": "325 East Bay Drive",
+    "city": "Long Beach",
+    "nyc_designation": null,
+    "state": "NY",
+    "zip_code": "11561",
+    "operating_certificate_number": "2950001H",
+    "cms_certification_number": null,
+    "permanent_facility_identifier": "9691",
+    "ocn_num": "2950001",
+    "ocn_pfi": "2950001-9691",
+    "system": "Mount Sinai",
+    "financial_assistance_link_text": "Hospital Financial Assistance Program | Mount Sinai South Nassau"
+  },
+  "assessment": {
+    "grade": "B",
+    "automatic_fail": false,
+    "noncompliant_categories_count": 1
+  },
+  "posted_materials": {
+    "application_posted": true,
+    "policy_summary_posted": true,
+    "policy_statement_posted": true,
+    "consistent_across_documents": true,
+    "primary_service_area_boundaries_compliant": true,
+    "no_submission_time_limit": true,
+    "submission_timeframe_notes": "N/A",
+    "no_evidence_of_asset_checks": true,
+    "no_immigration_status_barrier": true,
+    "inconsistency_notes": "N/A",
+    "languages_available": "English, Spanish, Chinese, Hatian Creole, Russain, Polish",
+    "other_materials_notes": "Place for phone # is just left blank on online PDF"
+  },
+  "application": {
+    "entire_uniform_application": true,
+    "contact_information_included": false,
+    "contact_phone": "N/A",
+    "income_and_discount_tables_included": true,
+    "uses_2025_fpl_guidelines": true,
+    "maximum_fpl": "400%",
+    "installments_capped_at_five_percent": true,
+    "notes": null
+  },
+  "policy_summary": {
+    "primary_service_area_described": true,
+    "means_of_applying_explained": true,
+    "income_levels_included": true,
+    "notes": null
+  },
+  "review_notes": {
+    "september_pdf_in_folder": true,
+    "other_notes": null
+  },
+  "hyperlinks": {
+    "hospital_name": "http://Hospital Financial Assistance Program | Mount Sinai South Nassau",
+    "financial_assistance": "https://www.southnassau.org/sn/financial-assistance-program"
+  }
+}

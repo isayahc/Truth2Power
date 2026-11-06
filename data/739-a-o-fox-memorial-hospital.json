@@ -1,0 +1,65 @@
+{
+  "source": {
+    "review_month": "2025-09",
+    "row_url": "https://docs.google.com/spreadsheets/d/17S2EheUVVr1g911fPpBQJqRpy18pkUlaEEnvGM0LB1o/edit#gid=504145376&range=A3:AQ3"
+  },
+  "hospital": {
+    "name": "A.O. Fox Memorial Hospital",
+    "linked_name": "A.O. Fox Memorial Hospital",
+    "address": "One Norton Avenue",
+    "city": "Oneonta",
+    "nyc_designation": null,
+    "state": "NY",
+    "zip_code": "13820",
+    "operating_certificate_number": "3801000H",
+    "cms_certification_number": "330085",
+    "permanent_facility_identifier": "739",
+    "ocn_num": "3801000",
+    "ocn_pfi": "3801000-0739",
+    "system": "Bassett Health",
+    "financial_assistance_link_text": "https://www.bassett.org/patients-visitors/billing-insurance/financial-assistance"
+  },
+  "assessment": {
+    "grade": "B",
+    "automatic_fail": false,
+    "noncompliant_categories_count": 2
+  },
+  "posted_materials": {
+    "application_posted": true,
+    "policy_summary_posted": true,
+    "policy_statement_posted": true,
+    "consistent_across_documents": true,
+    "primary_service_area_boundaries_compliant": false,
+    "no_submission_time_limit": true,
+    "submission_timeframe_notes": "N/A",
+    "no_evidence_of_asset_checks": true,
+    "no_immigration_status_barrier": true,
+    "inconsistency_notes": "N/A",
+    "languages_available": "English, Spanish",
+    "other_materials_notes": "Still uses the language of \"charity care,\" mistake of medical bills PAID needing to be over 10% of income is replicated from the Uniform Application in the policy (not docking for this, though, because this mistake was in the UA."
+  },
+  "application": {
+    "entire_uniform_application": true,
+    "contact_information_included": true,
+    "contact_phone": "607-547-3093",
+    "income_and_discount_tables_included": true,
+    "uses_2025_fpl_guidelines": true,
+    "maximum_fpl": "400%",
+    "installments_capped_at_five_percent": true,
+    "notes": null
+  },
+  "policy_summary": {
+    "primary_service_area_described": false,
+    "means_of_applying_explained": true,
+    "income_levels_included": true,
+    "notes": null
+  },
+  "review_notes": {
+    "september_pdf_in_folder": true,
+    "other_notes": "No primary service area listed or described in any posted documents"
+  },
+  "hyperlinks": {
+    "hospital_name": "https://www.bassett.org/patients-visitors/billing-insurance/financial-assistance",
+    "financial_assistance": "https://www.bassett.org/patients-visitors/billing-insurance/financial-assistance"
+  }
+}

@@ -1,0 +1,65 @@
+{
+  "source": {
+    "review_month": "2025-09",
+    "row_url": "https://docs.google.com/spreadsheets/d/17S2EheUVVr1g911fPpBQJqRpy18pkUlaEEnvGM0LB1o/edit#gid=504145376&range=A157:AQ157"
+  },
+  "hospital": {
+    "name": "Schuyler Hospital",
+    "linked_name": "Schuyler Hospital",
+    "address": "220 Steuben Street",
+    "city": "Montour Falls",
+    "nyc_designation": null,
+    "state": "NY",
+    "zip_code": "14865",
+    "operating_certificate_number": "4823700C",
+    "cms_certification_number": "331313",
+    "permanent_facility_identifier": "858",
+    "ocn_num": "4823700",
+    "ocn_pfi": "4823700-0858",
+    "system": "Centralus Health (Cayuga Health & Arnot Health)",
+    "financial_assistance_link_text": "Cayuga Health | Schuyler Hospital"
+  },
+  "assessment": {
+    "grade": "C",
+    "automatic_fail": false,
+    "noncompliant_categories_count": 4
+  },
+  "posted_materials": {
+    "application_posted": true,
+    "policy_summary_posted": true,
+    "policy_statement_posted": false,
+    "consistent_across_documents": false,
+    "primary_service_area_boundaries_compliant": true,
+    "no_submission_time_limit": true,
+    "submission_timeframe_notes": null,
+    "no_evidence_of_asset_checks": false,
+    "no_immigration_status_barrier": true,
+    "inconsistency_notes": "Financial Aid Brochure mentions the use of bank statements",
+    "languages_available": "English",
+    "other_materials_notes": null
+  },
+  "application": {
+    "entire_uniform_application": true,
+    "contact_information_included": true,
+    "contact_phone": "607-535-8621",
+    "income_and_discount_tables_included": true,
+    "uses_2025_fpl_guidelines": true,
+    "maximum_fpl": "400%",
+    "installments_capped_at_five_percent": true,
+    "notes": null
+  },
+  "policy_summary": {
+    "primary_service_area_described": true,
+    "means_of_applying_explained": true,
+    "income_levels_included": false,
+    "notes": null
+  },
+  "review_notes": {
+    "september_pdf_in_folder": true,
+    "other_notes": null
+  },
+  "hyperlinks": {
+    "hospital_name": "http://Cayuga Health | Schuyler Hospital",
+    "financial_assistance": "https://cayugahealth.org/patients/paying-for-your-care/schuyler-hospital/"
+  }
+}

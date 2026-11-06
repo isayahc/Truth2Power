@@ -1,0 +1,65 @@
+{
+  "source": {
+    "review_month": "2025-09",
+    "row_url": "https://docs.google.com/spreadsheets/d/17S2EheUVVr1g911fPpBQJqRpy18pkUlaEEnvGM0LB1o/edit#gid=504145376&range=A169:AQ169"
+  },
+  "hospital": {
+    "name": "St Johns Episcopal Hospital South Shore",
+    "linked_name": "St Johns Episcopal Hospital South Shore",
+    "address": "327 Beach 19th Street",
+    "city": "Far Rockaway",
+    "nyc_designation": "NYC",
+    "state": "NY",
+    "zip_code": "11691",
+    "operating_certificate_number": "7001024H",
+    "cms_certification_number": "330395",
+    "permanent_facility_identifier": "1635",
+    "ocn_num": "7001024",
+    "ocn_pfi": "7001024-1635",
+    "system": "Episcopal Health Services",
+    "financial_assistance_link_text": "Paying For Care | Episcopal Health Services"
+  },
+  "assessment": {
+    "grade": "F",
+    "automatic_fail": true,
+    "noncompliant_categories_count": 7
+  },
+  "posted_materials": {
+    "application_posted": true,
+    "policy_summary_posted": true,
+    "policy_statement_posted": true,
+    "consistent_across_documents": true,
+    "primary_service_area_boundaries_compliant": true,
+    "no_submission_time_limit": true,
+    "submission_timeframe_notes": "N/A",
+    "no_evidence_of_asset_checks": false,
+    "no_immigration_status_barrier": true,
+    "inconsistency_notes": "N/A",
+    "languages_available": "English",
+    "other_materials_notes": "Using charity care language. The policy is posted and then everything else is under \"Addendum B.\""
+  },
+  "application": {
+    "entire_uniform_application": false,
+    "contact_information_included": true,
+    "contact_phone": "718-869-7077",
+    "income_and_discount_tables_included": false,
+    "uses_2025_fpl_guidelines": false,
+    "maximum_fpl": "no",
+    "installments_capped_at_five_percent": false,
+    "notes": "Different application, it is also buried in Addendum B and not posted as its own file. No FPL guidelines anywhere."
+  },
+  "policy_summary": {
+    "primary_service_area_described": true,
+    "means_of_applying_explained": true,
+    "income_levels_included": false,
+    "notes": "Summary and other info under addendum B"
+  },
+  "review_notes": {
+    "september_pdf_in_folder": true,
+    "other_notes": "They still appear to be doing asset checks. Say they have English and Spanish but only English available."
+  },
+  "hyperlinks": {
+    "hospital_name": "http://Paying For Care | Episcopal Health Services",
+    "financial_assistance": "https://ehs.org/patient-visitors/paying-for-care/"
+  }
+}

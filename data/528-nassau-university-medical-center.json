@@ -1,0 +1,65 @@
+{
+  "source": {
+    "review_month": "2025-09",
+    "row_url": "https://docs.google.com/spreadsheets/d/17S2EheUVVr1g911fPpBQJqRpy18pkUlaEEnvGM0LB1o/edit#gid=504145376&range=A111:AQ111"
+  },
+  "hospital": {
+    "name": "Nassau University Medical Center",
+    "linked_name": "Nassau University Medical Center",
+    "address": "2201 HEMPSTEAD TURNPIKE",
+    "city": "East Meadow",
+    "nyc_designation": null,
+    "state": "NY",
+    "zip_code": "11554",
+    "operating_certificate_number": "2950002H",
+    "cms_certification_number": "330027",
+    "permanent_facility_identifier": "528",
+    "ocn_num": "2950002",
+    "ocn_pfi": "2950002-0528",
+    "system": "NuHealth",
+    "financial_assistance_link_text": "https://www.numc.edu/patients-and-visitors/financial-assistance/"
+  },
+  "assessment": {
+    "grade": "F",
+    "automatic_fail": true,
+    "noncompliant_categories_count": 15
+  },
+  "posted_materials": {
+    "application_posted": false,
+    "policy_summary_posted": false,
+    "policy_statement_posted": false,
+    "consistent_across_documents": false,
+    "primary_service_area_boundaries_compliant": false,
+    "no_submission_time_limit": false,
+    "submission_timeframe_notes": "FROM WEBSITE: \"You must apply for Financial Assistance within ninety (90) days of receiving treatment or the date you were discharged, and complete your application, including all required documentation, within 30 days thereafter.\"",
+    "no_evidence_of_asset_checks": true,
+    "no_immigration_status_barrier": true,
+    "inconsistency_notes": "N/A",
+    "languages_available": "N/A",
+    "other_materials_notes": "Nothing posted. Website landing page is too sparse to be classified as a Plain Language Summary."
+  },
+  "application": {
+    "entire_uniform_application": false,
+    "contact_information_included": false,
+    "contact_phone": "N/A",
+    "income_and_discount_tables_included": false,
+    "uses_2025_fpl_guidelines": false,
+    "maximum_fpl": "no",
+    "installments_capped_at_five_percent": false,
+    "notes": "no PDF application; online application is not compliant and requests SSN for family member (although not a required field)"
+  },
+  "policy_summary": {
+    "primary_service_area_described": false,
+    "means_of_applying_explained": false,
+    "income_levels_included": false,
+    "notes": "No plain language summary posted"
+  },
+  "review_notes": {
+    "september_pdf_in_folder": true,
+    "other_notes": null
+  },
+  "hyperlinks": {
+    "hospital_name": "https://www.numc.edu/patients-and-visitors/financial-assistance/",
+    "financial_assistance": "https://www.numc.edu/patients-and-visitors/financial-assistance/"
+  }
+}

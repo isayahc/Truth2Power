@@ -1,0 +1,65 @@
+{
+  "source": {
+    "review_month": "2025-09",
+    "row_url": "https://docs.google.com/spreadsheets/d/17S2EheUVVr1g911fPpBQJqRpy18pkUlaEEnvGM0LB1o/edit#gid=504145376&range=A66:AQ66"
+  },
+  "hospital": {
+    "name": "Ira Davenport Memorial Hospital",
+    "linked_name": "Ira Davenport Memorial Hospital",
+    "address": "7571 State Route 54",
+    "city": "Bath",
+    "nyc_designation": null,
+    "state": "NY",
+    "zip_code": "14810",
+    "operating_certificate_number": "5022000H",
+    "cms_certification_number": "330144",
+    "permanent_facility_identifier": "873",
+    "ocn_num": "5022000",
+    "ocn_pfi": "5022000-0873",
+    "system": "Centralus Health (Cayuga Health & Arnot Health)",
+    "financial_assistance_link_text": "https://www.arnothealth.org/financial-assistance"
+  },
+  "assessment": {
+    "grade": "D",
+    "automatic_fail": false,
+    "noncompliant_categories_count": 9
+  },
+  "posted_materials": {
+    "application_posted": true,
+    "policy_summary_posted": false,
+    "policy_statement_posted": true,
+    "consistent_across_documents": false,
+    "primary_service_area_boundaries_compliant": false,
+    "no_submission_time_limit": false,
+    "submission_timeframe_notes": "\"Patients have up to 12 months from the date of service to apply for Charity/Community Care\"",
+    "no_evidence_of_asset_checks": false,
+    "no_immigration_status_barrier": true,
+    "inconsistency_notes": "Asset checks appear to still be happening (section C of the posted policy). The discount tables in the policy are wrong, which does not match the correct tables in the App.",
+    "languages_available": "English",
+    "other_materials_notes": "The discount tables in the policy are wrong, with individuals at 400% of FPL getting a \"20% discount\" instead of having to pay \"no more than 20% (which would be an 80% DISCOUNT). discount tables are also split by every 50% of FPL, and defined incorrectly."
+  },
+  "application": {
+    "entire_uniform_application": true,
+    "contact_information_included": true,
+    "contact_phone": "607-737-7715",
+    "income_and_discount_tables_included": true,
+    "uses_2025_fpl_guidelines": false,
+    "maximum_fpl": "400%",
+    "installments_capped_at_five_percent": true,
+    "notes": "Top of application says 2024 (see Methodology for how this was taken into account)"
+  },
+  "policy_summary": {
+    "primary_service_area_described": false,
+    "means_of_applying_explained": false,
+    "income_levels_included": false,
+    "notes": null
+  },
+  "review_notes": {
+    "september_pdf_in_folder": true,
+    "other_notes": "No primary service area listed or described"
+  },
+  "hyperlinks": {
+    "hospital_name": "https://www.arnothealth.org/financial-assistance",
+    "financial_assistance": "https://www.arnothealth.org/financial-assistance"
+  }
+}

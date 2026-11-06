@@ -1,0 +1,65 @@
+{
+  "source": {
+    "review_month": "2025-09",
+    "row_url": "https://docs.google.com/spreadsheets/d/17S2EheUVVr1g911fPpBQJqRpy18pkUlaEEnvGM0LB1o/edit#gid=504145376&range=A119:AQ119"
+  },
+  "hospital": {
+    "name": "New York-Presbyterian Westchester",
+    "linked_name": "New York-Presbyterian Westchester",
+    "address": "55 Palmer Avenue",
+    "city": "Bronxville",
+    "nyc_designation": null,
+    "state": "NY",
+    "zip_code": "10708",
+    "operating_certificate_number": "7002054H",
+    "cms_certification_number": "330061",
+    "permanent_facility_identifier": "1122",
+    "ocn_num": "7002054",
+    "ocn_pfi": "7002054-1122",
+    "system": "New York-Presbyterian",
+    "financial_assistance_link_text": "https://www.nyp.org/pay-my-bill"
+  },
+  "assessment": {
+    "grade": "A",
+    "automatic_fail": false,
+    "noncompliant_categories_count": 0
+  },
+  "posted_materials": {
+    "application_posted": true,
+    "policy_summary_posted": true,
+    "policy_statement_posted": true,
+    "consistent_across_documents": true,
+    "primary_service_area_boundaries_compliant": true,
+    "no_submission_time_limit": true,
+    "submission_timeframe_notes": "\"Patients may apply for assistance by requesting an application form and submitting a complete application at any time during the billing and collection process. \"",
+    "no_evidence_of_asset_checks": true,
+    "no_immigration_status_barrier": true,
+    "inconsistency_notes": "N/A",
+    "languages_available": "Spanish; Arabic; Bengali; Chinese (Simplified and Traditional); French; Greek; Hindi; Italian; Korean; Portuguese; Russian; Urdu",
+    "other_materials_notes": "N/A"
+  },
+  "application": {
+    "entire_uniform_application": true,
+    "contact_information_included": true,
+    "contact_phone": "866-252-0101",
+    "income_and_discount_tables_included": true,
+    "uses_2025_fpl_guidelines": true,
+    "maximum_fpl": "600%",
+    "installments_capped_at_five_percent": true,
+    "notes": "N/A"
+  },
+  "policy_summary": {
+    "primary_service_area_described": true,
+    "means_of_applying_explained": true,
+    "income_levels_included": true,
+    "notes": null
+  },
+  "review_notes": {
+    "september_pdf_in_folder": true,
+    "other_notes": "PSA def in summary: \"Residents of New York State may qualify for Financial Aid for medically necessary emergency services.  Residents of Hospital’s primary service area may qualify for Financial Aid for medically necessary nonemergency services.  For NewYork-Presbyterian/Columbia (including Morgan Stanley Children’s Hospital of NewYorkPresbyterian), NewYork-Presbyterian/Weill Cornell, NewYork-Presbyterian/Lower Manhattan, NewYorkPresbyterian/Allen, NewYork-Presbyterian Queens and NewYork-Presbyterian Brooklyn Methodist the primary service area consists of the five boroughs (counties) of New York City and Nassau and Suffolk counties. For NewYork-Presbyterian/Westchester Behavioral Health Center, NewYork-Presbyterian Westchester (formerly Lawrence Hospital) and NewYork-Presbyterian Hudson Valley Hospital the primary service area consists of the following counties: Westchester, Bronx, Orange, Putnam and Rockland.\""
+  },
+  "hyperlinks": {
+    "hospital_name": "https://www.nyp.org/pay-my-bill",
+    "financial_assistance": "https://www.nyp.org/pay-my-bill"
+  }
+}

@@ -1,0 +1,65 @@
+{
+  "source": {
+    "review_month": "2025-09",
+    "row_url": "https://docs.google.com/spreadsheets/d/17S2EheUVVr1g911fPpBQJqRpy18pkUlaEEnvGM0LB1o/edit#gid=504145376&range=A88:AQ88"
+  },
+  "hospital": {
+    "name": "Medina Memorial Hospital",
+    "linked_name": "Medina Memorial Hospital",
+    "address": "200 Ohio Street",
+    "city": "Medina",
+    "nyc_designation": null,
+    "state": "NY",
+    "zip_code": "14103",
+    "operating_certificate_number": "3622700C",
+    "cms_certification_number": "330053",
+    "permanent_facility_identifier": "718",
+    "ocn_num": "3622700",
+    "ocn_pfi": "3622700-0718",
+    "system": "Orleans Community Health",
+    "financial_assistance_link_text": "https://orleanscommunityhealth.org/financial-assistance-charity-care/"
+  },
+  "assessment": {
+    "grade": "B",
+    "automatic_fail": false,
+    "noncompliant_categories_count": 3
+  },
+  "posted_materials": {
+    "application_posted": true,
+    "policy_summary_posted": true,
+    "policy_statement_posted": true,
+    "consistent_across_documents": false,
+    "primary_service_area_boundaries_compliant": true,
+    "no_submission_time_limit": false,
+    "submission_timeframe_notes": "FROM POLICY: \"Applications may be submitted by patients, guarantors, guardians or Powers of Attorney. Applications will be accepted prior to, during or within 1 year of date of service\"",
+    "no_evidence_of_asset_checks": true,
+    "no_immigration_status_barrier": true,
+    "inconsistency_notes": "FPL guidelines are 2023 in policy and 2024 in application",
+    "languages_available": "English",
+    "other_materials_notes": "Plain Language Summary is formatted as \"FAQs\""
+  },
+  "application": {
+    "entire_uniform_application": true,
+    "contact_information_included": true,
+    "contact_phone": "585-798-8053 or 585-798-8095",
+    "income_and_discount_tables_included": true,
+    "uses_2025_fpl_guidelines": false,
+    "maximum_fpl": "400%",
+    "installments_capped_at_five_percent": true,
+    "notes": "FPL in application is 2024"
+  },
+  "policy_summary": {
+    "primary_service_area_described": true,
+    "means_of_applying_explained": true,
+    "income_levels_included": true,
+    "notes": null
+  },
+  "review_notes": {
+    "september_pdf_in_folder": true,
+    "other_notes": "PSA: \"New York State residents (citizens and aliens) who need emergency services may receive care and get a discount if they meet the financial requirements and complete the Financial Assistance application process. Individuals may get a discount on medically necessary services if they meet the financial requirements and complete the Financial \nAssistance application process.\""
+  },
+  "hyperlinks": {
+    "hospital_name": "https://orleanscommunityhealth.org/financial-assistance-charity-care/",
+    "financial_assistance": "https://orleanscommunityhealth.org/financial-assistance-charity-care/"
+  }
+}

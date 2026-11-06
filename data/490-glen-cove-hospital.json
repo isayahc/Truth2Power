@@ -1,0 +1,65 @@
+{
+  "source": {
+    "review_month": "2025-09",
+    "row_url": "https://docs.google.com/spreadsheets/d/17S2EheUVVr1g911fPpBQJqRpy18pkUlaEEnvGM0LB1o/edit#gid=504145376&range=A52:AQ52"
+  },
+  "hospital": {
+    "name": "Glen Cove Hospital",
+    "linked_name": "Glen Cove Hospital",
+    "address": "101 St Andrews Lane",
+    "city": "Glen Cove",
+    "nyc_designation": null,
+    "state": "NY",
+    "zip_code": "11542",
+    "operating_certificate_number": "2901000H",
+    "cms_certification_number": "330181",
+    "permanent_facility_identifier": "490",
+    "ocn_num": "2901000",
+    "ocn_pfi": "2901000-0490",
+    "system": "Northwell Health",
+    "financial_assistance_link_text": "https://www.northwell.edu/billing-and-insurance/financial-assistance-programs-policies/financial-assistance-program"
+  },
+  "assessment": {
+    "grade": "B",
+    "automatic_fail": false,
+    "noncompliant_categories_count": 2
+  },
+  "posted_materials": {
+    "application_posted": true,
+    "policy_summary_posted": true,
+    "policy_statement_posted": true,
+    "consistent_across_documents": false,
+    "primary_service_area_boundaries_compliant": true,
+    "no_submission_time_limit": true,
+    "submission_timeframe_notes": "IN POLICY/ SUMMARY: \"Patients are encouraged to apply for Financial Assistance within ninety (90) days from the date noted on the first post-discharge billing statement; however, Northwell will accept Financial Assistance Applications at any time a patient has an outstanding balance for Emergency Medical Care or other Medically Necessary Services received at a Northwell Health hospital facility.\"\nON WEBSITE: \"You are encouraged to apply for financial assistance within 90 days from the first post-discharge date noted on the statement; however, you are permitted a minimum of 240 days to apply and submit a completed application.\"",
+    "no_evidence_of_asset_checks": false,
+    "no_immigration_status_barrier": true,
+    "inconsistency_notes": "Policy explicitly mentions that immigration status will not be a barrier to recieveing financial assitance, however the online application asks for SSN (it does allow the option of putting \"None\" but they in general should not be asking for it). The FPL numbers everywhere is correctly 2025 but it is just sometimes incorrectly labeled as 2024. Some documents go up to 400% of the FPL and some go up to 500% (the policy goes up to 500%, but this is confusing becasue 401% to 500% have to pay 100% of the fees, so this does not even seem like a discount)",
+    "languages_available": "Albanian, Arabic, Bengali, Chinese, English, French, Greek, Haitian, Hindi, Italian, Korean, Polish, Russian, Spanish",
+    "other_materials_notes": "The policy has the CORRECT definition of Underinsured: \"Underinsured: The patient is not Uninsured and has out-of-pocket medical costs accumulated in the past 12 months for Emergency Medical Care or other Medically Necessary Services that amount to more than 10% of the individual’s annual gross income.\" ASSET CHECKS (on website): \"Note: We reserve the right to request additional documentation related to resources for patients with household incomes under 150% of the federal poverty level.\""
+  },
+  "application": {
+    "entire_uniform_application": true,
+    "contact_information_included": true,
+    "contact_phone": "800-995-5727",
+    "income_and_discount_tables_included": true,
+    "uses_2025_fpl_guidelines": true,
+    "maximum_fpl": "400%",
+    "installments_capped_at_five_percent": true,
+    "notes": "PDF of application is uniform, but their online application is not and requests SSN"
+  },
+  "policy_summary": {
+    "primary_service_area_described": true,
+    "means_of_applying_explained": true,
+    "income_levels_included": true,
+    "notes": "The income levels table uses 2025 FPL guidelines (cross checked this) but inconsistently refers to them as both 2024 FPL cutoffs and 2025 FPL cutoffs"
+  },
+  "review_notes": {
+    "september_pdf_in_folder": true,
+    "other_notes": "\"If you are a New York state resident, you may qualify for financial assistance or the sliding fee discount if you submit an application and if we determine that you are eligible\""
+  },
+  "hyperlinks": {
+    "hospital_name": "https://www.northwell.edu/billing-and-insurance/financial-assistance-programs-policies/financial-assistance-program",
+    "financial_assistance": "https://www.northwell.edu/billing-and-insurance/financial-assistance-programs-policies/financial-assistance-program"
+  }
+}

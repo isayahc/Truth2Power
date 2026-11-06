@@ -1,0 +1,65 @@
+{
+  "source": {
+    "review_month": "2025-09",
+    "row_url": "https://docs.google.com/spreadsheets/d/17S2EheUVVr1g911fPpBQJqRpy18pkUlaEEnvGM0LB1o/edit#gid=504145376&range=A68:AQ68"
+  },
+  "hospital": {
+    "name": "Jamaica Hospital Medical Center",
+    "linked_name": "Jamaica Hospital Medical Center",
+    "address": "89th Avenue & Van Wyck Expressway",
+    "city": "Jamaica",
+    "nyc_designation": "NYC",
+    "state": "NY",
+    "zip_code": "11418",
+    "operating_certificate_number": "7003003H",
+    "cms_certification_number": "330014",
+    "permanent_facility_identifier": "1629",
+    "ocn_num": "7003003",
+    "ocn_pfi": "7003003-1629",
+    "system": "Jamaica Hospital Medical Center",
+    "financial_assistance_link_text": "https://jamaicahospital.org/financial/financial-assistance-program/"
+  },
+  "assessment": {
+    "grade": "A",
+    "automatic_fail": false,
+    "noncompliant_categories_count": 0
+  },
+  "posted_materials": {
+    "application_posted": true,
+    "policy_summary_posted": true,
+    "policy_statement_posted": true,
+    "consistent_across_documents": true,
+    "primary_service_area_boundaries_compliant": true,
+    "no_submission_time_limit": true,
+    "submission_timeframe_notes": "N/A",
+    "no_evidence_of_asset_checks": true,
+    "no_immigration_status_barrier": true,
+    "inconsistency_notes": "N/A",
+    "languages_available": "English, Spanish, Bengali, Chinese Simplified, Chinese Traditional",
+    "other_materials_notes": "Plain language summary directly on landing page. \"There is no resource test for financial assistance eligible patients.\""
+  },
+  "application": {
+    "entire_uniform_application": true,
+    "contact_information_included": true,
+    "contact_phone": "718-206-8270",
+    "income_and_discount_tables_included": true,
+    "uses_2025_fpl_guidelines": true,
+    "maximum_fpl": "400%",
+    "installments_capped_at_five_percent": true,
+    "notes": "N/A"
+  },
+  "policy_summary": {
+    "primary_service_area_described": true,
+    "means_of_applying_explained": true,
+    "income_levels_included": true,
+    "notes": null
+  },
+  "review_notes": {
+    "september_pdf_in_folder": true,
+    "other_notes": "PSA: \"For Jamaica Hospital, everyone who lives in Queens, the Bronx, Kings (Brooklyn), New York (Manhattan), Richmond (Staten Island), or Nassau County can get a discount on non-emergency, medically necessary services, if they are uninsured and meet the income and other financial assistance requirements.\""
+  },
+  "hyperlinks": {
+    "hospital_name": "https://jamaicahospital.org/financial/financial-assistance-program/",
+    "financial_assistance": "https://jamaicahospital.org/financial/financial-assistance-program/"
+  }
+}

@@ -1,0 +1,65 @@
+{
+  "source": {
+    "review_month": "2025-09",
+    "row_url": "https://docs.google.com/spreadsheets/d/17S2EheUVVr1g911fPpBQJqRpy18pkUlaEEnvGM0LB1o/edit#gid=504145376&range=A208:AQ208"
+  },
+  "hospital": {
+    "name": "Westfield Memorial Hospital Inc",
+    "linked_name": "Westfield Memorial Hospital Inc",
+    "address": "189 E Main Street",
+    "city": "Westfield",
+    "nyc_designation": null,
+    "state": "NY",
+    "zip_code": "14787",
+    "operating_certificate_number": "0632000H",
+    "cms_certification_number": "330166",
+    "permanent_facility_identifier": "111",
+    "ocn_num": "632000",
+    "ocn_pfi": "0632000-0111",
+    "system": "Allegheny Health Network",
+    "financial_assistance_link_text": "https://www.ahn.org/patients-visitors/patients/financial-services/uninsured-financial-assistance"
+  },
+  "assessment": {
+    "grade": "F",
+    "automatic_fail": true,
+    "noncompliant_categories_count": 12
+  },
+  "posted_materials": {
+    "application_posted": true,
+    "policy_summary_posted": true,
+    "policy_statement_posted": true,
+    "consistent_across_documents": false,
+    "primary_service_area_boundaries_compliant": false,
+    "no_submission_time_limit": false,
+    "submission_timeframe_notes": "FROM SUMMARY: \"The application and proofs of income must be received by AHN within 240 days of the date the patient received medical services from AHN.\"",
+    "no_evidence_of_asset_checks": false,
+    "no_immigration_status_barrier": false,
+    "inconsistency_notes": "App says no asset tests but policy has evidence of asset tests",
+    "languages_available": "English, Spanish, Arabic, Bosnian, Chinese, Czech, Filipino, French, German, Hindi, Italian, Japanese, Korean, Maithili, Persian-Farsi, Polish, Portuguese, Russian, Turkish, Ukrainian, Urdu, Uzbek, Vietnamese",
+    "other_materials_notes": "Application asks for SSN. ASSETS: application says no more asset tests, but policy still has evidence of asset tests. Says PSA definition is in Appendix E but it is missing there "
+  },
+  "application": {
+    "entire_uniform_application": false,
+    "contact_information_included": false,
+    "contact_phone": "N/A",
+    "income_and_discount_tables_included": false,
+    "uses_2025_fpl_guidelines": false,
+    "maximum_fpl": "no",
+    "installments_capped_at_five_percent": false,
+    "notes": "Not uniform application, requesting SSN; cover page says application is for US citizens; has a section about assets that says it does not need to be gilled out, but THIS SHOULD BE DELETED"
+  },
+  "policy_summary": {
+    "primary_service_area_described": false,
+    "means_of_applying_explained": true,
+    "income_levels_included": true,
+    "notes": "\"For Westfield Memorial Hospital, eligible income range goes up to 300% of the Federal Poverty Guidelines. Please refer to Appendix E of the Financial Assistance Policy for the complete table ranges.\" <<notes this is different in PLS"
+  },
+  "review_notes": {
+    "september_pdf_in_folder": true,
+    "other_notes": null
+  },
+  "hyperlinks": {
+    "hospital_name": "https://www.ahn.org/patients-visitors/patients/financial-services/uninsured-financial-assistance",
+    "financial_assistance": "https://www.ahn.org/patients-visitors/patients/financial-services/uninsured-financial-assistance"
+  }
+}

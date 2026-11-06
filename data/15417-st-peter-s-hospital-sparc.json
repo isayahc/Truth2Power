@@ -1,0 +1,65 @@
+{
+  "source": {
+    "review_month": "2025-09",
+    "row_url": "https://docs.google.com/spreadsheets/d/17S2EheUVVr1g911fPpBQJqRpy18pkUlaEEnvGM0LB1o/edit#gid=504145376&range=A183:AQ183"
+  },
+  "hospital": {
+    "name": "St. Peter's Hospital - SPARC",
+    "linked_name": "St. Peter's Hospital - SPARC",
+    "address": "1300 Massachusetts Avenue",
+    "city": "Troy",
+    "nyc_designation": null,
+    "state": "NY",
+    "zip_code": "12180",
+    "operating_certificate_number": "0101004H",
+    "cms_certification_number": null,
+    "permanent_facility_identifier": "15417",
+    "ocn_num": "101004",
+    "ocn_pfi": "0101004-15417",
+    "system": "Trinity Health",
+    "financial_assistance_link_text": "Financial Assistance | St. Peter's Health Partners"
+  },
+  "assessment": {
+    "grade": "C",
+    "automatic_fail": false,
+    "noncompliant_categories_count": 4
+  },
+  "posted_materials": {
+    "application_posted": true,
+    "policy_summary_posted": true,
+    "policy_statement_posted": true,
+    "consistent_across_documents": true,
+    "primary_service_area_boundaries_compliant": false,
+    "no_submission_time_limit": false,
+    "submission_timeframe_notes": "Application Period begins the day that care is provided and ends the later of 240 days after that date or either -- a. the end of the 30 day period that patients who qualified for less than the most generous assistance available based upon Presumptive Support status or prior FAP eligibility are provided to apply for more generous assistance. b. the deadline provided in a written notice",
+    "no_evidence_of_asset_checks": true,
+    "no_immigration_status_barrier": true,
+    "inconsistency_notes": "N/A",
+    "languages_available": " English, Bengali, Burmese, Dari Farsi, Portuguese-Brazilian, Simplified Chinese, Spanish, Urdu",
+    "other_materials_notes": "N/A"
+  },
+  "application": {
+    "entire_uniform_application": true,
+    "contact_information_included": true,
+    "contact_phone": "800-494-5797",
+    "income_and_discount_tables_included": true,
+    "uses_2025_fpl_guidelines": false,
+    "maximum_fpl": "400%",
+    "installments_capped_at_five_percent": true,
+    "notes": "Using 2024 FPL. Format is different but it is essentially still the UA (it is just visually different since it is placed in cells of a table instead of text on a page)."
+  },
+  "policy_summary": {
+    "primary_service_area_described": false,
+    "means_of_applying_explained": true,
+    "income_levels_included": true,
+    "notes": null
+  },
+  "review_notes": {
+    "september_pdf_in_folder": true,
+    "other_notes": "PSA: \"Service Area means the primary markets served by the Ministries. This is demonstrated by a list of zip codes in which the patients reside\" <-- this is as close as they get to defining service area despite stating it will be used \"as defined in the policy\" (no list of zip codes in policy); charity care language referenced a few times on the website in conjuction with financial assistance, but otherwise absent from policy, PLS, and application"
+  },
+  "hyperlinks": {
+    "hospital_name": "http://Financial Assistance | St. Peter's Health Partners",
+    "financial_assistance": "https://www.sphp.com/for-patients/billing-information/financial-assistance"
+  }
+}

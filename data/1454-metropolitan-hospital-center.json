@@ -1,0 +1,65 @@
+{
+  "source": {
+    "review_month": "2025-09",
+    "row_url": "https://docs.google.com/spreadsheets/d/17S2EheUVVr1g911fPpBQJqRpy18pkUlaEEnvGM0LB1o/edit#gid=504145376&range=A93:AQ93"
+  },
+  "hospital": {
+    "name": "Metropolitan Hospital Center",
+    "linked_name": "Metropolitan Hospital Center",
+    "address": "1901 First Avenue",
+    "city": "New York",
+    "nyc_designation": "NYC",
+    "state": "NY",
+    "zip_code": "10029",
+    "operating_certificate_number": "7002021H",
+    "cms_certification_number": "330199",
+    "permanent_facility_identifier": "1454",
+    "ocn_num": "7002021",
+    "ocn_pfi": "7002021-1454",
+    "system": "NYC Health + Hospitals",
+    "financial_assistance_link_text": "https://www.nychealthandhospitals.org/financial-assistance/"
+  },
+  "assessment": {
+    "grade": "B",
+    "automatic_fail": false,
+    "noncompliant_categories_count": 2
+  },
+  "posted_materials": {
+    "application_posted": true,
+    "policy_summary_posted": true,
+    "policy_statement_posted": true,
+    "consistent_across_documents": false,
+    "primary_service_area_boundaries_compliant": true,
+    "no_submission_time_limit": true,
+    "submission_timeframe_notes": null,
+    "no_evidence_of_asset_checks": true,
+    "no_immigration_status_barrier": true,
+    "inconsistency_notes": "FPL is 2024 on the Uniform Application and 2025 everywhere else. Application goes up to 400% but the separate table is extended up to 500% of the FPL (ideally they match)",
+    "languages_available": "English;Spanish; Albanian, Arabic; Bengali; French; Haitian Creole; Hindi; Korean; Polish; Russian; Traditional Mandarin; Urdu",
+    "other_materials_notes": "For definition of primary service area, it is split into eligibility for NYC Care (for NYC residents) and Options (for those in contiguous counties). Can see note in Methodology about this."
+  },
+  "application": {
+    "entire_uniform_application": true,
+    "contact_information_included": true,
+    "contact_phone": "1-844-692-4692",
+    "income_and_discount_tables_included": true,
+    "uses_2025_fpl_guidelines": false,
+    "maximum_fpl": "500%",
+    "installments_capped_at_five_percent": true,
+    "notes": "FPL guidelines in the Uniform Application are from 2024, but guidelines in the plain language summary and guidelines for dicounts posted separately on  the website use 2025 FPL guidelines"
+  },
+  "policy_summary": {
+    "primary_service_area_described": true,
+    "means_of_applying_explained": true,
+    "income_levels_included": true,
+    "notes": "Guidelines in PLS are 2025 FPL. "
+  },
+  "review_notes": {
+    "september_pdf_in_folder": true,
+    "other_notes": null
+  },
+  "hyperlinks": {
+    "hospital_name": "https://www.nychealthandhospitals.org/financial-assistance/",
+    "financial_assistance": "https://www.nychealthandhospitals.org/financial-assistance/"
+  }
+}

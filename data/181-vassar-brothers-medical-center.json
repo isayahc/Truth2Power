@@ -1,0 +1,65 @@
+{
+  "source": {
+    "review_month": "2025-09",
+    "row_url": "https://docs.google.com/spreadsheets/d/17S2EheUVVr1g911fPpBQJqRpy18pkUlaEEnvGM0LB1o/edit#gid=504145376&range=A206:AQ206"
+  },
+  "hospital": {
+    "name": "Vassar Brothers Medical Center",
+    "linked_name": "Vassar Brothers Medical Center",
+    "address": "45 READE PLACE",
+    "city": "Poughkeepsie",
+    "nyc_designation": null,
+    "state": "NY",
+    "zip_code": "12601",
+    "operating_certificate_number": "1302001H",
+    "cms_certification_number": "330023",
+    "permanent_facility_identifier": "181",
+    "ocn_num": "1302001",
+    "ocn_pfi": "1302001-0181",
+    "system": "Nuvance - Northwell Health",
+    "financial_assistance_link_text": "Patient Financial Assistance | Nuvance Health"
+  },
+  "assessment": {
+    "grade": "C",
+    "automatic_fail": false,
+    "noncompliant_categories_count": 4
+  },
+  "posted_materials": {
+    "application_posted": true,
+    "policy_summary_posted": true,
+    "policy_statement_posted": true,
+    "consistent_across_documents": false,
+    "primary_service_area_boundaries_compliant": true,
+    "no_submission_time_limit": true,
+    "submission_timeframe_notes": "\"However, a patient may request consideration for Financial Assistance at any time following discharge or the date of service. Nuvance will evaluate a patient’s eligibility under this Policy as requested at any time, including during the collections and judgment phase.\"",
+    "no_evidence_of_asset_checks": true,
+    "no_immigration_status_barrier": true,
+    "inconsistency_notes": "Policy says 400% FPL and below get fully discounted care, application has typical discounts for each FPL.",
+    "languages_available": "English, Spanish, Portuguese, Mandarin, Haitian Creole, Arabic, Albanian",
+    "other_materials_notes": "ASSETS: \"Hospitals will not scrutinize or take an individual’s assets (i.e., other than the current forms of income described in II(B) below) into account in rendering a decision regarding the availability of Financial Assistance where prohibited by state law.\""
+  },
+  "application": {
+    "entire_uniform_application": true,
+    "contact_information_included": false,
+    "contact_phone": "N/A",
+    "income_and_discount_tables_included": true,
+    "uses_2025_fpl_guidelines": false,
+    "maximum_fpl": "400%",
+    "installments_capped_at_five_percent": true,
+    "notes": null
+  },
+  "policy_summary": {
+    "primary_service_area_described": false,
+    "means_of_applying_explained": true,
+    "income_levels_included": true,
+    "notes": null
+  },
+  "review_notes": {
+    "september_pdf_in_folder": true,
+    "other_notes": "PSA: \"(patients who) reside in New York or Connecticut.\""
+  },
+  "hyperlinks": {
+    "hospital_name": "http://Patient Financial Assistance | Nuvance Health",
+    "financial_assistance": "https://www.nuvancehealth.org/patients-and-visitors/billing-and-insurance/patient-financial-assistance"
+  }
+}

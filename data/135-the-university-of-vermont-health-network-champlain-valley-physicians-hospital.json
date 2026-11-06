@@ -1,0 +1,65 @@
+{
+  "source": {
+    "review_month": "2025-09",
+    "row_url": "https://docs.google.com/spreadsheets/d/17S2EheUVVr1g911fPpBQJqRpy18pkUlaEEnvGM0LB1o/edit#gid=504145376&range=A194:AQ194"
+  },
+  "hospital": {
+    "name": "The University of Vermont Health Network - Champlain Valley Physicians Hospital",
+    "linked_name": "The University of Vermont Health Network - Champlain Valley Physicians Hospital",
+    "address": "75 Beekman St",
+    "city": "Plattsburgh",
+    "nyc_designation": null,
+    "state": "NY",
+    "zip_code": "12901",
+    "operating_certificate_number": "0901001H",
+    "cms_certification_number": "330250",
+    "permanent_facility_identifier": "135",
+    "ocn_num": "901001",
+    "ocn_pfi": "0901001-0135",
+    "system": "The University of Vermont Health Network",
+    "financial_assistance_link_text": "https://www.cvph.org/Patients-and-Visitors/Patients/Financial-Assistance"
+  },
+  "assessment": {
+    "grade": "B",
+    "automatic_fail": false,
+    "noncompliant_categories_count": 3
+  },
+  "posted_materials": {
+    "application_posted": true,
+    "policy_summary_posted": true,
+    "policy_statement_posted": true,
+    "consistent_across_documents": false,
+    "primary_service_area_boundaries_compliant": true,
+    "no_submission_time_limit": true,
+    "submission_timeframe_notes": "POLICY: \"UVMHN NY will process applications submitted by individuals at any time during the collection process.\"",
+    "no_evidence_of_asset_checks": false,
+    "no_immigration_status_barrier": true,
+    "inconsistency_notes": "Cutoff for fully discounted care is 200% FPL in application and 250% in summary",
+    "languages_available": "English, Arabic, Bosnian, Burmese, Dari, French, Kirundi, Nepali, Pashto, Simplified Chinese, Somali, Spanish, Swahili, Ukranian, Vietnamese",
+    "other_materials_notes": "ASSETS: asks for possibly bank statements, in Policy"
+  },
+  "application": {
+    "entire_uniform_application": true,
+    "contact_information_included": true,
+    "contact_phone": "802-847-8000 or 800-639-2719",
+    "income_and_discount_tables_included": true,
+    "uses_2025_fpl_guidelines": false,
+    "maximum_fpl": "400%",
+    "installments_capped_at_five_percent": true,
+    "notes": "FPL is 2024"
+  },
+  "policy_summary": {
+    "primary_service_area_described": true,
+    "means_of_applying_explained": true,
+    "income_levels_included": true,
+    "notes": "Income and discount tables are 2024 FPL"
+  },
+  "review_notes": {
+    "september_pdf_in_folder": true,
+    "other_notes": "PSA in summary: \"You must be a “New York resident” – this includes students, people who are employed in New York, undocumented immigrants, people who live in New York but do not have stable housing It does not include visitors or travelers unless care is emergent.\""
+  },
+  "hyperlinks": {
+    "hospital_name": "https://www.cvph.org/Patients-and-Visitors/Patients/Financial-Assistance",
+    "financial_assistance": "https://www.cvph.org/Patients-and-Visitors/Patients/Financial-Assistance"
+  }
+}

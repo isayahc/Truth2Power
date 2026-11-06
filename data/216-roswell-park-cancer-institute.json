@@ -1,0 +1,65 @@
+{
+  "source": {
+    "review_month": "2025-09",
+    "row_url": "https://docs.google.com/spreadsheets/d/17S2EheUVVr1g911fPpBQJqRpy18pkUlaEEnvGM0LB1o/edit#gid=504145376&range=A151:AQ151"
+  },
+  "hospital": {
+    "name": "Roswell Park Cancer Institute",
+    "linked_name": "Roswell Park Cancer Institute",
+    "address": "Elm and Carlton Streets",
+    "city": "Buffalo",
+    "nyc_designation": null,
+    "state": "NY",
+    "zip_code": "14263",
+    "operating_certificate_number": "1401010H",
+    "cms_certification_number": "330354",
+    "permanent_facility_identifier": "216",
+    "ocn_num": "1401010",
+    "ocn_pfi": "1401010-0216",
+    "system": "Roswell Park",
+    "financial_assistance_link_text": "https://www.roswellpark.org/become-patient/paying-cancer-care/financial-assistance"
+  },
+  "assessment": {
+    "grade": "C",
+    "automatic_fail": false,
+    "noncompliant_categories_count": 4
+  },
+  "posted_materials": {
+    "application_posted": true,
+    "policy_summary_posted": true,
+    "policy_statement_posted": false,
+    "consistent_across_documents": false,
+    "primary_service_area_boundaries_compliant": false,
+    "no_submission_time_limit": true,
+    "submission_timeframe_notes": "N/A",
+    "no_evidence_of_asset_checks": true,
+    "no_immigration_status_barrier": true,
+    "inconsistency_notes": "Summary/website mislabels FPL table as 2024, but it has 2025 numbers",
+    "languages_available": "English",
+    "other_materials_notes": "Plain language summary is just the website landing page. "
+  },
+  "application": {
+    "entire_uniform_application": true,
+    "contact_information_included": true,
+    "contact_phone": "716-845-4782",
+    "income_and_discount_tables_included": true,
+    "uses_2025_fpl_guidelines": true,
+    "maximum_fpl": "400%",
+    "installments_capped_at_five_percent": true,
+    "notes": "Uniform application, but they reformatted and tried to make it pretty"
+  },
+  "policy_summary": {
+    "primary_service_area_described": false,
+    "means_of_applying_explained": true,
+    "income_levels_included": true,
+    "notes": null
+  },
+  "review_notes": {
+    "september_pdf_in_folder": true,
+    "other_notes": "Webpage shows FPL table and labels it as 2024, but the numbers are actualy 2025; No primary service area described or listed"
+  },
+  "hyperlinks": {
+    "hospital_name": "https://www.roswellpark.org/become-patient/paying-cancer-care/financial-assistance",
+    "financial_assistance": "https://www.roswellpark.org/become-patient/paying-cancer-care/financial-assistance"
+  }
+}

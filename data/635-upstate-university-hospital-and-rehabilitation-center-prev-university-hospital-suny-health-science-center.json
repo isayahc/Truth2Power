@@ -1,0 +1,65 @@
+{
+  "source": {
+    "review_month": "2025-09",
+    "row_url": "https://docs.google.com/spreadsheets/d/17S2EheUVVr1g911fPpBQJqRpy18pkUlaEEnvGM0LB1o/edit#gid=504145376&range=A202:AQ202"
+  },
+  "hospital": {
+    "name": "Upstate University Hospital and Rehabilitation Center (prev. University Hospital SUNY Health Science Center)",
+    "linked_name": "Upstate University Hospital and Rehabilitation Center (prev. University Hospital SUNY Health Science Center)",
+    "address": "750 East Adams Street",
+    "city": "Syracuse",
+    "nyc_designation": null,
+    "state": "NY",
+    "zip_code": "13210",
+    "operating_certificate_number": "3301007H",
+    "cms_certification_number": "330241",
+    "permanent_facility_identifier": "635",
+    "ocn_num": "3301007",
+    "ocn_pfi": "3301007-0635",
+    "system": "SUNY Upstate Medical University",
+    "financial_assistance_link_text": "Financial Assistance | Upstate University Hospital | SUNY Upstate"
+  },
+  "assessment": {
+    "grade": "B",
+    "automatic_fail": false,
+    "noncompliant_categories_count": 3
+  },
+  "posted_materials": {
+    "application_posted": true,
+    "policy_summary_posted": true,
+    "policy_statement_posted": false,
+    "consistent_across_documents": false,
+    "primary_service_area_boundaries_compliant": true,
+    "no_submission_time_limit": false,
+    "submission_timeframe_notes": "FROM SUMMARY: \"Patient will be given ninety (90) days to apply for financial assistance using the application made available.\"",
+    "no_evidence_of_asset_checks": true,
+    "no_immigration_status_barrier": true,
+    "inconsistency_notes": "FPL cutoff is 300% in PLS and 400% in application",
+    "languages_available": "English, Spanish",
+    "other_materials_notes": "Summary uses charity care language"
+  },
+  "application": {
+    "entire_uniform_application": true,
+    "contact_information_included": true,
+    "contact_phone": "315-464-8050",
+    "income_and_discount_tables_included": true,
+    "uses_2025_fpl_guidelines": true,
+    "maximum_fpl": "400%",
+    "installments_capped_at_five_percent": true,
+    "notes": "Has a front page added to the UA"
+  },
+  "policy_summary": {
+    "primary_service_area_described": true,
+    "means_of_applying_explained": true,
+    "income_levels_included": true,
+    "notes": "Cutoff in summary is 300% of FPL"
+  },
+  "review_notes": {
+    "september_pdf_in_folder": true,
+    "other_notes": "Still using charity care language "
+  },
+  "hyperlinks": {
+    "hospital_name": "http://Financial Assistance | Upstate University Hospital | SUNY Upstate",
+    "financial_assistance": "https://www.upstate.edu/hospital/patients-families/billing/financial-resources.php"
+  }
+}
