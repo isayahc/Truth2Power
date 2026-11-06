@@ -1,0 +1,65 @@
+{
+  "source": {
+    "review_month": "2025-09",
+    "row_url": "https://docs.google.com/spreadsheets/d/17S2EheUVVr1g911fPpBQJqRpy18pkUlaEEnvGM0LB1o/edit#gid=504145376&range=A33:AQ33"
+  },
+  "hospital": {
+    "name": "Community Memorial Hospital Inc",
+    "linked_name": "Community Memorial Hospital Inc",
+    "address": "150 Broad St",
+    "city": "Hamilton",
+    "nyc_designation": null,
+    "state": "NY",
+    "zip_code": "13346",
+    "operating_certificate_number": "2625700C",
+    "cms_certification_number": "330249",
+    "permanent_facility_identifier": "401",
+    "ocn_num": "2625700",
+    "ocn_pfi": "2625700-0401",
+    "system": "Community Memorial Hospital",
+    "financial_assistance_link_text": "https://communitymemorial.org/patient-visitor-info/financial-assistance/"
+  },
+  "assessment": {
+    "grade": "F",
+    "automatic_fail": true,
+    "noncompliant_categories_count": 3
+  },
+  "posted_materials": {
+    "application_posted": true,
+    "policy_summary_posted": true,
+    "policy_statement_posted": true,
+    "consistent_across_documents": true,
+    "primary_service_area_boundaries_compliant": true,
+    "no_submission_time_limit": true,
+    "submission_timeframe_notes": "\"Patients are encouraged to submit their application for our Financial Assistance Program within 240 days from the date of the first billing statement after discharge; however, patients may apply at any time, even after an account has gone into collection status.\"",
+    "no_evidence_of_asset_checks": true,
+    "no_immigration_status_barrier": true,
+    "inconsistency_notes": "No inconsistencies, but incorrect discount tables",
+    "languages_available": "English, Spanish",
+    "other_materials_notes": "Discount tables very incorrect (across all documents). Still using charity care language."
+  },
+  "application": {
+    "entire_uniform_application": false,
+    "contact_information_included": true,
+    "contact_phone": "315- 824-6553",
+    "income_and_discount_tables_included": true,
+    "uses_2025_fpl_guidelines": true,
+    "maximum_fpl": "400%",
+    "installments_capped_at_five_percent": false,
+    "notes": "Income and discount tables included but the discount amounts are INCORRECT for 200% FPL to 400% FPL"
+  },
+  "policy_summary": {
+    "primary_service_area_described": true,
+    "means_of_applying_explained": true,
+    "income_levels_included": false,
+    "notes": null
+  },
+  "review_notes": {
+    "september_pdf_in_folder": true,
+    "other_notes": "\"The primary service areas covered by our Financial Assistance Program are the counties of Chenango, Cortland, Madison, Oneida, Onondaga, Oswego, and Otsego, in addition to all residents of New York State.\""
+  },
+  "hyperlinks": {
+    "hospital_name": "https://communitymemorial.org/patient-visitor-info/financial-assistance/",
+    "financial_assistance": "https://communitymemorial.org/patient-visitor-info/financial-assistance/"
+  }
+}

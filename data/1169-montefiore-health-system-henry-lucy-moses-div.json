@@ -1,0 +1,65 @@
+{
+  "source": {
+    "review_month": "2025-09",
+    "row_url": "https://docs.google.com/spreadsheets/d/17S2EheUVVr1g911fPpBQJqRpy18pkUlaEEnvGM0LB1o/edit#gid=504145376&range=A97:AQ97"
+  },
+  "hospital": {
+    "name": "Montefiore Health System - Henry & Lucy Moses Div",
+    "linked_name": "Montefiore Health System - Henry & Lucy Moses Div",
+    "address": "111 East 210th Street",
+    "city": "Bronx",
+    "nyc_designation": "NYC",
+    "state": "NY",
+    "zip_code": "10467",
+    "operating_certificate_number": "7000006H",
+    "cms_certification_number": "330059",
+    "permanent_facility_identifier": "1169",
+    "ocn_num": "7000006",
+    "ocn_pfi": "7000006-1169",
+    "system": "Montefiore Health System",
+    "financial_assistance_link_text": "https://montefioreeinstein.org/patient-care/patients-visitors/billing-insurance/aid-policy"
+  },
+  "assessment": {
+    "grade": "F",
+    "automatic_fail": true,
+    "noncompliant_categories_count": 7
+  },
+  "posted_materials": {
+    "application_posted": true,
+    "policy_summary_posted": true,
+    "policy_statement_posted": true,
+    "consistent_across_documents": false,
+    "primary_service_area_boundaries_compliant": true,
+    "no_submission_time_limit": true,
+    "submission_timeframe_notes": "FROM POLICY: \"Patients can apply for financial aid prior to services or after receipt of a bill. Patients can also apply for financial aid after a bill has been sent to a collection agency. There is no deadline for when a patient can request to complete a financial aid application.\"",
+    "no_evidence_of_asset_checks": true,
+    "no_immigration_status_barrier": true,
+    "inconsistency_notes": "Summary has FPL limit as 500%, but policy has it at 400%. But then later on policy also states 500% FPL as the limit. ",
+    "languages_available": "English, Spanish, Albanian, Greek, Italian, Creole, French",
+    "other_materials_notes": "Plain language summary and application in same PDF file. Policy explicitly states that assets are not considered."
+  },
+  "application": {
+    "entire_uniform_application": false,
+    "contact_information_included": false,
+    "contact_phone": "N/A",
+    "income_and_discount_tables_included": false,
+    "uses_2025_fpl_guidelines": false,
+    "maximum_fpl": "no",
+    "installments_capped_at_five_percent": false,
+    "notes": "Missing last 3 pages of uniform application"
+  },
+  "policy_summary": {
+    "primary_service_area_described": true,
+    "means_of_applying_explained": true,
+    "income_levels_included": true,
+    "notes": null
+  },
+  "review_notes": {
+    "september_pdf_in_folder": true,
+    "other_notes": "PSA in summary: \"Financial Assistance is available for patients with no health insurance or limited health insurance coverage that reside in the \nmedical center’s primary service area (New York State).\""
+  },
+  "hyperlinks": {
+    "hospital_name": "https://montefioreeinstein.org/patient-care/patients-visitors/billing-insurance/aid-policy",
+    "financial_assistance": "https://montefioreeinstein.org/patient-care/patients-visitors/billing-insurance/aid-policy"
+  }
+}

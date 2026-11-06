@@ -1,0 +1,65 @@
+{
+  "source": {
+    "review_month": "2025-09",
+    "row_url": "https://docs.google.com/spreadsheets/d/17S2EheUVVr1g911fPpBQJqRpy18pkUlaEEnvGM0LB1o/edit#gid=504145376&range=A19:AQ19"
+  },
+  "hospital": {
+    "name": "Brooks-TLC Hospital System, Inc.",
+    "linked_name": "Brooks-TLC Hospital System, Inc.",
+    "address": "529 Central Avenue",
+    "city": "Dunkirk",
+    "nyc_designation": null,
+    "state": "NY",
+    "zip_code": "14048",
+    "operating_certificate_number": "0601000H",
+    "cms_certification_number": "330229",
+    "permanent_facility_identifier": "98",
+    "ocn_num": "601000",
+    "ocn_pfi": "0601000-0098",
+    "system": "Brooks-TLC Hospital",
+    "financial_assistance_link_text": "https://brookshospital.org/patient-information/patient-financial-services/financial-information/"
+  },
+  "assessment": {
+    "grade": "F",
+    "automatic_fail": true,
+    "noncompliant_categories_count": 7
+  },
+  "posted_materials": {
+    "application_posted": true,
+    "policy_summary_posted": true,
+    "policy_statement_posted": true,
+    "consistent_across_documents": true,
+    "primary_service_area_boundaries_compliant": false,
+    "no_submission_time_limit": true,
+    "submission_timeframe_notes": null,
+    "no_evidence_of_asset_checks": true,
+    "no_immigration_status_barrier": true,
+    "inconsistency_notes": "Not inconsistent, necessarily, but there is no income/discount tables in application",
+    "languages_available": "English, Spanish",
+    "other_materials_notes": "Still uses charity care language"
+  },
+  "application": {
+    "entire_uniform_application": false,
+    "contact_information_included": true,
+    "contact_phone": "716-363-7221",
+    "income_and_discount_tables_included": false,
+    "uses_2025_fpl_guidelines": false,
+    "maximum_fpl": "no",
+    "installments_capped_at_five_percent": false,
+    "notes": "Not the uniform app - nothing prohibited but missing a lot of information"
+  },
+  "policy_summary": {
+    "primary_service_area_described": false,
+    "means_of_applying_explained": true,
+    "income_levels_included": true,
+    "notes": "FPL is 2024"
+  },
+  "review_notes": {
+    "september_pdf_in_folder": true,
+    "other_notes": "PSA definition: \"Everyone who lives in Chautauqua County or the surrounding area…\" Made the judgement call that this was not specific enough. Income levels in plain language summary are not 2025 FPL."
+  },
+  "hyperlinks": {
+    "hospital_name": "https://brookshospital.org/patient-information/patient-financial-services/financial-information/",
+    "financial_assistance": "https://brookshospital.org/patient-information/patient-financial-services/financial-information/"
+  }
+}

@@ -1,0 +1,65 @@
+{
+  "source": {
+    "review_month": "2025-09",
+    "row_url": "https://docs.google.com/spreadsheets/d/17S2EheUVVr1g911fPpBQJqRpy18pkUlaEEnvGM0LB1o/edit#gid=504145376&range=A89:AQ89"
+  },
+  "hospital": {
+    "name": "Memorial Hosp of Wm F & Gertrude F Jones A/K/A Jones Memorial Hosp",
+    "linked_name": "Memorial Hosp of Wm F & Gertrude F Jones A/K/A Jones Memorial Hosp",
+    "address": "191 North Main Street",
+    "city": "Wellsville",
+    "nyc_designation": null,
+    "state": "NY",
+    "zip_code": "14895",
+    "operating_certificate_number": "0228000H",
+    "cms_certification_number": "330096",
+    "permanent_facility_identifier": "39",
+    "ocn_num": "228000",
+    "ocn_pfi": "0228000-0039",
+    "system": "University of Rochester Medicine",
+    "financial_assistance_link_text": "https://www.urmc.rochester.edu/pay-a-bill/financial-assistance/jones-memorial-hospital-financial-assistance"
+  },
+  "assessment": {
+    "grade": "B",
+    "automatic_fail": false,
+    "noncompliant_categories_count": 2
+  },
+  "posted_materials": {
+    "application_posted": true,
+    "policy_summary_posted": true,
+    "policy_statement_posted": true,
+    "consistent_across_documents": true,
+    "primary_service_area_boundaries_compliant": false,
+    "no_submission_time_limit": true,
+    "submission_timeframe_notes": "\"Patients are encouraged to apply for Financial Assistance within ninety (90) days from the date noted on the first post-discharge billing statement; however, Jones will accept Financial Assistance Applications at any time a patient has an outstanding balance for Emergency Medical Care or other Medically Necessary Services.\"",
+    "no_evidence_of_asset_checks": true,
+    "no_immigration_status_barrier": true,
+    "inconsistency_notes": "N/A",
+    "languages_available": "English, Spanish",
+    "other_materials_notes": "N/A"
+  },
+  "application": {
+    "entire_uniform_application": true,
+    "contact_information_included": true,
+    "contact_phone": "585-396-6515",
+    "income_and_discount_tables_included": true,
+    "uses_2025_fpl_guidelines": true,
+    "maximum_fpl": "400%",
+    "installments_capped_at_five_percent": true,
+    "notes": null
+  },
+  "policy_summary": {
+    "primary_service_area_described": false,
+    "means_of_applying_explained": true,
+    "income_levels_included": true,
+    "notes": null
+  },
+  "review_notes": {
+    "september_pdf_in_folder": true,
+    "other_notes": "\"Financial Assistance to patients, who reside in our primary service areas, including Allegany, Cattaraugus and Stueben counties\" <<missing two counties"
+  },
+  "hyperlinks": {
+    "hospital_name": "https://www.urmc.rochester.edu/pay-a-bill/financial-assistance/jones-memorial-hospital-financial-assistance",
+    "financial_assistance": "https://www.urmc.rochester.edu/pay-a-bill/financial-assistance/jones-memorial-hospital-financial-assistance"
+  }
+}

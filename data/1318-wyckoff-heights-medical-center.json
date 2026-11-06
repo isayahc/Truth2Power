@@ -1,0 +1,65 @@
+{
+  "source": {
+    "review_month": "2025-09",
+    "row_url": "https://docs.google.com/spreadsheets/d/17S2EheUVVr1g911fPpBQJqRpy18pkUlaEEnvGM0LB1o/edit#gid=504145376&range=A212:AQ212"
+  },
+  "hospital": {
+    "name": "Wyckoff Heights Medical Center",
+    "linked_name": "Wyckoff Heights Medical Center",
+    "address": "374 Stockholm Street",
+    "city": "Brooklyn",
+    "nyc_designation": "NYC",
+    "state": "NY",
+    "zip_code": "11237",
+    "operating_certificate_number": "7001035H",
+    "cms_certification_number": "330221",
+    "permanent_facility_identifier": "1318",
+    "ocn_num": "7001035",
+    "ocn_pfi": "7001035-1318",
+    "system": "Wyckoff",
+    "financial_assistance_link_text": "Billing & Payment - Wyckoff"
+  },
+  "assessment": {
+    "grade": "B",
+    "automatic_fail": false,
+    "noncompliant_categories_count": 2
+  },
+  "posted_materials": {
+    "application_posted": true,
+    "policy_summary_posted": true,
+    "policy_statement_posted": true,
+    "consistent_across_documents": false,
+    "primary_service_area_boundaries_compliant": true,
+    "no_submission_time_limit": true,
+    "submission_timeframe_notes": "FROM POLICY: \"You are encouraged to apply for financial assistance within 90 days from the first post-discharge date noted on the statement; however, you are permitted a minimum of 240 days to apply and submit a completed application.\" <<so no limit, but confusing wording ",
+    "no_evidence_of_asset_checks": true,
+    "no_immigration_status_barrier": true,
+    "inconsistency_notes": "Policy says full financial assistance for those under 100% FPL, but application says for under 200% FPL",
+    "languages_available": "English, Spanish",
+    "other_materials_notes": "All documents posted in same document, the document is labeled the \"policy\""
+  },
+  "application": {
+    "entire_uniform_application": true,
+    "contact_information_included": true,
+    "contact_phone": " 718-963-7317",
+    "income_and_discount_tables_included": true,
+    "uses_2025_fpl_guidelines": false,
+    "maximum_fpl": "400%",
+    "installments_capped_at_five_percent": true,
+    "notes": "Application using 2024 FPL guidelines."
+  },
+  "policy_summary": {
+    "primary_service_area_described": true,
+    "means_of_applying_explained": true,
+    "income_levels_included": true,
+    "notes": null
+  },
+  "review_notes": {
+    "september_pdf_in_folder": true,
+    "other_notes": "PSA in summary: \"Everyone in New York State who needs emergency services can receive care and get a discount if they meet the income limits. Everyone who lives in the five boroughs of New York City can get a discount on non- Emergency medically necessary services at Wyckoff Heights Medical Center if they meet the income limits.\""
+  },
+  "hyperlinks": {
+    "hospital_name": "http://Billing & Payment - Wyckoff",
+    "financial_assistance": "https://whmcny.org/billing-payment/"
+  }
+}

@@ -1,0 +1,65 @@
+{
+  "source": {
+    "review_month": "2025-09",
+    "row_url": "https://docs.google.com/spreadsheets/d/17S2EheUVVr1g911fPpBQJqRpy18pkUlaEEnvGM0LB1o/edit#gid=504145376&range=A46:AQ46"
+  },
+  "hospital": {
+    "name": "Faxton St Luke's Healthcare Campus",
+    "linked_name": "Faxton St Luke's Healthcare Campus",
+    "address": "1656 Champlin Avenue",
+    "city": "Utica",
+    "nyc_designation": null,
+    "state": "NY",
+    "zip_code": "13502",
+    "operating_certificate_number": "3202003H",
+    "cms_certification_number": "330044",
+    "permanent_facility_identifier": "599",
+    "ocn_num": "3202003",
+    "ocn_pfi": "3202003-0599",
+    "system": "Mohawk Valley Health System",
+    "financial_assistance_link_text": "https://www.mvhealthsystem.org/patient-visitor-info/billing-assistance/financial-assistance-program/"
+  },
+  "assessment": {
+    "grade": "F",
+    "automatic_fail": true,
+    "noncompliant_categories_count": 9
+  },
+  "posted_materials": {
+    "application_posted": true,
+    "policy_summary_posted": true,
+    "policy_statement_posted": true,
+    "consistent_across_documents": false,
+    "primary_service_area_boundaries_compliant": true,
+    "no_submission_time_limit": true,
+    "submission_timeframe_notes": "N/A",
+    "no_evidence_of_asset_checks": false,
+    "no_immigration_status_barrier": true,
+    "inconsistency_notes": "Policy says bank statements can be used",
+    "languages_available": "English, Spanish, Burmese, Karen, Russian, Bosnian",
+    "other_materials_notes": "Says bank statements can be used (proof of asset checks)"
+  },
+  "application": {
+    "entire_uniform_application": false,
+    "contact_information_included": false,
+    "contact_phone": "N/A",
+    "income_and_discount_tables_included": false,
+    "uses_2025_fpl_guidelines": false,
+    "maximum_fpl": "no",
+    "installments_capped_at_five_percent": false,
+    "notes": "missing pages about installments, income levels, etc."
+  },
+  "policy_summary": {
+    "primary_service_area_described": false,
+    "means_of_applying_explained": true,
+    "income_levels_included": true,
+    "notes": "Has levels of income used to determine assistance, but they are incorrect"
+  },
+  "review_notes": {
+    "september_pdf_in_folder": true,
+    "other_notes": "\"MVHS will extend financial assistance to all eligible individuals who reside in the United States. Patients residing outside of the United States will be reviewed on a case-by\u0002case basis. We do not limit availability of financial assistance based on residency.\""
+  },
+  "hyperlinks": {
+    "hospital_name": "https://www.mvhealthsystem.org/patient-visitor-info/billing-assistance/financial-assistance-program/",
+    "financial_assistance": "https://www.mvhealthsystem.org/patient-visitor-info/billing-assistance/financial-assistance-program/"
+  }
+}

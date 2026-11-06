@@ -1,0 +1,65 @@
+{
+  "source": {
+    "review_month": "2025-09",
+    "row_url": "https://docs.google.com/spreadsheets/d/17S2EheUVVr1g911fPpBQJqRpy18pkUlaEEnvGM0LB1o/edit#gid=504145376&range=A161:AQ161"
+  },
+  "hospital": {
+    "name": "SJRH - Park Care Pavilion",
+    "linked_name": "SJRH - Park Care Pavilion",
+    "address": "Two Park Avenue",
+    "city": "Yonkers",
+    "nyc_designation": null,
+    "state": "NY",
+    "zip_code": "10703",
+    "operating_certificate_number": "5907001H",
+    "cms_certification_number": "330208",
+    "permanent_facility_identifier": "1099",
+    "ocn_num": "5907001",
+    "ocn_pfi": "5907001-1099",
+    "system": "St. John's Medical Group",
+    "financial_assistance_link_text": "Patient Financial Services - St. Johns Riverside Hospital"
+  },
+  "assessment": {
+    "grade": "B",
+    "automatic_fail": false,
+    "noncompliant_categories_count": 3
+  },
+  "posted_materials": {
+    "application_posted": true,
+    "policy_summary_posted": true,
+    "policy_statement_posted": true,
+    "consistent_across_documents": false,
+    "primary_service_area_boundaries_compliant": true,
+    "no_submission_time_limit": false,
+    "submission_timeframe_notes": "FROM POLICY: \"Applications must be submitted within 120 days from the date of discharge (for inpatients) and the date of service (for outpatients). Patients will be allowed an additional 20 days to submit a completed application and documentation.\n3. The hospital Financial Counselor will accept FAP applications submitted during a longer “application period” that ends on the 240th day from the date of the hospital’s first post-discharge billing statement\"",
+    "no_evidence_of_asset_checks": true,
+    "no_immigration_status_barrier": true,
+    "inconsistency_notes": "Breakdown of income levels and discounts is correct in application but done by increments of 25% in the policy and is incorrect.",
+    "languages_available": "English",
+    "other_materials_notes": "ASSETS: \"Decisions are based on annual income only. Assets are not considered.\""
+  },
+  "application": {
+    "entire_uniform_application": true,
+    "contact_information_included": true,
+    "contact_phone": "914-964-7799 or 914-964-4513",
+    "income_and_discount_tables_included": true,
+    "uses_2025_fpl_guidelines": false,
+    "maximum_fpl": "400%",
+    "installments_capped_at_five_percent": true,
+    "notes": "Using 2024 FPL guidelines"
+  },
+  "policy_summary": {
+    "primary_service_area_described": true,
+    "means_of_applying_explained": true,
+    "income_levels_included": true,
+    "notes": null
+  },
+  "review_notes": {
+    "september_pdf_in_folder": true,
+    "other_notes": "Charity care language used extensively in policy"
+  },
+  "hyperlinks": {
+    "hospital_name": "http://Patient Financial Services - St. Johns Riverside Hospital",
+    "financial_assistance": "https://riversidehealth.org/patients-visitors/patient-financial-services/"
+  }
+}

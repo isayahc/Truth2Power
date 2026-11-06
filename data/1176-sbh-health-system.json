@@ -1,0 +1,65 @@
+{
+  "source": {
+    "review_month": "2025-09",
+    "row_url": "https://docs.google.com/spreadsheets/d/17S2EheUVVr1g911fPpBQJqRpy18pkUlaEEnvGM0LB1o/edit#gid=504145376&range=A156:AQ156"
+  },
+  "hospital": {
+    "name": "SBH Health System",
+    "linked_name": "SBH Health System",
+    "address": "4422 Third Avenue",
+    "city": "Bronx",
+    "nyc_designation": "NYC",
+    "state": "NY",
+    "zip_code": "10457",
+    "operating_certificate_number": "7000014H",
+    "cms_certification_number": "330399",
+    "permanent_facility_identifier": "1176",
+    "ocn_num": "7000014",
+    "ocn_pfi": "7000014-1176",
+    "system": "SBH Health System",
+    "financial_assistance_link_text": "https://www.sbhny.org/financial-services/"
+  },
+  "assessment": {
+    "grade": "B",
+    "automatic_fail": false,
+    "noncompliant_categories_count": 3
+  },
+  "posted_materials": {
+    "application_posted": true,
+    "policy_summary_posted": true,
+    "policy_statement_posted": true,
+    "consistent_across_documents": false,
+    "primary_service_area_boundaries_compliant": false,
+    "no_submission_time_limit": true,
+    "submission_timeframe_notes": "\"However, the determination may be done at any point in the collection cycle (patient has a minimum of 90 days from date of service).\"",
+    "no_evidence_of_asset_checks": true,
+    "no_immigration_status_barrier": true,
+    "inconsistency_notes": "FPL in summary is 2022. Policy says immigration status not taken into account but list of required documents is summary is confusing.",
+    "languages_available": "English, Spanish",
+    "other_materials_notes": "IMMIGRATION STATUS: summary lists Social Security Card, Resident Card or Passport, as documents needed, even though there is an addendum \"If you cannot provide any of these, you may still be able to apply for financial assistance.\" Policy says immigration status not taken into account. "
+  },
+  "application": {
+    "entire_uniform_application": true,
+    "contact_information_included": true,
+    "contact_phone": "802-847-8000 or 800-639-2719",
+    "income_and_discount_tables_included": true,
+    "uses_2025_fpl_guidelines": false,
+    "maximum_fpl": "400%",
+    "installments_capped_at_five_percent": true,
+    "notes": "Phone number listed is UVM phone number, so unsure if this is incorrect or if the systems merged."
+  },
+  "policy_summary": {
+    "primary_service_area_described": true,
+    "means_of_applying_explained": true,
+    "income_levels_included": true,
+    "notes": "FPL is 2022 and PSA is defined wrong, but it is included nonetheless"
+  },
+  "review_notes": {
+    "september_pdf_in_folder": true,
+    "other_notes": "application has UVM health network phone number; primary service area defined by bronx zipcodes that do not include the entire county nor the other 4 boroughs of NYC; uses charity care language throughout website and PLS and policy documentation"
+  },
+  "hyperlinks": {
+    "hospital_name": "https://www.sbhny.org/financial-services/",
+    "financial_assistance": "https://www.sbhny.org/financial-services/"
+  }
+}

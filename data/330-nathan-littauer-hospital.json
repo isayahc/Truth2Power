@@ -1,0 +1,65 @@
+{
+  "source": {
+    "review_month": "2025-09",
+    "row_url": "https://docs.google.com/spreadsheets/d/17S2EheUVVr1g911fPpBQJqRpy18pkUlaEEnvGM0LB1o/edit#gid=504145376&range=A112:AQ112"
+  },
+  "hospital": {
+    "name": "Nathan Littauer Hospital",
+    "linked_name": "Nathan Littauer Hospital",
+    "address": "99 EAST STATE STREET",
+    "city": "Gloversville",
+    "nyc_designation": null,
+    "state": "NY",
+    "zip_code": "12078",
+    "operating_certificate_number": "1701000H",
+    "cms_certification_number": "330276",
+    "permanent_facility_identifier": "330",
+    "ocn_num": "1701000",
+    "ocn_pfi": "1701000-0330",
+    "system": "Nathan Littauer Hospital & Nursing Home",
+    "financial_assistance_link_text": "https://www.nlh.org/about-nlh/patient-billing"
+  },
+  "assessment": {
+    "grade": "B",
+    "automatic_fail": false,
+    "noncompliant_categories_count": 2
+  },
+  "posted_materials": {
+    "application_posted": true,
+    "policy_summary_posted": true,
+    "policy_statement_posted": true,
+    "consistent_across_documents": false,
+    "primary_service_area_boundaries_compliant": true,
+    "no_submission_time_limit": true,
+    "submission_timeframe_notes": "FROM SUMMARY: \"For efficient processing NLH requests application submission within 30 days of the first billing statement, however a Financial Assistance application may be submitted at any time during the collection process.\"",
+    "no_evidence_of_asset_checks": false,
+    "no_immigration_status_barrier": true,
+    "inconsistency_notes": "Policy states that \"extraordinary collection efforts\" will commence after 120 days, while summary says after 180 days. Policy says payment plans are capped at 10% while application says plans are capped at 5% (which is correct).",
+    "languages_available": "English, Spanish",
+    "other_materials_notes": "FOR PSA compliant, in plain langauge summary, the counties listed are wrong (missing two) but then it is followed by this sentence: \"If your county of residence is not listed above and you would like to apply for Financial Assistance we encourage you to do so.  No application will be refused due to location of residence.\"\nASSET CHECKS: for required documents, \"Copies of last two bank statements (Not required for patients at or below 200% of the Federal Poverty Guidelines).\""
+  },
+  "application": {
+    "entire_uniform_application": true,
+    "contact_information_included": true,
+    "contact_phone": "518-773-5558",
+    "income_and_discount_tables_included": true,
+    "uses_2025_fpl_guidelines": true,
+    "maximum_fpl": "400%",
+    "installments_capped_at_five_percent": true,
+    "notes": "N/A"
+  },
+  "policy_summary": {
+    "primary_service_area_described": true,
+    "means_of_applying_explained": true,
+    "income_levels_included": true,
+    "notes": null
+  },
+  "review_notes": {
+    "september_pdf_in_folder": true,
+    "other_notes": null
+  },
+  "hyperlinks": {
+    "hospital_name": "https://www.nlh.org/about-nlh/patient-billing",
+    "financial_assistance": "https://www.nlh.org/about-nlh/patient-billing"
+  }
+}

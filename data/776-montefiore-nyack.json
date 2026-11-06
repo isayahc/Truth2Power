@@ -1,0 +1,65 @@
+{
+  "source": {
+    "review_month": "2025-09",
+    "row_url": "https://docs.google.com/spreadsheets/d/17S2EheUVVr1g911fPpBQJqRpy18pkUlaEEnvGM0LB1o/edit#gid=504145376&range=A102:AQ102"
+  },
+  "hospital": {
+    "name": "Montefiore Nyack",
+    "linked_name": "Montefiore Nyack",
+    "address": "160 North Midland Avenue",
+    "city": "Nyack",
+    "nyc_designation": null,
+    "state": "NY",
+    "zip_code": "10960",
+    "operating_certificate_number": "4324000H",
+    "cms_certification_number": "330104",
+    "permanent_facility_identifier": "776",
+    "ocn_num": "4324000",
+    "ocn_pfi": "4324000-0776",
+    "system": "Montefiore Health System",
+    "financial_assistance_link_text": "https://www.montefiorenyack.org/manage-my-care/billing/financial-aid-policy"
+  },
+  "assessment": {
+    "grade": "F",
+    "automatic_fail": true,
+    "noncompliant_categories_count": 6
+  },
+  "posted_materials": {
+    "application_posted": true,
+    "policy_summary_posted": true,
+    "policy_statement_posted": true,
+    "consistent_across_documents": true,
+    "primary_service_area_boundaries_compliant": true,
+    "no_submission_time_limit": true,
+    "submission_timeframe_notes": null,
+    "no_evidence_of_asset_checks": true,
+    "no_immigration_status_barrier": true,
+    "inconsistency_notes": null,
+    "languages_available": "English, Spanish",
+    "other_materials_notes": "Monthly payment capped at 10% (not 5%). "
+  },
+  "application": {
+    "entire_uniform_application": false,
+    "contact_information_included": false,
+    "contact_phone": "N/A",
+    "income_and_discount_tables_included": false,
+    "uses_2025_fpl_guidelines": false,
+    "maximum_fpl": "no",
+    "installments_capped_at_five_percent": false,
+    "notes": "Application is not the uniform app"
+  },
+  "policy_summary": {
+    "primary_service_area_described": true,
+    "means_of_applying_explained": true,
+    "income_levels_included": true,
+    "notes": null
+  },
+  "review_notes": {
+    "september_pdf_in_folder": true,
+    "other_notes": "PSA: \"Everyone who resides in New York State who needs emergency services can receive care from the Hospital and qualify for a discount if they meet certain income limits and are determined eligible by the Hospital. Everyone who resides in Rockland, Westchester, Orange and Putnam counties can qualify for a discount on non-emergent, medically necessary services (as this term is defined in the Hospital’s Financial Assistance Policy) if they meet certain income limits and are determined eligible by the Hospital.\""
+  },
+  "hyperlinks": {
+    "hospital_name": "https://www.montefiorenyack.org/manage-my-care/billing/financial-aid-policy",
+    "financial_assistance": "https://www.montefiorenyack.org/manage-my-care/billing/financial-aid-policy"
+  }
+}

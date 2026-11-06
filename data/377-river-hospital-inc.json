@@ -1,0 +1,65 @@
+{
+  "source": {
+    "review_month": "2025-09",
+    "row_url": "https://docs.google.com/spreadsheets/d/17S2EheUVVr1g911fPpBQJqRpy18pkUlaEEnvGM0LB1o/edit#gid=504145376&range=A148:AQ148"
+  },
+  "hospital": {
+    "name": "River Hospital, Inc.",
+    "linked_name": "River Hospital, Inc.",
+    "address": "4 Fuller Street",
+    "city": "Alexandria Bay",
+    "nyc_designation": null,
+    "state": "NY",
+    "zip_code": "13607",
+    "operating_certificate_number": "2221700C",
+    "cms_certification_number": "331309",
+    "permanent_facility_identifier": "377",
+    "ocn_num": "2221700",
+    "ocn_pfi": "2221700-0377",
+    "system": "River Hospital",
+    "financial_assistance_link_text": "https://www.riverhospital.org/patient-resources/financial-services"
+  },
+  "assessment": {
+    "grade": "B",
+    "automatic_fail": false,
+    "noncompliant_categories_count": 3
+  },
+  "posted_materials": {
+    "application_posted": true,
+    "policy_summary_posted": true,
+    "policy_statement_posted": true,
+    "consistent_across_documents": false,
+    "primary_service_area_boundaries_compliant": false,
+    "no_submission_time_limit": true,
+    "submission_timeframe_notes": "N/A",
+    "no_evidence_of_asset_checks": true,
+    "no_immigration_status_barrier": true,
+    "inconsistency_notes": "Policy saya cut off is 300% but application has cut off as 400% FPL",
+    "languages_available": "English",
+    "other_materials_notes": "N/A"
+  },
+  "application": {
+    "entire_uniform_application": true,
+    "contact_information_included": true,
+    "contact_phone": " 315-482-1235",
+    "income_and_discount_tables_included": true,
+    "uses_2025_fpl_guidelines": true,
+    "maximum_fpl": "400%",
+    "installments_capped_at_five_percent": true,
+    "notes": null
+  },
+  "policy_summary": {
+    "primary_service_area_described": false,
+    "means_of_applying_explained": true,
+    "income_levels_included": true,
+    "notes": null
+  },
+  "review_notes": {
+    "september_pdf_in_folder": true,
+    "other_notes": "PSA never defined"
+  },
+  "hyperlinks": {
+    "hospital_name": "https://www.riverhospital.org/patient-resources/financial-services",
+    "financial_assistance": "https://www.riverhospital.org/patient-resources/financial-services"
+  }
+}

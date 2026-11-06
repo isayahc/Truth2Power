@@ -1,0 +1,65 @@
+{
+  "source": {
+    "review_month": "2025-09",
+    "row_url": "https://docs.google.com/spreadsheets/d/17S2EheUVVr1g911fPpBQJqRpy18pkUlaEEnvGM0LB1o/edit#gid=504145376&range=A65:AQ65"
+  },
+  "hospital": {
+    "name": "Interfaith Medical Center",
+    "linked_name": "Interfaith Medical Center",
+    "address": "1545 Atlantic Avenue",
+    "city": "Brooklyn",
+    "nyc_designation": "NYC",
+    "state": "NY",
+    "zip_code": "11213",
+    "operating_certificate_number": "7001002H",
+    "cms_certification_number": "330397",
+    "permanent_facility_identifier": "1309",
+    "ocn_num": "7001002",
+    "ocn_pfi": "7001002-1309",
+    "system": "One Brooklyn Health",
+    "financial_assistance_link_text": "https://onebrooklynhealth.org/financial-assistance"
+  },
+  "assessment": {
+    "grade": "C",
+    "automatic_fail": false,
+    "noncompliant_categories_count": 4
+  },
+  "posted_materials": {
+    "application_posted": true,
+    "policy_summary_posted": true,
+    "policy_statement_posted": true,
+    "consistent_across_documents": false,
+    "primary_service_area_boundaries_compliant": false,
+    "no_submission_time_limit": true,
+    "submission_timeframe_notes": null,
+    "no_evidence_of_asset_checks": true,
+    "no_immigration_status_barrier": true,
+    "inconsistency_notes": "Application uses 2024 FPL but plain language summary uses 2025 FPL guidelines.",
+    "languages_available": "Spanish; Russian; Yiddish; Arabic; Chinese; Bengali; Hatian Creole",
+    "other_materials_notes": null
+  },
+  "application": {
+    "entire_uniform_application": true,
+    "contact_information_included": true,
+    "contact_phone": "718-613-4000",
+    "income_and_discount_tables_included": true,
+    "uses_2025_fpl_guidelines": false,
+    "maximum_fpl": "400%",
+    "installments_capped_at_five_percent": true,
+    "notes": "FPL in application is 2024"
+  },
+  "policy_summary": {
+    "primary_service_area_described": false,
+    "means_of_applying_explained": true,
+    "income_levels_included": true,
+    "notes": null
+  },
+  "review_notes": {
+    "september_pdf_in_folder": true,
+    "other_notes": "No primary service area listed or described; policy states \"insurance programs are offered to New York State residents who qualify\"; charity care language used minimally in policy and seems to be specific for those that are uninsured"
+  },
+  "hyperlinks": {
+    "hospital_name": "https://onebrooklynhealth.org/financial-assistance",
+    "financial_assistance": "https://onebrooklynhealth.org/financial-assistance"
+  }
+}

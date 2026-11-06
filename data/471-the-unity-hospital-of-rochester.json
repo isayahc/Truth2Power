@@ -1,0 +1,65 @@
+{
+  "source": {
+    "review_month": "2025-09",
+    "row_url": "https://docs.google.com/spreadsheets/d/17S2EheUVVr1g911fPpBQJqRpy18pkUlaEEnvGM0LB1o/edit#gid=504145376&range=A192:AQ192"
+  },
+  "hospital": {
+    "name": "The Unity Hospital of Rochester",
+    "linked_name": "The Unity Hospital of Rochester",
+    "address": "1555 Long Pond Road",
+    "city": "Rochester",
+    "nyc_designation": null,
+    "state": "NY",
+    "zip_code": "14626",
+    "operating_certificate_number": "2754001H",
+    "cms_certification_number": "330226",
+    "permanent_facility_identifier": "471",
+    "ocn_num": "2754001",
+    "ocn_pfi": "2754001-0471",
+    "system": "Rochester Regional Health",
+    "financial_assistance_link_text": "Financial Assistance | Rochester Regional Health"
+  },
+  "assessment": {
+    "grade": "C",
+    "automatic_fail": false,
+    "noncompliant_categories_count": 5
+  },
+  "posted_materials": {
+    "application_posted": true,
+    "policy_summary_posted": false,
+    "policy_statement_posted": true,
+    "consistent_across_documents": true,
+    "primary_service_area_boundaries_compliant": true,
+    "no_submission_time_limit": false,
+    "submission_timeframe_notes": "It says both that: \"Patients can submit Financial Assistance applications any time during the collection process.\" AND that \"The Financial Assistance Counselor will, upon approving a patient for a Financial Assistance Discount, include any and all covered service accounts with open balances up to 240 days back from the date the patient completed the application and up to a maximum of 12 months forward. Accounts older than 240 days prior to the application date may be approved at the discretion of the Sr. Vice President, Revenue Cycle or designee.\" So, even though they say an application can be submitted at any time, there is an effective time frame.",
+    "no_evidence_of_asset_checks": true,
+    "no_immigration_status_barrier": true,
+    "inconsistency_notes": "Consistent across posted documents, but no plain language summary posted",
+    "languages_available": "English, Spanish",
+    "other_materials_notes": "Also has an online application that is compliant"
+  },
+  "application": {
+    "entire_uniform_application": true,
+    "contact_information_included": true,
+    "contact_phone": "585-922-1900",
+    "income_and_discount_tables_included": true,
+    "uses_2025_fpl_guidelines": true,
+    "maximum_fpl": "400%",
+    "installments_capped_at_five_percent": true,
+    "notes": null
+  },
+  "policy_summary": {
+    "primary_service_area_described": false,
+    "means_of_applying_explained": false,
+    "income_levels_included": false,
+    "notes": "No plain language summary posted"
+  },
+  "review_notes": {
+    "september_pdf_in_folder": true,
+    "other_notes": "PSA definition: \"Financial Assistance Discounts are available for uninsured and underinsured patients who reside in New York State\""
+  },
+  "hyperlinks": {
+    "hospital_name": "http://Financial Assistance | Rochester Regional Health",
+    "financial_assistance": "https://www.rochesterregional.org/billing-and-insurance/financial-assistance"
+  }
+}

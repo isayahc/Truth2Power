@@ -1,0 +1,65 @@
+{
+  "source": {
+    "review_month": "2025-09",
+    "row_url": "https://docs.google.com/spreadsheets/d/17S2EheUVVr1g911fPpBQJqRpy18pkUlaEEnvGM0LB1o/edit#gid=504145376&range=A95:AQ95"
+  },
+  "hospital": {
+    "name": "Millard Fillmore Suburban Hospital",
+    "linked_name": "Millard Fillmore Suburban Hospital",
+    "address": "1540 Maple Road",
+    "city": "Amherst",
+    "nyc_designation": null,
+    "state": "NY",
+    "zip_code": "14221",
+    "operating_certificate_number": "1401014H",
+    "cms_certification_number": "330005",
+    "permanent_facility_identifier": "3067",
+    "ocn_num": "1401014",
+    "ocn_pfi": "1401014-3067",
+    "system": "Kaleida Health",
+    "financial_assistance_link_text": "https://www.millardfillmoresuburban.org/care/Financial-Assistance-Program"
+  },
+  "assessment": {
+    "grade": "B",
+    "automatic_fail": false,
+    "noncompliant_categories_count": 3
+  },
+  "posted_materials": {
+    "application_posted": true,
+    "policy_summary_posted": true,
+    "policy_statement_posted": true,
+    "consistent_across_documents": true,
+    "primary_service_area_boundaries_compliant": false,
+    "no_submission_time_limit": true,
+    "submission_timeframe_notes": null,
+    "no_evidence_of_asset_checks": false,
+    "no_immigration_status_barrier": true,
+    "inconsistency_notes": null,
+    "languages_available": "English, Arabic, Bengali, Burmese, Spanish, Swahili",
+    "other_materials_notes": "\"Bank statements for the current month are required (no more than 30 days from \nthe signature date on the application).\" (from the POLICY statement)"
+  },
+  "application": {
+    "entire_uniform_application": true,
+    "contact_information_included": true,
+    "contact_phone": "716-859-8789",
+    "income_and_discount_tables_included": true,
+    "uses_2025_fpl_guidelines": true,
+    "maximum_fpl": "400%",
+    "installments_capped_at_five_percent": true,
+    "notes": null
+  },
+  "policy_summary": {
+    "primary_service_area_described": false,
+    "means_of_applying_explained": true,
+    "income_levels_included": true,
+    "notes": null
+  },
+  "review_notes": {
+    "september_pdf_in_folder": true,
+    "other_notes": null
+  },
+  "hyperlinks": {
+    "hospital_name": "https://www.millardfillmoresuburban.org/care/Financial-Assistance-Program",
+    "financial_assistance": "https://www.millardfillmoresuburban.org/care/Financial-Assistance-Program"
+  }
+}

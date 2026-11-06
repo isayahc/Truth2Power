@@ -1,0 +1,65 @@
+{
+  "source": {
+    "review_month": "2025-09",
+    "row_url": "https://docs.google.com/spreadsheets/d/17S2EheUVVr1g911fPpBQJqRpy18pkUlaEEnvGM0LB1o/edit#gid=504145376&range=A14:AQ14"
+  },
+  "hospital": {
+    "name": "Bon Secours Community Hospital",
+    "linked_name": "Bon Secours Community Hospital",
+    "address": "160 East Main Street",
+    "city": "Port Jervis",
+    "nyc_designation": null,
+    "state": "NY",
+    "zip_code": "12771",
+    "operating_certificate_number": "3535001H",
+    "cms_certification_number": "330135",
+    "permanent_facility_identifier": "708",
+    "ocn_num": "3535001",
+    "ocn_pfi": "3535001-0708",
+    "system": "Westchester Medical Center Health Network",
+    "financial_assistance_link_text": "https://www.wmchealth.org/patients-and-visitors/insurance-and-billing/financial-assistance"
+  },
+  "assessment": {
+    "grade": "B",
+    "automatic_fail": false,
+    "noncompliant_categories_count": 3
+  },
+  "posted_materials": {
+    "application_posted": true,
+    "policy_summary_posted": true,
+    "policy_statement_posted": true,
+    "consistent_across_documents": true,
+    "primary_service_area_boundaries_compliant": false,
+    "no_submission_time_limit": true,
+    "submission_timeframe_notes": null,
+    "no_evidence_of_asset_checks": true,
+    "no_immigration_status_barrier": true,
+    "inconsistency_notes": "The numbers used for FPL are varied in a way that is confusing, but not neccesarily inconsistent",
+    "languages_available": "English, Spanish",
+    "other_materials_notes": "Primary service area defined in the policy but not in the PLS (See \"Other Notes\" for the quoted definition of PSA from the policy)"
+  },
+  "application": {
+    "entire_uniform_application": true,
+    "contact_information_included": true,
+    "contact_phone": "845-547-3888",
+    "income_and_discount_tables_included": true,
+    "uses_2025_fpl_guidelines": false,
+    "maximum_fpl": "400%",
+    "installments_capped_at_five_percent": true,
+    "notes": "FPL guidelines in App are 2024"
+  },
+  "policy_summary": {
+    "primary_service_area_described": false,
+    "means_of_applying_explained": true,
+    "income_levels_included": true,
+    "notes": "PLS has 2024 FPL guidelines"
+  },
+  "review_notes": {
+    "september_pdf_in_folder": true,
+    "other_notes": "\"The Primary Service Area of Bon Secours Community Hospital, located in Port Jervis, includes Port Jervis and the surrounding areas in Orange and Sullivan Counties in New York, Pike County in Pennsylvania, and Sussex County in New Jersey.  \""
+  },
+  "hyperlinks": {
+    "hospital_name": "https://www.wmchealth.org/patients-and-visitors/insurance-and-billing/financial-assistance",
+    "financial_assistance": "https://www.wmchealth.org/patients-and-visitors/insurance-and-billing/financial-assistance"
+  }
+}

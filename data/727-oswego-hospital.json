@@ -1,0 +1,65 @@
+{
+  "source": {
+    "review_month": "2025-09",
+    "row_url": "https://docs.google.com/spreadsheets/d/17S2EheUVVr1g911fPpBQJqRpy18pkUlaEEnvGM0LB1o/edit#gid=504145376&range=A140:AQ140"
+  },
+  "hospital": {
+    "name": "Oswego Hospital",
+    "linked_name": "Oswego Hospital",
+    "address": "110 W Sixth Street",
+    "city": "Oswego",
+    "nyc_designation": null,
+    "state": "NY",
+    "zip_code": "13126",
+    "operating_certificate_number": "3702000H",
+    "cms_certification_number": "330218",
+    "permanent_facility_identifier": "727",
+    "ocn_num": "3702000",
+    "ocn_pfi": "3702000-0727",
+    "system": "Oswego Health",
+    "financial_assistance_link_text": "https://www.oswegohealth.org/patients-families/billing-information/financial-assistance/"
+  },
+  "assessment": {
+    "grade": "F",
+    "automatic_fail": true,
+    "noncompliant_categories_count": 1
+  },
+  "posted_materials": {
+    "application_posted": true,
+    "policy_summary_posted": true,
+    "policy_statement_posted": true,
+    "consistent_across_documents": true,
+    "primary_service_area_boundaries_compliant": true,
+    "no_submission_time_limit": true,
+    "submission_timeframe_notes": "\"The Hospital will accept completed Financial Assistance applications at any time during the collection process.\"",
+    "no_evidence_of_asset_checks": true,
+    "no_immigration_status_barrier": true,
+    "inconsistency_notes": "N/A",
+    "languages_available": "English",
+    "other_materials_notes": "Missing last page of the Uniform Application"
+  },
+  "application": {
+    "entire_uniform_application": false,
+    "contact_information_included": true,
+    "contact_phone": "315-349-5533",
+    "income_and_discount_tables_included": true,
+    "uses_2025_fpl_guidelines": true,
+    "maximum_fpl": "400%",
+    "installments_capped_at_five_percent": true,
+    "notes": null
+  },
+  "policy_summary": {
+    "primary_service_area_described": true,
+    "means_of_applying_explained": true,
+    "income_levels_included": true,
+    "notes": null
+  },
+  "review_notes": {
+    "september_pdf_in_folder": true,
+    "other_notes": "PSA definition from policy: \"Financial assistance is available to all patients. This includes patients within the Hospital’s primary service area (defined as the following zip codes, 13126, 13069, 13074, 13156, 13111, 13114, and 13142), as well as patients outside the primary service, including out-of-state residents.\" Summary also states HFA is available to all patients."
+  },
+  "hyperlinks": {
+    "hospital_name": "https://www.oswegohealth.org/patients-families/billing-information/financial-assistance/",
+    "financial_assistance": "https://www.oswegohealth.org/patients-families/billing-information/financial-assistance/"
+  }
+}

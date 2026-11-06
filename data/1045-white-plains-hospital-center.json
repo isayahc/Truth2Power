@@ -1,0 +1,65 @@
+{
+  "source": {
+    "review_month": "2025-09",
+    "row_url": "https://docs.google.com/spreadsheets/d/17S2EheUVVr1g911fPpBQJqRpy18pkUlaEEnvGM0LB1o/edit#gid=504145376&range=A209:AQ209"
+  },
+  "hospital": {
+    "name": "White Plains Hospital Center",
+    "linked_name": "White Plains Hospital Center",
+    "address": "41 East Post Road",
+    "city": "White Plains",
+    "nyc_designation": null,
+    "state": "NY",
+    "zip_code": "10601",
+    "operating_certificate_number": "5902001H",
+    "cms_certification_number": "330304",
+    "permanent_facility_identifier": "1045",
+    "ocn_num": "5902001",
+    "ocn_pfi": "5902001-1045",
+    "system": "Montefiore Health System",
+    "financial_assistance_link_text": "Standard Charges | White Plains Hospital"
+  },
+  "assessment": {
+    "grade": "F",
+    "automatic_fail": true,
+    "noncompliant_categories_count": 6
+  },
+  "posted_materials": {
+    "application_posted": true,
+    "policy_summary_posted": true,
+    "policy_statement_posted": true,
+    "consistent_across_documents": true,
+    "primary_service_area_boundaries_compliant": true,
+    "no_submission_time_limit": false,
+    "submission_timeframe_notes": "FROM POLICY: \"Responsible Individuals will be given two hundred and forty (240) days from the date of the first post-discharge bill to complete a financial assistance application.\"",
+    "no_evidence_of_asset_checks": true,
+    "no_immigration_status_barrier": true,
+    "inconsistency_notes": "N/A",
+    "languages_available": "English, Spanish",
+    "other_materials_notes": "N/A"
+  },
+  "application": {
+    "entire_uniform_application": false,
+    "contact_information_included": true,
+    "contact_phone": "914-681-1004",
+    "income_and_discount_tables_included": false,
+    "uses_2025_fpl_guidelines": false,
+    "maximum_fpl": "no",
+    "installments_capped_at_five_percent": false,
+    "notes": "Partial Uniform App and then a page of their own application."
+  },
+  "policy_summary": {
+    "primary_service_area_described": true,
+    "means_of_applying_explained": true,
+    "income_levels_included": true,
+    "notes": null
+  },
+  "review_notes": {
+    "september_pdf_in_folder": true,
+    "other_notes": "PSA in summary: \"Everyone who resides in Bronx, Orange, Putnam, Rockland, and Westchester counties can qualify for a discount on non-emergency, “medically necessary services” (as this term is defined in the Hospital’s Financial Assistance Policy) if they meet certain income limits and are determined eligible by the Hospital.\""
+  },
+  "hyperlinks": {
+    "hospital_name": "http://Standard Charges | White Plains Hospital",
+    "financial_assistance": "https://www.wphospital.org/patients-visitors/patients/billing-information/standard-charges/"
+  }
+}

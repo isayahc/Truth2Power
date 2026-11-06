@@ -1,0 +1,65 @@
+{
+  "source": {
+    "review_month": "2025-09",
+    "row_url": "https://docs.google.com/spreadsheets/d/17S2EheUVVr1g911fPpBQJqRpy18pkUlaEEnvGM0LB1o/edit#gid=504145376&range=A57:AQ57"
+  },
+  "hospital": {
+    "name": "Guthrie Cortland Medical Center",
+    "linked_name": "Guthrie Cortland Medical Center",
+    "address": "134 Homer Avenue",
+    "city": "Cortland",
+    "nyc_designation": null,
+    "state": "NY",
+    "zip_code": "13045",
+    "operating_certificate_number": "1101000H",
+    "cms_certification_number": "330175",
+    "permanent_facility_identifier": "158",
+    "ocn_num": "1101000",
+    "ocn_pfi": "1101000-0158",
+    "system": "The Guthrie Clinic",
+    "financial_assistance_link_text": "https://www.guthrie.org/patients-visitors/pay-my-bill/financial-assistance"
+  },
+  "assessment": {
+    "grade": "B",
+    "automatic_fail": false,
+    "noncompliant_categories_count": 3
+  },
+  "posted_materials": {
+    "application_posted": true,
+    "policy_summary_posted": true,
+    "policy_statement_posted": true,
+    "consistent_across_documents": false,
+    "primary_service_area_boundaries_compliant": false,
+    "no_submission_time_limit": true,
+    "submission_timeframe_notes": null,
+    "no_evidence_of_asset_checks": true,
+    "no_immigration_status_barrier": true,
+    "inconsistency_notes": "Not even consistent within documents, this is a quote from the policy: \"An individual with out-of-pocket medical costs accumulated in the past 12 months that amount to more than 10% of the individual’s gross income is considered Under-insured and eligible for financial assistance regardless of federal poverty level limits. Is defined as patients whose paid medical expenses have exceeded 10% of their income in the last 12 months.\"",
+    "languages_available": "English, Spanish",
+    "other_materials_notes": null
+  },
+  "application": {
+    "entire_uniform_application": true,
+    "contact_information_included": true,
+    "contact_phone": "570-887-2051",
+    "income_and_discount_tables_included": true,
+    "uses_2025_fpl_guidelines": true,
+    "maximum_fpl": "400%",
+    "installments_capped_at_five_percent": true,
+    "notes": "Later on in the application the criteria for assistance is properly defined: \"underinsured individuals (out-of-pocket medical costs accumulated in the past twelve months that amount to more than ten percent of such individual's gross annual income).\" Also has an online application that appears compliant (judgement of compliance from last audit)"
+  },
+  "policy_summary": {
+    "primary_service_area_described": false,
+    "means_of_applying_explained": true,
+    "income_levels_included": true,
+    "notes": null
+  },
+  "review_notes": {
+    "september_pdf_in_folder": true,
+    "other_notes": "\"For emergent and medically necessary health care services, a patient has to be a resident in The Guthrie Clinic Service area, which consists of the following counties: Broome, Bradford, Sullivan, Susquehanna, Tioga, and Wyoming in Pennsylvania and Chemung, Cortland, Schuyler, Steuben, Tioga, and Tompkins, in New York.\" <<this PSA description is missing some contiguous counties"
+  },
+  "hyperlinks": {
+    "hospital_name": "https://www.guthrie.org/patients-visitors/pay-my-bill/financial-assistance",
+    "financial_assistance": "https://www.guthrie.org/patients-visitors/pay-my-bill/financial-assistance"
+  }
+}

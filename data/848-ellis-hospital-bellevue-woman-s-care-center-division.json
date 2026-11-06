@@ -1,0 +1,65 @@
+{
+  "source": {
+    "review_month": "2025-09",
+    "row_url": "https://docs.google.com/spreadsheets/d/17S2EheUVVr1g911fPpBQJqRpy18pkUlaEEnvGM0LB1o/edit#gid=504145376&range=A42:AQ42"
+  },
+  "hospital": {
+    "name": "Ellis Hospital - Bellevue Woman's Care Center Division",
+    "linked_name": "Ellis Hospital - Bellevue Woman's Care Center Division",
+    "address": "2210 Troy Road",
+    "city": "Niskayuna",
+    "nyc_designation": null,
+    "state": "NY",
+    "zip_code": "12309",
+    "operating_certificate_number": "4601001H",
+    "cms_certification_number": "330339",
+    "permanent_facility_identifier": "848",
+    "ocn_num": "4601001",
+    "ocn_pfi": "4601001-0848",
+    "system": "Ellis Medicine",
+    "financial_assistance_link_text": "https://www.ellismedicine.org/financial-assistance/default.aspx"
+  },
+  "assessment": {
+    "grade": "B",
+    "automatic_fail": false,
+    "noncompliant_categories_count": 3
+  },
+  "posted_materials": {
+    "application_posted": true,
+    "policy_summary_posted": true,
+    "policy_statement_posted": true,
+    "consistent_across_documents": false,
+    "primary_service_area_boundaries_compliant": true,
+    "no_submission_time_limit": false,
+    "submission_timeframe_notes": "\"Financial Assistance is a program that is available at any time within 240 days of the first post discharge bill or service date. \"",
+    "no_evidence_of_asset_checks": true,
+    "no_immigration_status_barrier": true,
+    "inconsistency_notes": "Application says up to 400% of FPL gets 100% discount, PLS says only up to 300% FPL gets 100% discount. Policy has a sentence abouy cutoff being 300% FPL",
+    "languages_available": "English, Spanish",
+    "other_materials_notes": "N/A"
+  },
+  "application": {
+    "entire_uniform_application": true,
+    "contact_information_included": true,
+    "contact_phone": " 518-831-8123",
+    "income_and_discount_tables_included": true,
+    "uses_2025_fpl_guidelines": false,
+    "maximum_fpl": "400%",
+    "installments_capped_at_five_percent": true,
+    "notes": "Using 2024 FPL guidelines. Income and discount levels are different than typical UA--up to 400% of FPL gets 100% discount. "
+  },
+  "policy_summary": {
+    "primary_service_area_described": true,
+    "means_of_applying_explained": true,
+    "income_levels_included": true,
+    "notes": null
+  },
+  "review_notes": {
+    "september_pdf_in_folder": true,
+    "other_notes": "FAQs page does not load. PSA = \"Financial assistance is available for residents of New York State\""
+  },
+  "hyperlinks": {
+    "hospital_name": "https://www.ellismedicine.org/financial-assistance/default.aspx",
+    "financial_assistance": "https://www.ellismedicine.org/financial-assistance/default.aspx"
+  }
+}

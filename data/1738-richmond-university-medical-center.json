@@ -1,0 +1,65 @@
+{
+  "source": {
+    "review_month": "2025-09",
+    "row_url": "https://docs.google.com/spreadsheets/d/17S2EheUVVr1g911fPpBQJqRpy18pkUlaEEnvGM0LB1o/edit#gid=504145376&range=A147:AQ147"
+  },
+  "hospital": {
+    "name": "Richmond University Medical Center",
+    "linked_name": "Richmond University Medical Center",
+    "address": "355 Bard Avenue",
+    "city": "Staten Island",
+    "nyc_designation": "NYC",
+    "state": "NY",
+    "zip_code": "10310",
+    "operating_certificate_number": "7004010H",
+    "cms_certification_number": "330028",
+    "permanent_facility_identifier": "1738",
+    "ocn_num": "7004010",
+    "ocn_pfi": "7004010-1738",
+    "system": "Richmond University Medical Center",
+    "financial_assistance_link_text": "https://www.rumcsi.org/patients-visitors/billing-and-insurance/financial-assistance-summary/"
+  },
+  "assessment": {
+    "grade": "F",
+    "automatic_fail": true,
+    "noncompliant_categories_count": 7
+  },
+  "posted_materials": {
+    "application_posted": true,
+    "policy_summary_posted": true,
+    "policy_statement_posted": true,
+    "consistent_across_documents": true,
+    "primary_service_area_boundaries_compliant": true,
+    "no_submission_time_limit": true,
+    "submission_timeframe_notes": "\"Patients may apply/re-apply for financial assistance at any time when their personal financial situation changes.\"",
+    "no_evidence_of_asset_checks": true,
+    "no_immigration_status_barrier": true,
+    "inconsistency_notes": null,
+    "languages_available": "English",
+    "other_materials_notes": "PSA defined as residents of NYS in the policy"
+  },
+  "application": {
+    "entire_uniform_application": false,
+    "contact_information_included": false,
+    "contact_phone": "N/A",
+    "income_and_discount_tables_included": false,
+    "uses_2025_fpl_guidelines": false,
+    "maximum_fpl": "no",
+    "installments_capped_at_five_percent": false,
+    "notes": "Using uniform app but missing last 3 pages"
+  },
+  "policy_summary": {
+    "primary_service_area_described": false,
+    "means_of_applying_explained": true,
+    "income_levels_included": true,
+    "notes": null
+  },
+  "review_notes": {
+    "september_pdf_in_folder": true,
+    "other_notes": "FPL is from 2024; primary service area is described well on the website summary but not on the downloadable copy"
+  },
+  "hyperlinks": {
+    "hospital_name": "https://www.rumcsi.org/patients-visitors/billing-and-insurance/financial-assistance-summary/",
+    "financial_assistance": "https://www.rumcsi.org/patients-visitors/billing-and-insurance/financial-assistance-summary/"
+  }
+}

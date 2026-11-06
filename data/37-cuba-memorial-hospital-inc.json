@@ -1,0 +1,65 @@
+{
+  "source": {
+    "review_month": "2025-09",
+    "row_url": "https://docs.google.com/spreadsheets/d/17S2EheUVVr1g911fPpBQJqRpy18pkUlaEEnvGM0LB1o/edit#gid=504145376&range=A37:AQ37"
+  },
+  "hospital": {
+    "name": "Cuba Memorial Hospital Inc",
+    "linked_name": "Cuba Memorial Hospital Inc",
+    "address": "140 West Main Street",
+    "city": "Cuba",
+    "nyc_designation": null,
+    "state": "NY",
+    "zip_code": "14727",
+    "operating_certificate_number": "0226700C",
+    "cms_certification_number": "331301",
+    "permanent_facility_identifier": "37",
+    "ocn_num": "226700",
+    "ocn_pfi": "0226700-0037",
+    "system": "Cuba Memorial Hospital",
+    "financial_assistance_link_text": "https://www.cubamemorialhospital.com/"
+  },
+  "assessment": {
+    "grade": "F",
+    "automatic_fail": true,
+    "noncompliant_categories_count": 7
+  },
+  "posted_materials": {
+    "application_posted": true,
+    "policy_summary_posted": true,
+    "policy_statement_posted": true,
+    "consistent_across_documents": true,
+    "primary_service_area_boundaries_compliant": false,
+    "no_submission_time_limit": true,
+    "submission_timeframe_notes": "\"Patients may apply for financial assistance at any point in the collection process.\" (from policy)",
+    "no_evidence_of_asset_checks": true,
+    "no_immigration_status_barrier": true,
+    "inconsistency_notes": "N/A",
+    "languages_available": "English",
+    "other_materials_notes": "Still using charity care language. Policy caps monthly installments at 10%."
+  },
+  "application": {
+    "entire_uniform_application": false,
+    "contact_information_included": true,
+    "contact_phone": "716-375-6080",
+    "income_and_discount_tables_included": false,
+    "uses_2025_fpl_guidelines": false,
+    "maximum_fpl": "no",
+    "installments_capped_at_five_percent": false,
+    "notes": "Missing lots (very bare bones)"
+  },
+  "policy_summary": {
+    "primary_service_area_described": false,
+    "means_of_applying_explained": true,
+    "income_levels_included": true,
+    "notes": "FPL guidelines are 2024. Have a PSA but decided it was not defined enough (see notes in Methodology) \"Everyone who lives in Allegany County or the surrounding area can get a discount on non-emergency medically necessary services at Cuba Memorial Hospital if they meet the income limits.\""
+  },
+  "review_notes": {
+    "september_pdf_in_folder": true,
+    "other_notes": null
+  },
+  "hyperlinks": {
+    "hospital_name": "https://www.cubamemorialhospital.com/",
+    "financial_assistance": "https://www.cubamemorialhospital.com/"
+  }
+}

@@ -1,0 +1,65 @@
+{
+  "source": {
+    "review_month": "2025-09",
+    "row_url": "https://docs.google.com/spreadsheets/d/17S2EheUVVr1g911fPpBQJqRpy18pkUlaEEnvGM0LB1o/edit#gid=504145376&range=A132:AQ132"
+  },
+  "hospital": {
+    "name": "NYU Langone Hospital-Brooklyn",
+    "linked_name": "NYU Langone Hospital-Brooklyn",
+    "address": "150 55th Street",
+    "city": "Brooklyn",
+    "nyc_designation": "NYC",
+    "state": "NY",
+    "zip_code": "11220",
+    "operating_certificate_number": "7002053H",
+    "cms_certification_number": "330306",
+    "permanent_facility_identifier": "1304",
+    "ocn_num": "7002053",
+    "ocn_pfi": "7002053-1304",
+    "system": "NYU Langone Health",
+    "financial_assistance_link_text": "https://nyulangone.org/insurance-billing-financial-assistance"
+  },
+  "assessment": {
+    "grade": "B",
+    "automatic_fail": false,
+    "noncompliant_categories_count": 3
+  },
+  "posted_materials": {
+    "application_posted": true,
+    "policy_summary_posted": true,
+    "policy_statement_posted": false,
+    "consistent_across_documents": false,
+    "primary_service_area_boundaries_compliant": true,
+    "no_submission_time_limit": true,
+    "submission_timeframe_notes": "N/A",
+    "no_evidence_of_asset_checks": true,
+    "no_immigration_status_barrier": true,
+    "inconsistency_notes": "The summary states that the FPL cutoff is 600% but the application only goes up to 400%",
+    "languages_available": "Arabic, Bengali, Chinese, Farsi, English, Greek, Hatian Creole, Italian, Korean, Polish, Portuguese, Russian, Spanish",
+    "other_materials_notes": null
+  },
+  "application": {
+    "entire_uniform_application": true,
+    "contact_information_included": true,
+    "contact_phone": "718-630-6252",
+    "income_and_discount_tables_included": true,
+    "uses_2025_fpl_guidelines": false,
+    "maximum_fpl": "400%",
+    "installments_capped_at_five_percent": true,
+    "notes": null
+  },
+  "policy_summary": {
+    "primary_service_area_described": true,
+    "means_of_applying_explained": true,
+    "income_levels_included": true,
+    "notes": null
+  },
+  "review_notes": {
+    "september_pdf_in_folder": true,
+    "other_notes": "PSA: \"Financial assistance is available for every New York State resident who needs medically necessary services and every person who needs emergency services at any of our hospital locations and who have limited incomes, have no health insurance or have exhausted their health insurance benefits\""
+  },
+  "hyperlinks": {
+    "hospital_name": "https://nyulangone.org/insurance-billing-financial-assistance",
+    "financial_assistance": "https://nyulangone.org/insurance-billing-financial-assistance"
+  }
+}

@@ -1,0 +1,65 @@
+{
+  "source": {
+    "review_month": "2025-09",
+    "row_url": "https://docs.google.com/spreadsheets/d/17S2EheUVVr1g911fPpBQJqRpy18pkUlaEEnvGM0LB1o/edit#gid=504145376&range=A154:AQ154"
+  },
+  "hospital": {
+    "name": "Samaritan Medical Center",
+    "linked_name": "Samaritan Medical Center",
+    "address": "830 Washington Street",
+    "city": "Watertown",
+    "nyc_designation": null,
+    "state": "NY",
+    "zip_code": "13601",
+    "operating_certificate_number": "2201000H",
+    "cms_certification_number": "330157",
+    "permanent_facility_identifier": "367",
+    "ocn_num": "2201000",
+    "ocn_pfi": "2201000-0367",
+    "system": "Samaritan Health",
+    "financial_assistance_link_text": "https://samaritanhealth.com/for-patients/financial-information/financial-assistance-program/"
+  },
+  "assessment": {
+    "grade": "B",
+    "automatic_fail": false,
+    "noncompliant_categories_count": 1
+  },
+  "posted_materials": {
+    "application_posted": true,
+    "policy_summary_posted": true,
+    "policy_statement_posted": false,
+    "consistent_across_documents": true,
+    "primary_service_area_boundaries_compliant": true,
+    "no_submission_time_limit": true,
+    "submission_timeframe_notes": "N/A",
+    "no_evidence_of_asset_checks": true,
+    "no_immigration_status_barrier": true,
+    "inconsistency_notes": "N/A",
+    "languages_available": "English",
+    "other_materials_notes": "PLS on website landing page. No policy posted, but consistent between application and PLS."
+  },
+  "application": {
+    "entire_uniform_application": true,
+    "contact_information_included": true,
+    "contact_phone": "315-785-4308",
+    "income_and_discount_tables_included": true,
+    "uses_2025_fpl_guidelines": true,
+    "maximum_fpl": "400%",
+    "installments_capped_at_five_percent": true,
+    "notes": "Uniform application, but they reformatted and tried to make it pretty"
+  },
+  "policy_summary": {
+    "primary_service_area_described": true,
+    "means_of_applying_explained": true,
+    "income_levels_included": true,
+    "notes": null
+  },
+  "review_notes": {
+    "september_pdf_in_folder": true,
+    "other_notes": "PSA def in summary: \"Anyone who is a resident of New York State and needs emergency or medically necessary services at Samaritan Medical Center are eligible for a discount if they meet the income levels.\""
+  },
+  "hyperlinks": {
+    "hospital_name": "https://samaritanhealth.com/for-patients/financial-information/financial-assistance-program/",
+    "financial_assistance": "https://samaritanhealth.com/for-patients/financial-information/financial-assistance-program/"
+  }
+}

@@ -1,0 +1,65 @@
+{
+  "source": {
+    "review_month": "2025-09",
+    "row_url": "https://docs.google.com/spreadsheets/d/17S2EheUVVr1g911fPpBQJqRpy18pkUlaEEnvGM0LB1o/edit#gid=504145376&range=A150:AQ150"
+  },
+  "hospital": {
+    "name": "Rome Memorial Hospital, Inc",
+    "linked_name": "Rome Memorial Hospital, Inc",
+    "address": "1500 N James St",
+    "city": "Rome",
+    "nyc_designation": null,
+    "state": "NY",
+    "zip_code": "13440",
+    "operating_certificate_number": "3201002H",
+    "cms_certification_number": "330215",
+    "permanent_facility_identifier": "589",
+    "ocn_num": "3201002",
+    "ocn_pfi": "3201002-0589",
+    "system": "Rome Health",
+    "financial_assistance_link_text": "https://www.romehealth.org/medical-financial-assistance-near-rome-ny/"
+  },
+  "assessment": {
+    "grade": "F",
+    "automatic_fail": true,
+    "noncompliant_categories_count": 9
+  },
+  "posted_materials": {
+    "application_posted": true,
+    "policy_summary_posted": true,
+    "policy_statement_posted": true,
+    "consistent_across_documents": true,
+    "primary_service_area_boundaries_compliant": true,
+    "no_submission_time_limit": false,
+    "submission_timeframe_notes": "Webpage states \"You have up to 240 days after receiving your first post discharge billing statement to submit the application.\"",
+    "no_evidence_of_asset_checks": true,
+    "no_immigration_status_barrier": true,
+    "inconsistency_notes": "N/A",
+    "languages_available": "English",
+    "other_materials_notes": "Missing all pages after the first page. Policy has FPL cutoff at 300% which is WRONG. FPL guidelines are 2024 in policy (only place with income tables)."
+  },
+  "application": {
+    "entire_uniform_application": false,
+    "contact_information_included": false,
+    "contact_phone": "N/A",
+    "income_and_discount_tables_included": false,
+    "uses_2025_fpl_guidelines": false,
+    "maximum_fpl": "no",
+    "installments_capped_at_five_percent": false,
+    "notes": "Application is the UA, but missing all pages after the first page"
+  },
+  "policy_summary": {
+    "primary_service_area_described": false,
+    "means_of_applying_explained": true,
+    "income_levels_included": false,
+    "notes": null
+  },
+  "review_notes": {
+    "september_pdf_in_folder": true,
+    "other_notes": "Policy states that FA extends to \"all eligible individuals residing within the State and beyond.\""
+  },
+  "hyperlinks": {
+    "hospital_name": "https://www.romehealth.org/medical-financial-assistance-near-rome-ny/",
+    "financial_assistance": "https://www.romehealth.org/medical-financial-assistance-near-rome-ny/"
+  }
+}

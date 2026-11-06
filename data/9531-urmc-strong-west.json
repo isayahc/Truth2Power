@@ -1,0 +1,65 @@
+{
+  "source": {
+    "review_month": "2025-09",
+    "row_url": "https://docs.google.com/spreadsheets/d/17S2EheUVVr1g911fPpBQJqRpy18pkUlaEEnvGM0LB1o/edit#gid=504145376&range=A205:AQ205"
+  },
+  "hospital": {
+    "name": "URMC Strong West",
+    "linked_name": "URMC Strong West",
+    "address": "156 West Avenue",
+    "city": "Brockport",
+    "nyc_designation": null,
+    "state": "NY",
+    "zip_code": "14420",
+    "operating_certificate_number": "2701005H",
+    "cms_certification_number": null,
+    "permanent_facility_identifier": "9531",
+    "ocn_num": "2701005",
+    "ocn_pfi": "2701005-9531",
+    "system": "University of Rochester Medicine",
+    "financial_assistance_link_text": "https://www.urmc.rochester.edu/pay-a-bill/financial-assistance/strong-memorial-hospital-financial-assistance"
+  },
+  "assessment": {
+    "grade": "A",
+    "automatic_fail": false,
+    "noncompliant_categories_count": 0
+  },
+  "posted_materials": {
+    "application_posted": true,
+    "policy_summary_posted": true,
+    "policy_statement_posted": true,
+    "consistent_across_documents": true,
+    "primary_service_area_boundaries_compliant": true,
+    "no_submission_time_limit": true,
+    "submission_timeframe_notes": "\"Patients are encouraged to apply for Financial Assistance within ninety (90) days from the date noted on the first pos-discharge billing statement, however, Highland will accept Financial Assistance Applications at any time a patient has an outstanding balance for Emergency Medical Care or other Medically Necessary Services.\"",
+    "no_evidence_of_asset_checks": true,
+    "no_immigration_status_barrier": true,
+    "inconsistency_notes": "N/A",
+    "languages_available": "English, Spanish",
+    "other_materials_notes": null
+  },
+  "application": {
+    "entire_uniform_application": true,
+    "contact_information_included": true,
+    "contact_phone": "585-784-8889 or 800-257-7049",
+    "income_and_discount_tables_included": true,
+    "uses_2025_fpl_guidelines": true,
+    "maximum_fpl": "400%",
+    "installments_capped_at_five_percent": true,
+    "notes": null
+  },
+  "policy_summary": {
+    "primary_service_area_described": true,
+    "means_of_applying_explained": true,
+    "income_levels_included": true,
+    "notes": null
+  },
+  "review_notes": {
+    "september_pdf_in_folder": true,
+    "other_notes": "\"Strong also provides Financial Assistance to patients, who reside in our primary service areas, including Genesee, Livingston, Monroe, Ontario, Schuyler, Seneca, Steuben, Wayne, Wyoming, and Yates counties, and receive medically necessary inpatient or outpatient services that a physician, exercising prudent clinical judgment, would order or provide for a patient.\""
+  },
+  "hyperlinks": {
+    "hospital_name": "https://www.urmc.rochester.edu/pay-a-bill/financial-assistance/strong-memorial-hospital-financial-assistance",
+    "financial_assistance": "https://www.urmc.rochester.edu/pay-a-bill/financial-assistance/strong-memorial-hospital-financial-assistance"
+  }
+}

@@ -1,0 +1,65 @@
+{
+  "source": {
+    "review_month": "2025-09",
+    "row_url": "https://docs.google.com/spreadsheets/d/17S2EheUVVr1g911fPpBQJqRpy18pkUlaEEnvGM0LB1o/edit#gid=504145376&range=A71:AQ71"
+  },
+  "hospital": {
+    "name": "Kenmore Mercy Hospital",
+    "linked_name": "Kenmore Mercy Hospital",
+    "address": "2950 ELMWOOD AVENUE",
+    "city": "Kenmore",
+    "nyc_designation": null,
+    "state": "NY",
+    "zip_code": "14217",
+    "operating_certificate_number": "1404000H",
+    "cms_certification_number": "330102",
+    "permanent_facility_identifier": "267",
+    "ocn_num": "1404000",
+    "ocn_pfi": "1404000-0267",
+    "system": "Catholic Health (Buffalo)",
+    "financial_assistance_link_text": "https://www.chsbuffalo.org/billing-insurance/financial-assistance/"
+  },
+  "assessment": {
+    "grade": "B",
+    "automatic_fail": false,
+    "noncompliant_categories_count": 2
+  },
+  "posted_materials": {
+    "application_posted": true,
+    "policy_summary_posted": true,
+    "policy_statement_posted": true,
+    "consistent_across_documents": true,
+    "primary_service_area_boundaries_compliant": true,
+    "no_submission_time_limit": false,
+    "submission_timeframe_notes": "FROM POLICY: \"Patients have until the 240th day after the first billing statement to submit an application, regardless of \nwhether or not an account has been transferred to a collection agency.\"",
+    "no_evidence_of_asset_checks": true,
+    "no_immigration_status_barrier": true,
+    "inconsistency_notes": "N/A",
+    "languages_available": "English, Spanish, Arabic",
+    "other_materials_notes": "Plain language summary on website directly"
+  },
+  "application": {
+    "entire_uniform_application": true,
+    "contact_information_included": true,
+    "contact_phone": "716-601-3600",
+    "income_and_discount_tables_included": true,
+    "uses_2025_fpl_guidelines": false,
+    "maximum_fpl": "400%",
+    "installments_capped_at_five_percent": true,
+    "notes": "FPL in application is 2024, but 2025 FPL guidelines are posted seperately"
+  },
+  "policy_summary": {
+    "primary_service_area_described": true,
+    "means_of_applying_explained": true,
+    "income_levels_included": true,
+    "notes": "Plain language summary just on website. Separate PDF hyperlinked within the website PLS (with 2025 FPL guidelines), counting this as \"yes\" for inclusion of income and discount tables."
+  },
+  "review_notes": {
+    "september_pdf_in_folder": true,
+    "other_notes": "PSA: \"While we primarily serve the five counties of Western New York, everyone in New York State who needs emergency services can receive care and financial assistance through Catholic Health. Additionally, everyone in New York State can receive assistance on non-emergency medically necessary services in Catholic Health facilities.\""
+  },
+  "hyperlinks": {
+    "hospital_name": "https://www.chsbuffalo.org/billing-insurance/financial-assistance/",
+    "financial_assistance": "https://www.chsbuffalo.org/billing-insurance/financial-assistance/"
+  }
+}

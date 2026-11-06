@@ -1,0 +1,65 @@
+{
+  "source": {
+    "review_month": "2025-09",
+    "row_url": "https://docs.google.com/spreadsheets/d/17S2EheUVVr1g911fPpBQJqRpy18pkUlaEEnvGM0LB1o/edit#gid=504145376&range=A38:AQ38"
+  },
+  "hospital": {
+    "name": "David H. Koch Center For Cancer Care",
+    "linked_name": "David H. Koch Center For Cancer Care",
+    "address": "530 East 74th Street",
+    "city": "New York",
+    "nyc_designation": "NYC",
+    "state": "NY",
+    "zip_code": "10021",
+    "operating_certificate_number": "7002020H",
+    "cms_certification_number": null,
+    "permanent_facility_identifier": "10355",
+    "ocn_num": "7002020",
+    "ocn_pfi": "7002020-10355",
+    "system": "Memorial Sloan Kettering",
+    "financial_assistance_link_text": "https://www.mskcc.org/insurance-assistance/assistance"
+  },
+  "assessment": {
+    "grade": "F",
+    "automatic_fail": true,
+    "noncompliant_categories_count": 8
+  },
+  "posted_materials": {
+    "application_posted": true,
+    "policy_summary_posted": true,
+    "policy_statement_posted": false,
+    "consistent_across_documents": true,
+    "primary_service_area_boundaries_compliant": true,
+    "no_submission_time_limit": true,
+    "submission_timeframe_notes": "Not explicitly not limit, but also no explicit limit",
+    "no_evidence_of_asset_checks": false,
+    "no_immigration_status_barrier": true,
+    "inconsistency_notes": null,
+    "languages_available": "English, Spanish, Russian, Chinese",
+    "other_materials_notes": "Blantant evidence of asset checks, and bank statements listed as a form of documentation. 500% FPL as limit, but missing from application (separate link). Website says \"The Financial Assistance Program is for patients who live in the U.S.\""
+  },
+  "application": {
+    "entire_uniform_application": false,
+    "contact_information_included": true,
+    "contact_phone": "212-639-3810 or 212-639-5514",
+    "income_and_discount_tables_included": false,
+    "uses_2025_fpl_guidelines": false,
+    "maximum_fpl": "no",
+    "installments_capped_at_five_percent": false,
+    "notes": "Missing eligibility requirements and household income pages. Income and discount tables in separate link on website."
+  },
+  "policy_summary": {
+    "primary_service_area_described": false,
+    "means_of_applying_explained": true,
+    "income_levels_included": true,
+    "notes": "Goes up to 500% FPL. Table also has section on asset checks."
+  },
+  "review_notes": {
+    "september_pdf_in_folder": true,
+    "other_notes": null
+  },
+  "hyperlinks": {
+    "hospital_name": "https://www.mskcc.org/insurance-assistance/assistance",
+    "financial_assistance": "https://www.mskcc.org/insurance-assistance/assistance"
+  }
+}

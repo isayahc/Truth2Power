@@ -1,0 +1,65 @@
+{
+  "source": {
+    "review_month": "2025-09",
+    "row_url": "https://docs.google.com/spreadsheets/d/17S2EheUVVr1g911fPpBQJqRpy18pkUlaEEnvGM0LB1o/edit#gid=504145376&range=A180:AQ180"
+  },
+  "hospital": {
+    "name": "St. Mary's Healthcare - Amsterdam Memorial Campus",
+    "linked_name": "St. Mary's Healthcare - Amsterdam Memorial Campus",
+    "address": "4988 Sthwy 30",
+    "city": "Amsterdam",
+    "nyc_designation": null,
+    "state": "NY",
+    "zip_code": "12010",
+    "operating_certificate_number": "2801001H",
+    "cms_certification_number": "330010",
+    "permanent_facility_identifier": "482",
+    "ocn_num": "2801001",
+    "ocn_pfi": "2801001-0482",
+    "system": "St. Mary's Healthcare",
+    "financial_assistance_link_text": "St. Mary's Hospital Financial Assistance, Amsterdam, NY"
+  },
+  "assessment": {
+    "grade": "C",
+    "automatic_fail": false,
+    "noncompliant_categories_count": 4
+  },
+  "posted_materials": {
+    "application_posted": true,
+    "policy_summary_posted": true,
+    "policy_statement_posted": true,
+    "consistent_across_documents": true,
+    "primary_service_area_boundaries_compliant": false,
+    "no_submission_time_limit": true,
+    "submission_timeframe_notes": "\"Patients can apply for financial assistance at any time, including during the collection process.\"",
+    "no_evidence_of_asset_checks": true,
+    "no_immigration_status_barrier": true,
+    "inconsistency_notes": "N/A",
+    "languages_available": "English, Spanish",
+    "other_materials_notes": "Plain language summary in a brochure format"
+  },
+  "application": {
+    "entire_uniform_application": true,
+    "contact_information_included": true,
+    "contact_phone": "518-546-6238",
+    "income_and_discount_tables_included": true,
+    "uses_2025_fpl_guidelines": false,
+    "maximum_fpl": "400%",
+    "installments_capped_at_five_percent": true,
+    "notes": "FPL guidelines in application are 2024"
+  },
+  "policy_summary": {
+    "primary_service_area_described": false,
+    "means_of_applying_explained": true,
+    "income_levels_included": false,
+    "notes": "Plain language summary in a brochure format"
+  },
+  "review_notes": {
+    "september_pdf_in_folder": true,
+    "other_notes": "PSA defined through list of zip codes in policy (not in the plain language summary though). Not enough zip codes to cover full PSA. Plain language summary is a brochure format and pretty sparse."
+  },
+  "hyperlinks": {
+    "hospital_name": "http://St. Mary's Hospital Financial Assistance, Amsterdam, NY",
+    "financial_assistance": "https://www.smha.org/patients-visitors/financial-help/"
+  }
+}

@@ -1,0 +1,65 @@
+{
+  "source": {
+    "review_month": "2025-09",
+    "row_url": "https://docs.google.com/spreadsheets/d/17S2EheUVVr1g911fPpBQJqRpy18pkUlaEEnvGM0LB1o/edit#gid=504145376&range=A60:AQ60"
+  },
+  "hospital": {
+    "name": "Helen Hayes Hospital",
+    "linked_name": "Helen Hayes Hospital",
+    "address": "51 N Route 9W",
+    "city": "West Haverstraw",
+    "nyc_designation": null,
+    "state": "NY",
+    "zip_code": "10993",
+    "operating_certificate_number": "4322000H",
+    "cms_certification_number": "330405",
+    "permanent_facility_identifier": "775",
+    "ocn_num": "4322000",
+    "ocn_pfi": "4322000-0775",
+    "system": "Operated by NYS DOH; Affiliated with NYP",
+    "financial_assistance_link_text": "https://helenhayeshospital.org/admissions/patient-financial-services/"
+  },
+  "assessment": {
+    "grade": "D",
+    "automatic_fail": false,
+    "noncompliant_categories_count": 7
+  },
+  "posted_materials": {
+    "application_posted": true,
+    "policy_summary_posted": false,
+    "policy_statement_posted": true,
+    "consistent_across_documents": false,
+    "primary_service_area_boundaries_compliant": true,
+    "no_submission_time_limit": false,
+    "submission_timeframe_notes": "FROM POLICY: \"The application must be completed within 120 days from the date that the first post-discharge billing statement for the care is provided. Any services prior to 120 days from the application date will not be considered\"",
+    "no_evidence_of_asset_checks": true,
+    "no_immigration_status_barrier": true,
+    "inconsistency_notes": "Policy states has to be under 300% FPL, while the application has correct cut off of 400% FPL",
+    "languages_available": "English, Arabic, Bengali, French, Haitian Creole, Italian, Korean, Polish, Russian, Simplified Chinese, Spanish, Traditional Chinese, Urdu, Yiddish",
+    "other_materials_notes": "Lots of use of \"charity care.\" This sentence also struck me as odd: \"HHH’s Charity Care Program is not responsible for housing, food, transportation, immigration status, or continuity of care.\" The policy also defines \"liquid assets,\" despite no further evidence of asset checks."
+  },
+  "application": {
+    "entire_uniform_application": true,
+    "contact_information_included": true,
+    "contact_phone": "845-786-4786",
+    "income_and_discount_tables_included": true,
+    "uses_2025_fpl_guidelines": false,
+    "maximum_fpl": "400%",
+    "installments_capped_at_five_percent": true,
+    "notes": "FPL in application is 2024"
+  },
+  "policy_summary": {
+    "primary_service_area_described": false,
+    "means_of_applying_explained": false,
+    "income_levels_included": false,
+    "notes": "No plain language summary posted"
+  },
+  "review_notes": {
+    "september_pdf_in_folder": true,
+    "other_notes": "\"Helen Hayes Hospital (HHH) is committed to providing several forms of financial assistance to qualified uninsured or underinsured patients who received medical services at HHH and reside in the HHH primary service area, which includes New York State counties of Rockland, Orange, Putnam and Westchester.\""
+  },
+  "hyperlinks": {
+    "hospital_name": "https://helenhayeshospital.org/admissions/patient-financial-services/",
+    "financial_assistance": "https://helenhayeshospital.org/admissions/patient-financial-services/"
+  }
+}

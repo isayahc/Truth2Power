@@ -1,0 +1,65 @@
+{
+  "source": {
+    "review_month": "2025-09",
+    "row_url": "https://docs.google.com/spreadsheets/d/17S2EheUVVr1g911fPpBQJqRpy18pkUlaEEnvGM0LB1o/edit#gid=504145376&range=A139:AQ139"
+  },
+  "hospital": {
+    "name": "Oneida Health Hospital",
+    "linked_name": "Oneida Health Hospital",
+    "address": "321 Genesee Street",
+    "city": "Oneida",
+    "nyc_designation": null,
+    "state": "NY",
+    "zip_code": "13421",
+    "operating_certificate_number": "2601001H",
+    "cms_certification_number": "330115",
+    "permanent_facility_identifier": "397",
+    "ocn_num": "2601001",
+    "ocn_pfi": "2601001-0397",
+    "system": "Oneida Health",
+    "financial_assistance_link_text": "https://www.oneidahealth.org/financial-assistance/"
+  },
+  "assessment": {
+    "grade": "B",
+    "automatic_fail": false,
+    "noncompliant_categories_count": 2
+  },
+  "posted_materials": {
+    "application_posted": true,
+    "policy_summary_posted": true,
+    "policy_statement_posted": true,
+    "consistent_across_documents": false,
+    "primary_service_area_boundaries_compliant": true,
+    "no_submission_time_limit": true,
+    "submission_timeframe_notes": "\"Patients are encouraged to apply for Financial Assistance within ninety (90) days from the date noted on the first post-discharge billing statement; however, OH will accept Financial Assistance Applications at any time a patient has an outstanding balance for Emergency Medical Care or other Medically Necessary Services received at a OH hospital facility.\"",
+    "no_evidence_of_asset_checks": false,
+    "no_immigration_status_barrier": true,
+    "inconsistency_notes": "FPL in application is 2025, FPL in summary is 2024.",
+    "languages_available": "English, Spanish, Chinese, Russian, Italian, Korean, French/Haitian Creole ",
+    "other_materials_notes": "ASSETS: policy states that bank statements may be requested"
+  },
+  "application": {
+    "entire_uniform_application": true,
+    "contact_information_included": true,
+    "contact_phone": " 315-361-2230",
+    "income_and_discount_tables_included": true,
+    "uses_2025_fpl_guidelines": true,
+    "maximum_fpl": "400%",
+    "installments_capped_at_five_percent": true,
+    "notes": null
+  },
+  "policy_summary": {
+    "primary_service_area_described": true,
+    "means_of_applying_explained": true,
+    "income_levels_included": true,
+    "notes": "FPL is 2024"
+  },
+  "review_notes": {
+    "september_pdf_in_folder": true,
+    "other_notes": "PSA: \"Everyone in New York State who needs emergency services, non-emergency or medically necessary services at Oneida Health are eligible for a discount if they meet the income levels.\""
+  },
+  "hyperlinks": {
+    "hospital_name": "https://www.oneidahealth.org/financial-assistance/",
+    "financial_assistance": "https://www.oneidahealth.org/financial-assistance/"
+  }
+}

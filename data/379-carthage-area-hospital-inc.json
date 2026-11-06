@@ -1,0 +1,65 @@
+{
+  "source": {
+    "review_month": "2025-09",
+    "row_url": "https://docs.google.com/spreadsheets/d/17S2EheUVVr1g911fPpBQJqRpy18pkUlaEEnvGM0LB1o/edit#gid=504145376&range=A24:AQ24"
+  },
+  "hospital": {
+    "name": "Carthage Area Hospital Inc",
+    "linked_name": "Carthage Area Hospital Inc",
+    "address": "1001 WEST STREET",
+    "city": "Carthage",
+    "nyc_designation": null,
+    "state": "NY",
+    "zip_code": "13619",
+    "operating_certificate_number": "2238700C",
+    "cms_certification_number": "330263",
+    "permanent_facility_identifier": "379",
+    "ocn_num": "2238700",
+    "ocn_pfi": "2238700-0379",
+    "system": "Carthage Area Hospital",
+    "financial_assistance_link_text": "https://www.carthagehospital.com/patients-visitors/billing-insurance/"
+  },
+  "assessment": {
+    "grade": "F",
+    "automatic_fail": true,
+    "noncompliant_categories_count": 9
+  },
+  "posted_materials": {
+    "application_posted": true,
+    "policy_summary_posted": false,
+    "policy_statement_posted": true,
+    "consistent_across_documents": true,
+    "primary_service_area_boundaries_compliant": true,
+    "no_submission_time_limit": false,
+    "submission_timeframe_notes": "\"The applicant will have ninety (90) days from the date of service to \nrequest an application and thirty (30) days to submit the completed application.\"",
+    "no_evidence_of_asset_checks": true,
+    "no_immigration_status_barrier": true,
+    "inconsistency_notes": null,
+    "languages_available": "English",
+    "other_materials_notes": "The policy posted is labeled as a \"policy\", so I categorized it that way, but it is incredibly brief and seems almost more like a plain language summary."
+  },
+  "application": {
+    "entire_uniform_application": false,
+    "contact_information_included": true,
+    "contact_phone": "315-493-1000",
+    "income_and_discount_tables_included": false,
+    "uses_2025_fpl_guidelines": false,
+    "maximum_fpl": "300%",
+    "installments_capped_at_five_percent": false,
+    "notes": null
+  },
+  "policy_summary": {
+    "primary_service_area_described": false,
+    "means_of_applying_explained": false,
+    "income_levels_included": false,
+    "notes": null
+  },
+  "review_notes": {
+    "september_pdf_in_folder": true,
+    "other_notes": null
+  },
+  "hyperlinks": {
+    "hospital_name": "https://www.carthagehospital.com/patients-visitors/billing-insurance/",
+    "financial_assistance": "https://www.carthagehospital.com/patients-visitors/billing-insurance/"
+  }
+}

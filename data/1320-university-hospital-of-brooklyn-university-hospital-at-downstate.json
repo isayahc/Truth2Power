@@ -1,0 +1,65 @@
+{
+  "source": {
+    "review_month": "2025-09",
+    "row_url": "https://docs.google.com/spreadsheets/d/17S2EheUVVr1g911fPpBQJqRpy18pkUlaEEnvGM0LB1o/edit#gid=504145376&range=A201:AQ201"
+  },
+  "hospital": {
+    "name": "University Hospital of Brooklyn (University Hospital at Downstate)",
+    "linked_name": "University Hospital of Brooklyn (University Hospital at Downstate)",
+    "address": "445 Lenox Road",
+    "city": "Brooklyn",
+    "nyc_designation": "NYC",
+    "state": "NY",
+    "zip_code": "11203",
+    "operating_certificate_number": "7001037H",
+    "cms_certification_number": "330350",
+    "permanent_facility_identifier": "1320",
+    "ocn_num": "7001037",
+    "ocn_pfi": "7001037-1320",
+    "system": "SUNY Downstate Health Sciences University",
+    "financial_assistance_link_text": "Insurance & Billing | Patient & Family Support | SUNY Downstate Health Sciences University"
+  },
+  "assessment": {
+    "grade": "D",
+    "automatic_fail": false,
+    "noncompliant_categories_count": 7
+  },
+  "posted_materials": {
+    "application_posted": true,
+    "policy_summary_posted": false,
+    "policy_statement_posted": false,
+    "consistent_across_documents": true,
+    "primary_service_area_boundaries_compliant": false,
+    "no_submission_time_limit": true,
+    "submission_timeframe_notes": "N/A",
+    "no_evidence_of_asset_checks": true,
+    "no_immigration_status_barrier": true,
+    "inconsistency_notes": "N/A",
+    "languages_available": "English",
+    "other_materials_notes": "No summary or PLS posted, just application and list of documents."
+  },
+  "application": {
+    "entire_uniform_application": true,
+    "contact_information_included": true,
+    "contact_phone": "855-786-9362",
+    "income_and_discount_tables_included": true,
+    "uses_2025_fpl_guidelines": false,
+    "maximum_fpl": "400%",
+    "installments_capped_at_five_percent": true,
+    "notes": "Application uses 2024 FPL. Application pages are also out of order in the PDF."
+  },
+  "policy_summary": {
+    "primary_service_area_described": false,
+    "means_of_applying_explained": false,
+    "income_levels_included": false,
+    "notes": "No PLS posted"
+  },
+  "review_notes": {
+    "september_pdf_in_folder": true,
+    "other_notes": "no summary or PLS posted except for a phone number to call if you have financial assistance Qs and the documents requirements; charity care language used on website"
+  },
+  "hyperlinks": {
+    "hospital_name": "http://Insurance & Billing | Patient & Family Support | SUNY Downstate Health Sciences University",
+    "financial_assistance": "https://www.downstate.edu/patient-care/patient-family-support/insurance-billing/index.html"
+  }
+}

@@ -1,0 +1,65 @@
+{
+  "source": {
+    "review_month": "2025-09",
+    "row_url": "https://docs.google.com/spreadsheets/d/17S2EheUVVr1g911fPpBQJqRpy18pkUlaEEnvGM0LB1o/edit#gid=504145376&range=A44:AQ44"
+  },
+  "hospital": {
+    "name": "Erie County Medical Center",
+    "linked_name": "Erie County Medical Center",
+    "address": "462 Grider Street",
+    "city": "Buffalo",
+    "nyc_designation": null,
+    "state": "NY",
+    "zip_code": "14215",
+    "operating_certificate_number": "1401005H",
+    "cms_certification_number": "330219",
+    "permanent_facility_identifier": "210",
+    "ocn_num": "1401005",
+    "ocn_pfi": "1401005-0210",
+    "system": "Erie County Medical Health",
+    "financial_assistance_link_text": "https://www.ecmc.edu/patients-visitors/billing-and-insurance/financial-assistance/"
+  },
+  "assessment": {
+    "grade": "F",
+    "automatic_fail": true,
+    "noncompliant_categories_count": 8
+  },
+  "posted_materials": {
+    "application_posted": false,
+    "policy_summary_posted": true,
+    "policy_statement_posted": false,
+    "consistent_across_documents": true,
+    "primary_service_area_boundaries_compliant": true,
+    "no_submission_time_limit": true,
+    "submission_timeframe_notes": "N/A",
+    "no_evidence_of_asset_checks": true,
+    "no_immigration_status_barrier": true,
+    "inconsistency_notes": "N/A",
+    "languages_available": "English",
+    "other_materials_notes": "Counting the FAQs landing page on the website as the plain language summary (it covers the same info, and other PLS have been structured in an \"FAQ\" fashion."
+  },
+  "application": {
+    "entire_uniform_application": false,
+    "contact_information_included": false,
+    "contact_phone": "N/A",
+    "income_and_discount_tables_included": false,
+    "uses_2025_fpl_guidelines": false,
+    "maximum_fpl": "no",
+    "installments_capped_at_five_percent": false,
+    "notes": "There is an income and discount table posted but NO APPLICATION so no credit for this section"
+  },
+  "policy_summary": {
+    "primary_service_area_described": true,
+    "means_of_applying_explained": true,
+    "income_levels_included": true,
+    "notes": "Income and discount tables linked in separate PDF. Using 2025 FPL. "
+  },
+  "review_notes": {
+    "september_pdf_in_folder": true,
+    "other_notes": "PSA in FAQs: \"Anyone in New York State or northern Pennsylvania who requires emergency services can receive care and obtain a discount if they meet the income guidelines.\""
+  },
+  "hyperlinks": {
+    "hospital_name": "https://www.ecmc.edu/patients-visitors/billing-and-insurance/financial-assistance/",
+    "financial_assistance": "https://www.ecmc.edu/patients-visitors/billing-and-insurance/financial-assistance/"
+  }
+}

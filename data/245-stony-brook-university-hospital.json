@@ -1,0 +1,65 @@
+{
+  "source": {
+    "review_month": "2025-09",
+    "row_url": "https://docs.google.com/spreadsheets/d/17S2EheUVVr1g911fPpBQJqRpy18pkUlaEEnvGM0LB1o/edit#gid=504145376&range=A188:AQ188"
+  },
+  "hospital": {
+    "name": "Stony Brook University Hospital",
+    "linked_name": "Stony Brook University Hospital",
+    "address": "Health Sciences Center SUNY",
+    "city": "Stony Brook",
+    "nyc_designation": null,
+    "state": "NY",
+    "zip_code": "11794",
+    "operating_certificate_number": "5151001H",
+    "cms_certification_number": "330393",
+    "permanent_facility_identifier": "245",
+    "ocn_num": "5151001",
+    "ocn_pfi": "5151001-0245",
+    "system": "Stony Brook Medicine",
+    "financial_assistance_link_text": "Financial Assistance | Stony Brook Medicine"
+  },
+  "assessment": {
+    "grade": "B",
+    "automatic_fail": false,
+    "noncompliant_categories_count": 3
+  },
+  "posted_materials": {
+    "application_posted": true,
+    "policy_summary_posted": true,
+    "policy_statement_posted": false,
+    "consistent_across_documents": false,
+    "primary_service_area_boundaries_compliant": true,
+    "no_submission_time_limit": true,
+    "submission_timeframe_notes": "N/A",
+    "no_evidence_of_asset_checks": true,
+    "no_immigration_status_barrier": true,
+    "inconsistency_notes": "PLS has FPL cutoff at 650% FPG, application has cutoff at 400% FPL",
+    "languages_available": "English, Spanish",
+    "other_materials_notes": null
+  },
+  "application": {
+    "entire_uniform_application": true,
+    "contact_information_included": true,
+    "contact_phone": "631-444-4151",
+    "income_and_discount_tables_included": true,
+    "uses_2025_fpl_guidelines": false,
+    "maximum_fpl": "400%",
+    "installments_capped_at_five_percent": true,
+    "notes": "App has 2024 FPL guidelines"
+  },
+  "policy_summary": {
+    "primary_service_area_described": true,
+    "means_of_applying_explained": true,
+    "income_levels_included": true,
+    "notes": null
+  },
+  "review_notes": {
+    "september_pdf_in_folder": true,
+    "other_notes": "PSA: \"Stony Brook Medicine provides financial assistance to all uninsured and underinsured patients residing in New York State for all emergency or medically necessary services and procedures unless specifically excluded.\""
+  },
+  "hyperlinks": {
+    "hospital_name": "http://Financial Assistance | Stony Brook Medicine",
+    "financial_assistance": "https://www.stonybrookmedicine.edu/patientcare/oon/financial-assistance"
+  }
+}

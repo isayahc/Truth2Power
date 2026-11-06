@@ -1,0 +1,65 @@
+{
+  "source": {
+    "review_month": "2025-09",
+    "row_url": "https://docs.google.com/spreadsheets/d/17S2EheUVVr1g911fPpBQJqRpy18pkUlaEEnvGM0LB1o/edit#gid=504145376&range=A29:AQ29"
+  },
+  "hospital": {
+    "name": "Clifton-Fine Hospital",
+    "linked_name": "Clifton-Fine Hospital",
+    "address": "1014 Oswegatchie Trail PO Box 10",
+    "city": "Star Lake",
+    "nyc_designation": null,
+    "state": "NY",
+    "zip_code": "13690",
+    "operating_certificate_number": "4458701C",
+    "cms_certification_number": "331307",
+    "permanent_facility_identifier": "817",
+    "ocn_num": "4458701",
+    "ocn_pfi": "4458701-0817",
+    "system": "Clifton-Fine Healthcare Corporation",
+    "financial_assistance_link_text": "https://cliftonfinehospital.org/financial-information/"
+  },
+  "assessment": {
+    "grade": "C",
+    "automatic_fail": false,
+    "noncompliant_categories_count": 4
+  },
+  "posted_materials": {
+    "application_posted": true,
+    "policy_summary_posted": true,
+    "policy_statement_posted": true,
+    "consistent_across_documents": false,
+    "primary_service_area_boundaries_compliant": true,
+    "no_submission_time_limit": true,
+    "submission_timeframe_notes": "Not a violation, but just noting: \"Patients can submit FAP applications prior to or on the day their care is provided or at any time during the collection process.\"",
+    "no_evidence_of_asset_checks": true,
+    "no_immigration_status_barrier": true,
+    "inconsistency_notes": "PLS says the cutoff for FA is 300%, everywhere else says the cutoff is 400% FPL. Policy and Application have correct definitions for cost-sharing obligations, but their extra posted document is incorrect. SUGGESTION: delete this supplement and add proper tables to plain language summary",
+    "languages_available": "English",
+    "other_materials_notes": null
+  },
+  "application": {
+    "entire_uniform_application": true,
+    "contact_information_included": true,
+    "contact_phone": "315-848-800",
+    "income_and_discount_tables_included": true,
+    "uses_2025_fpl_guidelines": false,
+    "maximum_fpl": "400%",
+    "installments_capped_at_five_percent": true,
+    "notes": "Using 2024 FPL guidelines for application"
+  },
+  "policy_summary": {
+    "primary_service_area_described": false,
+    "means_of_applying_explained": true,
+    "income_levels_included": false,
+    "notes": "Plain language summary posted directly on website/FA landing page (not a PDF)"
+  },
+  "review_notes": {
+    "september_pdf_in_folder": true,
+    "other_notes": "\"Financial Assistance discounts are available for uninsured and underinsured patients who reside in New York State and whose household income, as determined by the income patients provide in the Financial Assistance Application, is equal to or less than 400% of the most recent Federal Poverty Guidelines. "
+  },
+  "hyperlinks": {
+    "hospital_name": "https://cliftonfinehospital.org/financial-information/",
+    "financial_assistance": "https://cliftonfinehospital.org/financial-information/"
+  }
+}

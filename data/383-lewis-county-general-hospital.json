@@ -1,0 +1,65 @@
+{
+  "source": {
+    "review_month": "2025-09",
+    "row_url": "https://docs.google.com/spreadsheets/d/17S2EheUVVr1g911fPpBQJqRpy18pkUlaEEnvGM0LB1o/edit#gid=504145376&range=A76:AQ76"
+  },
+  "hospital": {
+    "name": "Lewis County General Hospital",
+    "linked_name": "Lewis County General Hospital",
+    "address": "7785 North State Street",
+    "city": "Lowville",
+    "nyc_designation": null,
+    "state": "NY",
+    "zip_code": "13367",
+    "operating_certificate_number": "2424700C",
+    "cms_certification_number": "331317",
+    "permanent_facility_identifier": "383",
+    "ocn_num": "2424700",
+    "ocn_pfi": "2424700-0383",
+    "system": "Lewis County Health System",
+    "financial_assistance_link_text": "https://www.lcgh.net/"
+  },
+  "assessment": {
+    "grade": "F",
+    "automatic_fail": true,
+    "noncompliant_categories_count": 9
+  },
+  "posted_materials": {
+    "application_posted": true,
+    "policy_summary_posted": false,
+    "policy_statement_posted": false,
+    "consistent_across_documents": true,
+    "primary_service_area_boundaries_compliant": false,
+    "no_submission_time_limit": true,
+    "submission_timeframe_notes": "N/A",
+    "no_evidence_of_asset_checks": true,
+    "no_immigration_status_barrier": true,
+    "inconsistency_notes": "N/A",
+    "languages_available": "English",
+    "other_materials_notes": "2025 FPL guidelines and discounts posted as separate PDF"
+  },
+  "application": {
+    "entire_uniform_application": false,
+    "contact_information_included": true,
+    "contact_phone": "315-376-5210",
+    "income_and_discount_tables_included": false,
+    "uses_2025_fpl_guidelines": false,
+    "maximum_fpl": "400%",
+    "installments_capped_at_five_percent": true,
+    "notes": null
+  },
+  "policy_summary": {
+    "primary_service_area_described": false,
+    "means_of_applying_explained": false,
+    "income_levels_included": false,
+    "notes": null
+  },
+  "review_notes": {
+    "september_pdf_in_folder": true,
+    "other_notes": "ACESSABILIITY NOTE: Accessing the page is confusing, only available at the bottom of the home page with no overview, summary, or a dedicated page."
+  },
+  "hyperlinks": {
+    "hospital_name": "https://www.lcgh.net/",
+    "financial_assistance": "https://www.lcgh.net/"
+  }
+}

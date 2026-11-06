@@ -1,0 +1,65 @@
+{
+  "source": {
+    "review_month": "2025-09",
+    "row_url": "https://docs.google.com/spreadsheets/d/17S2EheUVVr1g911fPpBQJqRpy18pkUlaEEnvGM0LB1o/edit#gid=504145376&range=A39:AQ39"
+  },
+  "hospital": {
+    "name": "Delaware Valley Hospital Inc",
+    "linked_name": "Delaware Valley Hospital Inc",
+    "address": "1 Titus Place",
+    "city": "Walton",
+    "nyc_designation": null,
+    "state": "NY",
+    "zip_code": "13856",
+    "operating_certificate_number": "1229700C",
+    "cms_certification_number": "331312",
+    "permanent_facility_identifier": "174",
+    "ocn_num": "1229700",
+    "ocn_pfi": "1229700-0174",
+    "system": "United Health Services",
+    "financial_assistance_link_text": "https://www.nyuhs.org/patients-visitors/patients/financial-assistance"
+  },
+  "assessment": {
+    "grade": "B",
+    "automatic_fail": false,
+    "noncompliant_categories_count": 3
+  },
+  "posted_materials": {
+    "application_posted": true,
+    "policy_summary_posted": true,
+    "policy_statement_posted": true,
+    "consistent_across_documents": false,
+    "primary_service_area_boundaries_compliant": true,
+    "no_submission_time_limit": false,
+    "submission_timeframe_notes": "\"Applications to be completed within 365 days of date of patient financial responsibility. The Financial Assistance Policy allows patient at least 30 days to complete application…\"",
+    "no_evidence_of_asset_checks": true,
+    "no_immigration_status_barrier": true,
+    "inconsistency_notes": "AMOUNT OF DISCOUNT IS INCORRECT IN PLAIN LANGUAGE SUMMARY. It is also wrong in the policy (only place it is correct is the unifrom application). ",
+    "languages_available": "English, Spanish, Russian",
+    "other_materials_notes": null
+  },
+  "application": {
+    "entire_uniform_application": true,
+    "contact_information_included": true,
+    "contact_phone": "802-847-8000 or 800-639-2719",
+    "income_and_discount_tables_included": true,
+    "uses_2025_fpl_guidelines": true,
+    "maximum_fpl": "400% (500% for pharmacy only)",
+    "installments_capped_at_five_percent": true,
+    "notes": null
+  },
+  "policy_summary": {
+    "primary_service_area_described": false,
+    "means_of_applying_explained": true,
+    "income_levels_included": true,
+    "notes": "AMOUNT OF DISCOUNT IS INCORRECT IN PLAIN LANGUAGE SUMMARY (it is there, but it is incorrect)"
+  },
+  "review_notes": {
+    "september_pdf_in_folder": true,
+    "other_notes": "PDF downloads did not work, so folder has screenshots in it. Fully open and zoom in to read. "
+  },
+  "hyperlinks": {
+    "hospital_name": "https://www.nyuhs.org/patients-visitors/patients/financial-assistance",
+    "financial_assistance": "https://www.nyuhs.org/patients-visitors/patients/financial-assistance"
+  }
+}
