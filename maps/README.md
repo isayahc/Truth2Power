@@ -2,6 +2,8 @@
 
 The map covers all 212 hospitals in the Community Service Society of New York’s September 2025 financial assistance review. Select a point or search for a hospital to see its latitude, longitude, coordinate source, financial assistance page, and original audit row. Select a rating to filter the map. The NYC–Long Island inset repeats the 83 sites in New York City, Nassau County, and Suffolk County.
 
+To run the React and Node.js application, follow the [root quickstart](../README.md#run-the-react-app).
+
 ![Statewide map of hospital financial assistance ratings with an NYC and Long Island inset](new-york-hospital-compliance.png)
 
 - Download [the interactive map](index.html) and open the HTML in a browser. The map works offline. Source links open online.
