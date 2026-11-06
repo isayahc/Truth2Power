@@ -1,0 +1,373 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Hospital financial assistance audit record",
+  "description": "Normalized Hospital Tracker row, columns A–AQ, with audit provenance and cell hyperlink targets. Null represents a blank cell; source text such as N/A is retained.",
+  "type": "object",
+  "properties": {
+    "source": {
+      "type": "object",
+      "properties": {
+        "review_month": {
+          "type": "string"
+        },
+        "row_url": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "review_month",
+        "row_url"
+      ],
+      "additionalProperties": false
+    },
+    "hospital": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "title": "Hospital Name"
+        },
+        "linked_name": {
+          "type": "string",
+          "title": "HYPERLINKED hospital names"
+        },
+        "address": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "title": "Address"
+        },
+        "city": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "title": "City"
+        },
+        "nyc_designation": {
+          "type": [
+            "null",
+            "string"
+          ],
+          "title": "NYC?"
+        },
+        "state": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "title": "State"
+        },
+        "zip_code": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "title": "Zip"
+        },
+        "operating_certificate_number": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "title": "Operating certificate number"
+        },
+        "cms_certification_number": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "title": "CMS Certification number (CCN)/Medical provider number (MPN)"
+        },
+        "permanent_facility_identifier": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "title": "Permanent Facility Identifier (PFI)"
+        },
+        "ocn_num": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "title": "OCN_num"
+        },
+        "ocn_pfi": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "title": "OCN_PFI"
+        },
+        "system": {
+          "type": "string",
+          "title": "System"
+        },
+        "financial_assistance_link_text": {
+          "type": "string",
+          "title": "HFA Link"
+        }
+      },
+      "required": [
+        "name",
+        "linked_name",
+        "address",
+        "city",
+        "nyc_designation",
+        "state",
+        "zip_code",
+        "operating_certificate_number",
+        "cms_certification_number",
+        "permanent_facility_identifier",
+        "ocn_num",
+        "ocn_pfi",
+        "system",
+        "financial_assistance_link_text"
+      ],
+      "additionalProperties": false
+    },
+    "assessment": {
+      "type": "object",
+      "properties": {
+        "grade": {
+          "type": "string",
+          "title": "COMPLIANCE GRADE",
+          "enum": [
+            "A",
+            "B",
+            "C",
+            "D",
+            "F"
+          ]
+        },
+        "automatic_fail": {
+          "type": "boolean",
+          "title": "Automatic Fail?"
+        },
+        "noncompliant_categories_count": {
+          "type": "integer",
+          "title": "Noncompliant Categories Count",
+          "minimum": 0
+        }
+      },
+      "required": [
+        "grade",
+        "automatic_fail",
+        "noncompliant_categories_count"
+      ],
+      "additionalProperties": false
+    },
+    "posted_materials": {
+      "type": "object",
+      "properties": {
+        "application_posted": {
+          "type": "boolean",
+          "title": "Application Posted"
+        },
+        "policy_summary_posted": {
+          "type": "boolean",
+          "title": "Policy Summary Posted (as PDF, or on landing page)"
+        },
+        "policy_statement_posted": {
+          "type": "boolean",
+          "title": "Policy Statement Posted"
+        },
+        "consistent_across_documents": {
+          "type": "boolean",
+          "title": "Consistent across posted documents (Y/N)"
+        },
+        "primary_service_area_boundaries_compliant": {
+          "type": "boolean",
+          "title": "Primary Service Area boundaries compliant with 2007 guidelines?"
+        },
+        "no_submission_time_limit": {
+          "type": "boolean",
+          "title": "No time limit to submit?"
+        },
+        "submission_timeframe_notes": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "title": "Notes on timeframe"
+        },
+        "no_evidence_of_asset_checks": {
+          "type": "boolean",
+          "title": "No evidence of asset checks"
+        },
+        "no_immigration_status_barrier": {
+          "type": "boolean",
+          "title": "No mention of immigration status as a barrier"
+        },
+        "inconsistency_notes": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "title": "Inconsistency notes"
+        },
+        "languages_available": {
+          "type": "string",
+          "title": "Languages Available"
+        },
+        "other_materials_notes": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "title": "Notes (e.g. use of \"charity care\")"
+        }
+      },
+      "required": [
+        "application_posted",
+        "policy_summary_posted",
+        "policy_statement_posted",
+        "consistent_across_documents",
+        "primary_service_area_boundaries_compliant",
+        "no_submission_time_limit",
+        "submission_timeframe_notes",
+        "no_evidence_of_asset_checks",
+        "no_immigration_status_barrier",
+        "inconsistency_notes",
+        "languages_available",
+        "other_materials_notes"
+      ],
+      "additionalProperties": false
+    },
+    "application": {
+      "type": "object",
+      "properties": {
+        "entire_uniform_application": {
+          "type": "boolean",
+          "title": "ENTIRE Uniform Application"
+        },
+        "contact_information_included": {
+          "type": "boolean",
+          "title": "Contact information included in application"
+        },
+        "contact_phone": {
+          "type": "string",
+          "title": "Contact phone #"
+        },
+        "income_and_discount_tables_included": {
+          "type": "boolean",
+          "title": "Income & Discount Tables Incuded in Application"
+        },
+        "uses_2025_fpl_guidelines": {
+          "type": "boolean",
+          "title": "2025 FPL Guidelines"
+        },
+        "maximum_fpl": {
+          "type": "string",
+          "title": "Max FPL (compliant is =/>400%)"
+        },
+        "installments_capped_at_five_percent": {
+          "type": "boolean",
+          "title": "Installments capped at 5% of monthly income"
+        },
+        "notes": {
+          "type": [
+            "null",
+            "string"
+          ],
+          "title": "Application notes (any prohibited information?)"
+        }
+      },
+      "required": [
+        "entire_uniform_application",
+        "contact_information_included",
+        "contact_phone",
+        "income_and_discount_tables_included",
+        "uses_2025_fpl_guidelines",
+        "maximum_fpl",
+        "installments_capped_at_five_percent",
+        "notes"
+      ],
+      "additionalProperties": false
+    },
+    "policy_summary": {
+      "type": "object",
+      "properties": {
+        "primary_service_area_described": {
+          "type": "boolean",
+          "title": "Primary Service Area described in summary? "
+        },
+        "means_of_applying_explained": {
+          "type": "boolean",
+          "title": "Means of applying for assistance explained"
+        },
+        "income_levels_included": {
+          "type": "boolean",
+          "title": "Income levels used to determine assistance"
+        },
+        "notes": {
+          "type": [
+            "null",
+            "string"
+          ],
+          "title": "Notes"
+        }
+      },
+      "required": [
+        "primary_service_area_described",
+        "means_of_applying_explained",
+        "income_levels_included",
+        "notes"
+      ],
+      "additionalProperties": false
+    },
+    "review_notes": {
+      "type": "object",
+      "properties": {
+        "september_pdf_in_folder": {
+          "type": "boolean",
+          "title": "SEPTEMBER - PDF in Folder"
+        },
+        "other_notes": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "title": "Other Notes"
+        }
+      },
+      "required": [
+        "september_pdf_in_folder",
+        "other_notes"
+      ],
+      "additionalProperties": false
+    },
+    "hyperlinks": {
+      "type": "object",
+      "properties": {
+        "hospital_name": {
+          "type": "string"
+        },
+        "financial_assistance": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "hospital_name",
+        "financial_assistance"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "source",
+    "hospital",
+    "assessment",
+    "posted_materials",
+    "application",
+    "policy_summary",
+    "review_notes",
+    "hyperlinks"
+  ],
+  "additionalProperties": false
+}
