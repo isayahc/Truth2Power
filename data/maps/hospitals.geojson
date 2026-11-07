@@ -5,7 +5,7 @@
   "features": [
     {
       "type": "Feature",
-      "id": "739-a-o-fox-memorial-hospital",
+      "id": "739",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -34,7 +34,7 @@
     },
     {
       "type": "Feature",
-      "id": "8554-a-o-fox-memorial-hospital-tri-town-campus",
+      "id": "8554",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -63,7 +63,7 @@
     },
     {
       "type": "Feature",
-      "id": "306-adirondack-medical-center-lake-placid-site",
+      "id": "306",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -92,7 +92,7 @@
     },
     {
       "type": "Feature",
-      "id": "324-adirondack-medical-center-saranac-lake-site",
+      "id": "324",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -121,7 +121,7 @@
     },
     {
       "type": "Feature",
-      "id": "2-albany-medical-center-south-clinical-campus",
+      "id": "2",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -150,7 +150,7 @@
     },
     {
       "type": "Feature",
-      "id": "1-albany-medical-center-hospital",
+      "id": "1",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -179,7 +179,7 @@
     },
     {
       "type": "Feature",
-      "id": "116-arnot-ogden-medical-center",
+      "id": "116",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -208,7 +208,7 @@
     },
     {
       "type": "Feature",
-      "id": "85-auburn-community-hospital",
+      "id": "85",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -237,7 +237,7 @@
     },
     {
       "type": "Feature",
-      "id": "1438-bellevue-hospital-center",
+      "id": "1438",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -266,7 +266,7 @@
     },
     {
       "type": "Feature",
-      "id": "280-bertrand-chaffee-hospital",
+      "id": "280",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -295,7 +295,7 @@
     },
     {
       "type": "Feature",
-      "id": "1138-blythedale-children-s-hospital",
+      "id": "1138",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -324,7 +324,7 @@
     },
     {
       "type": "Feature",
-      "id": "708-bon-secours-community-hospital",
+      "id": "708",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -353,7 +353,7 @@
     },
     {
       "type": "Feature",
-      "id": "1164-bronxcare-hospital-center",
+      "id": "1164",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -382,7 +382,7 @@
     },
     {
       "type": "Feature",
-      "id": "1178-bronxcare-hospital-center",
+      "id": "1178",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -411,7 +411,7 @@
     },
     {
       "type": "Feature",
-      "id": "1286-brookdale-hospital-medical-center",
+      "id": "1286",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -440,7 +440,7 @@
     },
     {
       "type": "Feature",
-      "id": "1288-brooklyn-hospital-center-downtown-campus",
+      "id": "1288",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -469,7 +469,7 @@
     },
     {
       "type": "Feature",
-      "id": "98-brooks-tlc-hospital-system-inc",
+      "id": "98",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -498,7 +498,7 @@
     },
     {
       "type": "Feature",
-      "id": "207-buffalo-general-medical-center",
+      "id": "207",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -527,7 +527,7 @@
     },
     {
       "type": "Feature",
-      "id": "10223-calvary-hospital-bronx-ny",
+      "id": "10223",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -556,7 +556,7 @@
     },
     {
       "type": "Feature",
-      "id": "1175-calvary-hospital-inc",
+      "id": "1175",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -585,7 +585,7 @@
     },
     {
       "type": "Feature",
-      "id": "815-canton-potsdam-hospital",
+      "id": "815",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -614,7 +614,7 @@
     },
     {
       "type": "Feature",
-      "id": "379-carthage-area-hospital-inc",
+      "id": "379",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -643,7 +643,7 @@
     },
     {
       "type": "Feature",
-      "id": "977-cayuga-medical-center-at-ithaca",
+      "id": "977",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -672,7 +672,7 @@
     },
     {
       "type": "Feature",
-      "id": "128-chenango-memorial-hospital-inc",
+      "id": "128",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -701,7 +701,7 @@
     },
     {
       "type": "Feature",
-      "id": "798-claxton-hepburn-medical-center",
+      "id": "798",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -730,7 +730,7 @@
     },
     {
       "type": "Feature",
-      "id": "676-clifton-springs-hospital-and-clinic",
+      "id": "676",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -759,7 +759,7 @@
     },
     {
       "type": "Feature",
-      "id": "817-clifton-fine-hospital",
+      "id": "817",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -788,7 +788,7 @@
     },
     {
       "type": "Feature",
-      "id": "10216-cobleskill-regional-hospital",
+      "id": "10216",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -817,7 +817,7 @@
     },
     {
       "type": "Feature",
-      "id": "cohen-children-s-medical-center",
+      "id": "t2p-0001",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -846,7 +846,7 @@
     },
     {
       "type": "Feature",
-      "id": "146-columbia-memorial-hospital",
+      "id": "146",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -875,7 +875,7 @@
     },
     {
       "type": "Feature",
-      "id": "401-community-memorial-hospital-inc",
+      "id": "401",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -904,7 +904,7 @@
     },
     {
       "type": "Feature",
-      "id": "866-corning-hospital",
+      "id": "866",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -933,7 +933,7 @@
     },
     {
       "type": "Feature",
-      "id": "636-crouse-hospital",
+      "id": "636",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -962,7 +962,7 @@
     },
     {
       "type": "Feature",
-      "id": "9059-crouse-hospital-commonwealth-division",
+      "id": "9059",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -991,7 +991,7 @@
     },
     {
       "type": "Feature",
-      "id": "37-cuba-memorial-hospital-inc",
+      "id": "37",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1020,7 +1020,7 @@
     },
     {
       "type": "Feature",
-      "id": "10355-david-h-koch-center-for-cancer-care",
+      "id": "10355",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1049,7 +1049,7 @@
     },
     {
       "type": "Feature",
-      "id": "174-delaware-valley-hospital-inc",
+      "id": "174",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1078,7 +1078,7 @@
     },
     {
       "type": "Feature",
-      "id": "1002-ellenville-regional-hospital",
+      "id": "1002",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1107,7 +1107,7 @@
     },
     {
       "type": "Feature",
-      "id": "829-ellis-hospital",
+      "id": "829",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1136,7 +1136,7 @@
     },
     {
       "type": "Feature",
-      "id": "848-ellis-hospital-bellevue-woman-s-care-center-division",
+      "id": "848",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1165,7 +1165,7 @@
     },
     {
       "type": "Feature",
-      "id": "1626-elmhurst-hospital-center",
+      "id": "1626",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1194,7 +1194,7 @@
     },
     {
       "type": "Feature",
-      "id": "210-erie-county-medical-center",
+      "id": "210",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1223,7 +1223,7 @@
     },
     {
       "type": "Feature",
-      "id": "678-f-f-thompson-hospital",
+      "id": "678",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1252,7 +1252,7 @@
     },
     {
       "type": "Feature",
-      "id": "599-faxton-st-luke-s-healthcare-campus",
+      "id": "599",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1281,7 +1281,7 @@
     },
     {
       "type": "Feature",
-      "id": "1628-flushing-hospital-medical-center",
+      "id": "1628",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1310,7 +1310,7 @@
     },
     {
       "type": "Feature",
-      "id": "699-garnet-health-medical-center",
+      "id": "699",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1339,7 +1339,7 @@
     },
     {
       "type": "Feature",
-      "id": "971-garnet-health-medical-center-catskills",
+      "id": "971",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1368,7 +1368,7 @@
     },
     {
       "type": "Feature",
-      "id": "968-garnet-health-medical-center-catskills-g-hermann-site",
+      "id": "968",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1397,7 +1397,7 @@
     },
     {
       "type": "Feature",
-      "id": "671-geneva-general-hospital",
+      "id": "671",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1426,7 +1426,7 @@
     },
     {
       "type": "Feature",
-      "id": "490-glen-cove-hospital",
+      "id": "490",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1455,7 +1455,7 @@
     },
     {
       "type": "Feature",
-      "id": "1005-glens-falls-hospital",
+      "id": "1005",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1484,7 +1484,7 @@
     },
     {
       "type": "Feature",
-      "id": "925-good-samaritan-hospital-medical-center",
+      "id": "925",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1513,7 +1513,7 @@
     },
     {
       "type": "Feature",
-      "id": "779-good-samaritan-hospital-of-suffern",
+      "id": "779",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1542,7 +1542,7 @@
     },
     {
       "type": "Feature",
-      "id": "812-gouverneur-hospital",
+      "id": "812",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1571,7 +1571,7 @@
     },
     {
       "type": "Feature",
-      "id": "158-guthrie-cortland-medical-center",
+      "id": "158",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1600,7 +1600,7 @@
     },
     {
       "type": "Feature",
-      "id": "1445-harlem-hospital-center",
+      "id": "1445",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1629,7 +1629,7 @@
     },
     {
       "type": "Feature",
-      "id": "989-healthalliance-hospital-mary-s-avenue-campus",
+      "id": "989",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1658,7 +1658,7 @@
     },
     {
       "type": "Feature",
-      "id": "775-helen-hayes-hospital",
+      "id": "775",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1687,7 +1687,7 @@
     },
     {
       "type": "Feature",
-      "id": "1486-henry-j-carter-specialty-hospital",
+      "id": "1486",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1716,7 +1716,7 @@
     },
     {
       "type": "Feature",
-      "id": "409-highland-hospital",
+      "id": "409",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1745,7 +1745,7 @@
     },
     {
       "type": "Feature",
-      "id": "1447-hospital-for-special-surgery",
+      "id": "1447",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1774,7 +1774,7 @@
     },
     {
       "type": "Feature",
-      "id": "913-huntington-hospital",
+      "id": "913",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1803,7 +1803,7 @@
     },
     {
       "type": "Feature",
-      "id": "1309-interfaith-medical-center",
+      "id": "1309",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1832,7 +1832,7 @@
     },
     {
       "type": "Feature",
-      "id": "873-ira-davenport-memorial-hospital",
+      "id": "873",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1861,7 +1861,7 @@
     },
     {
       "type": "Feature",
-      "id": "1165-jacobi-medical-center",
+      "id": "1165",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1890,7 +1890,7 @@
     },
     {
       "type": "Feature",
-      "id": "1629-jamaica-hospital-medical-center",
+      "id": "1629",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1919,7 +1919,7 @@
     },
     {
       "type": "Feature",
-      "id": "208-john-r-oishei-children-s-hospital",
+      "id": "208",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1948,7 +1948,7 @@
     },
     {
       "type": "Feature",
-      "id": "895-john-t-mather-memorial-hospital-of-port-jefferson-new-york-inc",
+      "id": "895",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1977,7 +1977,7 @@
     },
     {
       "type": "Feature",
-      "id": "267-kenmore-mercy-hospital",
+      "id": "267",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -2006,7 +2006,7 @@
     },
     {
       "type": "Feature",
-      "id": "1301-kings-county-hospital-center",
+      "id": "1301",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -2035,7 +2035,7 @@
     },
     {
       "type": "Feature",
-      "id": "12-lakeview-center-for-mental-health-and-wellness",
+      "id": "12",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -2064,7 +2064,7 @@
     },
     {
       "type": "Feature",
-      "id": "9700-lenox-health-greenwich-village",
+      "id": "9700",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -2093,7 +2093,7 @@
     },
     {
       "type": "Feature",
-      "id": "1450-lenox-hill-hospital",
+      "id": "1450",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -2122,7 +2122,7 @@
     },
     {
       "type": "Feature",
-      "id": "383-lewis-county-general-hospital",
+      "id": "383",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -2151,7 +2151,7 @@
     },
     {
       "type": "Feature",
-      "id": "1172-lincoln-medical-mental-health-center",
+      "id": "1172",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -2180,7 +2180,7 @@
     },
     {
       "type": "Feature",
-      "id": "362-little-falls-hospital",
+      "id": "362",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -2209,7 +2209,7 @@
     },
     {
       "type": "Feature",
-      "id": "15464-lockport-memorial-hospital-a-campus-of-mount-st-mary-s",
+      "id": "15464",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -2238,7 +2238,7 @@
     },
     {
       "type": "Feature",
-      "id": "1638-long-island-jewish-forest-hills",
+      "id": "1638",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -2267,7 +2267,7 @@
     },
     {
       "type": "Feature",
-      "id": "1630-long-island-jewish-medical-center",
+      "id": "1630",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -2296,7 +2296,7 @@
     },
     {
       "type": "Feature",
-      "id": "518-long-island-jewish-valley-stream",
+      "id": "518",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -2325,7 +2325,7 @@
     },
     {
       "type": "Feature",
-      "id": "1305-maimonides-medical-center",
+      "id": "1305",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -2354,7 +2354,7 @@
     },
     {
       "type": "Feature",
-      "id": "1293-maimonides-midwood-community-hospital",
+      "id": "1293",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -2383,7 +2383,7 @@
     },
     {
       "type": "Feature",
-      "id": "170-margaretville-hospital",
+      "id": "170",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -2412,7 +2412,7 @@
     },
     {
       "type": "Feature",
-      "id": "746-mary-imogene-bassett-hospital",
+      "id": "746",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -2441,7 +2441,7 @@
     },
     {
       "type": "Feature",
-      "id": "804-massena-hospital",
+      "id": "804",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -2470,7 +2470,7 @@
     },
     {
       "type": "Feature",
-      "id": "718-medina-memorial-hospital",
+      "id": "718",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -2499,7 +2499,7 @@
     },
     {
       "type": "Feature",
-      "id": "39-memorial-hosp-of-wm-f-gertrude-f-jones-a-k-a-jones-memorial-hosp",
+      "id": "39",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -2528,7 +2528,7 @@
     },
     {
       "type": "Feature",
-      "id": "1453-memorial-hospital-for-cancer-and-allied-diseases",
+      "id": "1453",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -2557,7 +2557,7 @@
     },
     {
       "type": "Feature",
-      "id": "513-mercy-hospital",
+      "id": "513",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -2586,7 +2586,7 @@
     },
     {
       "type": "Feature",
-      "id": "213-mercy-hospital-of-buffalo",
+      "id": "213",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -2615,7 +2615,7 @@
     },
     {
       "type": "Feature",
-      "id": "1454-metropolitan-hospital-center",
+      "id": "1454",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -2644,7 +2644,7 @@
     },
     {
       "type": "Feature",
-      "id": "180-mid-hudson-valley-division-of-westchester-medical-center",
+      "id": "180",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -2673,7 +2673,7 @@
     },
     {
       "type": "Feature",
-      "id": "3067-millard-fillmore-suburban-hospital",
+      "id": "3067",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -2702,7 +2702,7 @@
     },
     {
       "type": "Feature",
-      "id": "3058-montefiore-med-center-jack-d-weiler-hosp-of-a-einstein-college-div",
+      "id": "3058",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -2731,7 +2731,7 @@
     },
     {
       "type": "Feature",
-      "id": "1169-montefiore-health-system-henry-lucy-moses-div",
+      "id": "1169",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -2760,7 +2760,7 @@
     },
     {
       "type": "Feature",
-      "id": "1185-montefiore-health-system-montefiore-westchester-square",
+      "id": "1185",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -2789,7 +2789,7 @@
     },
     {
       "type": "Feature",
-      "id": "1168-montefiore-health-system-wakefield-hospital",
+      "id": "1168",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -2818,7 +2818,7 @@
     },
     {
       "type": "Feature",
-      "id": "1061-montefiore-mount-vernon-hospital",
+      "id": "1061",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -2847,7 +2847,7 @@
     },
     {
       "type": "Feature",
-      "id": "1072-montefiore-new-rochelle-hospital",
+      "id": "1072",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -2876,7 +2876,7 @@
     },
     {
       "type": "Feature",
-      "id": "776-montefiore-nyack",
+      "id": "776",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -2905,7 +2905,7 @@
     },
     {
       "type": "Feature",
-      "id": "15437-mount-sinai-behavioral-health-center",
+      "id": "15437",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -2934,7 +2934,7 @@
     },
     {
       "type": "Feature",
-      "id": "1324-mount-sinai-brooklyn",
+      "id": "1324",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -2963,7 +2963,7 @@
     },
     {
       "type": "Feature",
-      "id": "1456-mount-sinai-hospital",
+      "id": "1456",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -2992,7 +2992,7 @@
     },
     {
       "type": "Feature",
-      "id": "1639-mount-sinai-hospital-mount-sinai-hospital-of-queens",
+      "id": "1639",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -3021,7 +3021,7 @@
     },
     {
       "type": "Feature",
-      "id": "1469-mount-sinai-morningside",
+      "id": "1469",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -3050,7 +3050,7 @@
     },
     {
       "type": "Feature",
-      "id": "527-mount-sinai-south-nassau",
+      "id": "527",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -3079,7 +3079,7 @@
     },
     {
       "type": "Feature",
-      "id": "1466-mount-sinai-west",
+      "id": "1466",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -3108,7 +3108,7 @@
     },
     {
       "type": "Feature",
-      "id": "583-mount-st-mary-s-hospital-and-health-center",
+      "id": "583",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -3137,7 +3137,7 @@
     },
     {
       "type": "Feature",
-      "id": "528-nassau-university-medical-center",
+      "id": "528",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -3166,7 +3166,7 @@
     },
     {
       "type": "Feature",
-      "id": "330-nathan-littauer-hospital",
+      "id": "330",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -3195,7 +3195,7 @@
     },
     {
       "type": "Feature",
-      "id": "1460-new-york-eye-and-ear-infirmary-of-mount-sinai",
+      "id": "1460",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -3224,7 +3224,7 @@
     },
     {
       "type": "Feature",
-      "id": "1306-new-york-presbyterian-brooklyn-methodist-hospital",
+      "id": "1306",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -3253,7 +3253,7 @@
     },
     {
       "type": "Feature",
-      "id": "10139-new-york-presbyterian-david-h-koch-center",
+      "id": "10139",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -3282,7 +3282,7 @@
     },
     {
       "type": "Feature",
-      "id": "3975-new-york-presbyterian-hospital-allen-hospital",
+      "id": "3975",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -3311,7 +3311,7 @@
     },
     {
       "type": "Feature",
-      "id": "1464-new-york-presbyterian-hospital-columbia-presbyterian-center",
+      "id": "1464",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -3340,7 +3340,7 @@
     },
     {
       "type": "Feature",
-      "id": "1458-new-york-presbyterian-hospital-new-york-weill-cornell-center",
+      "id": "1458",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -3369,7 +3369,7 @@
     },
     {
       "type": "Feature",
-      "id": "1122-new-york-presbyterian-westchester",
+      "id": "1122",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -3398,7 +3398,7 @@
     },
     {
       "type": "Feature",
-      "id": "1047-new-york-presbyterian-westchester-behavioral-health-center",
+      "id": "1047",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -3427,7 +3427,7 @@
     },
     {
       "type": "Feature",
-      "id": "1039-new-york-presbyterian-hudson-valley-hospital",
+      "id": "1039",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -3456,7 +3456,7 @@
     },
     {
       "type": "Feature",
-      "id": "1437-new-york-presbyterian-lower-manhattan-hospital",
+      "id": "1437",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -3485,7 +3485,7 @@
     },
     {
       "type": "Feature",
-      "id": "1637-new-york-presbyterian-queens",
+      "id": "1637",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -3514,7 +3514,7 @@
     },
     {
       "type": "Feature",
-      "id": "1028-newark-wayne-community-hospital",
+      "id": "1028",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -3543,7 +3543,7 @@
     },
     {
       "type": "Feature",
-      "id": "574-niagara-falls-memorial-medical-center",
+      "id": "574",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -3572,7 +3572,7 @@
     },
     {
       "type": "Feature",
-      "id": "393-nicholas-h-noyes-memorial-hospital",
+      "id": "393",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -3601,7 +3601,7 @@
     },
     {
       "type": "Feature",
-      "id": "1186-north-central-bronx-hospital",
+      "id": "1186",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -3630,7 +3630,7 @@
     },
     {
       "type": "Feature",
-      "id": "541-north-shore-university-hospital",
+      "id": "541",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -3659,7 +3659,7 @@
     },
     {
       "type": "Feature",
-      "id": "192-northern-dutchess-hospital",
+      "id": "192",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -3688,7 +3688,7 @@
     },
     {
       "type": "Feature",
-      "id": "1117-northern-westchester-hospital",
+      "id": "1117",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -3717,7 +3717,7 @@
     },
     {
       "type": "Feature",
-      "id": "9753-nyu-langone-hospital-joseph-s-and-diane-h-steinberg-ambulatory-care-center",
+      "id": "9753",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -3746,7 +3746,7 @@
     },
     {
       "type": "Feature",
-      "id": "1304-nyu-langone-hospital-brooklyn",
+      "id": "1304",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -3775,7 +3775,7 @@
     },
     {
       "type": "Feature",
-      "id": "511-nyu-langone-hospital-long-island",
+      "id": "511",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -3804,7 +3804,7 @@
     },
     {
       "type": "Feature",
-      "id": "1463-nyu-langone-hospitals",
+      "id": "1463",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -3833,7 +3833,7 @@
     },
     {
       "type": "Feature",
-      "id": "1446-nyu-langone-orthopedic-hospital",
+      "id": "1446",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -3862,7 +3862,7 @@
     },
     {
       "type": "Feature",
-      "id": "885-nyu-langone-hospital-suffolk-formerly-long-island-community-hospital",
+      "id": "885",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -3891,7 +3891,7 @@
     },
     {
       "type": "Feature",
-      "id": "165-o-connor-hospital",
+      "id": "165",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -3920,7 +3920,7 @@
     },
     {
       "type": "Feature",
-      "id": "66-olean-general-hospital",
+      "id": "66",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -3949,7 +3949,7 @@
     },
     {
       "type": "Feature",
-      "id": "397-oneida-health-hospital",
+      "id": "397",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -3978,7 +3978,7 @@
     },
     {
       "type": "Feature",
-      "id": "727-oswego-hospital",
+      "id": "727",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -4007,7 +4007,7 @@
     },
     {
       "type": "Feature",
-      "id": "43-our-lady-of-lourdes-memorial-hospital",
+      "id": "43",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -4036,7 +4036,7 @@
     },
     {
       "type": "Feature",
-      "id": "938-peconic-bay-medical-center",
+      "id": "938",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -4065,7 +4065,7 @@
     },
     {
       "type": "Feature",
-      "id": "1129-phelps-hospital",
+      "id": "1129",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -4094,7 +4094,7 @@
     },
     {
       "type": "Feature",
-      "id": "552-plainview-hospital",
+      "id": "552",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -4123,7 +4123,7 @@
     },
     {
       "type": "Feature",
-      "id": "752-putnam-hospital",
+      "id": "752",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -4152,7 +4152,7 @@
     },
     {
       "type": "Feature",
-      "id": "1633-queens-hospital-center",
+      "id": "1633",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -4181,7 +4181,7 @@
     },
     {
       "type": "Feature",
-      "id": "1738-richmond-university-medical-center",
+      "id": "1738",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -4210,7 +4210,7 @@
     },
     {
       "type": "Feature",
-      "id": "377-river-hospital-inc",
+      "id": "377",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -4239,7 +4239,7 @@
     },
     {
       "type": "Feature",
-      "id": "411-rochester-general-hospital",
+      "id": "411",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -4268,7 +4268,7 @@
     },
     {
       "type": "Feature",
-      "id": "589-rome-memorial-hospital-inc",
+      "id": "589",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -4297,7 +4297,7 @@
     },
     {
       "type": "Feature",
-      "id": "216-roswell-park-cancer-institute",
+      "id": "216",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -4326,7 +4326,7 @@
     },
     {
       "type": "Feature",
-      "id": "756-samaritan-hospital",
+      "id": "756",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -4355,7 +4355,7 @@
     },
     {
       "type": "Feature",
-      "id": "4-samaritan-hospital-albany-memorial-campus",
+      "id": "4",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -4384,7 +4384,7 @@
     },
     {
       "type": "Feature",
-      "id": "367-samaritan-medical-center",
+      "id": "367",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -4413,7 +4413,7 @@
     },
     {
       "type": "Feature",
-      "id": "818-saratoga-hospital",
+      "id": "818",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -4442,7 +4442,7 @@
     },
     {
       "type": "Feature",
-      "id": "1176-sbh-health-system",
+      "id": "1176",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -4471,7 +4471,7 @@
     },
     {
       "type": "Feature",
-      "id": "858-schuyler-hospital",
+      "id": "858",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -4500,7 +4500,7 @@
     },
     {
       "type": "Feature",
-      "id": "218-sisters-of-charity-hospital",
+      "id": "218",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -4529,7 +4529,7 @@
     },
     {
       "type": "Feature",
-      "id": "292-sisters-of-charity-hospital-st-joseph-campus",
+      "id": "292",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -4558,7 +4558,7 @@
     },
     {
       "type": "Feature",
-      "id": "1124-sjrh-dobbs-ferry-pavillion",
+      "id": "1124",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -4587,7 +4587,7 @@
     },
     {
       "type": "Feature",
-      "id": "1099-sjrh-park-care-pavilion",
+      "id": "1099",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -4616,7 +4616,7 @@
     },
     {
       "type": "Feature",
-      "id": "1097-sjrh-st-johns-division",
+      "id": "1097",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -4645,7 +4645,7 @@
     },
     {
       "type": "Feature",
-      "id": "1158-soldiers-and-sailors-memorial-hospital-of-yates-county",
+      "id": "1158",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -4674,7 +4674,7 @@
     },
     {
       "type": "Feature",
-      "id": "1294-south-brooklyn-health",
+      "id": "1294",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -4703,7 +4703,7 @@
     },
     {
       "type": "Feature",
-      "id": "9691-south-nassau-communities-hospital-off-campus-emergency-department-freestanding-emergency-department-at-long-beach",
+      "id": "9691",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -4732,7 +4732,7 @@
     },
     {
       "type": "Feature",
-      "id": "924-south-shore-university-hospital",
+      "id": "924",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -4761,7 +4761,7 @@
     },
     {
       "type": "Feature",
-      "id": "704-st-anthony-community-hospital",
+      "id": "704",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -4790,7 +4790,7 @@
     },
     {
       "type": "Feature",
-      "id": "943-st-catherine-of-siena-hospital",
+      "id": "943",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -4819,7 +4819,7 @@
     },
     {
       "type": "Feature",
-      "id": "1635-st-johns-episcopal-hospital-south-shore",
+      "id": "1635",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -4848,7 +4848,7 @@
     },
     {
       "type": "Feature",
-      "id": "694-st-luke-s-cornwall-hospital-newburgh",
+      "id": "694",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -4877,7 +4877,7 @@
     },
     {
       "type": "Feature",
-      "id": "896-st-charles-hospital",
+      "id": "896",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -4906,7 +4906,7 @@
     },
     {
       "type": "Feature",
-      "id": "563-st-francis-hospital-heart-center",
+      "id": "563",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -4935,7 +4935,7 @@
     },
     {
       "type": "Feature",
-      "id": "870-st-james-hospital",
+      "id": "870",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -4964,7 +4964,7 @@
     },
     {
       "type": "Feature",
-      "id": "551-st-joseph-hospital",
+      "id": "551",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -4993,7 +4993,7 @@
     },
     {
       "type": "Feature",
-      "id": "118-st-joseph-s-hospital",
+      "id": "118",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -5022,7 +5022,7 @@
     },
     {
       "type": "Feature",
-      "id": "630-st-joseph-s-hospital-health-center",
+      "id": "630",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -5051,7 +5051,7 @@
     },
     {
       "type": "Feature",
-      "id": "1133-st-joseph-s-mc-st-vincent-s-westchester-division",
+      "id": "1133",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -5080,7 +5080,7 @@
     },
     {
       "type": "Feature",
-      "id": "1098-st-joseph-s-medical-center",
+      "id": "1098",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -5109,7 +5109,7 @@
     },
     {
       "type": "Feature",
-      "id": "484-st-mary-s-healthcare",
+      "id": "484",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -5138,7 +5138,7 @@
     },
     {
       "type": "Feature",
-      "id": "482-st-mary-s-healthcare-amsterdam-memorial-campus",
+      "id": "482",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -5167,7 +5167,7 @@
     },
     {
       "type": "Feature",
-      "id": "9431-st-peter-s-addiction-recovery-center",
+      "id": "9431",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -5196,7 +5196,7 @@
     },
     {
       "type": "Feature",
-      "id": "5-st-peter-s-hospital",
+      "id": "5",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -5225,7 +5225,7 @@
     },
     {
       "type": "Feature",
-      "id": "15417-st-peter-s-hospital-sparc",
+      "id": "15417",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -5254,7 +5254,7 @@
     },
     {
       "type": "Feature",
-      "id": "1737-staten-island-university-hospital-prince-s-bay",
+      "id": "1737",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -5283,7 +5283,7 @@
     },
     {
       "type": "Feature",
-      "id": "1740-staten-island-university-hosp-north",
+      "id": "1740",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -5312,7 +5312,7 @@
     },
     {
       "type": "Feature",
-      "id": "891-stony-brook-eastern-long-island-hospital",
+      "id": "891",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -5341,7 +5341,7 @@
     },
     {
       "type": "Feature",
-      "id": "889-stony-brook-southampton-hospital",
+      "id": "889",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -5370,7 +5370,7 @@
     },
     {
       "type": "Feature",
-      "id": "245-stony-brook-university-hospital",
+      "id": "245",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -5399,7 +5399,7 @@
     },
     {
       "type": "Feature",
-      "id": "413-strong-memorial-hospital",
+      "id": "413",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -5428,7 +5428,7 @@
     },
     {
       "type": "Feature",
-      "id": "831-sunnyview-hospital-and-rehabilitation-center",
+      "id": "831",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -5457,7 +5457,7 @@
     },
     {
       "type": "Feature",
-      "id": "550-syosset-hospital",
+      "id": "550",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -5486,7 +5486,7 @@
     },
     {
       "type": "Feature",
-      "id": "471-the-unity-hospital-of-rochester",
+      "id": "471",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -5515,7 +5515,7 @@
     },
     {
       "type": "Feature",
-      "id": "15485-the-university-of-vermont-health-network-alice-hyde-medical-center",
+      "id": "15485",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -5544,7 +5544,7 @@
     },
     {
       "type": "Feature",
-      "id": "135-the-university-of-vermont-health-network-champlain-valley-physicians-hospital",
+      "id": "135",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -5573,7 +5573,7 @@
     },
     {
       "type": "Feature",
-      "id": "303-the-university-of-vermont-health-network-elizabethtown-community-hospital",
+      "id": "303",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -5602,7 +5602,7 @@
     },
     {
       "type": "Feature",
-      "id": "42-united-health-services-hospitals-inc-binghamton-general-hospital",
+      "id": "42",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -5631,7 +5631,7 @@
     },
     {
       "type": "Feature",
-      "id": "58-united-health-services-hospitals-inc-wilson-medical-center",
+      "id": "58",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -5660,7 +5660,7 @@
     },
     {
       "type": "Feature",
-      "id": "340-jerome-medical-center-previously-united-memorial-medical-center-bank-st-campus",
+      "id": "340",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -5689,7 +5689,7 @@
     },
     {
       "type": "Feature",
-      "id": "339-united-memorial-medical-center-north-street-campus",
+      "id": "339",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -5718,7 +5718,7 @@
     },
     {
       "type": "Feature",
-      "id": "412-unity-specialty-hospital",
+      "id": "412",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -5747,7 +5747,7 @@
     },
     {
       "type": "Feature",
-      "id": "1320-university-hospital-of-brooklyn-university-hospital-at-downstate",
+      "id": "1320",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -5776,7 +5776,7 @@
     },
     {
       "type": "Feature",
-      "id": "635-upstate-university-hospital-and-rehabilitation-center-prev-university-hospital-suny-health-science-center",
+      "id": "635",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -5805,7 +5805,7 @@
     },
     {
       "type": "Feature",
-      "id": "103-upmc-chautauqua-at-wca",
+      "id": "103",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -5834,7 +5834,7 @@
     },
     {
       "type": "Feature",
-      "id": "628-upstate-university-hospital-at-community-general",
+      "id": "628",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -5863,7 +5863,7 @@
     },
     {
       "type": "Feature",
-      "id": "9531-urmc-strong-west",
+      "id": "9531",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -5892,7 +5892,7 @@
     },
     {
       "type": "Feature",
-      "id": "181-vassar-brothers-medical-center",
+      "id": "181",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -5921,7 +5921,7 @@
     },
     {
       "type": "Feature",
-      "id": "1139-westchester-medical-center",
+      "id": "1139",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -5950,7 +5950,7 @@
     },
     {
       "type": "Feature",
-      "id": "111-westfield-memorial-hospital-inc",
+      "id": "111",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -5979,7 +5979,7 @@
     },
     {
       "type": "Feature",
-      "id": "1045-white-plains-hospital-center",
+      "id": "1045",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -6008,7 +6008,7 @@
     },
     {
       "type": "Feature",
-      "id": "1046-winifred-masterson-burke-rehabilitation-hospital",
+      "id": "1046",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -6037,7 +6037,7 @@
     },
     {
       "type": "Feature",
-      "id": "1692-woodhull-medical-mental-health-center",
+      "id": "1692",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -6066,7 +6066,7 @@
     },
     {
       "type": "Feature",
-      "id": "1318-wyckoff-heights-medical-center",
+      "id": "1318",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -6095,7 +6095,7 @@
     },
     {
       "type": "Feature",
-      "id": "15478-wynn-hospital",
+      "id": "15478",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -6124,7 +6124,7 @@
     },
     {
       "type": "Feature",
-      "id": "15620-wyoming-county-community-hospital",
+      "id": "15620",
       "geometry": {
         "type": "Point",
         "coordinates": [

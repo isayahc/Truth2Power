@@ -37,3 +37,7 @@ The one- and zero-star groups split the original F grade on the audit’s “App
 All 212 points fall within one of the 62 [NYS shoreline-clipped county boundaries](https://gisservices.its.ny.gov/arcgis/rest/services/NYS_Civil_Boundaries/MapServer/3). Location data identify hospital sites. Ratings describe the September 2025 review.
 
 Coordinate sources include the [HIFLD Hospitals layer](https://services2.arcgis.com/FiaPA4ga0iQKduv3/ArcGIS/rest/services/Extract_Data_Hospitals_HIFLD/FeatureServer/0) and [© OpenStreetMap contributors](https://www.openstreetmap.org/copyright). Boundaries are from NYS Office of Information Technology Services, Geospatial Data Services.
+
+## Hospital identifiers
+
+Use the GeoJSON feature ID or the CSV's `hospital_key` column to join roster records. A populated PFI is kept as a string. Cohen Children's Medical Center has the assigned local key `t2p-0001` and a blank PFI. The key resolver in `backend/src/hospital-key.js` uses the original audit row to recover that assignment during re-import. Display names can change independently. The `record_path` property locates the original JSON file.
