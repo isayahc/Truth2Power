@@ -1,0 +1,16 @@
+{
+  "schema_version": "1.0",
+  "hospital_key": "362",
+  "rubric_version": "demo-v1",
+  "reference_version": "hhs-2026-contiguous-us",
+  "guideline_year": 2026,
+  "attempt": {
+    "attempt_id": "demo-2",
+    "attempted_at": "2026-11-07T15:00:00Z",
+    "status": "failed",
+    "error": "Retrieval timed out"
+  },
+  "last_successful_assessment_at": "2026-11-06T15:00:00Z",
+  "snapshots": [],
+  "assessment": null
+}

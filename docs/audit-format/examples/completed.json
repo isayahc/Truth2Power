@@ -1,0 +1,94 @@
+{
+  "schema_version": "1.0",
+  "hospital_key": "362",
+  "rubric_version": "demo-v1",
+  "reference_version": "hhs-2026-contiguous-us",
+  "guideline_year": 2026,
+  "attempt": {
+    "attempt_id": "demo-1",
+    "attempted_at": "2026-11-06T15:00:00Z",
+    "status": "completed"
+  },
+  "last_successful_assessment_at": "2026-11-06T15:00:00Z",
+  "snapshots": [
+    {
+      "snapshot_id": "doc-1",
+      "document_type": "application",
+      "url": "https://example.org/aid/application.txt",
+      "retrieved_at": "2026-11-06T15:00:00Z",
+      "publisher_updated_at": null,
+      "sha256": "b1f850c30e2539b2476e6c1bfc49059d971903cb943c72c012e8a3ae3c0e6ee2",
+      "artifact_path": "application.txt"
+    }
+  ],
+  "assessment": {
+    "assessment_id": "demo-review-1",
+    "completed_at": "2026-11-06T15:00:00Z",
+    "findings": [
+      {
+        "measure_id": "application.fpl_guidelines",
+        "result": "no",
+        "reason_code": "contradicted",
+        "explanation": "Published amount differs from the 2026 reference.",
+        "observed": {
+          "household_size": 1,
+          "fpl_percent": 400,
+          "amount": 62600,
+          "currency": "USD",
+          "period": "annual"
+        },
+        "expected": {
+          "household_size": 1,
+          "fpl_percent": 400,
+          "amount": 63840,
+          "currency": "USD",
+          "period": "annual"
+        },
+        "evidence": [
+          {
+            "snapshot_id": "doc-1",
+            "locator": "line 2",
+            "quote": "One-person household | 400% FPL | $62,600 per year"
+          }
+        ]
+      },
+      {
+        "measure_id": "application.maximum_fpl",
+        "result": "yes",
+        "reason_code": "condition_met",
+        "explanation": "The table includes the 400% coverage threshold.",
+        "observed": {
+          "percent": 400
+        },
+        "expected": {
+          "minimum_percent": 400
+        },
+        "evidence": [
+          {
+            "snapshot_id": "doc-1",
+            "locator": "line 2",
+            "quote": "One-person household | 400% FPL | $62,600 per year"
+          }
+        ]
+      },
+      {
+        "measure_id": "application.contact_information",
+        "result": "unclear",
+        "reason_code": "insufficient_evidence",
+        "explanation": "The excerpt covers only the income table.",
+        "observed": null,
+        "expected": "Contact information on application",
+        "evidence": []
+      },
+      {
+        "measure_id": "demo.exemption",
+        "result": "n_a",
+        "reason_code": "rubric_exemption",
+        "explanation": "Synthetic rule for testing the exemption encoding.",
+        "observed": null,
+        "expected": null,
+        "evidence": []
+      }
+    ]
+  }
+}

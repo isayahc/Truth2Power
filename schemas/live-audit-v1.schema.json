@@ -1,0 +1,477 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Hospital measure audit output v1",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1.0"
+    },
+    "hospital_key": {
+      "type": "string",
+      "pattern": "^(?:[0-9]+|t2p-[0-9]+)$"
+    },
+    "rubric_version": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    },
+    "reference_version": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    },
+    "guideline_year": {
+      "type": "integer",
+      "minimum": 2000
+    },
+    "attempt": {
+      "$ref": "#/$defs/attempt"
+    },
+    "last_successful_assessment_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "snapshots": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/snapshot"
+      }
+    },
+    "assessment": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/assessment"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "required": [
+    "schema_version",
+    "hospital_key",
+    "rubric_version",
+    "reference_version",
+    "guideline_year",
+    "attempt",
+    "last_successful_assessment_at",
+    "snapshots",
+    "assessment"
+  ],
+  "$defs": {
+    "attempt": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "attempt_id": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "attempted_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "status": {
+          "enum": [
+            "completed",
+            "failed"
+          ]
+        },
+        "error": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        }
+      },
+      "required": [
+        "attempt_id",
+        "attempted_at",
+        "status"
+      ],
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "enum": [
+                  "failed"
+                ]
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "error"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "enum": [
+                  "completed"
+                ]
+              }
+            }
+          },
+          "then": {
+            "not": {
+              "required": [
+                "error"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "snapshot": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "snapshot_id": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "document_type": {
+          "enum": [
+            "landing_page",
+            "application",
+            "policy_statement",
+            "policy_summary",
+            "supplement"
+          ]
+        },
+        "url": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https?://"
+        },
+        "retrieved_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "publisher_updated_at": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date"
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "artifact_path": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        }
+      },
+      "required": [
+        "snapshot_id",
+        "document_type",
+        "url",
+        "retrieved_at",
+        "publisher_updated_at",
+        "sha256",
+        "artifact_path"
+      ]
+    },
+    "citation": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "snapshot_id": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "locator": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "quote": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        }
+      },
+      "required": [
+        "snapshot_id",
+        "locator",
+        "quote"
+      ]
+    },
+    "finding": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "measure_id": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "result": {
+          "enum": [
+            "yes",
+            "no",
+            "n_a",
+            "unclear"
+          ]
+        },
+        "reason_code": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "explanation": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "observed": {},
+        "expected": {},
+        "evidence": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/citation"
+          }
+        },
+        "search_notes": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        }
+      },
+      "required": [
+        "measure_id",
+        "result",
+        "reason_code",
+        "explanation",
+        "observed",
+        "expected",
+        "evidence"
+      ],
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "result": {
+                "enum": [
+                  "yes"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "reason_code": {
+                "enum": [
+                  "condition_met"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "result": {
+                "enum": [
+                  "no"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "reason_code": {
+                "enum": [
+                  "contradicted",
+                  "missing_after_search"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "result": {
+                "enum": [
+                  "n_a"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "reason_code": {
+                "enum": [
+                  "rubric_exemption"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "result": {
+                "enum": [
+                  "unclear"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "reason_code": {
+                "enum": [
+                  "insufficient_evidence",
+                  "conflicting_evidence",
+                  "unreadable"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "result": {
+                "enum": [
+                  "yes",
+                  "no"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "evidence": {
+                "minItems": 1
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "reason_code": {
+                "enum": [
+                  "missing_after_search"
+                ]
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "search_notes"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "reason_code": {
+                "enum": [
+                  "conflicting_evidence"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "evidence": {
+                "minItems": 2
+              }
+            }
+          }
+        }
+      ]
+    },
+    "assessment": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "assessment_id": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "completed_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "findings": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/finding"
+          }
+        }
+      },
+      "required": [
+        "assessment_id",
+        "completed_at",
+        "findings"
+      ]
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "attempt": {
+            "properties": {
+              "status": {
+                "const": "completed"
+              }
+            }
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "assessment": {
+            "$ref": "#/$defs/assessment"
+          },
+          "last_successful_assessment_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "attempt": {
+            "properties": {
+              "status": {
+                "const": "failed"
+              }
+            }
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "assessment": {
+            "type": "null"
+          }
+        }
+      }
+    }
+  ]
+}
