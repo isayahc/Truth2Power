@@ -75,11 +75,11 @@ python -m pip install -r tools/live-audit/requirements.txt
 python -m playwright install chromium
 ```
 
-On Linux or WSL use `python3 -m venv .venv` and `source .venv/bin/activate`, then run the two Python installation commands. Start OpenCode from this activated terminal so its MCP subprocess uses the same Python. The checked-in project config targets OpenCode CLI 1.19.x. Use your configured model/provider.
+On Linux or WSL use `python3 -m venv .venv` and `source .venv/bin/activate`, then run the two Python installation commands. The MCP launcher selects the project's `.venv` explicitly, including when OpenCode's shared service was started outside the activated terminal. The checked-in project config targets OpenCode V2 and exposes the two audit tools directly (not as skills or through Code Mode). Use your configured model/provider; connect OpenRouter with `/connect` first.
 
 ```shell
 opencode mcp list
-opencode run --agent hospital-auditor "Audit Little Falls Hospital's live 2026 one-person 400% FPL row. Cite the original application and campus policy."
+opencode run --agent hospital-auditor --model "openrouter/nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free" "Audit Little Falls Hospital's live 2026 one-person 400% FPL row and cite the evidence."
 ```
 
 For a provider-independent live smoke test, run `python tools/live-audit/smoke.py`. Both entry points use the same MCP tools. Review the reported URLs, snapshot hashes, PDF page and DOCX table locator. Source files are stored under `.audit/live/snapshots/`; paths inside each assessment resolve relative to `.audit/live/`. If the documents or link labels change, inspect the live sources and the reported limitation. An ambiguous table or unverified campus produces an unclear finding. The reference for this single check is [the 2026 HHS contiguous-state poverty guideline](https://aspe.hhs.gov/poverty-guidelines), $15,960 annually for one person (400% = $63,840).
