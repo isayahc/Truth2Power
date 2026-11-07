@@ -25,7 +25,8 @@ ROOT = Path(__file__).resolve().parents[2]
 DATA = Path(os.environ.get("AUDIT_DIR", ROOT / ".audit")).resolve() / "live"
 LIMIT = 12 * 1024 * 1024
 W = {"w": "http://schemas.openxmlformats.org/wordprocessingml/2006/main"}
-REFERENCE = "https://aspe.hhs.gov/poverty-guidelines"
+REFERENCE = ("https://aspe.hhs.gov/topics/poverty-economic-mobility/poverty-guidelines/"
+             "prior-hhs-poverty-guidelines-federal-register-references/2026-poverty-guidelines-computations")
 ONE_PERSON_2026_ANNUAL_GUIDELINE = 15_960
 mcp = FastMCP("Truth2Power")
 
@@ -163,12 +164,21 @@ def verify_little_falls(discovery_id: str, application_url: str, policy_url: str
     expected = dict(household_size=1, fpl_percent=400, currency="USD", period="annual",
                     amount=4 * ONE_PERSON_2026_ANNUAL_GUIDELINE)
     result = "unclear" if not (scope and row) else "yes" if row["amount"] == expected["amount"] else "no"
+    campus_line = (f"{scope['locator']}: {scope['quote']}" if scope
+                   else "Campus applicability requires review.")
+    observed_line = (f"{row['locator']}: {row['quote']} (observed annual amount ${row['amount']:,})."
+                     if row else "No unambiguous one-person 400% row was verified.")
+    explanation = "\n".join([
+        f"Campus applicability — Bassett policy PDF, {campus_line} {policy['url']}",
+        f"Published amount — English application DOCX, {observed_line} {app['url']}",
+        f"Expected amount — 2026 HHS guideline for one person in New York: "
+        f"${ONE_PERSON_2026_ANNUAL_GUIDELINE:,} × 4 = ${expected['amount']:,} annually. {REFERENCE}",
+        f"Result for the one-person 400% FPL cell: {result}.",
+    ])
     finding = dict(measure_id="application.fpl_guidelines",result=result,
                    reason_code={"yes":"condition_met","no":"contradicted","unclear":"insufficient_evidence"}[result],
                    observed=(expected | {"amount":row["amount"]}) if row else None,expected=expected,evidence=evidence,
-                   explanation="One-person, 400% annual-income cell only. " + (
-                       "Campus applicability or table evidence requires review." if result=="unclear" else
-                       f"Observed ${row['amount']:,}; 2026 reference $63,840."))
+                   explanation=explanation)
     completed, audit_id = now(), uuid.uuid4().hex
     output = dict(schema_version="1.0",hospital_key="362",rubric_version="live-fpl-one-cell-v1",
                   reference_version="hhs-2026-contiguous-us",guideline_year=2026,
@@ -177,7 +187,8 @@ def verify_little_falls(discovery_id: str, application_url: str, policy_url: str
                   assessment=dict(assessment_id=audit_id,completed_at=completed,findings=[finding]))
     path = DATA / "assessments" / (audit_id + ".json")
     save(path,json.dumps(output,indent=2,ensure_ascii=False).encode())
-    return dict(assessment_file=str(path), reference_url=REFERENCE, output=output)
+    return dict(report=explanation + f"\nSaved assessment: {path}", assessment_file=str(path),
+                reference_url=REFERENCE, output=output)
 
 
 if __name__ == "__main__":

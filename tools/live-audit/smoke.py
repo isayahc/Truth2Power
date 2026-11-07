@@ -34,6 +34,14 @@ async def main() -> None:
             return matches.pop()
         report = await call(session, "verify_little_falls", dict(discovery_id=discovery["id"],
                             application_url=choose("application"),policy_url=choose("charity care")))
+        snapshots = {s["document_type"]: s for s in report["output"]["snapshots"]}
+        lines = report["report"].splitlines()
+        for line, label, url in zip(lines, ("Campus applicability", "Published amount", "Expected amount"),
+                                    (snapshots["policy_statement"]["url"], snapshots["application"]["url"],
+                                     report["reference_url"]), strict=False):
+            assert line.startswith(label) and url in line, f"Incorrect source for {label}"
+        finding = report["output"]["assessment"]["findings"][0]
+        assert len(lines) == 5 and report["report"].startswith(finding["explanation"])
         print(json.dumps(report, indent=2,ensure_ascii=False))
 
 
