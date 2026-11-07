@@ -4,13 +4,19 @@ import { extname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { handler } from "./handler.js";
 
+import { auditRoute } from "../audit/routes.js";
+
 const development = process.argv.includes("--dev");
 const port = Number(process.env.PORT ?? 8000);
 if (!Number.isInteger(port) || port < 1 || port > 65535)
   throw new Error("PORT must be between 1 and 65535.");
 
 const dist = fileURLToPath(new URL("../../dist/", import.meta.url));
-const types = { ".html": "text/html", ".js": "text/javascript", ".css": "text/css" };
+const types = {
+  ".html": "text/html",
+  ".js": "text/javascript",
+  ".css": "text/css",
+};
 const headers = {
   "X-Content-Type-Options": "nosniff",
   "X-Frame-Options": "DENY",
@@ -28,7 +34,9 @@ async function serveBuild(path, req, res) {
   }
   try {
     const bytes = await readFile(join(dist, file));
-    res.writeHead(200, { "Content-Type": types[extname(file)] + "; charset=utf-8" });
+    res.writeHead(200, {
+      "Content-Type": types[extname(file)] + "; charset=utf-8",
+    });
     res.end(req.method === "HEAD" ? undefined : bytes);
   } catch (error) {
     if (error.code !== "ENOENT") throw error;
@@ -40,8 +48,13 @@ const server = createServer(async (req, res) => {
   for (const [key, value] of Object.entries(headers)) res.setHeader(key, value);
   try {
     const path = (req.url ?? "/").split("?", 1)[0];
-    if (path === "/api" || path.startsWith("/api/")) {
-      const result = await handler({ rawPath: path, requestContext: { http: { method: req.method } } });
+    if (path.startsWith("/api/audits/") || path.startsWith("/audit-demo/")) {
+      await auditRoute(req, res, path, port);
+    } else if (path === "/api" || path.startsWith("/api/")) {
+      const result = await handler({
+        rawPath: path,
+        requestContext: { http: { method: req.method } },
+      });
       res.writeHead(result.statusCode, result.headers).end(result.body);
     } else if (!["GET", "HEAD"].includes(req.method)) {
       res.writeHead(405, { Allow: "GET, HEAD" }).end();
@@ -65,7 +78,9 @@ if (development) {
   try {
     await access(join(dist, "index.html"));
   } catch {
-    throw new Error("Build the React app with npm run build before running npm start.");
+    throw new Error(
+      "Build the React app with npm run build before running npm start.",
+    );
   }
 }
 server.on("error", (error) => {

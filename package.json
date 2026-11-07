@@ -2,13 +2,18 @@
   "name": "truth2power",
   "private": true,
   "type": "module",
-  "engines": { "node": ">=22.12.0" },
+  "engines": {
+    "node": ">=22.13.0"
+  },
   "scripts": {
     "dev": "node backend/src/local-server.js --dev",
     "build": "vite build",
-    "start": "node backend/src/local-server.js"
+    "start": "node backend/src/local-server.js",
+    "audit:worker": "node backend/audit/worker.js",
+    "test:audit": "npm run build && node scripts/test-audit-e2e.js"
   },
   "dependencies": {
+    "playwright": "1.65.0",
     "react": "19.3.1",
     "react-dom": "19.3.1"
   },

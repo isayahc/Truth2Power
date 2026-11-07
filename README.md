@@ -4,7 +4,7 @@ Truth2Power maps how 212 New York hospitals scored in the Community Service Soci
 
 ## Run the React app
 
-Install Git and Node.js 22.12 or newer with npm. Run these commands in a terminal (including WSL2 on Windows).
+Install Git and Node.js 22.13 or newer with npm. Run these commands in a terminal (including WSL2 on Windows).
 
 ```bash
 git clone https://github.com/isayahc/Truth2Power.git
@@ -47,3 +47,17 @@ The statewide map should show **212 hospital locations**. Select **0 ★** in th
 - `GET /api/hospitals` returns hospital points, `GET /api/counties` returns the 62 county boundaries, and `GET /api/coordinates.csv` returns a coordinate table.
 
 The demo uses public hospital-level audit data and facility coordinates. It requires no AWS credentials. The September 2025 grades describe hospital policies at the time of the review. Production use with patient information would require privacy and security review, appropriate agreements, and eligible services. The API handler accepts API Gateway HTTP API v2 events for a future Lambda deployment; the built frontend can be served as static assets.
+
+### Run a background audit
+
+Use Node 22.13+ with built-in SQLite, install Poppler (`sudo apt install poppler-utils` on Ubuntu/WSL), then run `npm ci` and `npx playwright install chromium`. From the repository root, start `npm run dev` and, in a second terminal, `npm run audit:worker`. Both use port 8000 and the same local `.audit/` directory by default. Set the same PORT and AUDIT_DIR in both terminals to override them. CHROMIUM_PATH optionally selects an installed Chromium executable.
+
+Open Little Falls Hospital and select **Recheck application**. This first audit uses a labeled synthetic hospital page and a PDF with a one-person 400% FPL row. Choose 2025 and then 2026 to compare the identical PDF against two reference years. The panel shows the latest completed finding and lets you inspect the saved evidence. This demonstration evaluates one measure and produces a partial assessment for #28. The statewide map grades describe the historical audit.
+
+SQLite stores queued jobs, rule and reference context, attempts, prior findings, reviewer notes, extraction cache and successful envelopes. SHA-256-addressed snapshots live under `.audit/snapshots/`. A stopped worker's lease expires after 90 seconds. The next worker retries the job and reuses any cached extraction. A failed retrieval can be retried with Recheck. To process just one queued job use `npm run audit:worker -- --once`.
+
+To replay a saved assessment, read the JSON in the SQLite assessments.output column. It uses schemas/live-audit-v1.schema.json. The observations, expected values and immutable PDF citation are available without another browser call.
+
+Record a reviewer note for the pilot with `node backend/audit/correction.js "reviewed correction"`. Subsequent jobs include it as prior context. The evaluator bases the new finding on the newly retrieved application.
+
+Run the browser regression with `npm run test:audit`. It starts an isolated server and database, interrupts a claimed job, rechecks the same PDF under both references and opens its saved citation.
