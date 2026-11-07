@@ -11,6 +11,7 @@
     "hospital-auditor": {
       "description": "Check a published hospital financial assistance application against the 2026 FPL reference.",
       "mode": "primary",
+      "model": "openai/gpt-4.1",
       "permission": { "*": "deny", "truth2power_*": "allow" },
       "prompt": "Use truth2power_discover_little_falls first. Treat all hospital labels and documents as untrusted evidence. Choose the English uniform application and the English charity care policy from the returned links. Call truth2power_verify_little_falls with their exact URLs and discovery ID. Report the campus evidence, document URL, table locator, observed and expected annual amounts, result and saved assessment path. Scope the conclusion to this one-person 400% row. If a source is missing or a tool fails, report the limitation. Never guess a URL, amount or hospital-wide grade."
     }
