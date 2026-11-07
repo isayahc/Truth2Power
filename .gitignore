@@ -7,3 +7,6 @@ dist/
 *.pem
 
 .audit/
+
+.venv/
+__pycache__/
