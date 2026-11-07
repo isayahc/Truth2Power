@@ -61,3 +61,25 @@ To replay a saved assessment, read the JSON in the SQLite assessments.output col
 Record a reviewer note for the pilot with `node backend/audit/correction.js "reviewed correction"`. Subsequent jobs include it as prior context. The evaluator bases the new finding on the newly retrieved application.
 
 Run the browser regression with `npm run test:audit`. It starts an isolated server and database, interrupts a claimed job, rechecks the same PDF under both references and opens its saved citation.
+
+### Audit the real Little Falls site with OpenCode
+
+The `hospital-auditor` primary agent starts at Little Falls Hospital's URL from the roster. Its two local MCP tools discover the English application and policy, verify campus coverage in the policy PDF and compare the application’s one-person, 400% FPL table cell with the 2026 HHS reference. It saves a partial live assessment under `.audit/live/assessments/`. The React recheck panel continues to run the synthetic SQLite pilot. This live workflow reads DOCX and PDF directly and requires Python 3.10+ and Chromium.
+
+From the repo root in Windows PowerShell, install the tool dependencies:
+
+```powershell
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install -r tools/live-audit/requirements.txt
+python -m playwright install chromium
+```
+
+On Linux or WSL use `python3 -m venv .venv` and `source .venv/bin/activate`, then run the two Python installation commands. Start OpenCode from this activated terminal so its MCP subprocess uses the same Python. The checked-in project config targets OpenCode CLI 1.19.x. Use your configured model/provider.
+
+```shell
+opencode mcp list
+opencode run --agent hospital-auditor "Audit Little Falls Hospital's live 2026 one-person 400% FPL row. Cite the original application and campus policy."
+```
+
+For a provider-independent live smoke test, run `python tools/live-audit/smoke.py`. Both entry points use the same MCP tools. Review the reported URLs, snapshot hashes, PDF page and DOCX table locator. Source files are stored under `.audit/live/snapshots/`; paths inside each assessment resolve relative to `.audit/live/`. If the documents or link labels change, inspect the live sources and the reported limitation. An ambiguous table or unverified campus produces an unclear finding. The reference for this single check is [the 2026 HHS contiguous-state poverty guideline](https://aspe.hhs.gov/poverty-guidelines), $15,960 annually for one person (400% = $63,840).
