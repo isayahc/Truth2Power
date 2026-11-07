@@ -1,3 +1,4 @@
+import AuditPanel from "./AuditPanel.jsx";
 import React from "react";
 import { ratings, ratingByStars } from "./ratings.js";
 
@@ -97,6 +98,7 @@ export function HospitalDetail({ hospital, onClose }) {
           <a href={p.coordinate_source_url}>{p.coordinate_source}</a>
         </dd>
       </dl>
+      {hospital.id === "362" && <AuditPanel />}
       <div className="links">
         <a href={p.audit_url}>Audit row ↗</a>
         {p.assistance_url && <a href={p.assistance_url}>Financial assistance ↗</a>}
