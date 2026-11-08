@@ -235,9 +235,9 @@ async def compare_application_template(hospital_key: str, extraction_id: str, ap
 
 
 @mcp.tool()
-def review_application_measures(hospital_key: str, extraction_id: str, application_url: str, review_date: str) -> dict:
-    """Issue #23: evaluate six application-only draft measures from a saved application URL. review_date is YYYY-MM-DD and selects the versioned HHS reference. Uses a deterministic English uniform-form profile; unsupported layouts/languages are unclear. Full official-form equivalence remains a specific review question. Re-extracts original bytes and saves an inbox-ready draft; never substitutes policy/summary text or approves findings."""
-    return review_application(hospital_key, extraction_id, application_url, review_date, DATA, save)
+def review_application_measures(hospital_key: str, extraction_id: str, application_url: str, review_date: str, template_comparison_id: str | None = None) -> dict:
+    """Issue #23/#72: evaluate six application-only drafts. review_date is YYYY-MM-DD. Optional template_comparison_id attaches a fresh source-verified comparison to a NEW 2026 draft for the inbox; stale parsers or mismatched evidence are rejected. Re-extracts original bytes. English uniform-form profile only; unsupported layouts/languages are unclear. Whole-form interpretation stays pending, original drafts preserved, no human approval."""
+    return review_application(hospital_key, extraction_id, application_url, review_date, DATA, save, template_comparison_id=template_comparison_id)
 
 
 @mcp.tool()

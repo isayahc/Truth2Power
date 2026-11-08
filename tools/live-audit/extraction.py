@@ -14,7 +14,7 @@ from pypdf import PdfReader, __version__ as PDF_VERSION
 from documents import LIMIT, now
 from docx_drawings import inventory as drawing_inventory
 
-PARSER = "document-text-v4"
+PARSER = "document-text-v5"
 MAX_PAGES = 200
 MAX_TEXT = 2_000_000
 
@@ -64,6 +64,8 @@ def extract_bytes(data, suffix):
             if len(members) > 1000 or sum(m.file_size for m in members) > LIMIT * 4:
                 raise ValueError("docx_expansion_limit_exceeded")
             xml = archive.read("word/document.xml")
+            auxiliary = {m.filename: archive.read(m.filename) for m in members
+                         if re.fullmatch(r"word/(header\d+|footer\d+|footnotes|endnotes)\.xml", m.filename)}
         if b"<!DOCTYPE" in xml.upper() or b"<!ENTITY" in xml.upper():
             raise ValueError("docx_xml_declarations_not_supported")
         ns = {"w": "http://schemas.openxmlformats.org/wordprocessingml/2006/main"}
@@ -88,10 +90,31 @@ def extract_bytes(data, suffix):
         drawing_gap = (len(drawings) != len(body.findall(".//w:drawing", ns)) + len(body.findall(".//w:pict", ns))
                        or any(d["classification"] == "requires_visual_review" for d in drawings))
         unsupported = drawing_gap or any(body.findall(f".//w:{tag}", ns) for tag in ("ins", "del", "altChunk", "object", "txbxContent"))
-        extra_parts = any(re.fullmatch(r"word/(header\d+|footer\d+|footnotes|endnotes)\.xml", m.filename) for m in members)
-        if unsupported or extra_parts:
+        if unsupported:
             result.update(status="needs_review", reason="docx_visual_or_extra_content_review_needed")
-        return [result]
+        results = [result]
+        for name, content in sorted(auxiliary.items()):
+            if b"<!DOCTYPE" in content.upper() or b"<!ENTITY" in content.upper():
+                raise ValueError("docx_xml_declarations_not_supported")
+            tree = ET.fromstring(content)
+            root_name = "hdr" if "/header" in name else "ftr" if "/footer" in name else "footnotes" if name.endswith("/footnotes.xml") else "endnotes"
+            text = "\n".join("".join(t.text or "" for t in p.findall(".//w:t", ns)) for p in tree.findall(".//w:p", ns))
+            part = segment(text, f"DOCX {name} (auxiliary part; pagination unverified)")
+            # Valid empty note separators and empty headers/footers are coverage, not missing pages.
+            part["empty_auxiliary_part"] = not part["text"]
+            if part["empty_auxiliary_part"]:
+                part.update(status="extracted", reason=None)
+            fields = [" ".join((e.text or "").split()) for e in tree.findall(".//w:instrText", ns)]
+            part["fields"] = fields
+            # Page-number fields are layout metadata; never evaluate arbitrary Word fields.
+            unknown_fields = any(not re.fullmatch(r"(?:PAGE|NUMPAGES)(?:\s+\\\*\s+(?:MERGEFORMAT|Arabic))?", f, re.I) for f in fields)
+            complex_content = any(tree.findall(f".//w:{t}", ns) for t in ("ins", "del", "altChunk", "object", "drawing", "pict", "txbxContent", "fldSimple"))
+            if unknown_fields or complex_content or tree.tag != f"{{{ns['w']}}}{root_name}":
+                part.update(status="needs_review", reason="docx_auxiliary_content_requires_review")
+            results.append(part)
+        if sum(len(p["text"]) for p in results) > MAX_TEXT:
+            raise ValueError("text_limit_exceeded")
+        return results
     if suffix == ".html":
         parser = VisibleText()
         parser.feed(data.decode("utf-8", errors="replace"))

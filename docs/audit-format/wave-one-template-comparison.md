@@ -15,10 +15,10 @@ Source-checked supervising-assistant notes for #72/#70/#23. These are draft obse
 
 | Hospital | Packet under `.audit/live/template-comparisons/` | Verified evidence lines | Changed alignment blocks |
 | --- | --- | ---: | ---: |
-| Little Falls (362) | `eca1d67de925400c9c077f81e333db81.json` | 168 | 11 |
-| Ellenville (1002) | `f15d388d259344bbb3e05497a2d0f629.json` | 248 | 17 |
+| Little Falls (362) | `f81fd1bb22ed4d33bcd34ac8d9d2432b.json` | 169 | 12 |
+| Ellenville (1002) | `ab76b25dcdd148f1a6a890d4d5d1a4d6.json` | 249 | 17 |
 
-All **416 evidence lines** were independently verified against re-extracted, hash-checked original snapshots. Changed-block counts are formatting/text alignment diagnostics, not counts of violations. Earlier packets remain preserved.
+All **418 evidence lines** were independently verified against re-extracted, hash-checked original snapshots. Parser `document-text-v5` adds the official footnote as `reference-80`; prior body evidence IDs are unchanged. Changed-block counts are formatting/text alignment diagnostics, not counts of violations. Earlier packets remain preserved.
 
 The auditor saved the evidence correctly, but its initial prose incorrectly claimed that common sections were absent from the reference. Those claims are rejected: the source-checked observations below supersede the prose summaries. Compact tool delivery now includes each cited source line once instead of duplicate source/evidence copies that could exceed output limits. Even complete delivery did not make the model's interpretation reliable; source verification remains necessary.
 
@@ -50,6 +50,12 @@ Evidence IDs refer to the Ellenville packet above.
 
 ## Remaining limits
 
-The official DOCX body extraction is flagged `needs_review` because it has footnotes and header/footer parts. Direct auxiliary-XML inspection located the primary-language definition in `word/footnotes.xml`; it must not be called missing merely because it is absent from body-only evidence. A local auxiliary inspection text is saved at `.audit/72-inspection/reference-extra-text.txt`, bound to the same original reference snapshot. This inspection is not a rendered-layout check or a replacement for formally cited auxiliary-part extraction.
+The official DOCX now has **nine individually covered XML parts**, all extracted: body, footnotes, and seven empty endnote/header/footer parts. Empty parts are explicitly recorded, not treated as unreadable pages. The primary-language definition is formally cited as `reference-80`, locator `DOCX word/footnotes.xml (auxiliary part; pagination unverified)`. It corresponds to Little Falls `application-19` and Ellenville `application-28`–`application-31`. Unknown Word fields or unsupported auxiliary content still trigger review flags. XML coverage does not verify rendered pagination or visual layout.
 
-Both whole-form findings remain **unclear** pending complete reference coverage and interpretation of permitted customizations/layout. No original application finding, human decision or historical grade was changed by these comparison packets. Wave 1's application drafts remain **9 yes / 1 no / 2 unclear**. Four additional Ellenville language versions and one Little Falls Spanish version remain unassessed.
+Both whole-form findings remain **unclear** pending interpretation of permitted customizations/layout. New inbox drafts attach verified observations, exact quotes and source links, reference coverage, and specific questions:
+
+- Little Falls: `.audit/live/application-reviews/3758793319154842aa88cc2f63339d76/results/56b15522b0a740f6969cfcbea420aecb.json`.
+- Ellenville: `.audit/live/application-reviews/af547d4cb3ca48fdb95de3cf4a04d22c/results/dce4309264d54716b3f62d1e35a84d8d.json`.
+- Verify visual fields, signature areas and table layout; decide permitted campus/MRN/extra-row customization; clarify treatment of the official numeric discrepancy. For Ellenville, decide whether the outdated table also fails whole-form currency under the approved rubric.
+
+Prior drafts and human decisions remain preserved; new drafts inherit no approvals. Wave 1's application drafts remain **9 yes / 1 no / 2 unclear**. Four additional Ellenville language versions and one Little Falls Spanish version remain unassessed. Live inbox at `http://127.0.0.1:8098/` was verified for both hospitals at 1440×1000 and 390×844, with 16 pending items and no decisions recorded. Local screenshots: `.audit/72-inspection/{Ellenville,Little Falls}-v5-{desktop,mobile}.png`; verification manifest: `.audit/72-inspection/v5-verification.json`.

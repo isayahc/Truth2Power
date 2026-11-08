@@ -105,6 +105,11 @@ test("application checks coexist with posted-material findings and retain their 
   assert.equal(service.list().pending, 7);
   const item = service.list().items.find((r) => r.measure_id === "application.fpl_guidelines");
   const detail = service.detail(item.id);
+  assert.equal(detail.template_comparison, null);
+  const uniform = service.detail(service.list().items.find((r) => r.measure_id === "application.uniform_application").id);
+  assert.equal(uniform.template_comparison.reference_parts.length, 2);
+  assert.match(uniform.template_comparison.observations[0].evidence[0].saved_url, /\/sources\//);
+  assert.equal(uniform.template_comparison.observations[0].evidence[0].quote, "Patients may apply at any time.");
   assert.equal(detail.draft_result, "no");
   assert.equal(detail.guideline_year, 2026);
   assert.equal(detail.observed.cells[0].expected, 63840);

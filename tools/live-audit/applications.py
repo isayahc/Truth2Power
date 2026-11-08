@@ -42,7 +42,7 @@ def evaluate(source, review_date, reference):
         raise ValueError("No versioned HHS reference for this review year")
     pages = source["segments"]
     text = normalized(" ".join(p["text"] for p in pages))
-    readable = bool(pages) and all(p["status"] == "extracted" and p["text"].strip() for p in pages)
+    readable = bool(pages) and all(p["status"] == "extracted" and (p["text"].strip() or p.get("empty_auxiliary_part")) for p in pages)
     profile = readable and bool(re.search(r"NYS Uniform Hospital Financial Assistance Application", normalized(pages[0]["text"])))
     findings = []
 
@@ -141,7 +141,7 @@ def evaluate(source, review_date, reference):
     return findings, "reviewed"
 
 
-def review_application(hospital_key, extraction_id, application_url, review_date, output, save):
+def review_application(hospital_key, extraction_id, application_url, review_date, output, save, template_comparison_id=None):
     # Date parsing/reference lookup occurs before producing any artifact.
     year = date.fromisoformat(review_date).year
     raw_reference = REFERENCE.read_bytes()
@@ -173,6 +173,24 @@ def review_application(hospital_key, extraction_id, application_url, review_date
         limitations=["Only the explicitly selected application is evaluated; other language versions are not certified.",
                     "Full official-form equivalence needs the applicable reference template and human review.",
                     "No statewide or Wave 1 completion, automatic grade, or human approval is implied."])
+    if template_comparison_id:
+        if year != 2026:
+            raise ValueError("The pinned official template context supports 2026 reviews only")
+        from template_context import attach_context
+        context, official = attach_context(template_comparison_id, hospital_key, extraction_id, source, reference, output)
+        result["template_comparison"] = context
+        result["snapshots"].append(official["snapshot"])
+        uniform = next(f for f in findings if f["measure_id"] == "application.uniform_application")
+        uniform.update(result="unclear", reason_code="insufficient_evidence",
+            explanation="Source-verified text comparison is attached, including official auxiliary parts. Whole-form interpretation and rendered layout remain unresolved; the specific questions below replace the earlier reference-discovery question.",
+            unresolved_questions=context["unresolved_questions"],
+            expected=dict(condition=MEASURES["application.uniform_application"], authority_url=official["snapshot"]["url"], template_version=context["reference_version"]))
+        uniform["evidence"].extend(evidence(official, official["segments"]))
+        result["coverage"].append(dict(source_id="official_reference", url=official["snapshot"]["url"], language="English",
+            status="extracted" if all(s["status"] == "extracted" for s in official["segments"]) else "extraction_review_needed",
+            total_pages=len(official["segments"]), reviewed_pages=[s["locator"] for s in official["segments"] if s["status"] == "extracted"],
+            notes="DOCX body plus footnote/endnote/header/footer XML parts; empty parsed parts are explicitly covered. No rendered pagination or human approval is implied."))
+        result["gaps"].extend(dict(url=official["snapshot"]["url"], locator=s["locator"], reason=s["reason"]) for s in official["segments"] if s["status"] != "extracted")
     # Keep the v1 finding core interoperable; questions belong to the draft envelope extension.
     from jsonschema import Draft202012Validator
     schema = json.loads((REFERENCE.parents[1] / "schemas/live-audit-v1.schema.json").read_text(encoding="utf-8"))
@@ -184,4 +202,5 @@ def review_application(hospital_key, extraction_id, application_url, review_date
     return dict(result_file=str(path), review_id=review_id, scope=result["scope_label"],
                 results={f["measure_id"]: f["result"] for f in findings},
                 extraction_details=result["extraction_details"], human_review="pending",
+                template_comparison_id=template_comparison_id,
                 other_application_versions_not_assessed=other_applications, findings=findings)

@@ -32,7 +32,7 @@ class DocxTests(unittest.TestCase):
 
     def test_unrepresented_content_routes_to_review(self):
         for data in [docx(footer=True), docx('<w:del><w:r><w:t>deleted</w:t></w:r></w:del>'), docx('<w:drawing/>')]:
-            self.assertEqual(extract_bytes(data, ".docx")[0]["status"], "needs_review")
+            self.assertTrue(any(p["status"] == "needs_review" for p in extract_bytes(data, ".docx")))
 
     def test_archive_expansion_limit(self):
         out = io.BytesIO()
