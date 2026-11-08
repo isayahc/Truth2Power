@@ -13,6 +13,7 @@ from pathlib import Path
 from cross_documents import load_sources
 from documents import now
 from full_review import json_save
+from extraction import PARSER
 
 MEASURES = {
     "application.uniform_application": "The entire applicable NYS Uniform Hospital Financial Assistance Application is used.",
@@ -161,6 +162,9 @@ def review_application(hospital_key, extraction_id, application_url, review_date
         reference=reference, rubric_version="english-uniform-application-profile-v1", human_review="pending", status="draft_needs_human_review",
         scope_label="Selected application only; English profile" if status == "reviewed" else "Selected application; language/layout review needed",
         findings=findings, snapshots=[source["snapshot"]],
+        extraction_details=dict(parser_version=PARSER, snapshot_id=source["snapshot"]["snapshot_id"],
+            drawings=[d for p in source["segments"] for d in p.get("drawings", [])],
+            limitations="Structural drawing classification does not verify rendered layout or entire-form equivalence."),
         coverage=[dict(source_id="application", url=application_url, language="English" if status == "reviewed" else "unverified",
             status=status, total_pages=len(source["segments"]), reviewed_pages=[p["locator"] for p in source["segments"]] if status == "reviewed" else [],
             notes="Source segments extracted; DOCX body locators are not rendered pages. Deterministic profile checks, not human approval or complete official-template equivalence.")],
@@ -177,5 +181,7 @@ def review_application(hospital_key, extraction_id, application_url, review_date
         validator.validate({k: v for k, v in finding.items() if k != "unresolved_questions"})
     path = output / "application-reviews" / review_id / "results" / f"{result_id}.json"
     json_save(path, result, save)
-    return dict(result_file=str(path), review_id=review_id, scope=result["scope_label"], findings=findings,
-                other_application_versions_not_assessed=other_applications, human_review="pending")
+    return dict(result_file=str(path), review_id=review_id, scope=result["scope_label"],
+                results={f["measure_id"]: f["result"] for f in findings},
+                extraction_details=result["extraction_details"], human_review="pending",
+                other_application_versions_not_assessed=other_applications, findings=findings)

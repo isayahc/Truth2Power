@@ -129,6 +129,13 @@ export default function ReviewInbox({ inbox, error, onRefresh, hospitalKey, hosp
               <thead><tr><th scope="col">Household size</th><th scope="col">FPL %</th><th scope="col">Published</th><th scope="col">Expected</th><th scope="col">Match</th></tr></thead>
               <tbody>{item.observed.cells.map((cell, i) => <tr key={i}><td>{cell.household_size}</td><td>{cell.fpl_percent}%</td><td>${cell.observed.toLocaleString()}</td><td>${cell.expected.toLocaleString()}</td><td>{cell.observed === cell.expected ? "Yes" : "No"}</td></tr>)}</tbody>
             </table></div></details>}
+          {!!item.extraction_details?.drawings?.length && <details><summary>Drawing extraction evidence ({item.extraction_details.drawings.length})</summary>
+            <p>Parser: {item.extraction_details.parser_version}. {item.extraction_details.limitations}</p>
+            <ul>{item.extraction_details.drawings.map((drawing) => <li key={drawing.locator}>
+              <strong>{drawing.name || "Unnamed drawing"}</strong> · {drawing.locator}<br />
+              {drawing.explanation}<br /><small>Drawing XML SHA-256: {drawing.xml_sha256}</small>
+            </li>)}</ul>
+          </details>}
           {!!item.other_application_versions_not_assessed?.length && <details><summary>Other application versions not assessed ({item.other_application_versions_not_assessed.length})</summary>
             <p>These findings cover only the selected application, not all language versions.</p><ul>{item.other_application_versions_not_assessed.map((url) => <li key={url}><a href={url} target="_blank" rel="noreferrer">{url.split("/").at(-1)} ↗</a></li>)}</ul>
           </details>}
