@@ -24,6 +24,28 @@ function Evidence({ evidence }) {
   </article>)}</div>;
 }
 
+function WholeFormReview({ review }) {
+  if (!review) return null;
+  return <section aria-label="Rendered whole-form interpretation">
+    <h4>Rendered whole-form interpretation</h4>
+    <p className="review-meta">{review.reviewed_at} · {review.reviewer} · {review.reference_units_reviewed} reference text units accounted for</p>
+    <p>{review.conclusion}</p><p><strong>Recommendation pending approval:</strong> {review.recommendation}</p>
+    <details><summary>Visual section-by-section comparison</summary>
+      <p>{review.limitations}</p>
+      {review.visual_sections.map((s) => <article key={s.section}><h4>{s.section}</h4><p>{s.observation}</p>
+        <div className="review-links">{["reference", "application"].map((role) => <span key={role}>{role === "reference" ? "Official reference" : "Hospital application"}: {s[`${role}_pages`].map((page) =>
+          review.renders[role].saved_url ? <a key={page} href={`${review.renders[role].saved_url}#page=${page}`} target="_blank" rel="noreferrer">page {page} ↗ </a> : <span key={page}>page {page} (unavailable) </span>)}</span>)}</div>
+      </article>)}
+    </details>
+    <details><summary>Resolved points and authority</summary>
+      <ul>{review.resolved_points.map((point) => <li key={point}>{point}</li>)}</ul>
+      <p>{review.authority.locator}</p><blockquote>{review.authority.quote}</blockquote>
+      <p>{review.authority.interpretation}</p>
+      {review.authority.url && <a href={review.authority.url} target="_blank" rel="noreferrer">Statutory source ↗</a>}
+    </details>
+  </section>;
+}
+
 function DecisionForm({ item, onSaved }) {
   const [action, setAction] = useState("confirm");
   const [result, setResult] = useState(item.draft_result);
@@ -125,7 +147,8 @@ export default function ReviewInbox({ inbox, error, onRefresh, hospitalKey, hosp
           {item.authority_url && <p><a href={item.authority_url} target="_blank" rel="noreferrer">Reference source ↗</a></p>}
           {item.template_comparison && <section aria-label="Verified template comparison">
             <h3>Verified template comparison</h3>
-            <p>Text evidence verified against saved originals. Whole-form interpretation remains pending.</p>
+            <p>Text evidence verified against saved originals. Whole-form approval remains pending.</p>
+            <WholeFormReview review={item.template_comparison.whole_form_review} />
             <p className="review-meta">{item.template_comparison.reference_version} · Retrieved {date(item.template_comparison.reference_retrieved_at)} · {item.template_comparison.parser_version}</p>
             {item.template_comparison.numeric_authority_url && <p><a href={item.template_comparison.numeric_authority_url} target="_blank" rel="noreferrer">HHS dollar-check authority ↗</a> · {item.template_comparison.numeric_reference_version}</p>}
             <details><summary>Official reference part coverage ({item.template_comparison.reference_parts.length})</summary>

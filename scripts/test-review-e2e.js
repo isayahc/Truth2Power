@@ -51,6 +51,11 @@ try {
   await page.setViewportSize({ width: 1440, height: 1000 });
   await page.getByRole("button", { name: /Needs review.*Ellenville.*Entire Uniform Application/ }).click();
   await page.getByRole("heading", { name: "Verified template comparison", exact: true }).waitFor();
+  await page.getByRole("heading", { name: "Rendered whole-form interpretation", exact: true }).waitFor();
+  await page.getByText("Visual section-by-section comparison", { exact: true }).click();
+  await page.getByRole("heading", { name: "SYN signature area", exact: true }).waitFor();
+  assert.match(await page.getByRole("link", { name: /page 1 ↗/ }).first().getAttribute("href"), /#page=1$/);
+  assert.match(await page.locator(".review-detail").innerText(), /SYN visual review complete/);
   await page.getByText("SYN official numeric discrepancy", { exact: true }).click();
   await page.getByText("Official reference part coverage (2)", { exact: true }).click();
   assert.match(await page.locator(".review-detail").innerText(), /Empty part verified/);
@@ -61,6 +66,7 @@ try {
   await page.screenshot({ path: join(artifacts, "72-template-mobile.png"), fullPage: true });
   await page.setViewportSize({ width: 1440, height: 1000 });
   await page.getByRole("button", { name: /Needs review.*Ellenville.*Application deadlines/ }).click();
+  await page.getByRole("heading", { name: "Application deadlines", exact: true }).waitFor();
   await page.getByRole("heading", { name: "Quoted evidence" }).waitFor();
   assert.match(await page.locator(".review-detail").innerText(), /SYNTHETIC/);
   const savedUrl = await page.getByRole("link", { name: /Open saved source/ }).first().getAttribute("href");

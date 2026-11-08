@@ -108,6 +108,8 @@ test("application checks coexist with posted-material findings and retain their 
   assert.equal(detail.template_comparison, null);
   const uniform = service.detail(service.list().items.find((r) => r.measure_id === "application.uniform_application").id);
   assert.equal(uniform.template_comparison.reference_parts.length, 2);
+  assert.match(uniform.template_comparison.whole_form_review.renders.reference.saved_url, /\/sources\//);
+  assert.equal(uniform.template_comparison.whole_form_review.authority.url, "https://example.org/SYN-authority");
   assert.match(uniform.template_comparison.observations[0].evidence[0].saved_url, /\/sources\//);
   assert.equal(uniform.template_comparison.observations[0].evidence[0].quote, "Patients may apply at any time.");
   assert.equal(detail.draft_result, "no");

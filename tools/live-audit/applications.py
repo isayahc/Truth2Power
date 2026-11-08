@@ -141,7 +141,7 @@ def evaluate(source, review_date, reference):
     return findings, "reviewed"
 
 
-def review_application(hospital_key, extraction_id, application_url, review_date, output, save, template_comparison_id=None):
+def review_application(hospital_key, extraction_id, application_url, review_date, output, save, template_comparison_id=None, whole_form_review_id=None):
     # Date parsing/reference lookup occurs before producing any artifact.
     year = date.fromisoformat(review_date).year
     raw_reference = REFERENCE.read_bytes()
@@ -191,6 +191,11 @@ def review_application(hospital_key, extraction_id, application_url, review_date
             total_pages=len(official["segments"]), reviewed_pages=[s["locator"] for s in official["segments"] if s["status"] == "extracted"],
             notes="DOCX body plus footnote/endnote/header/footer XML parts; empty parsed parts are explicitly covered. No rendered pagination or human approval is implied."))
         result["gaps"].extend(dict(url=official["snapshot"]["url"], locator=s["locator"], reason=s["reason"]) for s in official["segments"] if s["status"] != "extracted")
+    if whole_form_review_id:
+        if not template_comparison_id:
+            raise ValueError("Whole-form interpretation requires a verified template comparison")
+        from whole_form import attach_whole_form
+        attach_whole_form(result, source, official, whole_form_review_id, output)
     # Keep the v1 finding core interoperable; questions belong to the draft envelope extension.
     from jsonschema import Draft202012Validator
     schema = json.loads((REFERENCE.parents[1] / "schemas/live-audit-v1.schema.json").read_text(encoding="utf-8"))
@@ -203,4 +208,5 @@ def review_application(hospital_key, extraction_id, application_url, review_date
                 results={f["measure_id"]: f["result"] for f in findings},
                 extraction_details=result["extraction_details"], human_review="pending",
                 template_comparison_id=template_comparison_id,
+                whole_form_review_id=whole_form_review_id,
                 other_application_versions_not_assessed=other_applications, findings=findings)
