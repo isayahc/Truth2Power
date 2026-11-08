@@ -150,6 +150,28 @@ Run regression checks with `python -m unittest discover -s tools/live-audit -p "
 
 All three aggregate drafts remain `unclear` for specific reasons: the linked 2021 policy was not downloaded (the collection reported 404); application timing includes unspecified “timely” completion and Russian wording about data collection; asset provisions need reconciliation with personal-resource exhaustion and weaker Spanish wording; Ukrainian immigration wording needs qualified translation interpretation. Favorable provisions remain cited. These are questions for review, not established violations. PSA criteria and human approval remain pending; the earlier incomplete result is retained for traceability.
 
+### Human review inbox (#27)
+
+Open **Review inbox** in the header, or **Review notifications** on a hospital record. The badge counts pending and information-requested items. The local inbox reads the newest finalized full-document result per hospital from `.audit/live/full-reviews/`; it includes all three model findings and the unresolved service-area question. The existing Ellenville result supplies four notifications. A fresh checkout with no local drafts shows an empty inbox, not invented findings. Earlier result files remain on disk; the inbox explicitly shows the current result ID and date.
+
+Notifications identify the hospital, measure, question, date and review status. The review panel shows the original result, exact source-language quotations, page locators, source-by-source reasoning, language/page coverage, missing sources and live links. **Open saved source** serves hash-verified original PDFs (with page anchors) or inert text for saved website HTML. Website HTML is never executed in the app's origin.
+
+Reviewers may **confirm**, **correct**, or **request information / leave unresolved**, with a role and reason. Confirming `unclear` keeps the finding unclear. Correcting to yes/no requires existing cited evidence; missing evidence must first be supplied in a new draft. N/A requires the reviewer to explain the applicable rubric exemption. The UI records a reviewed-result overlay and an append-only decision history; original drafts and the September 2025 map ratings are not overwritten. Requests for information remain in the pending count. Stale submissions are rejected, and a new result hash requires fresh review.
+
+Decisions are stored under `.audit/live/review-inbox-decisions/`, linked to the hospital, measure, result ID and SHA-256. This local workflow uses self-attested roles and is not a multi-user authenticated approval service. It does not import the terminal-only whole-result decisions or older #22 excerpt envelopes. Those remain separate artifacts. Only public hospital documents and synthetic test data belong here; do not enter patient information in review notes.
+
+API routes: `GET /api/reviews`, `GET /api/reviews/<item-id>`, `POST /api/reviews/<item-id>/decisions`, and `GET /api/reviews/<item-id>/sources/<snapshot-id>`. Local mutations require same-origin requests and the review request header, and enforce an 8 KB body limit. `T2P_REVIEW_DIRECTORY` can select an isolated directory for tests; the default is `.audit/live`.
+
+Verification:
+
+```powershell
+node --test backend/test/*.test.js
+npm run build
+node scripts/test-review-e2e.js
+```
+
+The browser test starts an isolated local server on port 8097 with synthetic drafts, verifies decisions and persistence, then removes only its temporary data. It does not approve live findings. Desktop/mobile screenshots are saved locally in `.audit/ui/27/`.
+
 ### Audit the real Little Falls site with OpenCode
 
 The `hospital-auditor` primary agent starts at Little Falls Hospital's URL from the roster. Its two local MCP tools discover the English application and policy, verify campus coverage in the policy PDF and compare the application’s one-person, 400% FPL table cell with the 2026 HHS reference. It saves a partial live assessment under `.audit/live/assessments/`. The React recheck panel continues to run the synthetic SQLite pilot. This live workflow reads DOCX and PDF directly and requires Python 3.10+ and Chromium.

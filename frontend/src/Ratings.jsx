@@ -62,7 +62,7 @@ export function Ratings({ hospitals, filter, onFilter }) {
   );
 }
 
-export function HospitalDetail({ hospital, onClose }) {
+export function HospitalDetail({ hospital, onClose, onReview, pendingReviews }) {
   const p = hospital.properties;
   const [longitude, latitude] = hospital.geometry.coordinates;
   return (
@@ -99,6 +99,7 @@ export function HospitalDetail({ hospital, onClose }) {
         </dd>
       </dl>
       {hospital.id === "362" && <AuditPanel />}
+      <button className="review-nav" onClick={onReview}>Review notifications ({pendingReviews ?? "…"})</button>
       <div className="links">
         <a href={p.audit_url}>Audit row ↗</a>
         {p.assistance_url && <a href={p.assistance_url}>Financial assistance ↗</a>}

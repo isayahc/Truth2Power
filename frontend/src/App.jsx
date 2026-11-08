@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import HospitalMap from "./HospitalMap.jsx";
 import HospitalSearch from "./HospitalSearch.jsx";
 import { HospitalDetail, Ratings } from "./Ratings.jsx";
+import ReviewInbox, { reviewRequest } from "./ReviewInbox.jsx";
 
 async function getFeatures(path, signal) {
   const response = await fetch(path, { signal });
@@ -13,7 +14,7 @@ async function getFeatures(path, signal) {
   return data.features;
 }
 
-function Header() {
+function Header({ onReview, pending }) {
   return (
     <header>
       <div className="brand">
@@ -31,7 +32,7 @@ function Header() {
         <span className="brand-name">Truth2Power</span>
         <span className="brand-unit">Health equity atlas</span>
       </div>
-      <span className="bar-right">New York State</span>
+      <button className="review-nav" onClick={onReview}>Review inbox <span>{pending ?? "…"}</span></button>
     </header>
   );
 }
@@ -79,6 +80,16 @@ export default function App() {
   const [selected, setSelected] = useState(null);
   const [mapKey, setMapKey] = useState(0);
   const [searchKey, setSearchKey] = useState(0);
+  const [reviewOpen, setReviewOpen] = useState(false);
+  const [reviewHospital, setReviewHospital] = useState("");
+  const [inbox, setInbox] = useState(null);
+  const [reviewError, setReviewError] = useState("");
+  async function refreshReviews() {
+    try { setInbox(await reviewRequest("/api/reviews")); setReviewError(""); }
+    catch (e) { setReviewError(e.message); }
+  }
+  useEffect(() => { refreshReviews(); }, []);
+  function openReviews(hospital = "") { setReviewHospital(hospital); setReviewOpen(true); refreshReviews(); }
   useEffect(() => {
     const controller = new AbortController();
     setError(false);
@@ -106,8 +117,15 @@ export default function App() {
   const visible = data?.hospitals.filter((h) => filter === null || h.properties.stars === filter);
   return (
     <div className="page">
-      <Header />
+      <Header onReview={() => openReviews()} pending={reviewError ? "!" : inbox?.pending} />
       <main>
+        {reviewOpen ? <>
+          <button className="back plain" onClick={() => setReviewOpen(false)}>← Back to hospital map</button>
+          <ReviewInbox key={reviewHospital} inbox={inbox} error={reviewError} onRefresh={refreshReviews}
+            hospitalKey={reviewHospital} hospitals={data?.hospitals ?? []} onHospital={(hospital) => {
+              if (hospital) { selectHospital(hospital); setMapKey((n) => n + 1); setReviewOpen(false); }
+            }} />
+        </> : <>
         <div className="intro">
           <div>
             <div className="period">September 2025 review</div>
@@ -162,7 +180,8 @@ export default function App() {
             </section>
             <aside>
               {selected ? (
-                <HospitalDetail hospital={selected} onClose={closeDetail} />
+                <HospitalDetail hospital={selected} onClose={closeDetail} onReview={() => openReviews(String(selected.id))}
+                  pendingReviews={inbox?.items.filter((r) => r.hospital_key === String(selected.id) && r.status !== "resolved").length} />
               ) : (
                 <Ratings hospitals={data.hospitals} filter={filter} onFilter={setFilter} />
               )}
@@ -182,6 +201,7 @@ export default function App() {
             )}
           </p>
         )}
+        </>}
         <Footer />
       </main>
     </div>
