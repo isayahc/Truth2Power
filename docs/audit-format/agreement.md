@@ -2,11 +2,11 @@
 
 Contract under review: [v1 output contract](README.md) and [`live-audit-v1.schema.json`](../../schemas/live-audit-v1.schema.json).
 
-**Pending agreement.** Implementation, passing checks, an AI statement or merging a PR does not substitute for explicit technical and subject-matter agreement.
+**Technical agreement recorded; subject-matter agreement pending.** Implementation, passing checks, an AI statement or merging a PR does not substitute for explicit technical and subject-matter agreement.
 
 | Review | Status | Decision reference / date |
 | --- | --- | --- |
-| Technical stakeholder — project owner | Reviewer identified; agreement decision pending | Project owner confirmed the technical-review role in the working session; no explicit agree/changes-requested decision recorded yet. |
+| Technical stakeholder — project owner | Agreed | Explicit technical approval on 2026-11-08 for PR #66 at commit `576aa33`; [recorded decision](https://github.com/isayahc/Truth2Power/pull/66#issuecomment-6726107152), relayed from the working session. |
 | Subject-matter stakeholder (CSS / policy reviewer) | Pending; reviewer unavailable | Follow-up [#67](https://github.com/isayahc/Truth2Power/issues/67), linked to #20 and PR #66. No recorded decision. |
 
 ## Decisions requested
