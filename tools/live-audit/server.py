@@ -22,7 +22,7 @@ from playwright.async_api import async_playwright
 from pypdf import PdfReader
 from documents import collect
 from extraction import extract_collection
-from cross_documents import CrossFinding, prepare, persist
+from cross_documents import CrossFinding, prepare, persist_selection
 
 ROOT = Path(__file__).resolve().parents[2]
 DATA = Path(os.environ.get("AUDIT_DIR", ROOT / ".audit")).resolve() / "live"
@@ -214,8 +214,8 @@ def prepare_cross_document_review(hospital_key: str, extraction_id: str) -> dict
 
 @mcp.tool()
 def save_cross_document_review(packet_id: str, findings: list[CrossFinding]) -> dict:
-    """Save five citation-checked drafts for #22. Each finding needs measure_id, result (no or unclear), reason_code (contradicted for no; insufficient_evidence or conflicting_evidence for unclear), explanation, observed, expected, evidence. Each evidence entry needs snapshot_id, locator and exact quote. Positive global conclusions require full review outside this keyword pilot. PSA must be unclear without an approved boundary rule."""
-    return persist(packet_id, [f.model_dump() for f in findings], ROOT, DATA, save)
+    """Save exactly five #22 drafts. Select evidence_ids from each measure's packet candidates, never retype quotes. The server inserts original quotes and verifies them against source pages. result: no or unclear. reason_code: contradicted for no; insufficient_evidence or conflicting_evidence for unclear. PSA must be unclear without an approved boundary rule. Return concise explanation, observed and expected strings."""
+    return persist_selection(packet_id, [f.model_dump() for f in findings], ROOT, DATA, save)
 
 
 if __name__ == "__main__":

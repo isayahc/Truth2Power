@@ -6,7 +6,7 @@ import unittest
 from pathlib import Path
 from unittest.mock import patch
 
-from cross_documents import MEASURES, load_sources, persist, prepare
+from cross_documents import MEASURES, load_sources, persist, persist_selection, prepare
 
 ROOT = Path(__file__).resolve().parents[2]
 QUOTE = "SYN-001 Patients may apply for financial assistance at any time."
@@ -73,6 +73,31 @@ class CrossDocumentTests(unittest.TestCase):
         self.findings[1].update(result="no", reason_code="contradicted")
         with self.assertRaisesRegex(ValueError, "PSA rule"):
             self.persist()
+
+    def selections(self):
+        return [dict(measure_id=m, result="unclear", reason_code="insufficient_evidence",
+                     explanation="Synthetic partial evidence requires review.", observed=None, expected=None,
+                     evidence_ids=[c["evidence_id"] for c in self.packet["candidates"][m]]) for m in MEASURES]
+
+    def test_evidence_ids_preserve_exact_source_quotes(self):
+        result = persist_selection(self.packet["packet_id"], self.selections(), ROOT, self.output, self.save)
+        saved = json.loads(Path(result["review_file"]).read_text())
+        time_finding = next(f for f in saved["findings"] if f["measure_id"].endswith("no_submission_time_limit"))
+        self.assertEqual(time_finding["evidence"][0]["quote"], QUOTE)
+
+    def test_unknown_or_cross_measure_evidence_ids_rejected(self):
+        selections = self.selections()
+        selections[0]["evidence_ids"] = ["m3-e1"]
+        with self.assertRaisesRegex(ValueError, "evidence IDs"):
+            persist_selection(self.packet["packet_id"], selections, ROOT, self.output, self.save)
+
+    def test_tampered_packet_quote_still_rejected(self):
+        measure = "posted_materials.no_submission_time_limit"
+        self.packet["candidates"][measure][0]["quote"] = "SYN-999 This quoted text was fabricated."
+        self.save(self.output / "cross-document-packets" / (self.packet["packet_id"] + ".json"),
+                  json.dumps(self.packet).encode())
+        with self.assertRaisesRegex(ValueError, "Citation"):
+            persist_selection(self.packet["packet_id"], self.selections(), ROOT, self.output, self.save)
 
 
 class SourceIntegrityTests(unittest.TestCase):
