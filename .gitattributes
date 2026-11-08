@@ -1,1 +1,2 @@
 backend/audit/fixture/*.pdf binary
+docs/audit-format/examples/application.txt text eol=lf
