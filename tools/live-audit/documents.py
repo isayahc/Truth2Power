@@ -1,8 +1,10 @@
-"""Collect directly linked PDFs from a roster financial-assistance landing page."""
+"""Collect directly linked PDFs and DOCX from a roster assistance landing page."""
 import hashlib
 import json
 import re
 import uuid
+import io
+import zipfile
 from datetime import datetime, timezone
 from html.parser import HTMLParser
 from pathlib import Path
@@ -19,7 +21,7 @@ def now():
 
 
 class Links(HTMLParser):
-    """Keep every PDF anchor, including duplicate labels and languages."""
+    """Keep document anchors, including duplicate labels and languages."""
     def __init__(self, base):
         super().__init__()
         self.base, self.links, self.current = base, {}, None
@@ -28,7 +30,7 @@ class Links(HTMLParser):
         if tag == "a":
             href = dict(attrs).get("href", "")
             url = urldefrag(urljoin(self.base, href))[0]
-            self.current = (url, []) if urlsplit(url).path.lower().endswith(".pdf") else None
+            self.current = (url, []) if urlsplit(url).path.lower().endswith((".pdf", ".docx")) else None
 
     def handle_data(self, text):
         if self.current:
@@ -74,7 +76,7 @@ def collect(hospital_key, root, output, save, fetch=download):
     host = (urlsplit(url).hostname or "").removeprefix("www.")
     attempt = dict(schema_version="1.0", hospital_key=hospital_key, landing_url=url,
                    attempted_at=now(), status="failed", landing_page=None, documents=[],
-                   limitations=["Direct .pdf anchors in saved HTML only; no JavaScript or recursive discovery. "
+                    limitations=["Direct .pdf/.docx anchors in saved HTML only; no JavaScript or recursive discovery. "
                                 "External hosts require review. Downloading does not verify currency or campus applicability."])
 
     def snapshot(data, final_url, suffix, mime):
@@ -99,9 +101,14 @@ def collect(hospital_key, root, output, save, fetch=download):
                     raise ValueError("100-document limit reached")
                 approved(source, host)
                 data, destination, content_type = fetch(source, host)
-                if not data.startswith(b"%PDF-"):
+                suffix = Path(urlsplit(source).path).suffix.lower()
+                if suffix == ".pdf" and not data.startswith(b"%PDF-"):
                     raise ValueError("Linked document is not a PDF")
-                record.update(snapshot(data, destination, ".pdf", content_type), status="saved")
+                if suffix == ".docx":
+                    with zipfile.ZipFile(io.BytesIO(data)) as archive:
+                        if "word/document.xml" not in archive.namelist():
+                            raise ValueError("Linked document is not a DOCX")
+                record.update(snapshot(data, destination, suffix, content_type), status="saved")
             except Exception as error:
                 record["error_type"] = type(error).__name__
                 if isinstance(error, HTTPError):
@@ -118,7 +125,7 @@ def collect(hospital_key, root, output, save, fetch=download):
     path = output / "collections" / hospital_key / (uuid.uuid4().hex + ".json")
     save(path, json.dumps(attempt, indent=2, ensure_ascii=False).encode("utf-8"))
     saved = sum(d["status"] == "saved" for d in attempt["documents"])
-    report = (f"Hospital {hospital_key}: {saved}/{len(attempt['documents'])} directly linked PDFs saved. "
+    report = (f"Hospital {hospital_key}: {saved}/{len(attempt['documents'])} directly linked documents saved. "
               f"Collection status: {attempt['status']}.\nLanding page: {url}\nManifest: {path}\n"
               + "\n".join(f"{d['status']}: {d['source_url']}" +
                           (f" ({d['error_type']}, HTTP {d['http_status']})" if "http_status" in d

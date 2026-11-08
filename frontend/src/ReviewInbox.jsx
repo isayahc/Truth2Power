@@ -138,7 +138,7 @@ export default function ReviewInbox({ inbox, error, onRefresh, hospitalKey, hosp
           <Evidence evidence={item.evidence} />
           {!!item.gaps.length && <><h3>Missing evidence</h3><ul>{item.gaps.map((g, i) => <li key={i}>{g.reason}: {g.detail || "Source could not be fully reviewed."} {g.url && <a href={g.url} target="_blank" rel="noreferrer">Source ↗</a>}</li>)}</ul></>}
           <details><summary>Full source and language coverage ({item.coverage.length})</summary><ul>{item.coverage.map((c) => <li key={c.source_id}>
-            {c.language} · {c.status} · {c.reviewed_pages}/{c.total_pages} pages. {c.url && <a href={c.url} target="_blank" rel="noreferrer">Current document ↗</a>}{" "}
+            {c.language} · {c.status} · {c.reviewed_pages}/{c.total_pages} {c.locator_unit ?? "pages"}. {c.url && <a href={c.url} target="_blank" rel="noreferrer">Current document ↗</a>}{" "}
             {c.saved_url && <a href={c.saved_url} target="_blank" rel="noreferrer">Saved source ↗</a>}<p>{c.notes}</p>
           </li>)}</ul></details>
           <details><summary>Source-by-source reasoning</summary>{item.observations.map((o, i) => <article key={i}><h4>{o.source_id} · {o.position} · {o.context}</h4><p>{o.explanation}</p><Evidence evidence={o.evidence} /></article>)}</details>

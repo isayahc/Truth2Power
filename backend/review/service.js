@@ -125,7 +125,9 @@ export function createReviewService(root, hospitals = []) {
         evidence: (row.finding.evidence ?? []).map((c) => sourceMetadata(row, c)),
         gaps: (row.result.gaps ?? []).map((g) => ({ reason: g.reason, detail: g.detail, url: safeUrl(g.url) })),
         coverage: row.result.coverage.map((c) => ({ source_id: c.source_id, language: c.language, status: c.status,
-          total_pages: c.total_pages, reviewed_pages: c.reviewed_pages?.length ?? 0, url: safeUrl(c.url), notes: c.notes,
+          total_pages: c.total_pages, reviewed_pages: c.reviewed_pages?.length ?? 0,
+          locator_unit: row.result.snapshots.some((s) => s.url === c.url && s.artifact_path.endsWith(".docx")) ? "DOCX body segments (pagination unverified)" : "pages",
+          url: safeUrl(c.url), notes: c.notes,
           saved_url: row.result.snapshots.some((s) => s.url === c.url) ? `/api/reviews/${row.id}/sources/${row.result.snapshots.find((s) => s.url === c.url).snapshot_id}` : null })),
         history: row.history, observations: (row.result.source_reviews ?? []).flatMap((s) =>
           (s.review?.observations ?? []).filter((o) => o.measure_id === row.measure_id).map((o) =>
@@ -154,13 +156,14 @@ export function createReviewService(root, hospitals = []) {
       const row = get(id);
       const source = row.result.snapshots.find((s) => s.snapshot_id === snapshotId);
       if (!source || !/^[a-f0-9]{64}$/.test(snapshotId) || !/^[a-f0-9]{64}$/.test(source.sha256) ||
-          !new RegExp(`^snapshots/${source.sha256}\\.(pdf|html)$`).test(source.artifact_path)) fail(404, "Saved source not found.");
+          !new RegExp(`^snapshots/${source.sha256}\\.(pdf|html|docx)$`).test(source.artifact_path)) fail(404, "Saved source not found.");
       let raw;
       try { raw = bytes(join(root, source.artifact_path), root); } catch { fail(404, "Saved source unavailable."); }
       if (digest(raw) !== source.sha256) fail(422, "Saved source failed integrity verification.");
       // Never execute saved website HTML under the application's origin.
       return { body: raw.toString("base64"), isBase64Encoded: true, headers: {
-        "Content-Type": source.artifact_path.endsWith(".pdf") ? "application/pdf" : "text/plain; charset=utf-8",
+        "Content-Type": source.artifact_path.endsWith(".docx") ? "application/vnd.openxmlformats-officedocument.wordprocessingml.document" : source.artifact_path.endsWith(".pdf") ? "application/pdf" : "text/plain; charset=utf-8",
+        ...(source.artifact_path.endsWith(".docx") ? { "Content-Disposition": 'attachment; filename="application.docx"' } : {}),
         "Content-Security-Policy": "sandbox", "X-Content-Type-Options": "nosniff" } };
     },
   };

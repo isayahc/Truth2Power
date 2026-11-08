@@ -76,7 +76,7 @@ Choose **Bedrock API key**. OpenCode saves it in its own credential database; do
 
 `scripts/start-bedrock.ps1` is an optional Ellenville sample shortcut using the same saved credentials. It no longer prompts for or manages API keys. Model-generated findings remain drafts requiring interpretation review, even when citation checks pass.
 
-### Collect posted PDFs with the hospital-auditor agent (#17)
+### Collect posted documents with the hospital-auditor agent (#17/#70)
 
 After installing the Python dependencies below, use a hospital ID from `data/maps/hospitals.geojson`. Ellenville Regional Hospital (`1002`) is the second live sample; it is not a defined Wave 1 roster.
 
@@ -85,9 +85,9 @@ opencode mcp list
 opencode run --agent hospital-auditor --model "openrouter/nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free" "Collect posted PDFs for issue #17 at Ellenville Regional Hospital, hospital_key 1002. Return the manifest and limitations."
 ```
 
-Wait for `truth2power` to report connected before running. The agent calls `truth2power_collect_posted_documents`; it selects the landing URL from the roster, saves the HTML, resolves relative PDF anchors, deduplicates URLs (preserving labels), and saves every directly linked PDF on the same HTTPS host. Redirects must stay on that host or its `www` alias. Each file is limited to 12 MiB, with at most 100 document requests per run. External hosts, invalid PDFs and failed requests are recorded for review.
+Wait for `truth2power` to report connected before running. The agent calls `truth2power_collect_posted_documents`; it selects the landing URL from the roster, saves the HTML, resolves relative PDF/DOCX anchors, deduplicates URLs (preserving labels), and saves every directly linked PDF/DOCX on the same HTTPS host. Redirects must stay on that host or its `www` alias. Each file is limited to 12 MiB, with at most 100 document requests per run. External hosts, invalid documents and failed requests are recorded for review.
 
-Immutable manifests live in `.audit/live/collections/<hospital_id>/`; files live in `.audit/live/snapshots/`. Each saved document includes its linked and final URL, hash, local path and successful retrieval time. Each attempt has a separate timestamp and failures never overwrite earlier successful manifests. Publisher update dates remain unknown. A collection is partial if any link fails or no PDFs are found. This collects all PDF anchors, including footer PDFs; it does not classify documents, establish campus applicability, follow nested pages, discover JavaScript/extensionless downloads or judge whether a policy is current.
+Immutable manifests live in `.audit/live/collections/<hospital_id>/`; files live in `.audit/live/snapshots/`. Each saved document includes its linked and final URL, hash, local path and successful retrieval time. Each attempt has a separate timestamp and failures never overwrite earlier successful manifests. Publisher update dates remain unknown. A collection is partial if any link fails or no PDF/DOCX links are found. This includes footer documents; it does not classify documents, establish campus applicability, follow nested pages, discover JavaScript/extensionless downloads or judge whether a policy is current.
 
 Run offline regressions with `python -m unittest discover -s tools/live-audit -p "test_*.py"` from the activated environment.
 
@@ -158,9 +158,19 @@ Checks cover entire Uniform Application, assistance contact, income/discount tab
 
 Ellenville's selected five-page English application was checked on 2026-11-08: **unclear / yes / yes / no / yes / yes**, respectively. Six citations were independently verified against original pages and 21 table cells compared. Its table is labelled 2024; the one-person 400% amount is $60,240 versus $63,840 for 2026. Dollar accuracy and maximum coverage are separate questions.
 
-Local pilot artifact: `.audit/live/application-reviews/aa62e50484844230a5da77c4c5f96971/results/6f011dec62964a92946943ef1dc4f146.json`. Human approval remains pending. Four other application language versions are explicitly unassessed. The applicable official NYS template comparison and a defined Wave 1 roster remain outstanding; this pilot does not complete #23 sample coverage.
+Local pilot artifact: `.audit/live/application-reviews/aa62e50484844230a5da77c4c5f96971/results/6f011dec62964a92946943ef1dc4f146.json`. Human approval remains pending. Four other application language versions are explicitly unassessed. The applicable official NYS template comparison remains outstanding; see #70 below for the subsequently confirmed Wave 1 roster and coverage.
 
 The inbox keeps application and posted-material groups independently, shows the review year and reference, and provides a published-versus-expected dollar table plus links to unassessed versions. Original drafts and historical map ratings remain preserved.
+
+### Wave 1 follow-up (#70)
+
+The user-defined initial Wave 1 roster is **Ellenville (1002) and Little Falls (362)**. Both now have six saved English-application draft records (12 total). This is draft coverage, not twelve resolved findings or human approvals.
+
+Little Falls posts English and Spanish applications as DOCX. The collector now saves directly linked PDF/DOCX documents; extraction validates snapshot hashes and bounds DOCX archive expansion. DOCX citations identify the body rather than inventing rendered page numbers. Tracked changes, embedded drawings/objects and additional document parts require review. Saved DOCX sources download from the inbox with hash verification.
+
+Little Falls collection `833f736450a346bca5b638ecb0809a44` and extraction `b218c29092c64bc29d8971e9d1f5c6e3` include both applications and three PDFs. Its English draft is `.audit/live/application-reviews/afa9e482a32942349841bb11e229be3b/results/68e4885e3d454acb8a480b72edfdfd6e.json`: all six findings are **unclear** because embedded drawings need visual review. The source body contains two drawing elements; body extraction alone does not establish their content. The Spanish application is unassessed.
+
+`compare_application_template` compares a saved application with the pinned official 2026 English NYS DOCX and saves full-text evidence/alignment under `.audit/live/template-comparisons/`. It never promotes an entire-form finding from text similarity. Live official-reference retrieval currently returns **HTTP 403**, including through the browser request stack, so **no live official-template comparison has completed**. The official listing is reachable, but that does not establish access to the DOCX itself. Remaining work includes reference retrieval, whole-form interpretation, Little Falls visual review, and the four Ellenville/one Little Falls additional language versions.
 
 ### Human review inbox (#27)
 

@@ -5,13 +5,15 @@ import json
 import logging
 import re
 import uuid
+import zipfile
+from xml.etree import ElementTree as ET
 from html.parser import HTMLParser
 from pathlib import Path
 
 from pypdf import PdfReader, __version__ as PDF_VERSION
 from documents import LIMIT, now
 
-PARSER = "document-text-v1"
+PARSER = "document-text-v2"
 MAX_PAGES = 200
 MAX_TEXT = 2_000_000
 
@@ -54,6 +56,36 @@ def segment(text, locator):
 
 
 def extract_bytes(data, suffix):
+    if suffix == ".docx":
+        # DOCX page numbers depend on rendering. Cite the body, never invented pages.
+        with zipfile.ZipFile(io.BytesIO(data)) as archive:
+            members = archive.infolist()
+            if len(members) > 1000 or sum(m.file_size for m in members) > LIMIT * 4:
+                raise ValueError("docx_expansion_limit_exceeded")
+            xml = archive.read("word/document.xml")
+        if b"<!DOCTYPE" in xml.upper() or b"<!ENTITY" in xml.upper():
+            raise ValueError("docx_xml_declarations_not_supported")
+        ns = {"w": "http://schemas.openxmlformats.org/wordprocessingml/2006/main"}
+        body = ET.fromstring(xml).find("w:body", ns)
+        if body is None:
+            raise ValueError("docx_body_missing")
+        parts = []
+        for child in body:
+            if child.tag == f"{{{ns['w']}}}tbl":
+                for row in child.findall("w:tr", ns):
+                    parts.append(" ".join("".join(t.text or "" for t in cell.findall(".//w:t", ns)) for cell in row.findall("w:tc", ns)))
+            else:
+                parts.append("".join(t.text or "" for t in child.findall(".//w:t", ns)))
+        text = "\n".join(parts)
+        if len(text) > MAX_TEXT:
+            raise ValueError("text_limit_exceeded")
+        result = segment(text, "DOCX body (paragraphs and tables; pagination unverified)")
+        # Tracked changes, embedded objects and text outside the body need visual review.
+        unsupported = any(body.findall(f".//w:{tag}", ns) for tag in ("ins", "del", "altChunk", "object", "drawing", "txbxContent"))
+        extra_parts = any(re.fullmatch(r"word/(header\d+|footer\d+|footnotes|endnotes)\.xml", m.filename) for m in members)
+        if unsupported or extra_parts:
+            result.update(status="needs_review", reason="docx_visual_or_extra_content_review_needed")
+        return [result]
     if suffix == ".html":
         parser = VisibleText()
         parser.feed(data.decode("utf-8", errors="replace"))
@@ -109,7 +141,9 @@ def extract_collection(hospital_key, collection_id, output, save):
             continue
         try:
             digest = record["sha256"]
-            suffix = ".html" if index == 0 else ".pdf"
+            suffix = ".html" if index == 0 else Path(record["artifact_path"]).suffix
+            if suffix not in {".html", ".pdf", ".docx"} or (index and suffix == ".html"):
+                raise ValueError("unsupported_snapshot_type")
             expected = Path("snapshots") / (digest + suffix)
             if not re.fullmatch(r"[0-9a-f]{64}", digest) or record["artifact_path"] != expected.as_posix():
                 raise ValueError("invalid_snapshot_path")
@@ -146,5 +180,6 @@ def extract_collection(hospital_key, collection_id, output, save):
               f"{review_count} need human review.\nExtraction manifest: {output / manifest_path}\n" +
               "\n".join(f"{r['status']}: {r['source_url']}" + (f" ({r['reason']})" if "reason" in r else "") for r in results) +
               "\nPDF locators preserve original page numbers. No OCR, translation or compliance findings. "
-              "Sparse/blank pages are flagged conservatively; text presence does not prove completeness or correct table structure.")
+               "DOCX uses body locators, not rendered page numbers; extra content requires visual review. "
+               "Sparse/blank pages are flagged conservatively; text presence does not prove completeness or correct table structure.")
     return dict(report=report, manifest_file=str(output / manifest_path), document_count=len(results), review_count=review_count)

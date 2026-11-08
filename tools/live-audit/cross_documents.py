@@ -64,7 +64,9 @@ def load_sources(hospital_key, extraction_id, output):
             continue
         try:
             digest = record["sha256"]
-            suffix = ".html" if index == 0 else ".pdf"
+            suffix = ".html" if index == 0 else Path(record["artifact_path"]).suffix
+            if suffix not in {".html", ".pdf", ".docx"} or (index and suffix == ".html"):
+                raise ValueError("unsupported_snapshot_type")
             relative = f"snapshots/{digest}{suffix}"
             if not re.fullmatch(r"[0-9a-f]{64}", digest) or record["artifact_path"] != relative:
                 raise ValueError("invalid_snapshot_reference")
@@ -79,7 +81,7 @@ def load_sources(hospital_key, extraction_id, output):
             role = "landing_page" if index == 0 else "supplement"
             name = url.lower()
             if index:
-                role = ("application" if "app-" in name else "policy_summary" if "summary" in name
+                role = ("application" if "app-" in name or "application" in name or "fa-form" in name else "policy_summary" if "summary" in name
                         else "policy_statement" if "financial-assistance" in name else "supplement")
             snapshot = dict(snapshot_id=digest, document_type=role, url=record["url"],
                             retrieved_at=record["retrieved_at"], publisher_updated_at=record.get("publisher_updated_at"),
