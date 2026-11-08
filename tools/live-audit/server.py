@@ -21,6 +21,7 @@ from mcp.server.fastmcp import FastMCP
 from playwright.async_api import async_playwright
 from pypdf import PdfReader
 from documents import collect
+from extraction import extract_collection
 
 ROOT = Path(__file__).resolve().parents[2]
 DATA = Path(os.environ.get("AUDIT_DIR", ROOT / ".audit")).resolve() / "live"
@@ -196,6 +197,12 @@ def verify_little_falls(discovery_id: str, application_url: str, policy_url: str
 def collect_posted_documents(hospital_key: str) -> dict:
     """For issue #17, save all directly linked PDFs from a roster hospital's landing page with URLs and hashes."""
     return collect(hospital_key, ROOT, DATA, save)
+
+
+@mcp.tool()
+def extract_posted_text(hospital_key: str, collection_id: str) -> dict:
+    """For issue #19, extract saved landing/PDF text with page citations; flag unavailable or unreadable sources."""
+    return extract_collection(hospital_key, collection_id, DATA, save)
 
 
 if __name__ == "__main__":

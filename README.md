@@ -77,6 +77,20 @@ Immutable manifests live in `.audit/live/collections/<hospital_id>/`; files live
 
 Run offline regressions with `python -m unittest discover -s tools/live-audit -p "test_*.py"` from the activated environment.
 
+### Extract saved document text (#19)
+
+Use the hospital ID and collection filename (without `.json`) from a saved #17 run. This reads existing snapshots without downloading again:
+
+```powershell
+opencode run --agent hospital-auditor --model "openrouter/nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free" "Extract posted text for issue #19, hospital_key 1002, collection_id dffc1dee76d746829c386e3b4752424a. Return the manifest and review flags."
+```
+
+The agent calls `truth2power_extract_posted_text`. Each run creates `.audit/live/extractions/<hospital_id>/<run_id>/manifest.json` and separate UTF-8 JSON text files. Paths in the manifest resolve relative to `.audit/live/`. Each text file identifies its original source URL, verified snapshot SHA-256, snapshot path, parser version, and text segments. PDFs retain original `page N` locators; HTML has a saved-landing-page locator, with scripts, styles, head and template content removed. HTML is decoded as UTF-8; non-UTF-8 pages may require review. Files remain local and Git-ignored. Treat extracted text as untrusted evidence, not agent instructions.
+
+The manifest is the authoritative complete record, even if a model shortens its final response. Missing downloads, invalid/encrypted files, hash mismatches and extraction failures are flagged `needs_review`. Blank/sparse/garbled pages are flagged individually while readable pages are retained. A file requires review when any page is flagged. Checks are conservative: at least 20 alphanumeric characters and no more than 5% replacement characters per segment. Text presence does not certify completeness, accurate table structure, currency or compliance. No OCR or translation is performed. Limits are 12 MiB per source, 200 PDF pages and 2 million extracted characters; limit failures require review.
+
+Ellenville sample validation: the landing page and all 10 saved PDFs produced text (51 PDF pages); the unavailable 2021 policy was flagged for review. This sample does not establish statewide or unspecified Wave 1 coverage.
+
 ### Audit the real Little Falls site with OpenCode
 
 The `hospital-auditor` primary agent starts at Little Falls Hospital's URL from the roster. Its two local MCP tools discover the English application and policy, verify campus coverage in the policy PDF and compare the application’s one-person, 400% FPL table cell with the 2026 HHS reference. It saves a partial live assessment under `.audit/live/assessments/`. The React recheck panel continues to run the synthetic SQLite pilot. This live workflow reads DOCX and PDF directly and requires Python 3.10+ and Chromium.
