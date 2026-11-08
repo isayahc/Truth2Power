@@ -20,6 +20,7 @@ from xml.etree import ElementTree as ET
 from mcp.server.fastmcp import FastMCP
 from playwright.async_api import async_playwright
 from pypdf import PdfReader
+from documents import collect
 
 ROOT = Path(__file__).resolve().parents[2]
 DATA = Path(os.environ.get("AUDIT_DIR", ROOT / ".audit")).resolve() / "live"
@@ -189,6 +190,12 @@ def verify_little_falls(discovery_id: str, application_url: str, policy_url: str
     save(path,json.dumps(output,indent=2,ensure_ascii=False).encode())
     return dict(report=explanation + f"\nSaved assessment: {path}", assessment_file=str(path),
                 reference_url=REFERENCE, output=output)
+
+
+@mcp.tool()
+def collect_posted_documents(hospital_key: str) -> dict:
+    """For issue #17, save all directly linked PDFs from a roster hospital's landing page with URLs and hashes."""
+    return collect(hospital_key, ROOT, DATA, save)
 
 
 if __name__ == "__main__":
