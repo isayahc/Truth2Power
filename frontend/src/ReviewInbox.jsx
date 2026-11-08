@@ -104,7 +104,7 @@ export default function ReviewInbox({ inbox, error, onRefresh, hospitalKey, hosp
         {inbox && !visible.length && <p>{hospital ? "No matching review items for this hospital." : "No matching review items."} Completed full-document drafts appear here automatically.</p>}
         {visible.map((r) => <button key={r.id} className={`review-notification ${selected === r.id ? "active" : ""}`} aria-current={selected === r.id ? "true" : undefined} onClick={() => setSelected(r.id)}>
           <span className="review-meta">{reviewStatus(r.status)} · {date(r.flagged_at)}</span>
-          <strong>{r.hospital_name}</strong><span>{r.title}</span><small>{r.question}</small>
+          <strong>{r.hospital_name}</strong><span>{r.title}</span><span className="review-meta">{r.scope_label}</span><small>{r.question}</small>
         </button>)}
       </nav>
       <section className="review-detail" aria-label="Selected review">
@@ -116,11 +116,22 @@ export default function ReviewInbox({ inbox, error, onRefresh, hospitalKey, hosp
           <div className="section-tag">{reviewStatus(item.status)}</div><h2 tabIndex={-1} ref={detailHeading}>{item.hospital_name}</h2>
           <button className="plain" onClick={() => onHospital(hospitals.find((h) => String(h.id) === item.hospital_key))}>View hospital on map</button>
           <h3>{item.title}</h3>
+          <p className="review-meta">Scope: {item.scope_label}{item.guideline_year ? ` · Review guideline year: ${item.guideline_year}` : ""}</p>
           <div className="review-question"><strong>Question for review</strong><p>{item.question}</p></div>
           <p><strong>Original draft:</strong> {outcome(item.draft_result)} · <strong>Reviewed result:</strong> {outcome(item.reviewed_result)}</p>
           <p>{item.explanation}</p>
-          <p><strong>Criterion:</strong> {typeof item.expected === "string" ? item.expected : JSON.stringify(item.expected)}</p>
-          {item.authority_url && <p><a href={item.authority_url} target="_blank" rel="noreferrer">Referenced legal authority ↗</a> · Applicability still needs review.</p>}
+          <p><strong>Criterion:</strong> {typeof item.expected === "string" ? item.expected : item.expected?.guideline_year ?
+            `${item.expected.guideline_year} annual HHS guidelines; one-person 400% amount: $${item.expected.one_person_400_percent.toLocaleString()}.` : item.expected?.condition ?? JSON.stringify(item.expected)}</p>
+          {item.authority_url && <p><a href={item.authority_url} target="_blank" rel="noreferrer">Reference source ↗</a></p>}
+          {!!item.observed?.cells?.length && <details><summary>Published vs expected FPL amounts ({item.observed.cells.length} cells)</summary>
+            <p>Published year: {item.observed.published_year ?? "Unverified"} · {item.observed.currency} · {item.observed.period}</p>
+            <div className="review-table-scroll"><table><caption>Dollar comparison by household size and FPL percentage</caption>
+              <thead><tr><th scope="col">Household size</th><th scope="col">FPL %</th><th scope="col">Published</th><th scope="col">Expected</th><th scope="col">Match</th></tr></thead>
+              <tbody>{item.observed.cells.map((cell, i) => <tr key={i}><td>{cell.household_size}</td><td>{cell.fpl_percent}%</td><td>${cell.observed.toLocaleString()}</td><td>${cell.expected.toLocaleString()}</td><td>{cell.observed === cell.expected ? "Yes" : "No"}</td></tr>)}</tbody>
+            </table></div></details>}
+          {!!item.other_application_versions_not_assessed?.length && <details><summary>Other application versions not assessed ({item.other_application_versions_not_assessed.length})</summary>
+            <p>These findings cover only the selected application, not all language versions.</p><ul>{item.other_application_versions_not_assessed.map((url) => <li key={url}><a href={url} target="_blank" rel="noreferrer">{url.split("/").at(-1)} ↗</a></li>)}</ul>
+          </details>}
           <p className="review-meta">Flagged {date(item.flagged_at)} · Hospital {item.hospital_key} · Result {item.result_id}</p>
           <h3>Quoted evidence</h3>
           {!item.evidence.length && <p>No quoted evidence was saved. Request the missing source before making an evidence-backed decision.</p>}

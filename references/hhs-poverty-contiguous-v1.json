@@ -1,0 +1,13 @@
+{
+  "reference_version": "hhs-contiguous-2025-2026-v1",
+  "geography": "48 contiguous states and District of Columbia",
+  "currency": "USD",
+  "period": "annual",
+  "authority_url": "https://aspe.hhs.gov/topics/poverty-economic-mobility/poverty-guidelines/prior-hhs-poverty-guidelines-federal-register-references/2026-poverty-guidelines-computations",
+  "source_locator": "2026 Annual Update computations table, columns 6 (January 2025) and 7 (January 2026)",
+  "verified_on": "2026-11-08",
+  "years": {
+    "2025": { "household_amounts": [15650, 21150, 26650, 32150, 37650, 43150, 48650, 54150], "additional_person": 5500 },
+    "2026": { "household_amounts": [15960, 21640, 27320, 33000, 38680, 44360, 50040, 55720], "additional_person": 5680 }
+  }
+}

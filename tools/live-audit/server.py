@@ -24,6 +24,7 @@ from documents import collect
 from extraction import extract_collection
 from cross_documents import CrossFinding, prepare, persist_selection
 from full_review import SourceReview, begin, read_source, submit, finalize
+from applications import review_application
 
 ROOT = Path(__file__).resolve().parents[2]
 DATA = Path(os.environ.get("AUDIT_DIR", ROOT / ".audit")).resolve() / "live"
@@ -217,6 +218,12 @@ def prepare_cross_document_review(hospital_key: str, extraction_id: str) -> dict
 def save_cross_document_review(packet_id: str, findings: list[CrossFinding]) -> dict:
     """Save exactly five #22 drafts. Select evidence_ids from each measure's packet candidates, never retype quotes. The server inserts original quotes and verifies them against source pages. result: no or unclear. reason_code: contradicted for no; insufficient_evidence or conflicting_evidence for unclear. PSA must be unclear without an approved boundary rule. Return concise explanation, observed and expected strings."""
     return persist_selection(packet_id, [f.model_dump() for f in findings], ROOT, DATA, save)
+
+
+@mcp.tool()
+def review_application_measures(hospital_key: str, extraction_id: str, application_url: str, review_date: str) -> dict:
+    """Issue #23: evaluate six application-only draft measures from a saved application URL. review_date is YYYY-MM-DD and selects the versioned HHS reference. Uses a deterministic English uniform-form profile; unsupported layouts/languages are unclear. Full official-form equivalence remains a specific review question. Re-extracts original bytes and saves an inbox-ready draft; never substitutes policy/summary text or approves findings."""
+    return review_application(hospital_key, extraction_id, application_url, review_date, DATA, save)
 
 
 @mcp.tool()

@@ -8,6 +8,12 @@ const titles = {
   "posted_materials.no_evidence_of_asset_checks": "Asset eligibility checks",
   "posted_materials.no_immigration_status_barrier": "Immigration eligibility",
   "posted_materials.primary_service_area_boundaries_compliant": "Service-area rule",
+  "application.uniform_application": "Entire Uniform Application",
+  "application.contact_information": "Application contact information",
+  "application.income_discount_tables": "Income and discount tables",
+  "application.fpl_guidelines": "Application FPL year and amounts",
+  "application.maximum_fpl": "Application coverage through 400% FPL",
+  "application.installments_cap": "Monthly installment cap",
 };
 function fail(status, message) { throw Object.assign(new Error(message), { status }); }
 function files(path) {
@@ -29,20 +35,21 @@ export function createReviewService(root, hospitals = []) {
   function drafts() {
     const latest = new Map();
     let unavailable = 0;
-    for (const review of files(join(root, "full-reviews"))) {
+    for (const namespace of ["full-reviews", "application-reviews"]) for (const review of files(join(root, namespace))) {
       if (!/^[a-f0-9]{32}$/.test(review)) continue;
-      for (const filename of files(join(root, "full-reviews", review, "results"))) {
+      for (const filename of files(join(root, namespace, review, "results"))) {
         if (!/^[a-f0-9]{32}\.json$/.test(filename)) continue;
         try {
-          const raw = bytes(join(root, "full-reviews", review, "results", filename), root);
+          const raw = bytes(join(root, namespace, review, "results", filename), root);
           const result = JSON.parse(raw);
           if (result.review_id !== review || result.result_id !== filename.slice(0, -5) ||
               !/^(?:\d{1,8}|t2p-\d+)$/.test(result.hospital_key) || !Number.isFinite(Date.parse(result.checked_at)) ||
               !Array.isArray(result.findings) || !Array.isArray(result.snapshots) || !Array.isArray(result.coverage)) throw new Error("Invalid result");
-          const prior = latest.get(result.hospital_key);
+          const group = `${result.hospital_key}:${namespace}`;
+          const prior = latest.get(group);
           if (!prior || Date.parse(result.checked_at) > Date.parse(prior.result.checked_at) ||
               (Date.parse(result.checked_at) === Date.parse(prior.result.checked_at) && result.result_id > prior.result.result_id)) {
-            latest.set(result.hospital_key, { result, hash: digest(raw) });
+            latest.set(group, { result, hash: digest(raw) });
           }
         } catch { unavailable++; }
       }
@@ -77,6 +84,7 @@ export function createReviewService(root, hospitals = []) {
         const status = last?.action === "confirm" || last?.action === "correct" ? "resolved" : last ? "needs_information" : "pending";
         rows.push({ id, hospital_key: result.hospital_key, hospital_name: names.get(result.hospital_key) ?? `Hospital ${result.hospital_key}`,
           measure_id: finding.measure_id, title: titles[finding.measure_id], flagged_at: result.checked_at,
+          scope_label: result.scope_label ?? "Posted-material review", guideline_year: result.guideline_year ?? null,
           result_id: result.result_id, result_sha256: hash, status, draft_result: finding.result,
           reviewed_result: status === "resolved" ? last.result : null, revision: history.length,
           question: finding.unresolved_questions?.length ? finding.unresolved_questions.join(" ") :
@@ -111,7 +119,9 @@ export function createReviewService(root, hospitals = []) {
     },
     detail(id) {
       const row = get(id);
-      return { ...summary(row), explanation: row.finding.explanation, expected: row.finding.expected, authority_url: row.finding.authority_url,
+      return { ...summary(row), explanation: row.finding.explanation, expected: row.finding.expected, observed: row.finding.observed,
+        authority_url: row.finding.authority_url ?? safeUrl(row.finding.expected?.authority_url),
+        other_application_versions_not_assessed: (row.result.other_application_versions_not_assessed ?? []).map(safeUrl).filter(Boolean),
         evidence: (row.finding.evidence ?? []).map((c) => sourceMetadata(row, c)),
         gaps: (row.result.gaps ?? []).map((g) => ({ reason: g.reason, detail: g.detail, url: safeUrl(g.url) })),
         coverage: row.result.coverage.map((c) => ({ source_id: c.source_id, language: c.language, status: c.status,

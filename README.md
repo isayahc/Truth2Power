@@ -150,6 +150,18 @@ Run regression checks with `python -m unittest discover -s tools/live-audit -p "
 
 All three aggregate drafts remain `unclear` for specific reasons: the linked 2021 policy was not downloaded (the collection reported 404); application timing includes unspecified “timely” completion and Russian wording about data collection; asset provisions need reconciliation with personal-resource exhaustion and weaker Spanish wording; Ukrainian immigration wording needs qualified translation interpretation. Favorable provisions remain cited. These are questions for review, not established violations. PSA criteria and human approval remain pending; the earlier incomplete result is retained for traceability.
 
+### Application-only draft checks (#23)
+
+The `hospital-auditor` can call `review_application_measures` with a saved `hospital_key`, `extraction_id`, exact application URL and ISO `review_date`. The tool re-extracts the original bytes and saves six cited drafts under `.audit/live/application-reviews/<review_id>/results/<result_id>.json`. Policy/summary documents cannot substitute for an application.
+
+Checks cover entire Uniform Application, assistance contact, income/discount tables, FPL year/dollars, eligibility through 400% FPL, and the 5% gross-monthly-income installment cap. Arithmetic uses `references/hhs-poverty-contiguous-v1.json` (2025/2026 annual HHS values); unsupported years are rejected. The deterministic English uniform-form profile is deliberately narrow: unsupported languages/layouts remain unclear, and matching headings cannot establish complete official-form equivalence.
+
+Ellenville's selected five-page English application was checked on 2026-11-08: **unclear / yes / yes / no / yes / yes**, respectively. Six citations were independently verified against original pages and 21 table cells compared. Its table is labelled 2024; the one-person 400% amount is $60,240 versus $63,840 for 2026. Dollar accuracy and maximum coverage are separate questions.
+
+Local pilot artifact: `.audit/live/application-reviews/aa62e50484844230a5da77c4c5f96971/results/6f011dec62964a92946943ef1dc4f146.json`. Human approval remains pending. Four other application language versions are explicitly unassessed. The applicable official NYS template comparison and a defined Wave 1 roster remain outstanding; this pilot does not complete #23 sample coverage.
+
+The inbox keeps application and posted-material groups independently, shows the review year and reference, and provides a published-versus-expected dollar table plus links to unassessed versions. Original drafts and historical map ratings remain preserved.
+
 ### Human review inbox (#27)
 
 Open **Review inbox** in the header, or **Review notifications** on a hospital record. The badge counts pending and information-requested items. The local inbox reads the newest finalized full-document result per hospital from `.audit/live/full-reviews/`; it includes all three model findings and the unresolved service-area question. The existing Ellenville result supplies four notifications. A fresh checkout with no local drafts shows an empty inbox, not invented findings. Earlier result files remain on disk; the inbox explicitly shows the current result ID and date.
