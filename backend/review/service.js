@@ -1,8 +1,8 @@
 import { readdirSync, readFileSync, statSync, mkdirSync, writeFileSync, realpathSync } from "node:fs";
 import { join, resolve, sep } from "node:path";
-import { createHash, randomUUID } from "node:crypto";
+import { randomUUID } from "node:crypto";
 
-const digest = (bytes) => createHash("sha256").update(bytes).digest("hex");
+import { reviewIdentity, sha256 as digest } from "./identity.js";
 const titles = {
   "posted_materials.no_submission_time_limit": "Application deadlines",
   "posted_materials.no_evidence_of_asset_checks": "Asset eligibility checks",
@@ -33,7 +33,7 @@ export function createReviewService(root, hospitals = []) {
   const decisionDirectory = join(root, "review-inbox-decisions");
 
   function drafts() {
-    const latest = new Map();
+    const groups = new Map();
     let unavailable = 0;
     for (const namespace of ["full-reviews", "application-reviews"]) for (const review of files(join(root, namespace))) {
       if (!/^[a-f0-9]{32}$/.test(review)) continue;
@@ -45,28 +45,31 @@ export function createReviewService(root, hospitals = []) {
           if (result.review_id !== review || result.result_id !== filename.slice(0, -5) ||
               !/^(?:\d{1,8}|t2p-\d+)$/.test(result.hospital_key) || !Number.isFinite(Date.parse(result.checked_at)) ||
               !Array.isArray(result.findings) || !Array.isArray(result.snapshots) || !Array.isArray(result.coverage)) throw new Error("Invalid result");
-          const group = `${result.hospital_key}:${namespace}`;
-          const prior = latest.get(group);
-          if (!prior || Date.parse(result.checked_at) > Date.parse(prior.result.checked_at) ||
-              (Date.parse(result.checked_at) === Date.parse(prior.result.checked_at) && result.result_id > prior.result.result_id)) {
-            latest.set(group, { result, hash: digest(raw) });
-          }
+          const hash = digest(raw);
+          const identity = reviewIdentity(result, namespace, hash);
+          if (!groups.has(identity.group)) groups.set(identity.group, []);
+          groups.get(identity.group).push({ result, hash, identity, namespace });
         } catch { unavailable++; }
       }
     }
-    return { records: [...latest.values()], unavailable };
+    for (const versions of groups.values()) versions.sort((a, b) =>
+      Date.parse(b.result.checked_at) - Date.parse(a.result.checked_at) || b.result.result_id.localeCompare(a.result.result_id) ||
+      b.hash.localeCompare(a.hash));
+    return { groups, unavailable };
   }
 
-  function decisions(id) {
+  function decisions() {
     return files(decisionDirectory).filter((name) => /^[a-f0-9-]{36}\.json$/.test(name))
       .map((name) => JSON.parse(bytes(join(decisionDirectory, name), root)))
-      .filter((d) => d.item_id === id).sort((a, b) => a.sequence - b.sequence);
+      .sort((a, b) => a.sequence - b.sequence);
   }
 
-  function items() {
-    const { records, unavailable } = drafts();
+  function items(includeHistory = false) {
+    const { groups, unavailable } = drafts();
+    const saved = decisions();
     const rows = [];
-    for (const { result, hash } of records) {
+    for (const versions of groups.values()) for (const record of includeHistory ? versions : versions.slice(0, 1)) {
+      const { result, hash, identity, namespace } = record;
       // Include favorable drafts too: model output is not automatically human-approved.
       const findings = [...result.findings];
       if (result.psa?.result === "unclear" && !findings.some((f) => f.measure_id === "posted_materials.primary_service_area_boundaries_compliant")) {
@@ -79,7 +82,8 @@ export function createReviewService(root, hospitals = []) {
       for (const finding of findings) {
         if (!titles[finding.measure_id] || !["yes", "no", "unclear", "n_a"].includes(finding.result)) continue;
         const id = digest(`${hash}:${finding.measure_id}`);
-        const history = decisions(id);
+        const history = saved.filter((d) => d.item_id === id && d.result_id === result.result_id &&
+          d.result_sha256 === hash && d.hospital_key === result.hospital_key && d.measure_id === finding.measure_id);
         const last = history.at(-1);
         const status = last?.action === "confirm" || last?.action === "correct" ? "resolved" : last ? "needs_information" : "pending";
         rows.push({ id, hospital_key: result.hospital_key, hospital_name: names.get(result.hospital_key) ?? `Hospital ${result.hospital_key}`,
@@ -89,19 +93,21 @@ export function createReviewService(root, hospitals = []) {
           reviewed_result: status === "resolved" ? last.result : null, revision: history.length,
           question: finding.unresolved_questions?.length ? finding.unresolved_questions.join(" ") :
             finding.result === "unclear" ? "What evidence is needed to resolve this finding?" : "Does the cited evidence support this draft finding?",
-          finding, result, history });
+          namespace, logical_review_id: identity.group, identity_status: identity.identity_status, identity_warning: identity.identity_warning,
+          documents: identity.documents, is_current: record === versions[0], version_count: versions.length,
+          versions, finding, result, history });
       }
     }
     return { rows, unavailable };
   }
-  function get(id) {
+  function get(id, currentOnly = false) {
     if (!/^[a-f0-9]{64}$/.test(id)) fail(404, "Review item not found.");
-    const row = items().rows.find((r) => r.id === id);
+    const row = items(!currentOnly).rows.find((r) => r.id === id);
     if (!row) fail(404, "Review item no longer current. Refresh the inbox.");
     return row;
   }
   function summary(row) {
-    const { finding, result, history, ...rest } = row;
+    const { finding, result, history, versions, ...rest } = row;
     return rest;
   }
   function sourceMetadata(row, citation) {
@@ -113,13 +119,23 @@ export function createReviewService(root, hospitals = []) {
       saved_url: `/api/reviews/${row.id}/sources/${source.snapshot_id}${page ? `#page=${page}` : ""}` };
   }
   return {
-    list() {
-      const { rows, unavailable } = items();
+    list(filters = {}) {
+      const { rows: all, unavailable } = items();
+      const rows = all.filter((r) => (!filters.hospital_key || r.hospital_key === filters.hospital_key) &&
+        (!filters.namespace || r.namespace === filters.namespace) &&
+        (!filters.source_id && !filters.role && !filters.language || r.documents.some((d) =>
+          (!filters.source_id || d.source_id === filters.source_id) && (!filters.role || d.role === filters.role) &&
+          (!filters.language || d.language === filters.language))));
       return { items: rows.map(summary), pending: rows.filter((r) => r.status !== "resolved").length, unavailable };
     },
     detail(id) {
       const row = get(id);
-      return { ...summary(row), explanation: row.finding.explanation, expected: row.finding.expected, observed: row.finding.observed,
+      return { ...summary(row), document_versions: row.versions.map(({ result, hash, identity }) => ({
+          result_id: result.result_id, checked_at: result.checked_at, result_sha256: hash, documents: identity.documents,
+          item_id: result.findings.some((f) => f.measure_id === row.measure_id) ||
+            (result.psa?.result === "unclear" && row.measure_id === "posted_materials.primary_service_area_boundaries_compliant")
+            ? digest(`${hash}:${row.measure_id}`) : null,
+        })), explanation: row.finding.explanation, expected: row.finding.expected, observed: row.finding.observed,
         authority_url: row.finding.authority_url ?? safeUrl(row.finding.expected?.authority_url),
         other_application_versions_not_assessed: (row.result.other_application_versions_not_assessed ?? []).map(safeUrl).filter(Boolean),
         extraction_details: row.result.extraction_details ?? null,
@@ -152,7 +168,7 @@ export function createReviewService(root, hospitals = []) {
     },
     decide(id, input) {
       // Synchronous read/check/append avoids two decisions accepting the same revision in this local process.
-      const row = get(id);
+      const row = get(id, true);
       if (!input || !["confirm", "correct", "request_information"].includes(input.action) ||
           !Number.isInteger(input.revision) || typeof input.notes !== "string" || !input.notes.trim() || input.notes.length > 2000 ||
           typeof input.reviewer_role !== "string" || !input.reviewer_role.trim() || input.reviewer_role.length > 100) fail(400, "Provide an action, reviewer role and reason.");

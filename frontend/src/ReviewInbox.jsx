@@ -86,6 +86,7 @@ function DecisionForm({ item, onSaved }) {
 
 export default function ReviewInbox({ inbox, error, onRefresh, hospitalKey, hospitals, onHospital }) {
   const [hospital, setHospital] = useState(hospitalKey || "");
+  const [language, setLanguage] = useState("");
   const [status, setStatus] = useState("open");
   const [selected, setSelected] = useState(null);
   const [item, setItem] = useState(null);
@@ -105,7 +106,8 @@ export default function ReviewInbox({ inbox, error, onRefresh, hospitalKey, hosp
     });
     return () => controller.abort();
   }, [selected, reload]);
-  const visible = (inbox?.items ?? []).filter((r) => (!hospital || r.hospital_key === hospital) &&
+  const languages = [...new Set((inbox?.items ?? []).flatMap((r) => r.documents.map((d) => d.language)))].sort();
+  const visible = (inbox?.items ?? []).filter((r) => (!language || r.documents.some((d) => d.language === language)) && (!hospital || r.hospital_key === hospital) &&
     (status === "all" || (status === "open" ? r.status !== "resolved" : r.status === "resolved")));
   const hospitalOptions = [...new Map((inbox?.items ?? []).map((r) => [r.hospital_key, r.hospital_name]))];
   return <section className="review-inbox" aria-labelledby="review-title">
@@ -115,6 +117,9 @@ export default function ReviewInbox({ inbox, error, onRefresh, hospitalKey, hosp
     <div className="review-filters">
       <label>Hospital<select aria-label="Hospital" value={hospital} onChange={(e) => { setHospital(e.target.value); setSelected(null); setItem(null); }}>
         <option value="">All hospitals</option>{hospitalOptions.map(([key, name]) => <option key={key} value={key}>{name}</option>)}
+      </select></label>
+      <label>Document language<select value={language} onChange={(e) => { setLanguage(e.target.value); setSelected(null); setItem(null); }}>
+        <option value="">All languages</option>{languages.map((tag) => <option key={tag} value={tag}>{tag === "und" ? "Unknown" : tag}</option>)}
       </select></label>
       <label>Status<select aria-label="Status" value={status} onChange={(e) => setStatus(e.target.value)}><option value="open">Needs attention</option><option value="resolved">Reviewed</option><option value="all">All statuses</option></select></label>
     </div>
@@ -126,7 +131,7 @@ export default function ReviewInbox({ inbox, error, onRefresh, hospitalKey, hosp
         {inbox && !visible.length && <p>{hospital ? "No matching review items for this hospital." : "No matching review items."} Completed full-document drafts appear here automatically.</p>}
         {visible.map((r) => <button key={r.id} className={`review-notification ${selected === r.id ? "active" : ""}`} aria-current={selected === r.id ? "true" : undefined} onClick={() => setSelected(r.id)}>
           <span className="review-meta">{reviewStatus(r.status)} · {date(r.flagged_at)}</span>
-          <strong>{r.hospital_name}</strong><span>{r.title}</span><span className="review-meta">{r.scope_label}</span><small>{r.question}</small>
+          <strong>{r.hospital_name}</strong><span>{r.title}</span><span className="review-meta">{r.documents.length === 1 ? `${r.documents[0].name} · ${r.documents[0].language} · ` : ""}{r.scope_label}</span><small>{r.question}</small>
         </button>)}
       </nav>
       <section className="review-detail" aria-label="Selected review">
@@ -139,6 +144,15 @@ export default function ReviewInbox({ inbox, error, onRefresh, hospitalKey, hosp
           <button className="plain" onClick={() => onHospital(hospitals.find((h) => String(h.id) === item.hospital_key))}>View hospital on map</button>
           <h3>{item.title}</h3>
           <p className="review-meta">Scope: {item.scope_label}{item.guideline_year ? ` · Review guideline year: ${item.guideline_year}` : ""}</p>
+          <details><summary>Source identity and revisions ({item.version_count})</summary>
+            {item.identity_warning && <p>Historical identity is ambiguous. {item.identity_warning}</p>}
+            <ul>{item.documents.map((d) => <li key={JSON.stringify([d.source_id, d.role, d.language])}>
+              {d.name} · {d.role} · {d.language === "und" ? "Unknown language" : d.language}<br />
+              <a href={d.source_id} target="_blank" rel="noreferrer">{d.source_id}</a><br />Snapshot SHA-256 <code>{d.snapshot_sha256}</code>
+            </li>)}</ul>
+            {item.document_versions.map((v, i) => <p key={v.result_sha256}>{i ? "Prior" : "Current"} · {date(v.checked_at)} · {v.item_id && v.item_id !== item.id
+              ? <button className="plain" onClick={() => setSelected(v.item_id)}>View revision {v.result_id}</button> : v.result_id}</p>)}
+          </details>
           <div className="review-question"><strong>Question for review</strong><p>{item.question}</p></div>
           <p><strong>Original draft:</strong> {outcome(item.draft_result)} · <strong>Reviewed result:</strong> {outcome(item.reviewed_result)}</p>
           <p>{item.explanation}</p>
@@ -187,10 +201,10 @@ export default function ReviewInbox({ inbox, error, onRefresh, hospitalKey, hosp
             {c.saved_url && <a href={c.saved_url} target="_blank" rel="noreferrer">Saved source ↗</a>}<p>{c.notes}</p>
           </li>)}</ul></details>
           <details><summary>Source-by-source reasoning</summary>{item.observations.map((o, i) => <article key={i}><h4>{o.source_id} · {o.position} · {o.context}</h4><p>{o.explanation}</p><Evidence evidence={o.evidence} /></article>)}</details>
-          <DecisionForm key={`${item.id}:${item.revision}`} item={item} onSaved={(updated) => {
+          {item.is_current ? <DecisionForm key={`${item.id}:${item.revision}`} item={item} onSaved={(updated) => {
             if (updated) { setItem(updated); setMessage("Decision saved. The original draft is preserved."); onRefresh(); }
             else setReload((n) => n + 1);
-          }} />
+          }} /> : <p>Historical revision · read only</p>}
           <details open={item.history.length > 0}><summary>Decision history ({item.history.length})</summary>
             {item.history.length ? item.history.map((d) => <article key={d.decision_id}><h4>{d.reviewer_role} · {date(d.recorded_at)}</h4><p>{d.action} · {outcome(d.result)}</p><p>{d.notes}</p></article>) : <p>No human decision recorded for this exact draft.</p>}
           </details>

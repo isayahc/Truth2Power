@@ -10,7 +10,7 @@ async function reviewHandler(event) {
   const match = /^\/api\/reviews\/([a-f0-9]{64})(?:\/(decisions|sources)(?:\/([a-f0-9]{64}))?)?$/.exec(event.rawPath);
   try {
     let result;
-    if (event.rawPath === "/api/reviews" && method === "GET") result = reviewService.list();
+    if (event.rawPath === "/api/reviews" && method === "GET") result = reviewService.list(event.queryStringParameters);
     else if (match && !match[2] && method === "GET") result = reviewService.detail(match[1]);
     else if (match?.[2] === "sources" && match[3] && method === "GET") return { statusCode: 200, ...reviewService.source(match[1], match[3]) };
     else if (match?.[2] === "decisions" && !match[3] && method === "POST") {

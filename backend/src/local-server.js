@@ -70,6 +70,7 @@ const server = createServer(async (req, res) => {
       }
       const result = await handler({
         rawPath: path,
+        queryStringParameters: Object.fromEntries(new URL(req.url, "http://localhost").searchParams),
         headers: req.headers,
         body,
         requestContext: { http: { method: req.method } },

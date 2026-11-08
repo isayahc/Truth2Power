@@ -241,6 +241,7 @@ def aggregate(state):
 
 
 def finalize(review_id, output, save):
+    from review_identity import review_identity
     state = state_load(output, review_id)
     fresh, current_unavailable = load_sources(state["hospital_key"], state["extraction_id"], output)
     for source in state["sources"]:
@@ -254,6 +255,8 @@ def finalize(review_id, output, save):
                   hospital_key=state["hospital_key"], extraction_id=state["extraction_id"], checked_at=now(),
                   status="draft_needs_human_review", human_review="pending", rubric_version="full-text-three-measures-v1",
                   findings=findings, coverage=coverage, gaps=gaps,
+                  review_identity=review_identity("posted_materials", [(s["snapshot"], c["language"])
+                      for s, c in zip(state["sources"], coverage, strict=True)]),
                   source_reviews=[dict(source_id=s["source_id"], revision=len(s["reviews"]),
                                        review=s["reviews"][-1] if s["reviews"] else None)
                                   for s in state["sources"]],
