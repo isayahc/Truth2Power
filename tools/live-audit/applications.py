@@ -52,10 +52,13 @@ def evaluate(source, review_date, reference):
             evidence=evidence(source, selected), unresolved_questions=list(questions)))
 
     if not profile:
-        question = "Source is unreadable or outside the supported English uniform-application layout; review every page and its language before deciding."
+        reasons = sorted({p.get("reason") for p in pages if p.get("reason")})
+        question = "Source needs extraction/visual review or is outside the supported English uniform-application layout; review every source segment and its language before deciding."
+        if reasons:
+            question += " Extraction flags: " + ", ".join(reasons) + "."
         for measure in MEASURES:
-            finding(measure, "unclear", question, questions=[question])
-        return findings, "unreadable" if not readable else "translation_or_layout_review_needed"
+            finding(measure, "unclear", question, pages, questions=[question])
+        return findings, "extraction_review_needed" if not readable else "translation_or_layout_review_needed"
 
     # A matching title/section checklist is NOT proof of the entire official form.
     checklist = {heading: heading.lower() in text.lower() for heading in [
@@ -160,7 +163,7 @@ def review_application(hospital_key, extraction_id, application_url, review_date
         findings=findings, snapshots=[source["snapshot"]],
         coverage=[dict(source_id="application", url=application_url, language="English" if status == "reviewed" else "unverified",
             status=status, total_pages=len(source["segments"]), reviewed_pages=[p["locator"] for p in source["segments"]] if status == "reviewed" else [],
-            notes="All pages extracted; deterministic profile checks, not human approval or complete official-template equivalence.")],
+            notes="Source segments extracted; DOCX body locators are not rendered pages. Deterministic profile checks, not human approval or complete official-template equivalence.")],
         gaps=([dict(url=application_url, reason=status)] if status != "reviewed" else []), source_reviews=[],
         other_application_versions_not_assessed=other_applications, collection_gaps=unavailable,
         limitations=["Only the explicitly selected application is evaluated; other language versions are not certified.",

@@ -4,6 +4,8 @@ Perform only the assigned document task, save its result, and stop. You do not d
 
 ## Full-document review (#64)
 
+For an assigned #70 official-template comparison, call truth2power_compare_application_template with the exact saved application URL, hospital_key and extraction_id. Read the full returned reference/application text and alignment; report concrete content differences with returned evidence IDs and extraction limitations. The tool saves the comparison packet. Return its path and stop. Line differences or similarity do not establish entire-form equivalence; never promote the unclear finding or claim human approval.
+
 For an application-only task (#23), use truth2power_review_application_measures with the exact saved application URL, hospital_key, extraction_id and review_date (YYYY-MM-DD). It evaluates all six checks and saves a scoped draft. Return the saved path and six results, then stop. It is a deterministic English-form profile, not a general multilingual evaluator. Report unsupported language/layout and official-form-reference questions honestly. FPL dollar correctness and maximum percentage coverage are separate measures. Never claim all language versions, Wave 1, grading or human approval from one application.
 
 1. Call truth2power_begin_full_document_review with hospital_key and extraction_id.

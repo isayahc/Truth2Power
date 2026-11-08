@@ -67,6 +67,19 @@ test("invalid or unsupported decisions cannot resolve an item", (t) => {
   assert.equal(service.list().pending, 1);
 });
 
+test("DOCX saved sources download with integrity verification", (t) => {
+  const { service, root, fixture } = setup(t);
+  fixture.result.snapshots[0].artifact_path = `snapshots/${fixture.hash}.docx`;
+  writeFileSync(join(root, fixture.result.snapshots[0].artifact_path), fixture.raw);
+  writeFileSync(fixture.path, JSON.stringify(fixture.result));
+  const id = service.list().items[0].id;
+  const source = service.source(id, fixture.hash);
+  assert.equal(source.headers["Content-Type"], "application/vnd.openxmlformats-officedocument.wordprocessingml.document");
+  assert.match(source.headers["Content-Disposition"], /^attachment;/);
+  writeFileSync(join(root, fixture.result.snapshots[0].artifact_path), "SYN tampered DOCX");
+  assert.throws(() => service.source(id, fixture.hash), (e) => e.status === 422);
+});
+
 test("service-area question is visible but cannot be promoted without evidence", (t) => {
   const { service, fixture } = setup(t);
   fixture.result.psa = { result: "unclear", unresolved_question: "SYN: Which approved boundary rule applies?",
