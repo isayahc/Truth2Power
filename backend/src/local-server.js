@@ -51,11 +51,30 @@ const server = createServer(async (req, res) => {
     if (path.startsWith("/api/audits/") || path.startsWith("/audit-demo/")) {
       await auditRoute(req, res, path, port);
     } else if (path === "/api" || path.startsWith("/api/")) {
+      let body;
+      if (path.startsWith("/api/reviews/") && req.method === "POST") {
+        const hosts = [`127.0.0.1:${port}`, `localhost:${port}`];
+        if (!hosts.includes(req.headers.host) || req.headers["x-review-request"] !== "1" ||
+            (req.headers.origin && !hosts.some((host) => req.headers.origin === `http://${host}`))) {
+          res.writeHead(403).end();
+          return;
+        }
+        const chunks = [];
+        let size = 0;
+        for await (const chunk of req) {
+          size += chunk.length;
+          if (size > 8192) { res.writeHead(413).end(); return; }
+          chunks.push(chunk);
+        }
+        body = Buffer.concat(chunks).toString("utf8");
+      }
       const result = await handler({
         rawPath: path,
+        headers: req.headers,
+        body,
         requestContext: { http: { method: req.method } },
       });
-      res.writeHead(result.statusCode, result.headers).end(result.body);
+      res.writeHead(result.statusCode, result.headers).end(result.isBase64Encoded ? Buffer.from(result.body, "base64") : result.body);
     } else if (!["GET", "HEAD"].includes(req.method)) {
       res.writeHead(405, { Allow: "GET, HEAD" }).end();
     } else if (development) {
