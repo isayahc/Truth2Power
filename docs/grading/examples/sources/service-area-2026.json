@@ -1,0 +1,17 @@
+{
+  "format": "published-fields-v1",
+  "synthetic": true,
+  "hospital_key": "1002",
+  "role": "psa_reference",
+  "url": "https://example.org/SYN-hospital/service-area-2026",
+  "language": "en",
+  "fields": {
+    "service_area": {
+      "required_counties": [
+        "SYN County"
+      ],
+      "guideline_year": 2026,
+      "version": "SYN-area-2026"
+    }
+  }
+}

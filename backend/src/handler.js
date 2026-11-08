@@ -2,6 +2,8 @@ import { readFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import { createReviewService } from "../review/service.js";
 
+import { gradingRoute } from "../grading/routes.js";
+
 let reviewService;
 async function reviewHandler(event) {
   reviewService ??= createReviewService(process.env.T2P_REVIEW_DIRECTORY || fileURLToPath(new URL("../../.audit/live/", import.meta.url)),
@@ -46,6 +48,7 @@ function errorResponse(statusCode, message) {
 
 /** Serve an API Gateway HTTP API v2 event with a response usable by Node or Lambda. */
 export async function handler(event) {
+  if (event.rawPath.startsWith("/api/grading/")) return gradingRoute(event);
   if (event.rawPath === "/api/reviews" || event.rawPath.startsWith("/api/reviews/")) return reviewHandler(event);
   const dataset = datasets.get(event.rawPath);
   if (!dataset) return errorResponse(404, "Dataset not found.");

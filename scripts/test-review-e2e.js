@@ -1,11 +1,13 @@
 // Synthetic-only browser verification; never records decisions against live hospital drafts.
 import assert from "node:assert/strict";
-import { mkdtempSync, mkdirSync, rmSync } from "node:fs";
+import { mkdtempSync, mkdirSync, rmSync, readFileSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { spawn } from "node:child_process";
 import { chromium } from "playwright";
-import { reviewFixture, applicationFixture } from "../backend/test/review-fixture.js";
+import { reviewFixture, applicationFixture, languageFixture } from "../backend/test/review-fixture.js";
+
+import { adaptArtifact } from "../backend/grading/adapter.js";
 
 const root = mkdtempSync(join(tmpdir(), "t2p-review-browser-"));
 reviewFixture(root);
@@ -15,7 +17,7 @@ const base = `http://127.0.0.1:${port}`;
 const artifacts = resolve(".audit/ui/27");
 mkdirSync(artifacts, { recursive: true });
 const server = spawn(process.execPath, ["backend/src/local-server.js"], {
-  env: { ...process.env, PORT: String(port), T2P_REVIEW_DIRECTORY: root }, stdio: ["ignore", "pipe", "pipe"],
+  env: { ...process.env, PORT: String(port), T2P_REVIEW_DIRECTORY: root, T2P_GRADING_DIRECTORY: root }, stdio: ["ignore", "pipe", "pipe"],
 });
 let browser;
 try {
@@ -24,7 +26,7 @@ try {
     server.on("exit", (code) => { clearTimeout(timer); reject(new Error(`Test server exited: ${code}`)); });
     server.stdout.on("data", (data) => { if (data.toString().includes("Truth2Power is running")) { clearTimeout(timer); resolveReady(); } });
   });
-  browser = await chromium.launch({ headless: true });
+  browser = await chromium.launch({ headless: true, executablePath: process.env.CHROMIUM_PATH || undefined });
   const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
   const errors = [];
   page.on("pageerror", (e) => errors.push(e.message));
@@ -112,8 +114,47 @@ try {
   assert.equal(await page.locator(".review-form").evaluate((form) => [...form.querySelectorAll("input, select, textarea")]
     .every((control) => control.getBoundingClientRect().right <= form.getBoundingClientRect().right)), true);
   await page.screenshot({ path: join(artifacts, "27-mobile.png"), fullPage: true });
+  // Create five independent source reviews in the isolated test directory. Select only the
+  // English result for grading so other inbox records cannot silently supply its coverage.
+  const languages = ["English", "Spanish", "Polish", "Ukrainian", "Russian"];
+  const urls = languages.map((l) => `https://example.org/SYN-${l}.html`);
+  const drafts = languages.map((l, n) => languageFixture(root, l, n + 1, { eligibility: n === 0, otherUrls: urls.filter((u) => u !== urls[n]) }));
+  const adapted = adaptArtifact(readFileSync(drafts[0].path), { root });
+  assert.equal(adapted.status, "partial", JSON.stringify(adapted.blockers[0]));
+  writeFileSync(join(root, "1002.json"), JSON.stringify(adapted.input));
+  await page.getByRole("button", { name: "Refresh inbox" }).click();
+  await page.getByLabel("Status", {exact:true}).selectOption("open");
+  await page.getByLabel("Document language").selectOption("es");
+  const spanish = page.getByRole("button", { name: /Needs review.*Ellenville.*SYN Spanish application/ });
+  await spanish.click();
+  await page.getByText("Source identity and revisions (1)").click();
+  await page.getByText(drafts[1].hash, {exact:true}).waitFor();
+  languageFixture(root, "Spanish", 9, {version:2,checked:"2026-11-09T14:00:00Z"});
+  await page.getByRole("button", { name: "Refresh inbox" }).click();
+  await spanish.click();
+  await page.getByText("Source identity and revisions (2)").waitFor();
+  if (!await page.getByRole("button", {name:/View revision/}).isVisible()) await page.getByText("Source identity and revisions (2)").click();
+  await page.getByRole("button", {name:/View revision/}).click();
+  await page.getByText("Historical revision · read only").waitFor();
+  assert.equal(await page.getByRole("button",{name:"Save review decision"}).count(),0);
+  const list = await (await page.request.get(base + "/api/reviews?hospital_key=1002&role=application")).json();
+  for (const tag of ["en","es","pl","uk","ru"]) assert.ok(list.items.some((i) => i.documents[0].language === tag));
+  await page.getByRole("button", {name:"View hospital on map"}).click();
+  const historical = await page.locator(".detail .pill").innerText();
+  await page.getByRole("button", {name:"View saved 17-measure assessment"}).click();
+  await page.getByRole("heading",{name:"Synthetic draft assessment"}).waitFor();
+  await page.getByText(/Institutional grade pending/).waitFor();
+  await page.getByText("Evidence and coverage",{exact:true}).click();
+  assert.match(await page.getByRole("region",{name:"Saved compliance assessment"}).innerText(),/SYN-Spanish/);
+  assert.equal(await page.locator(".detail .pill").innerText(),historical);
+  const report = await (await page.request.get(base + "/api/grading/hospitals/1002")).json();
+  assert.equal(report.origin.artifact_sha256, adapted.provenance.artifact_sha256);
+  assert.equal(report.source_coverage.find((d) => d.language === "en").snapshot.sha256, drafts[0].hash);
+  assert.equal(report.unresolved_measures.length,17);
+  assert.equal(report.final_grade,null);
+  assert.equal((await page.request.post(base + "/api/grading/hospitals/1002")).status(),405);
   assert.deepEqual(errors, []);
-  console.log("Review inbox browser checks passed: context, sources, CSRF, unresolved/correction, persistence, hospital link, desktop/mobile.");
+  console.log("Review inbox browser checks passed: context, sources, CSRF, unresolved/correction, persistence, hospital link, desktop/mobile, five languages, read-only history and draft grading.");
   console.log(`Screenshots: ${artifacts}`);
 } finally {
   await browser?.close();

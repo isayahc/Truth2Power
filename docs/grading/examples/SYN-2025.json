@@ -1,0 +1,1123 @@
+{
+  "schema_version": "grading-input-v1",
+  "synthetic": true,
+  "hospital_key": "1002",
+  "assessment_id": "SYN-2025",
+  "scope_id": "SYN-institutional-review",
+  "rubric_version": "css-17-v1",
+  "reference_version": "hhs-contiguous-2025-2026-v1",
+  "guideline_year": 2025,
+  "review_date": "2025-09-20",
+  "attempt": {
+    "attempt_id": "SYN-2025-attempt",
+    "status": "completed",
+    "attempted_at": "2025-09-20T14:00:00Z"
+  },
+  "last_successful_assessment_at": "2025-09-20T14:00:00Z",
+  "refresh_status": "overdue",
+  "scope": {
+    "inventory_status": "complete",
+    "online_application": "absent_after_search",
+    "required_sources": [
+      "https://example.org/SYN-hospital/aid",
+      "https://example.org/SYN-hospital/application-en",
+      "https://example.org/SYN-hospital/summary",
+      "https://example.org/SYN-hospital/statement",
+      "https://example.org/SYN-hospital/template-2025",
+      "https://example.org/SYN-hospital/service-area-2025"
+    ],
+    "gaps": []
+  },
+  "sources": [
+    {
+      "source_id": "https://example.org/SYN-hospital/aid",
+      "hospital_key": "1002",
+      "role": "landing_page",
+      "language": "en",
+      "status": "reviewed",
+      "snapshot": {
+        "snapshot_id": "bb7fe1dbe8d7f3fe3364f80198c702f4ad3e9b718a464169f3014c09171f7a19",
+        "sha256": "bb7fe1dbe8d7f3fe3364f80198c702f4ad3e9b718a464169f3014c09171f7a19",
+        "artifact_path": "sources/aid.json",
+        "retrieved_at": "2025-09-01T00:00:00Z",
+        "publisher_updated_at": null,
+        "url": "https://example.org/SYN-hospital/aid"
+      }
+    },
+    {
+      "source_id": "https://example.org/SYN-hospital/application-en",
+      "hospital_key": "1002",
+      "role": "application",
+      "language": "en",
+      "status": "reviewed",
+      "snapshot": {
+        "snapshot_id": "5141f590024de42f40c12fe99f7019e733f97d645a6668a189e9c057073c57bc",
+        "sha256": "5141f590024de42f40c12fe99f7019e733f97d645a6668a189e9c057073c57bc",
+        "artifact_path": "sources/application-en.json",
+        "retrieved_at": "2025-09-01T00:00:00Z",
+        "publisher_updated_at": null,
+        "url": "https://example.org/SYN-hospital/application-en"
+      }
+    },
+    {
+      "source_id": "https://example.org/SYN-hospital/summary",
+      "hospital_key": "1002",
+      "role": "policy_summary",
+      "language": "en",
+      "status": "reviewed",
+      "snapshot": {
+        "snapshot_id": "82e625b23f7baac8437f8cc019b7c428afa76000aa6b9903a3e78fda974ef97f",
+        "sha256": "82e625b23f7baac8437f8cc019b7c428afa76000aa6b9903a3e78fda974ef97f",
+        "artifact_path": "sources/summary.json",
+        "retrieved_at": "2025-09-01T00:00:00Z",
+        "publisher_updated_at": null,
+        "url": "https://example.org/SYN-hospital/summary"
+      }
+    },
+    {
+      "source_id": "https://example.org/SYN-hospital/statement",
+      "hospital_key": "1002",
+      "role": "policy_statement",
+      "language": "en",
+      "status": "reviewed",
+      "snapshot": {
+        "snapshot_id": "a5c2930491ff0ef2d13980629600b2e63c9d56c617701e5581b0e1b74af08481",
+        "sha256": "a5c2930491ff0ef2d13980629600b2e63c9d56c617701e5581b0e1b74af08481",
+        "artifact_path": "sources/statement.json",
+        "retrieved_at": "2025-09-01T00:00:00Z",
+        "publisher_updated_at": null,
+        "url": "https://example.org/SYN-hospital/statement"
+      }
+    },
+    {
+      "source_id": "https://example.org/SYN-hospital/template-2025",
+      "hospital_key": "1002",
+      "role": "uniform_reference",
+      "language": "en",
+      "status": "reviewed",
+      "snapshot": {
+        "snapshot_id": "9734550a685d72c2f808b9d8b53af2bd911b6b2bbaaf4625e8fbc4c76234caae",
+        "sha256": "9734550a685d72c2f808b9d8b53af2bd911b6b2bbaaf4625e8fbc4c76234caae",
+        "artifact_path": "sources/template-2025.json",
+        "retrieved_at": "2025-09-01T00:00:00Z",
+        "publisher_updated_at": null,
+        "url": "https://example.org/SYN-hospital/template-2025"
+      }
+    },
+    {
+      "source_id": "https://example.org/SYN-hospital/service-area-2025",
+      "hospital_key": "1002",
+      "role": "psa_reference",
+      "language": "en",
+      "status": "reviewed",
+      "snapshot": {
+        "snapshot_id": "7b1b0cfc32af28779e49ed1faee0ca76468f8b89cce8f94a3ebfc33524b93f52",
+        "sha256": "7b1b0cfc32af28779e49ed1faee0ca76468f8b89cce8f94a3ebfc33524b93f52",
+        "artifact_path": "sources/service-area-2025.json",
+        "retrieved_at": "2025-09-01T00:00:00Z",
+        "publisher_updated_at": null,
+        "url": "https://example.org/SYN-hospital/service-area-2025"
+      }
+    }
+  ],
+  "findings": [
+    {
+      "hospital_key": "1002",
+      "assessment_id": "SYN-2025",
+      "scope_id": "SYN-institutional-review",
+      "rubric_version": "css-17-v1",
+      "reference_version": "hhs-contiguous-2025-2026-v1",
+      "guideline_year": 2025,
+      "review_date": "2025-09-20",
+      "measure_id": "posted_materials.application_posted",
+      "result": "yes",
+      "expected": {
+        "any_accessible_role": [
+          "application",
+          "online_application"
+        ]
+      },
+      "observed": [
+        {
+          "evidence_index": 0,
+          "method": "source_field",
+          "value": {
+            "links": [
+              "https://example.org/SYN-hospital/application-en",
+              "https://example.org/SYN-hospital/summary",
+              "https://example.org/SYN-hospital/statement"
+            ],
+            "search_complete": true,
+            "search_notes": "SYN reviewed all designated financial assistance links."
+          }
+        }
+      ],
+      "evidence": [
+        {
+          "source_id": "https://example.org/SYN-hospital/aid",
+          "snapshot_id": "bb7fe1dbe8d7f3fe3364f80198c702f4ad3e9b718a464169f3014c09171f7a19",
+          "sha256": "bb7fe1dbe8d7f3fe3364f80198c702f4ad3e9b718a464169f3014c09171f7a19",
+          "locator": "/fields/posting",
+          "quote": "{\"links\":[\"https://example.org/SYN-hospital/application-en\",\"https://example.org/SYN-hospital/summary\",\"https://example.org/SYN-hospital/statement\"],\"search_complete\":true,\"search_notes\":\"SYN reviewed all designated financial assistance links.\"}"
+        }
+      ],
+      "unresolved_evidence": [],
+      "human_review": "pending"
+    },
+    {
+      "hospital_key": "1002",
+      "assessment_id": "SYN-2025",
+      "scope_id": "SYN-institutional-review",
+      "rubric_version": "css-17-v1",
+      "reference_version": "hhs-contiguous-2025-2026-v1",
+      "guideline_year": 2025,
+      "review_date": "2025-09-20",
+      "measure_id": "posted_materials.policy_summary_posted",
+      "result": "yes",
+      "expected": {
+        "any_accessible_role": [
+          "policy_summary"
+        ]
+      },
+      "observed": [
+        {
+          "evidence_index": 0,
+          "method": "source_field",
+          "value": {
+            "links": [
+              "https://example.org/SYN-hospital/application-en",
+              "https://example.org/SYN-hospital/summary",
+              "https://example.org/SYN-hospital/statement"
+            ],
+            "search_complete": true,
+            "search_notes": "SYN reviewed all designated financial assistance links."
+          }
+        }
+      ],
+      "evidence": [
+        {
+          "source_id": "https://example.org/SYN-hospital/aid",
+          "snapshot_id": "bb7fe1dbe8d7f3fe3364f80198c702f4ad3e9b718a464169f3014c09171f7a19",
+          "sha256": "bb7fe1dbe8d7f3fe3364f80198c702f4ad3e9b718a464169f3014c09171f7a19",
+          "locator": "/fields/posting",
+          "quote": "{\"links\":[\"https://example.org/SYN-hospital/application-en\",\"https://example.org/SYN-hospital/summary\",\"https://example.org/SYN-hospital/statement\"],\"search_complete\":true,\"search_notes\":\"SYN reviewed all designated financial assistance links.\"}"
+        }
+      ],
+      "unresolved_evidence": [],
+      "human_review": "pending"
+    },
+    {
+      "hospital_key": "1002",
+      "assessment_id": "SYN-2025",
+      "scope_id": "SYN-institutional-review",
+      "rubric_version": "css-17-v1",
+      "reference_version": "hhs-contiguous-2025-2026-v1",
+      "guideline_year": 2025,
+      "review_date": "2025-09-20",
+      "measure_id": "posted_materials.policy_statement_posted",
+      "result": "yes",
+      "expected": {
+        "any_accessible_role": [
+          "policy_statement"
+        ]
+      },
+      "observed": [
+        {
+          "evidence_index": 0,
+          "method": "source_field",
+          "value": {
+            "links": [
+              "https://example.org/SYN-hospital/application-en",
+              "https://example.org/SYN-hospital/summary",
+              "https://example.org/SYN-hospital/statement"
+            ],
+            "search_complete": true,
+            "search_notes": "SYN reviewed all designated financial assistance links."
+          }
+        }
+      ],
+      "evidence": [
+        {
+          "source_id": "https://example.org/SYN-hospital/aid",
+          "snapshot_id": "bb7fe1dbe8d7f3fe3364f80198c702f4ad3e9b718a464169f3014c09171f7a19",
+          "sha256": "bb7fe1dbe8d7f3fe3364f80198c702f4ad3e9b718a464169f3014c09171f7a19",
+          "locator": "/fields/posting",
+          "quote": "{\"links\":[\"https://example.org/SYN-hospital/application-en\",\"https://example.org/SYN-hospital/summary\",\"https://example.org/SYN-hospital/statement\"],\"search_complete\":true,\"search_notes\":\"SYN reviewed all designated financial assistance links.\"}"
+        }
+      ],
+      "unresolved_evidence": [],
+      "human_review": "pending"
+    },
+    {
+      "hospital_key": "1002",
+      "assessment_id": "SYN-2025",
+      "scope_id": "SYN-institutional-review",
+      "rubric_version": "css-17-v1",
+      "reference_version": "hhs-contiguous-2025-2026-v1",
+      "guideline_year": 2025,
+      "review_date": "2025-09-20",
+      "measure_id": "posted_materials.consistent_across_documents",
+      "result": "yes",
+      "expected": {
+        "conflicting_terms": 0,
+        "include_online_application": true
+      },
+      "observed": [
+        {
+          "evidence_index": 0,
+          "method": "source_field",
+          "value": {
+            "complete": true,
+            "terms": {
+              "eligibility_percent": 400
+            },
+            "online_application_search": "searched_absent"
+          }
+        },
+        {
+          "evidence_index": 1,
+          "method": "source_field",
+          "value": {
+            "complete": true,
+            "terms": {
+              "eligibility_percent": 400
+            }
+          }
+        },
+        {
+          "evidence_index": 2,
+          "method": "source_field",
+          "value": {
+            "complete": true,
+            "terms": {
+              "eligibility_percent": 400
+            }
+          }
+        },
+        {
+          "evidence_index": 3,
+          "method": "source_field",
+          "value": {
+            "complete": true,
+            "terms": {
+              "eligibility_percent": 400
+            }
+          }
+        }
+      ],
+      "evidence": [
+        {
+          "source_id": "https://example.org/SYN-hospital/aid",
+          "snapshot_id": "bb7fe1dbe8d7f3fe3364f80198c702f4ad3e9b718a464169f3014c09171f7a19",
+          "sha256": "bb7fe1dbe8d7f3fe3364f80198c702f4ad3e9b718a464169f3014c09171f7a19",
+          "locator": "/fields/consistency",
+          "quote": "{\"complete\":true,\"terms\":{\"eligibility_percent\":400},\"online_application_search\":\"searched_absent\"}"
+        },
+        {
+          "source_id": "https://example.org/SYN-hospital/application-en",
+          "snapshot_id": "5141f590024de42f40c12fe99f7019e733f97d645a6668a189e9c057073c57bc",
+          "sha256": "5141f590024de42f40c12fe99f7019e733f97d645a6668a189e9c057073c57bc",
+          "locator": "/fields/consistency",
+          "quote": "{\"complete\":true,\"terms\":{\"eligibility_percent\":400}}"
+        },
+        {
+          "source_id": "https://example.org/SYN-hospital/summary",
+          "snapshot_id": "82e625b23f7baac8437f8cc019b7c428afa76000aa6b9903a3e78fda974ef97f",
+          "sha256": "82e625b23f7baac8437f8cc019b7c428afa76000aa6b9903a3e78fda974ef97f",
+          "locator": "/fields/consistency",
+          "quote": "{\"complete\":true,\"terms\":{\"eligibility_percent\":400}}"
+        },
+        {
+          "source_id": "https://example.org/SYN-hospital/statement",
+          "snapshot_id": "a5c2930491ff0ef2d13980629600b2e63c9d56c617701e5581b0e1b74af08481",
+          "sha256": "a5c2930491ff0ef2d13980629600b2e63c9d56c617701e5581b0e1b74af08481",
+          "locator": "/fields/consistency",
+          "quote": "{\"complete\":true,\"terms\":{\"eligibility_percent\":400}}"
+        }
+      ],
+      "unresolved_evidence": [],
+      "human_review": "pending"
+    },
+    {
+      "hospital_key": "1002",
+      "assessment_id": "SYN-2025",
+      "scope_id": "SYN-institutional-review",
+      "rubric_version": "css-17-v1",
+      "reference_version": "hhs-contiguous-2025-2026-v1",
+      "guideline_year": 2025,
+      "review_date": "2025-09-20",
+      "measure_id": "posted_materials.primary_service_area_boundaries_compliant",
+      "result": "yes",
+      "expected": {
+        "required_counties": "applicable_facility_reference"
+      },
+      "observed": [
+        {
+          "evidence_index": 0,
+          "method": "source_field",
+          "value": {
+            "complete": true,
+            "published_counties": [
+              "SYN County"
+            ]
+          }
+        },
+        {
+          "evidence_index": 1,
+          "method": "source_field",
+          "value": {
+            "required_counties": [
+              "SYN County"
+            ],
+            "guideline_year": 2025,
+            "version": "SYN-area-2025"
+          }
+        }
+      ],
+      "evidence": [
+        {
+          "source_id": "https://example.org/SYN-hospital/statement",
+          "snapshot_id": "a5c2930491ff0ef2d13980629600b2e63c9d56c617701e5581b0e1b74af08481",
+          "sha256": "a5c2930491ff0ef2d13980629600b2e63c9d56c617701e5581b0e1b74af08481",
+          "locator": "/fields/service_area",
+          "quote": "{\"complete\":true,\"published_counties\":[\"SYN County\"]}"
+        },
+        {
+          "source_id": "https://example.org/SYN-hospital/service-area-2025",
+          "snapshot_id": "7b1b0cfc32af28779e49ed1faee0ca76468f8b89cce8f94a3ebfc33524b93f52",
+          "sha256": "7b1b0cfc32af28779e49ed1faee0ca76468f8b89cce8f94a3ebfc33524b93f52",
+          "locator": "/fields/service_area",
+          "quote": "{\"required_counties\":[\"SYN County\"],\"guideline_year\":2025,\"version\":\"SYN-area-2025\"}"
+        }
+      ],
+      "unresolved_evidence": [],
+      "human_review": "pending"
+    },
+    {
+      "hospital_key": "1002",
+      "assessment_id": "SYN-2025",
+      "scope_id": "SYN-institutional-review",
+      "rubric_version": "css-17-v1",
+      "reference_version": "hhs-contiguous-2025-2026-v1",
+      "guideline_year": 2025,
+      "review_date": "2025-09-20",
+      "measure_id": "posted_materials.no_submission_time_limit",
+      "result": "yes",
+      "expected": {
+        "application_submission": "any_time"
+      },
+      "observed": [
+        {
+          "evidence_index": 0,
+          "method": "source_field",
+          "value": {
+            "application_submission": "not_addressed"
+          }
+        },
+        {
+          "evidence_index": 1,
+          "method": "source_field",
+          "value": {
+            "application_submission": "any_time"
+          }
+        },
+        {
+          "evidence_index": 2,
+          "method": "source_field",
+          "value": {
+            "application_submission": "any_time"
+          }
+        },
+        {
+          "evidence_index": 3,
+          "method": "source_field",
+          "value": {
+            "application_submission": "any_time"
+          }
+        }
+      ],
+      "evidence": [
+        {
+          "source_id": "https://example.org/SYN-hospital/aid",
+          "snapshot_id": "bb7fe1dbe8d7f3fe3364f80198c702f4ad3e9b718a464169f3014c09171f7a19",
+          "sha256": "bb7fe1dbe8d7f3fe3364f80198c702f4ad3e9b718a464169f3014c09171f7a19",
+          "locator": "/fields/deadline",
+          "quote": "{\"application_submission\":\"not_addressed\"}"
+        },
+        {
+          "source_id": "https://example.org/SYN-hospital/application-en",
+          "snapshot_id": "5141f590024de42f40c12fe99f7019e733f97d645a6668a189e9c057073c57bc",
+          "sha256": "5141f590024de42f40c12fe99f7019e733f97d645a6668a189e9c057073c57bc",
+          "locator": "/fields/deadline",
+          "quote": "{\"application_submission\":\"any_time\"}"
+        },
+        {
+          "source_id": "https://example.org/SYN-hospital/summary",
+          "snapshot_id": "82e625b23f7baac8437f8cc019b7c428afa76000aa6b9903a3e78fda974ef97f",
+          "sha256": "82e625b23f7baac8437f8cc019b7c428afa76000aa6b9903a3e78fda974ef97f",
+          "locator": "/fields/deadline",
+          "quote": "{\"application_submission\":\"any_time\"}"
+        },
+        {
+          "source_id": "https://example.org/SYN-hospital/statement",
+          "snapshot_id": "a5c2930491ff0ef2d13980629600b2e63c9d56c617701e5581b0e1b74af08481",
+          "sha256": "a5c2930491ff0ef2d13980629600b2e63c9d56c617701e5581b0e1b74af08481",
+          "locator": "/fields/deadline",
+          "quote": "{\"application_submission\":\"any_time\"}"
+        }
+      ],
+      "unresolved_evidence": [],
+      "human_review": "pending"
+    },
+    {
+      "hospital_key": "1002",
+      "assessment_id": "SYN-2025",
+      "scope_id": "SYN-institutional-review",
+      "rubric_version": "css-17-v1",
+      "reference_version": "hhs-contiguous-2025-2026-v1",
+      "guideline_year": 2025,
+      "review_date": "2025-09-20",
+      "measure_id": "posted_materials.no_evidence_of_asset_checks",
+      "result": "yes",
+      "expected": {
+        "eligibility_asset_test": "no_asset_test"
+      },
+      "observed": [
+        {
+          "evidence_index": 0,
+          "method": "source_field",
+          "value": {
+            "eligibility_asset_test": "not_addressed"
+          }
+        },
+        {
+          "evidence_index": 1,
+          "method": "source_field",
+          "value": {
+            "eligibility_asset_test": "no_asset_test"
+          }
+        },
+        {
+          "evidence_index": 2,
+          "method": "source_field",
+          "value": {
+            "eligibility_asset_test": "no_asset_test"
+          }
+        },
+        {
+          "evidence_index": 3,
+          "method": "source_field",
+          "value": {
+            "eligibility_asset_test": "no_asset_test"
+          }
+        }
+      ],
+      "evidence": [
+        {
+          "source_id": "https://example.org/SYN-hospital/aid",
+          "snapshot_id": "bb7fe1dbe8d7f3fe3364f80198c702f4ad3e9b718a464169f3014c09171f7a19",
+          "sha256": "bb7fe1dbe8d7f3fe3364f80198c702f4ad3e9b718a464169f3014c09171f7a19",
+          "locator": "/fields/assets",
+          "quote": "{\"eligibility_asset_test\":\"not_addressed\"}"
+        },
+        {
+          "source_id": "https://example.org/SYN-hospital/application-en",
+          "snapshot_id": "5141f590024de42f40c12fe99f7019e733f97d645a6668a189e9c057073c57bc",
+          "sha256": "5141f590024de42f40c12fe99f7019e733f97d645a6668a189e9c057073c57bc",
+          "locator": "/fields/assets",
+          "quote": "{\"eligibility_asset_test\":\"no_asset_test\"}"
+        },
+        {
+          "source_id": "https://example.org/SYN-hospital/summary",
+          "snapshot_id": "82e625b23f7baac8437f8cc019b7c428afa76000aa6b9903a3e78fda974ef97f",
+          "sha256": "82e625b23f7baac8437f8cc019b7c428afa76000aa6b9903a3e78fda974ef97f",
+          "locator": "/fields/assets",
+          "quote": "{\"eligibility_asset_test\":\"no_asset_test\"}"
+        },
+        {
+          "source_id": "https://example.org/SYN-hospital/statement",
+          "snapshot_id": "a5c2930491ff0ef2d13980629600b2e63c9d56c617701e5581b0e1b74af08481",
+          "sha256": "a5c2930491ff0ef2d13980629600b2e63c9d56c617701e5581b0e1b74af08481",
+          "locator": "/fields/assets",
+          "quote": "{\"eligibility_asset_test\":\"no_asset_test\"}"
+        }
+      ],
+      "unresolved_evidence": [],
+      "human_review": "pending"
+    },
+    {
+      "hospital_key": "1002",
+      "assessment_id": "SYN-2025",
+      "scope_id": "SYN-institutional-review",
+      "rubric_version": "css-17-v1",
+      "reference_version": "hhs-contiguous-2025-2026-v1",
+      "guideline_year": 2025,
+      "review_date": "2025-09-20",
+      "measure_id": "posted_materials.no_immigration_status_barrier",
+      "result": "yes",
+      "expected": {
+        "immigration_eligibility": "regardless_of_status"
+      },
+      "observed": [
+        {
+          "evidence_index": 0,
+          "method": "source_field",
+          "value": {
+            "immigration_eligibility": "not_addressed"
+          }
+        },
+        {
+          "evidence_index": 1,
+          "method": "source_field",
+          "value": {
+            "immigration_eligibility": "regardless_of_status"
+          }
+        },
+        {
+          "evidence_index": 2,
+          "method": "source_field",
+          "value": {
+            "immigration_eligibility": "regardless_of_status"
+          }
+        },
+        {
+          "evidence_index": 3,
+          "method": "source_field",
+          "value": {
+            "immigration_eligibility": "regardless_of_status"
+          }
+        }
+      ],
+      "evidence": [
+        {
+          "source_id": "https://example.org/SYN-hospital/aid",
+          "snapshot_id": "bb7fe1dbe8d7f3fe3364f80198c702f4ad3e9b718a464169f3014c09171f7a19",
+          "sha256": "bb7fe1dbe8d7f3fe3364f80198c702f4ad3e9b718a464169f3014c09171f7a19",
+          "locator": "/fields/immigration",
+          "quote": "{\"immigration_eligibility\":\"not_addressed\"}"
+        },
+        {
+          "source_id": "https://example.org/SYN-hospital/application-en",
+          "snapshot_id": "5141f590024de42f40c12fe99f7019e733f97d645a6668a189e9c057073c57bc",
+          "sha256": "5141f590024de42f40c12fe99f7019e733f97d645a6668a189e9c057073c57bc",
+          "locator": "/fields/immigration",
+          "quote": "{\"immigration_eligibility\":\"regardless_of_status\"}"
+        },
+        {
+          "source_id": "https://example.org/SYN-hospital/summary",
+          "snapshot_id": "82e625b23f7baac8437f8cc019b7c428afa76000aa6b9903a3e78fda974ef97f",
+          "sha256": "82e625b23f7baac8437f8cc019b7c428afa76000aa6b9903a3e78fda974ef97f",
+          "locator": "/fields/immigration",
+          "quote": "{\"immigration_eligibility\":\"regardless_of_status\"}"
+        },
+        {
+          "source_id": "https://example.org/SYN-hospital/statement",
+          "snapshot_id": "a5c2930491ff0ef2d13980629600b2e63c9d56c617701e5581b0e1b74af08481",
+          "sha256": "a5c2930491ff0ef2d13980629600b2e63c9d56c617701e5581b0e1b74af08481",
+          "locator": "/fields/immigration",
+          "quote": "{\"immigration_eligibility\":\"regardless_of_status\"}"
+        }
+      ],
+      "unresolved_evidence": [],
+      "human_review": "pending"
+    },
+    {
+      "hospital_key": "1002",
+      "assessment_id": "SYN-2025",
+      "scope_id": "SYN-institutional-review",
+      "rubric_version": "css-17-v1",
+      "reference_version": "hhs-contiguous-2025-2026-v1",
+      "guideline_year": 2025,
+      "review_date": "2025-09-20",
+      "measure_id": "application.uniform_application",
+      "result": "yes",
+      "expected": {
+        "required_sections": "applicable_uniform_template",
+        "visual_review_complete": true
+      },
+      "observed": [
+        {
+          "evidence_index": 0,
+          "method": "source_field",
+          "value": {
+            "complete": true,
+            "present_sections": [
+              "SYN eligibility",
+              "SYN signature"
+            ],
+            "customizations": "none",
+            "visual_review_complete": true
+          }
+        },
+        {
+          "evidence_index": 1,
+          "method": "source_field",
+          "value": {
+            "required_sections": [
+              "SYN eligibility",
+              "SYN signature"
+            ],
+            "guideline_year": 2025,
+            "version": "SYN-template-2025"
+          }
+        }
+      ],
+      "evidence": [
+        {
+          "source_id": "https://example.org/SYN-hospital/application-en",
+          "snapshot_id": "5141f590024de42f40c12fe99f7019e733f97d645a6668a189e9c057073c57bc",
+          "sha256": "5141f590024de42f40c12fe99f7019e733f97d645a6668a189e9c057073c57bc",
+          "locator": "/fields/uniform",
+          "quote": "{\"complete\":true,\"present_sections\":[\"SYN eligibility\",\"SYN signature\"],\"customizations\":\"none\",\"visual_review_complete\":true}"
+        },
+        {
+          "source_id": "https://example.org/SYN-hospital/template-2025",
+          "snapshot_id": "9734550a685d72c2f808b9d8b53af2bd911b6b2bbaaf4625e8fbc4c76234caae",
+          "sha256": "9734550a685d72c2f808b9d8b53af2bd911b6b2bbaaf4625e8fbc4c76234caae",
+          "locator": "/fields/uniform",
+          "quote": "{\"required_sections\":[\"SYN eligibility\",\"SYN signature\"],\"guideline_year\":2025,\"version\":\"SYN-template-2025\"}"
+        }
+      ],
+      "unresolved_evidence": [],
+      "human_review": "pending"
+    },
+    {
+      "hospital_key": "1002",
+      "assessment_id": "SYN-2025",
+      "scope_id": "SYN-institutional-review",
+      "rubric_version": "css-17-v1",
+      "reference_version": "hhs-contiguous-2025-2026-v1",
+      "guideline_year": 2025,
+      "review_date": "2025-09-20",
+      "measure_id": "application.contact_information",
+      "result": "yes",
+      "expected": {
+        "minimum_application_assistance_channels": 1
+      },
+      "observed": [
+        {
+          "evidence_index": 0,
+          "method": "source_field",
+          "value": {
+            "complete": true,
+            "channels": [
+              {
+                "purpose": "application_assistance",
+                "type": "office",
+                "value": "SYN aid desk"
+              }
+            ]
+          }
+        }
+      ],
+      "evidence": [
+        {
+          "source_id": "https://example.org/SYN-hospital/application-en",
+          "snapshot_id": "5141f590024de42f40c12fe99f7019e733f97d645a6668a189e9c057073c57bc",
+          "sha256": "5141f590024de42f40c12fe99f7019e733f97d645a6668a189e9c057073c57bc",
+          "locator": "/fields/contact",
+          "quote": "{\"complete\":true,\"channels\":[{\"purpose\":\"application_assistance\",\"type\":\"office\",\"value\":\"SYN aid desk\"}]}"
+        }
+      ],
+      "unresolved_evidence": [],
+      "human_review": "pending"
+    },
+    {
+      "hospital_key": "1002",
+      "assessment_id": "SYN-2025",
+      "scope_id": "SYN-institutional-review",
+      "rubric_version": "css-17-v1",
+      "reference_version": "hhs-contiguous-2025-2026-v1",
+      "guideline_year": 2025,
+      "review_date": "2025-09-20",
+      "measure_id": "application.income_discount_tables",
+      "result": "yes",
+      "expected": {
+        "income_table": true,
+        "discount_table": true
+      },
+      "observed": [
+        {
+          "evidence_index": 0,
+          "method": "source_field",
+          "value": {
+            "complete": true,
+            "income_table": true,
+            "discount_table": true
+          }
+        }
+      ],
+      "evidence": [
+        {
+          "source_id": "https://example.org/SYN-hospital/application-en",
+          "snapshot_id": "5141f590024de42f40c12fe99f7019e733f97d645a6668a189e9c057073c57bc",
+          "sha256": "5141f590024de42f40c12fe99f7019e733f97d645a6668a189e9c057073c57bc",
+          "locator": "/fields/tables",
+          "quote": "{\"complete\":true,\"income_table\":true,\"discount_table\":true}"
+        }
+      ],
+      "unresolved_evidence": [],
+      "human_review": "pending"
+    },
+    {
+      "hospital_key": "1002",
+      "assessment_id": "SYN-2025",
+      "scope_id": "SYN-institutional-review",
+      "rubric_version": "css-17-v1",
+      "reference_version": "hhs-contiguous-2025-2026-v1",
+      "guideline_year": 2025,
+      "review_date": "2025-09-20",
+      "measure_id": "application.fpl_guidelines",
+      "result": "yes",
+      "expected": {
+        "currency": "USD",
+        "period": "annual",
+        "reference_version": "hhs-contiguous-2025-2026-v1",
+        "required_household_sizes": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "required_fpl_percentages": [
+          200,
+          300,
+          400
+        ],
+        "guideline_year": 2025
+      },
+      "observed": [
+        {
+          "evidence_index": 0,
+          "method": "source_field",
+          "value": {
+            "published_year": 2025,
+            "currency": "USD",
+            "period": "annual",
+            "cells": [
+              {
+                "household_size": 1,
+                "fpl_percent": 200,
+                "amount": 31300
+              },
+              {
+                "household_size": 1,
+                "fpl_percent": 300,
+                "amount": 46950
+              },
+              {
+                "household_size": 1,
+                "fpl_percent": 400,
+                "amount": 62600
+              },
+              {
+                "household_size": 2,
+                "fpl_percent": 200,
+                "amount": 42300
+              },
+              {
+                "household_size": 2,
+                "fpl_percent": 300,
+                "amount": 63450
+              },
+              {
+                "household_size": 2,
+                "fpl_percent": 400,
+                "amount": 84600
+              },
+              {
+                "household_size": 3,
+                "fpl_percent": 200,
+                "amount": 53300
+              },
+              {
+                "household_size": 3,
+                "fpl_percent": 300,
+                "amount": 79950
+              },
+              {
+                "household_size": 3,
+                "fpl_percent": 400,
+                "amount": 106600
+              },
+              {
+                "household_size": 4,
+                "fpl_percent": 200,
+                "amount": 64300
+              },
+              {
+                "household_size": 4,
+                "fpl_percent": 300,
+                "amount": 96450
+              },
+              {
+                "household_size": 4,
+                "fpl_percent": 400,
+                "amount": 128600
+              },
+              {
+                "household_size": 5,
+                "fpl_percent": 200,
+                "amount": 75300
+              },
+              {
+                "household_size": 5,
+                "fpl_percent": 300,
+                "amount": 112950
+              },
+              {
+                "household_size": 5,
+                "fpl_percent": 400,
+                "amount": 150600
+              },
+              {
+                "household_size": 6,
+                "fpl_percent": 200,
+                "amount": 86300
+              },
+              {
+                "household_size": 6,
+                "fpl_percent": 300,
+                "amount": 129450
+              },
+              {
+                "household_size": 6,
+                "fpl_percent": 400,
+                "amount": 172600
+              },
+              {
+                "household_size": 7,
+                "fpl_percent": 200,
+                "amount": 97300
+              },
+              {
+                "household_size": 7,
+                "fpl_percent": 300,
+                "amount": 145950
+              },
+              {
+                "household_size": 7,
+                "fpl_percent": 400,
+                "amount": 194600
+              },
+              {
+                "household_size": 8,
+                "fpl_percent": 200,
+                "amount": 108300
+              },
+              {
+                "household_size": 8,
+                "fpl_percent": 300,
+                "amount": 162450
+              },
+              {
+                "household_size": 8,
+                "fpl_percent": 400,
+                "amount": 216600
+              }
+            ]
+          }
+        }
+      ],
+      "evidence": [
+        {
+          "source_id": "https://example.org/SYN-hospital/application-en",
+          "snapshot_id": "5141f590024de42f40c12fe99f7019e733f97d645a6668a189e9c057073c57bc",
+          "sha256": "5141f590024de42f40c12fe99f7019e733f97d645a6668a189e9c057073c57bc",
+          "locator": "/fields/fpl",
+          "quote": "{\"published_year\":2025,\"currency\":\"USD\",\"period\":\"annual\",\"cells\":[{\"household_size\":1,\"fpl_percent\":200,\"amount\":31300},{\"household_size\":1,\"fpl_percent\":300,\"amount\":46950},{\"household_size\":1,\"fpl_percent\":400,\"amount\":62600},{\"household_size\":2,\"fpl_percent\":200,\"amount\":42300},{\"household_size\":2,\"fpl_percent\":300,\"amount\":63450},{\"household_size\":2,\"fpl_percent\":400,\"amount\":84600},{\"household_size\":3,\"fpl_percent\":200,\"amount\":53300},{\"household_size\":3,\"fpl_percent\":300,\"amount\":79950},{\"household_size\":3,\"fpl_percent\":400,\"amount\":106600},{\"household_size\":4,\"fpl_percent\":200,\"amount\":64300},{\"household_size\":4,\"fpl_percent\":300,\"amount\":96450},{\"household_size\":4,\"fpl_percent\":400,\"amount\":128600},{\"household_size\":5,\"fpl_percent\":200,\"amount\":75300},{\"household_size\":5,\"fpl_percent\":300,\"amount\":112950},{\"household_size\":5,\"fpl_percent\":400,\"amount\":150600},{\"household_size\":6,\"fpl_percent\":200,\"amount\":86300},{\"household_size\":6,\"fpl_percent\":300,\"amount\":129450},{\"household_size\":6,\"fpl_percent\":400,\"amount\":172600},{\"household_size\":7,\"fpl_percent\":200,\"amount\":97300},{\"household_size\":7,\"fpl_percent\":300,\"amount\":145950},{\"household_size\":7,\"fpl_percent\":400,\"amount\":194600},{\"household_size\":8,\"fpl_percent\":200,\"amount\":108300},{\"household_size\":8,\"fpl_percent\":300,\"amount\":162450},{\"household_size\":8,\"fpl_percent\":400,\"amount\":216600}]}"
+        }
+      ],
+      "unresolved_evidence": [],
+      "human_review": "pending"
+    },
+    {
+      "hospital_key": "1002",
+      "assessment_id": "SYN-2025",
+      "scope_id": "SYN-institutional-review",
+      "rubric_version": "css-17-v1",
+      "reference_version": "hhs-contiguous-2025-2026-v1",
+      "guideline_year": 2025,
+      "review_date": "2025-09-20",
+      "measure_id": "application.maximum_fpl",
+      "result": "yes",
+      "expected": {
+        "minimum_percent": 400
+      },
+      "observed": [
+        {
+          "evidence_index": 0,
+          "method": "source_field",
+          "value": {
+            "percent": 400,
+            "hard_ceiling": false
+          }
+        }
+      ],
+      "evidence": [
+        {
+          "source_id": "https://example.org/SYN-hospital/application-en",
+          "snapshot_id": "5141f590024de42f40c12fe99f7019e733f97d645a6668a189e9c057073c57bc",
+          "sha256": "5141f590024de42f40c12fe99f7019e733f97d645a6668a189e9c057073c57bc",
+          "locator": "/fields/maximum",
+          "quote": "{\"percent\":400,\"hard_ceiling\":false}"
+        }
+      ],
+      "unresolved_evidence": [],
+      "human_review": "pending"
+    },
+    {
+      "hospital_key": "1002",
+      "assessment_id": "SYN-2025",
+      "scope_id": "SYN-institutional-review",
+      "rubric_version": "css-17-v1",
+      "reference_version": "hhs-contiguous-2025-2026-v1",
+      "guideline_year": 2025,
+      "review_date": "2025-09-20",
+      "measure_id": "application.installments_cap",
+      "result": "yes",
+      "expected": {
+        "maximum_percent": 5,
+        "basis": "gross_monthly_income"
+      },
+      "observed": [
+        {
+          "evidence_index": 0,
+          "method": "source_field",
+          "value": {
+            "percent": 5,
+            "basis": "gross_monthly_income"
+          }
+        }
+      ],
+      "evidence": [
+        {
+          "source_id": "https://example.org/SYN-hospital/application-en",
+          "snapshot_id": "5141f590024de42f40c12fe99f7019e733f97d645a6668a189e9c057073c57bc",
+          "sha256": "5141f590024de42f40c12fe99f7019e733f97d645a6668a189e9c057073c57bc",
+          "locator": "/fields/installments",
+          "quote": "{\"percent\":5,\"basis\":\"gross_monthly_income\"}"
+        }
+      ],
+      "unresolved_evidence": [],
+      "human_review": "pending"
+    },
+    {
+      "hospital_key": "1002",
+      "assessment_id": "SYN-2025",
+      "scope_id": "SYN-institutional-review",
+      "rubric_version": "css-17-v1",
+      "reference_version": "hhs-contiguous-2025-2026-v1",
+      "guideline_year": 2025,
+      "review_date": "2025-09-20",
+      "measure_id": "policy_summary.primary_service_area_described",
+      "result": "yes",
+      "expected": {
+        "minimum_described_areas": 1
+      },
+      "observed": [
+        {
+          "evidence_index": 0,
+          "method": "source_field",
+          "value": {
+            "complete": true,
+            "areas": [
+              "SYN County"
+            ]
+          }
+        }
+      ],
+      "evidence": [
+        {
+          "source_id": "https://example.org/SYN-hospital/summary",
+          "snapshot_id": "82e625b23f7baac8437f8cc019b7c428afa76000aa6b9903a3e78fda974ef97f",
+          "sha256": "82e625b23f7baac8437f8cc019b7c428afa76000aa6b9903a3e78fda974ef97f",
+          "locator": "/fields/summary_area",
+          "quote": "{\"complete\":true,\"areas\":[\"SYN County\"]}"
+        }
+      ],
+      "unresolved_evidence": [],
+      "human_review": "pending"
+    },
+    {
+      "hospital_key": "1002",
+      "assessment_id": "SYN-2025",
+      "scope_id": "SYN-institutional-review",
+      "rubric_version": "css-17-v1",
+      "reference_version": "hhs-contiguous-2025-2026-v1",
+      "guideline_year": 2025,
+      "review_date": "2025-09-20",
+      "measure_id": "policy_summary.means_of_applying_explained",
+      "result": "yes",
+      "expected": {
+        "minimum_application_instructions": 1
+      },
+      "observed": [
+        {
+          "evidence_index": 0,
+          "method": "source_field",
+          "value": {
+            "complete": true,
+            "application_instructions": [
+              "Submit to SYN aid desk"
+            ]
+          }
+        }
+      ],
+      "evidence": [
+        {
+          "source_id": "https://example.org/SYN-hospital/summary",
+          "snapshot_id": "82e625b23f7baac8437f8cc019b7c428afa76000aa6b9903a3e78fda974ef97f",
+          "sha256": "82e625b23f7baac8437f8cc019b7c428afa76000aa6b9903a3e78fda974ef97f",
+          "locator": "/fields/summary_process",
+          "quote": "{\"complete\":true,\"application_instructions\":[\"Submit to SYN aid desk\"]}"
+        }
+      ],
+      "unresolved_evidence": [],
+      "human_review": "pending"
+    },
+    {
+      "hospital_key": "1002",
+      "assessment_id": "SYN-2025",
+      "scope_id": "SYN-institutional-review",
+      "rubric_version": "css-17-v1",
+      "reference_version": "hhs-contiguous-2025-2026-v1",
+      "guideline_year": 2025,
+      "review_date": "2025-09-20",
+      "measure_id": "policy_summary.income_levels_included",
+      "result": "yes",
+      "expected": {
+        "minimum_stated_income_levels": 1
+      },
+      "observed": [
+        {
+          "evidence_index": 0,
+          "method": "source_field",
+          "value": {
+            "complete": true,
+            "fpl_levels": [
+              200,
+              300,
+              400
+            ]
+          }
+        }
+      ],
+      "evidence": [
+        {
+          "source_id": "https://example.org/SYN-hospital/summary",
+          "snapshot_id": "82e625b23f7baac8437f8cc019b7c428afa76000aa6b9903a3e78fda974ef97f",
+          "sha256": "82e625b23f7baac8437f8cc019b7c428afa76000aa6b9903a3e78fda974ef97f",
+          "locator": "/fields/summary_income",
+          "quote": "{\"complete\":true,\"fpl_levels\":[200,300,400]}"
+        }
+      ],
+      "unresolved_evidence": [],
+      "human_review": "pending"
+    }
+  ]
+}

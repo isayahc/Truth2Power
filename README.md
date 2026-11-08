@@ -48,6 +48,20 @@ The statewide map should show **212 hospital locations**. Select **0 ★** in th
 
 The demo uses public hospital-level audit data and facility coordinates. It requires no AWS credentials. The September 2025 grades describe hospital policies at the time of the review. Production use with patient information would require privacy and security review, appropriate agreements, and eligible services. The API handler accepts API Gateway HTTP API v2 events for a future Lambda deployment; the built frontend can be served as static assets.
 
+### Replay the 17-measure compliance assessment
+
+Use Node 22.13+ and Python 3.10+ with the live-audit dependencies. These commands grade saved synthetic evidence offline. Set `T2P_PYTHON` if your interpreter is named `python3` or lives in a virtual environment.
+
+```bash
+python -m pip install -r tools/live-audit/requirements.txt
+npm run --silent grade -- grade docs/grading/examples/SYN-multilingual.json
+npm run --silent grade -- grade docs/grading/examples/SYN-2026.json
+```
+
+The multilingual example has five listed application languages. English and Spanish have separate evidence for 400% eligibility. Polish, Ukrainian and Russian still require review. The report identifies each coverage gap and withholds the hospital grade. The single-application 2025 and 2026 examples use identical application bytes. The outdated dollar table changes the calculated band from A to B. The institution has no approved new grade in either example.
+
+The [grading contract and local operating guide](docs/grading/README.md) documents the rubric, input and output schemas, native artifact adapters, read-only API, test commands and outstanding CSS decisions. The hospital detail panel labels the published September 2025 rating and opens a separately staged draft assessment on request.
+
 ### Run a background audit
 
 Use Node 22.13+ with built-in SQLite, install Poppler (`sudo apt install poppler-utils` on Ubuntu/WSL), then run `npm ci` and `npx playwright install chromium`. From the repository root, start `npm run dev` and, in a second terminal, `npm run audit:worker`. Both use port 8000 and the same local `.audit/` directory by default. Set the same PORT and AUDIT_DIR in both terminals to override them. CHROMIUM_PATH optionally selects an installed Chromium executable.
@@ -160,7 +174,7 @@ Ellenville's selected five-page English application was checked on 2026-11-08: *
 
 Local pilot artifact: `.audit/live/application-reviews/aa62e50484844230a5da77c4c5f96971/results/6f011dec62964a92946943ef1dc4f146.json`. Human approval remains pending. Four other application language versions are explicitly unassessed. The applicable official NYS template comparison remains outstanding; see #70 below for the subsequently confirmed Wave 1 roster and coverage.
 
-The inbox keeps application and posted-material groups independently, shows the review year and reference, and provides a published-versus-expected dollar table plus links to unassessed versions. Original drafts and historical map ratings remain preserved.
+The inbox groups each reviewed document by hospital, source URL, role, language and review scope. Filter by document language and expand **Source identity and revisions** to inspect the exact snapshot or open a previous draft. Each new result starts a separate decision history. The [identity contract](docs/grading/review-identity.md) covers URL changes, duplicate links and historical artifacts.
 
 ### Wave 1 follow-up (#70)
 

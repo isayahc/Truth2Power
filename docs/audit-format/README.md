@@ -77,9 +77,11 @@ For #70 DOCX sources, the legacy coverage count represents extracted body segmen
 
 The #72 `extraction_details` extension records parser version, original snapshot ID and a locator/classification/XML hash for each DrawingML or legacy VML element. XML hashes cover ElementTree serialization, not independently fetched images. Only the narrow text-free line profiles may clear a drawing extraction flag; their structural classification does not approve rendered layout or entire-form equivalence. New parsing produces a new application draft, preserving prior results and decisions.
 
-The #64 findings include `unresolved_questions`, which v1 findings do not permit. Its PSA object is a rule question, not a fourth schema-validated finding. Do not feed that envelope directly to the v1 grader or silently discard its coverage fields. A future promotion/export adapter must validate each finding against the agreed rubric, retain coverage and review provenance, and explicitly create the target assessment. No such automatic promotion is implemented by #20.
+The #64 findings include `unresolved_questions`, which v1 findings do not permit. Its PSA object is a rule question, not a fourth schema-validated finding. Do not feed that envelope directly to the v1 grader or silently discard its coverage fields. The [grading adapter](../grading/README.md) replays supported observations, retains native coverage and exact decisions, and returns blockers for missing context or unsupported interpretation. Individual artifact approvals remain attached to their original bytes.
 
 For deadlines/assets/immigration, a source's silence (`not_addressed`) is neutral. An excluded privacy notice is not an N/A finding for the hospital. Applying during collections differs from an appeal deadline, processing time, collections waiting period or approval duration. Income documentation is not itself an asset-value test or an immigration eligibility condition. An absent approved service-area rule produces `unclear`, not a guessed legal rule. #64 and subject-matter review resolve those interpretations.
+
+The [versioned 17-measure input and report](../grading/README.md) extend these snapshot, citation, result and date conventions. The optional v1 `review_date` records the date chosen for evaluation separately from execution time.
 
 ## Producer and consumer checks
 

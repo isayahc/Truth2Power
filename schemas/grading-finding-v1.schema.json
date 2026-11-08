@@ -1,0 +1,157 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://truth2power.local/schemas/grading-finding-v1.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "hospital_key": {
+      "$ref": "live-audit-v1.schema.json#/properties/hospital_key"
+    },
+    "assessment_id": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    },
+    "scope_id": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    },
+    "rubric_version": {
+      "const": "css-17-v1"
+    },
+    "reference_version": {
+      "const": "hhs-contiguous-2025-2026-v1"
+    },
+    "guideline_year": {
+      "$ref": "live-audit-v1.schema.json#/properties/guideline_year"
+    },
+    "review_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "measure_id": {
+      "enum": [
+        "posted_materials.application_posted",
+        "posted_materials.policy_summary_posted",
+        "posted_materials.policy_statement_posted",
+        "posted_materials.consistent_across_documents",
+        "posted_materials.primary_service_area_boundaries_compliant",
+        "posted_materials.no_submission_time_limit",
+        "posted_materials.no_evidence_of_asset_checks",
+        "posted_materials.no_immigration_status_barrier",
+        "application.uniform_application",
+        "application.contact_information",
+        "application.income_discount_tables",
+        "application.fpl_guidelines",
+        "application.maximum_fpl",
+        "application.installments_cap",
+        "policy_summary.primary_service_area_described",
+        "policy_summary.means_of_applying_explained",
+        "policy_summary.income_levels_included"
+      ]
+    },
+    "result": {
+      "$ref": "live-audit-v1.schema.json#/$defs/finding/properties/result"
+    },
+    "expected": {
+      "type": "object",
+      "minProperties": 1
+    },
+    "observed": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "evidence_index": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "method": {
+            "enum": [
+              "source_field",
+              "text_profile",
+              "human_coded"
+            ]
+          },
+          "value": {}
+        },
+        "required": [
+          "evidence_index",
+          "method",
+          "value"
+        ]
+      }
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "source_id": {
+            "type": "string",
+            "format": "uri",
+            "pattern": "^https?://",
+            "maxLength": 4096
+          },
+          "snapshot_id": {
+            "$ref": "live-audit-v1.schema.json#/$defs/citation/properties/snapshot_id"
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "locator": {
+            "$ref": "live-audit-v1.schema.json#/$defs/citation/properties/locator"
+          },
+          "quote": {
+            "$ref": "live-audit-v1.schema.json#/$defs/citation/properties/quote"
+          }
+        },
+        "required": [
+          "source_id",
+          "snapshot_id",
+          "sha256",
+          "locator",
+          "quote"
+        ]
+      }
+    },
+    "unresolved_evidence": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "pattern": "\\S"
+      },
+      "uniqueItems": true
+    },
+    "human_review": {
+      "enum": [
+        "pending",
+        "approved",
+        "needs_changes",
+        "rejected",
+        "conflict"
+      ]
+    }
+  },
+  "required": [
+    "hospital_key",
+    "assessment_id",
+    "scope_id",
+    "rubric_version",
+    "reference_version",
+    "guideline_year",
+    "review_date",
+    "measure_id",
+    "result",
+    "expected",
+    "observed",
+    "evidence",
+    "unresolved_evidence",
+    "human_review"
+  ]
+}

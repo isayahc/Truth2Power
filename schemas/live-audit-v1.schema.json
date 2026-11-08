@@ -21,6 +21,10 @@
       "minLength": 1,
       "pattern": "\\S"
     },
+    "review_date": {
+      "type": "string",
+      "format": "date"
+    },
     "guideline_year": {
       "type": "integer",
       "minimum": 2000

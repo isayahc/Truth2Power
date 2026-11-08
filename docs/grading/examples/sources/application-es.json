@@ -1,0 +1,14 @@
+{
+  "format": "published-fields-v1",
+  "synthetic": true,
+  "hospital_key": "1002",
+  "role": "application",
+  "url": "https://example.org/SYN-hospital/application-es",
+  "language": "es",
+  "fields": {
+    "maximum": {
+      "percent": 400,
+      "hard_ceiling": false
+    }
+  }
+}

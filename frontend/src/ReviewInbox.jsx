@@ -2,6 +2,8 @@ import React, { useEffect, useRef, useState } from "react";
 
 export const reviewStatus = (value) => ({ pending: "Needs review", needs_information: "More information needed", resolved: "Reviewed" }[value] ?? value);
 const outcome = (value) => value === "n_a" ? "N/A" : value ?? "Not recorded";
+const languageNames = new Intl.DisplayNames(["en"], { type: "language" });
+const languageName = (tag) => tag === "und" ? "Unknown language" : languageNames.of(tag) || tag;
 const date = (value) => new Date(value).toLocaleString();
 
 export async function reviewRequest(path, options) {
@@ -106,6 +108,9 @@ export default function ReviewInbox({ inbox, error, onRefresh, hospitalKey, hosp
     });
     return () => controller.abort();
   }, [selected, reload]);
+  useEffect(() => {
+    if (inbox && item?.id === selected && item.is_current && !inbox.items.some((r) => r.id === selected)) setReload((n) => n + 1);
+  }, [inbox, selected, item?.id, item?.is_current]);
   const languages = [...new Set((inbox?.items ?? []).flatMap((r) => r.documents.map((d) => d.language)))].sort();
   const visible = (inbox?.items ?? []).filter((r) => (!language || r.documents.some((d) => d.language === language)) && (!hospital || r.hospital_key === hospital) &&
     (status === "all" || (status === "open" ? r.status !== "resolved" : r.status === "resolved")));
@@ -119,7 +124,7 @@ export default function ReviewInbox({ inbox, error, onRefresh, hospitalKey, hosp
         <option value="">All hospitals</option>{hospitalOptions.map(([key, name]) => <option key={key} value={key}>{name}</option>)}
       </select></label>
       <label>Document language<select value={language} onChange={(e) => { setLanguage(e.target.value); setSelected(null); setItem(null); }}>
-        <option value="">All languages</option>{languages.map((tag) => <option key={tag} value={tag}>{tag === "und" ? "Unknown" : tag}</option>)}
+        <option value="">All languages</option>{languages.map((tag) => <option key={tag} value={tag}>{languageName(tag)}</option>)}
       </select></label>
       <label>Status<select aria-label="Status" value={status} onChange={(e) => setStatus(e.target.value)}><option value="open">Needs attention</option><option value="resolved">Reviewed</option><option value="all">All statuses</option></select></label>
     </div>
@@ -131,7 +136,7 @@ export default function ReviewInbox({ inbox, error, onRefresh, hospitalKey, hosp
         {inbox && !visible.length && <p>{hospital ? "No matching review items for this hospital." : "No matching review items."} Completed full-document drafts appear here automatically.</p>}
         {visible.map((r) => <button key={r.id} className={`review-notification ${selected === r.id ? "active" : ""}`} aria-current={selected === r.id ? "true" : undefined} onClick={() => setSelected(r.id)}>
           <span className="review-meta">{reviewStatus(r.status)} · {date(r.flagged_at)}</span>
-          <strong>{r.hospital_name}</strong><span>{r.title}</span><span className="review-meta">{r.documents.length === 1 ? `${r.documents[0].name} · ${r.documents[0].language} · ` : ""}{r.scope_label}</span><small>{r.question}</small>
+          <strong>{r.hospital_name}</strong><span>{r.title}</span><span className="review-meta">{r.documents.length === 1 ? `${r.documents[0].name} · ${languageName(r.documents[0].language)} · ` : ""}{r.scope_label}</span><small>{r.question}</small>
         </button>)}
       </nav>
       <section className="review-detail" aria-label="Selected review">
@@ -145,9 +150,9 @@ export default function ReviewInbox({ inbox, error, onRefresh, hospitalKey, hosp
           <h3>{item.title}</h3>
           <p className="review-meta">Scope: {item.scope_label}{item.guideline_year ? ` · Review guideline year: ${item.guideline_year}` : ""}</p>
           <details><summary>Source identity and revisions ({item.version_count})</summary>
-            {item.identity_warning && <p>Historical identity is ambiguous. {item.identity_warning}</p>}
+            {item.identity_warning && <p>{item.identity_warning}</p>}
             <ul>{item.documents.map((d) => <li key={JSON.stringify([d.source_id, d.role, d.language])}>
-              {d.name} · {d.role} · {d.language === "und" ? "Unknown language" : d.language}<br />
+              {d.name} · {d.role} · {languageName(d.language)}<br />
               <a href={d.source_id} target="_blank" rel="noreferrer">{d.source_id}</a><br />Snapshot SHA-256 <code>{d.snapshot_sha256}</code>
             </li>)}</ul>
             {item.document_versions.map((v, i) => <p key={v.result_sha256}>{i ? "Prior" : "Current"} · {date(v.checked_at)} · {v.item_id && v.item_id !== item.id

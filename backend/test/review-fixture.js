@@ -1,13 +1,14 @@
 import { mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { createHash } from "node:crypto";
+import { hhs, referenceHash } from "../grading/data.js";
 
 export function reviewFixture(root, id = "a".repeat(32), checked = "2026-11-08T12:00:00Z", namespace = "full-reviews") {
   const raw = "<h1>SYNTHETIC financial assistance policy</h1><p>Patients may apply at any time.</p>";
   const hash = createHash("sha256").update(raw).digest("hex");
   mkdirSync(join(root, "snapshots"), { recursive: true });
   writeFileSync(join(root, "snapshots", `${hash}.html`), raw);
-  const citation = { snapshot_id: hash, locator: "HTML text", quote: "Patients may apply at any time." };
+  const citation = { snapshot_id: hash, locator: "HTML text (saved landing page)", quote: "Patients may apply at any time." };
   const measure = "posted_materials.no_submission_time_limit";
   const result = { synthetic: true, rubric_version: "full-text-three-measures-v1", review_id: "b".repeat(32), result_id: id, hospital_key: "1002", checked_at: checked,
     findings: [{ measure_id: measure, result: "unclear", explanation: "SYNTHETIC: verify the application timing language.",
@@ -78,16 +79,21 @@ export function languageFixture(root, language, number, options = {}) {
   const checked = options.checked ?? "2026-11-08T14:00:00Z";
   const fixture = applicationFixture(root, id, checked);
   const r = fixture.result;
-  const raw = `<p>SYNTHETIC ${language} application revision ${options.version ?? 1}</p>`;
+  const eligibility = "Individuals up to 400% of the federal poverty level are eligible for financial assistance.";
+  const description = `SYNTHETIC ${language} application revision ${options.version ?? 1}`;
+  const raw = `<p>${description}</p>${options.eligibility ? "<p>" + eligibility + "</p>" : ""}`;
   const hash = createHash("sha256").update(raw).digest("hex");
   writeFileSync(join(root, "snapshots", hash + ".html"), raw);
   r.snapshots = [{ snapshot_id: hash, sha256: hash, artifact_path: `snapshots/${hash}.html`, url,
     document_type: "application", retrieved_at: checked, display_name: `SYN ${language} application` }];
   r.coverage = [{ source_id: "application", url, language, snapshot_sha256: hash, status: "reviewed", total_pages: 1, reviewed_pages: ["HTML text"] }];
   r.review_identity = { version: 1, scope: "selected_application", documents: [{ url, language, role: "application", snapshot_sha256: hash }] };
+  r.review_date = "2026-11-08";
+  r.reference_version = hhs.reference_version;
+  r.reference_sha256 = referenceHash;
   r.hospital_key = options.hospital ?? "1002";
-  r.findings = [{ measure_id: "application.maximum_fpl", result: "unclear", explanation: "SYN eligibility limit requires review.",
-    evidence: [{ snapshot_id: hash, locator: "HTML text", quote: raw.slice(3, -4) }] }];
+  r.findings = [{ measure_id: "application.maximum_fpl", result: options.eligibility ? "yes" : "unclear", explanation: "SYN selected application eligibility.",
+    evidence: [{ snapshot_id: hash, locator: "HTML text (saved landing page)", quote: options.eligibility ? eligibility : description }] }];
   delete r.template_comparison;
   delete r.extraction_details;
   r.other_application_versions_not_assessed = options.otherUrls ?? [];

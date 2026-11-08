@@ -1,4 +1,4 @@
-import { readdirSync, readFileSync, statSync, mkdirSync, writeFileSync, realpathSync } from "node:fs";
+import { readdirSync, readFileSync, statSync, mkdirSync, writeFileSync, realpathSync, linkSync, unlinkSync } from "node:fs";
 import { join, resolve, sep } from "node:path";
 import { randomUUID } from "node:crypto";
 
@@ -118,6 +118,15 @@ export function createReviewService(root, hospitals = []) {
       url: safeUrl(source.url), retrieved_at: source.retrieved_at,
       saved_url: `/api/reviews/${row.id}/sources/${source.snapshot_id}${page ? `#page=${page}` : ""}` };
   }
+  function verifiedSource(row, snapshotId) {
+    const source = row.result.snapshots.find((s) => s.snapshot_id === snapshotId);
+    if (!source || !/^[a-f0-9]{64}$/.test(snapshotId) || !/^[a-f0-9]{64}$/.test(source.sha256) ||
+        !new RegExp(`^snapshots/${source.sha256}\\.(pdf|html|docx)$`).test(source.artifact_path)) fail(404, "Saved source not found.");
+    let raw;
+    try { raw = bytes(join(root, source.artifact_path), root); } catch { fail(404, "Saved source unavailable."); }
+    if (digest(raw) !== source.sha256) fail(422, "Saved source failed integrity verification.");
+    return { source, raw };
+  }
   return {
     list(filters = {}) {
       const { rows: all, unavailable } = items();
@@ -176,22 +185,28 @@ export function createReviewService(root, hospitals = []) {
       const result = input.action === "confirm" ? row.draft_result : input.action === "correct" ? input.result : null;
       if (input.action === "correct" && !["yes", "no", "unclear", "n_a"].includes(result)) fail(400, "Choose a valid corrected result.");
       if (["yes", "no"].includes(result) && !row.finding.evidence?.length) fail(400, "Evidence must be added to a new draft before recording yes or no.");
-      const decision = { decision_id: randomUUID(), item_id: id, result_id: row.result_id,
+      if (["yes", "no"].includes(result)) {
+        for (const snapshotId of new Set(row.finding.evidence.map((c) => c.snapshot_id))) verifiedSource(row, snapshotId);
+      }
+      const hash = digest(id + ":" + (row.revision + 1));
+      const slot = `${hash.slice(0, 8)}-${hash.slice(8, 12)}-8${hash.slice(13, 16)}-a${hash.slice(17, 20)}-${hash.slice(20, 32)}`;
+      const decision = { decision_id: slot, item_id: id, result_id: row.result_id,
         result_sha256: row.result_sha256, hospital_key: row.hospital_key, measure_id: row.measure_id,
         action: input.action, result, notes: input.notes.trim(), reviewer_role: input.reviewer_role.trim(),
         recorded_at: new Date().toISOString(), sequence: row.revision + 1, identity: "self_attested_local_reviewer" };
       mkdirSync(decisionDirectory, { recursive: true });
-      writeFileSync(join(decisionDirectory, `${decision.decision_id}.json`), JSON.stringify(decision, null, 2), { flag: "wx" });
+      const temporary = join(decisionDirectory, randomUUID() + ".tmp");
+      writeFileSync(temporary, JSON.stringify(decision, null, 2), { flag: "wx" });
+      try { linkSync(temporary, join(decisionDirectory, slot + ".json")); }
+      catch (error) {
+        if (error.code === "EEXIST") fail(409, "This item changed. Reload before recording a decision.");
+        throw error;
+      } finally { unlinkSync(temporary); }
       return this.detail(id);
     },
     source(id, snapshotId) {
       const row = get(id);
-      const source = row.result.snapshots.find((s) => s.snapshot_id === snapshotId);
-      if (!source || !/^[a-f0-9]{64}$/.test(snapshotId) || !/^[a-f0-9]{64}$/.test(source.sha256) ||
-          !new RegExp(`^snapshots/${source.sha256}\\.(pdf|html|docx)$`).test(source.artifact_path)) fail(404, "Saved source not found.");
-      let raw;
-      try { raw = bytes(join(root, source.artifact_path), root); } catch { fail(404, "Saved source unavailable."); }
-      if (digest(raw) !== source.sha256) fail(422, "Saved source failed integrity verification.");
+      const { source, raw } = verifiedSource(row, snapshotId);
       // Never execute saved website HTML under the application's origin.
       return { body: raw.toString("base64"), isBase64Encoded: true, headers: {
         "Content-Type": source.artifact_path.endsWith(".docx") ? "application/vnd.openxmlformats-officedocument.wordprocessingml.document" : source.artifact_path.endsWith(".pdf") ? "application/pdf" : "text/plain; charset=utf-8",

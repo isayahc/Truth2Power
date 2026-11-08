@@ -1,0 +1,184 @@
+{
+  "format": "published-fields-v1",
+  "synthetic": true,
+  "hospital_key": "1002",
+  "role": "application",
+  "url": "https://example.org/SYN-hospital/application-en",
+  "language": "en",
+  "fields": {
+    "consistency": {
+      "complete": true,
+      "terms": {
+        "eligibility_percent": 400
+      }
+    },
+    "deadline": {
+      "application_submission": "any_time"
+    },
+    "assets": {
+      "eligibility_asset_test": "no_asset_test"
+    },
+    "immigration": {
+      "immigration_eligibility": "regardless_of_status"
+    },
+    "uniform": {
+      "complete": true,
+      "present_sections": [
+        "SYN eligibility",
+        "SYN signature"
+      ],
+      "customizations": "none",
+      "visual_review_complete": true
+    },
+    "contact": {
+      "complete": true,
+      "channels": [
+        {
+          "purpose": "application_assistance",
+          "type": "office",
+          "value": "SYN aid desk"
+        }
+      ]
+    },
+    "tables": {
+      "complete": true,
+      "income_table": true,
+      "discount_table": true
+    },
+    "fpl": {
+      "published_year": 2025,
+      "currency": "USD",
+      "period": "annual",
+      "cells": [
+        {
+          "household_size": 1,
+          "fpl_percent": 200,
+          "amount": 31300
+        },
+        {
+          "household_size": 1,
+          "fpl_percent": 300,
+          "amount": 46950
+        },
+        {
+          "household_size": 1,
+          "fpl_percent": 400,
+          "amount": 62600
+        },
+        {
+          "household_size": 2,
+          "fpl_percent": 200,
+          "amount": 42300
+        },
+        {
+          "household_size": 2,
+          "fpl_percent": 300,
+          "amount": 63450
+        },
+        {
+          "household_size": 2,
+          "fpl_percent": 400,
+          "amount": 84600
+        },
+        {
+          "household_size": 3,
+          "fpl_percent": 200,
+          "amount": 53300
+        },
+        {
+          "household_size": 3,
+          "fpl_percent": 300,
+          "amount": 79950
+        },
+        {
+          "household_size": 3,
+          "fpl_percent": 400,
+          "amount": 106600
+        },
+        {
+          "household_size": 4,
+          "fpl_percent": 200,
+          "amount": 64300
+        },
+        {
+          "household_size": 4,
+          "fpl_percent": 300,
+          "amount": 96450
+        },
+        {
+          "household_size": 4,
+          "fpl_percent": 400,
+          "amount": 128600
+        },
+        {
+          "household_size": 5,
+          "fpl_percent": 200,
+          "amount": 75300
+        },
+        {
+          "household_size": 5,
+          "fpl_percent": 300,
+          "amount": 112950
+        },
+        {
+          "household_size": 5,
+          "fpl_percent": 400,
+          "amount": 150600
+        },
+        {
+          "household_size": 6,
+          "fpl_percent": 200,
+          "amount": 86300
+        },
+        {
+          "household_size": 6,
+          "fpl_percent": 300,
+          "amount": 129450
+        },
+        {
+          "household_size": 6,
+          "fpl_percent": 400,
+          "amount": 172600
+        },
+        {
+          "household_size": 7,
+          "fpl_percent": 200,
+          "amount": 97300
+        },
+        {
+          "household_size": 7,
+          "fpl_percent": 300,
+          "amount": 145950
+        },
+        {
+          "household_size": 7,
+          "fpl_percent": 400,
+          "amount": 194600
+        },
+        {
+          "household_size": 8,
+          "fpl_percent": 200,
+          "amount": 108300
+        },
+        {
+          "household_size": 8,
+          "fpl_percent": 300,
+          "amount": 162450
+        },
+        {
+          "household_size": 8,
+          "fpl_percent": 400,
+          "amount": 216600
+        }
+      ]
+    },
+    "maximum": {
+      "percent": 400,
+      "hard_ceiling": false
+    },
+    "installments": {
+      "percent": 5,
+      "basis": "gross_monthly_income"
+    }
+  }
+}
