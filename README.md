@@ -62,6 +62,18 @@ Record a reviewer note for the pilot with `node backend/audit/correction.js "rev
 
 Run the browser regression with `npm run test:audit`. It starts an isolated server and database, interrupts a claimed job, rechecks the same PDF under both references and opens its saved citation.
 
+### Connect the audit agent to Bedrock
+
+The project defaults `hospital-auditor` to `amazon-bedrock/us.amazon.nova-lite-v1:0` in `us-east-1`. Connect an existing Bedrock API key once in your terminal:
+
+```powershell
+opencode auth login amazon-bedrock
+```
+
+Choose **Bedrock API key**. OpenCode saves it in its own credential database; do not put keys in chat, source files or `.env`. This path does not require SSO or repeated script/key entry. Once connected, use `opencode run --agent hospital-auditor "Your task"`. An explicit `--model` overrides the default, including the OpenRouter examples below. Bedrock usage is billed and may be covered by eligible credits; the catalog alone does not prove account access. Nova Lite was successfully invoked with the saved credential.
+
+`scripts/start-bedrock.ps1` is an optional Ellenville sample shortcut using the same saved credentials. It no longer prompts for or manages API keys. Model-generated findings remain drafts requiring interpretation review, even when citation checks pass.
+
 ### Collect posted PDFs with the hospital-auditor agent (#17)
 
 After installing the Python dependencies below, use a hospital ID from `data/maps/hospitals.geojson`. Ellenville Regional Hospital (`1002`) is the second live sample; it is not a defined Wave 1 roster.
@@ -90,6 +102,22 @@ The agent calls `truth2power_extract_posted_text`. Each run creates `.audit/live
 The manifest is the authoritative complete record, even if a model shortens its final response. Missing downloads, invalid/encrypted files, hash mismatches and extraction failures are flagged `needs_review`. Blank/sparse/garbled pages are flagged individually while readable pages are retained. A file requires review when any page is flagged. Checks are conservative: at least 20 alphanumeric characters and no more than 5% replacement characters per segment. Text presence does not certify completeness, accurate table structure, currency or compliance. No OCR or translation is performed. Limits are 12 MiB per source, 200 PDF pages and 2 million extracted characters; limit failures require review.
 
 Ellenville sample validation: the landing page and all 10 saved PDFs produced text (51 PDF pages); the unavailable 2021 policy was flagged for review. This sample does not establish statewide or unspecified Wave 1 coverage.
+
+### Review cross-document measures (#22)
+
+Use a saved #19 extraction run ID. The same `hospital-auditor` agent prepares a bounded evidence packet, reasons over the five measures, and submits a citation-checked draft:
+
+```powershell
+opencode run --agent hospital-auditor --model "openrouter/nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free" "Review issue #22 for hospital_key 1002, extraction_id 4f4645982ff740fa980f2a14e84acf8e. Prepare the cross-document packet and save all five draft findings with exact quotes."
+```
+
+The tools are `truth2power_prepare_cross_document_review` and `truth2power_save_cross_document_review`. Packets live in `.audit/live/cross-document-packets/`; drafts live in `.audit/live/cross-document-reviews/<hospital_id>/`. They cover consistency, primary service-area boundaries, submission deadlines, asset checks and immigration barriers. The agent selects packet-local `evidence_ids` per measure rather than retyping quotes. The server inserts the original quotes into findings using the existing v1 finding schema, with observed/expected values, snapshot IDs and page/HTML locators. The draft envelope retains source URLs, retrieval dates, review time, extraction ID, missing sources and limitations. It is separate from completed assessments and never changes a grade or last-successful date.
+
+Before preparing and saving, the tool verifies saved snapshot hashes and re-extracts original bytes. Fabricated quotes (including edited packet quotes), wrong pages, unknown/cross-measure evidence IDs, unknown/duplicate measure IDs and one-source inconsistency claims are rejected. Model tool arguments have an explicit schema with the five permitted measure IDs. This validates citation integrity, not the model's interpretation; a reviewer still needs to check relevance, exceptions, current rules and whether translations agree.
+
+**Pilot limits:** six keyword-selected excerpts per measure, prioritizing English sources; this is not exhaustive multilingual review. Document roles inferred from URLs are hints. Missing keyword matches never prove absence. The tool accepts `no` only as a cited draft contradiction, or `unclear` for insufficient/conflicting evidence; global `yes` and `n_a` conclusions require a fuller review outside this pilot. PSA stays unclear until an approved boundary rule exists. #20's subject-matter agreement is still pending. Download dates and filenames do not establish current compliance. One sample does not establish statewide or unspecified Wave 1 coverage.
+
+Ellenville validation produced a citation-checked draft mismatch: policy page 3 and application page 4 include the 301–400% range, while the summary page 1 income table stops at 300%. The other four measures remain unclear under the pilot's coverage/rule limits, while acknowledging explicit evidence allowing applications during collections and prohibiting asset/immigration criteria. The initial model explanations were inaccurate despite valid citations; a supervising-assistant correction pass was necessary. The corrected draft is not human-approved. The provider reached its free daily limit after saving it, so the local artifact—not a final model reply—confirmed persistence. Older draft files are retained and should not be treated as approved findings.
 
 ### Audit the real Little Falls site with OpenCode
 
