@@ -110,6 +110,9 @@ test("application checks coexist with posted-material findings and retain their 
   assert.equal(detail.observed.cells[0].expected, 63840);
   assert.match(detail.scope_label, /Selected application/);
   assert.equal(detail.other_application_versions_not_assessed.length, 1);
+  assert.equal(detail.extraction_details.parser_version, "document-text-v4");
+  assert.equal(detail.extraction_details.drawings.length, 2);
+  assert.equal(detail.extraction_details.drawings[0].classification, "text_free_line");
   service.decide(item.id, { ...decision, action: "confirm" });
   applicationFixture(root, "d".repeat(32), "2026-11-09T13:00:00Z");
   assert.equal(service.list().pending, 7);

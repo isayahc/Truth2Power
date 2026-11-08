@@ -122,6 +122,7 @@ export function createReviewService(root, hospitals = []) {
       return { ...summary(row), explanation: row.finding.explanation, expected: row.finding.expected, observed: row.finding.observed,
         authority_url: row.finding.authority_url ?? safeUrl(row.finding.expected?.authority_url),
         other_application_versions_not_assessed: (row.result.other_application_versions_not_assessed ?? []).map(safeUrl).filter(Boolean),
+        extraction_details: row.result.extraction_details ?? null,
         evidence: (row.finding.evidence ?? []).map((c) => sourceMetadata(row, c)),
         gaps: (row.result.gaps ?? []).map((g) => ({ reason: g.reason, detail: g.detail, url: safeUrl(g.url) })),
         coverage: row.result.coverage.map((c) => ({ source_id: c.source_id, language: c.language, status: c.status,

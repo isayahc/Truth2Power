@@ -29,6 +29,15 @@ export function applicationFixture(root, id = "c".repeat(32), checked = "2026-11
   fixture.result.review_type = "application";
   fixture.result.scope_label = "Selected application only; English profile";
   fixture.result.guideline_year = 2026;
+  fixture.result.extraction_details = {
+    parser_version: "document-text-v4", snapshot_id: fixture.hash,
+    limitations: "SYN: structural classification does not verify rendered layout or entire-form equivalence.",
+    drawings: [1, 2].map((number) => ({
+      locator: `word/document.xml drawing ${number} (paragraph ${number})`,
+      name: `SYN signature line ${number}`, classification: "text_free_line", xml_sha256: String(number).repeat(64),
+      explanation: "SYN: single preset line with no text, image, alternate text or relationship. Rendered layout is unverified.",
+    })),
+  };
   fixture.result.other_application_versions_not_assessed = ["https://example.org/SYN-spanish.pdf"];
   fixture.result.findings = ["uniform_application", "contact_information", "income_discount_tables", "fpl_guidelines", "maximum_fpl", "installments_cap"]
     .map((name) => ({ ...base, measure_id: `application.${name}`, result: name === "uniform_application" ? "unclear" : name === "fpl_guidelines" ? "no" : "yes",

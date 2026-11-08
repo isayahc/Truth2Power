@@ -39,6 +39,10 @@ try {
   assert.match(await page.locator(".review-detail").innerText(), /Selected application only/);
   await page.getByText("Other application versions not assessed (1)", { exact: true }).click();
   await page.getByRole("link", { name: /SYN-spanish.pdf/ }).waitFor();
+  await page.getByText("Drawing extraction evidence (2)", { exact: true }).click();
+  await page.getByText("SYN signature line 1", { exact: true }).waitFor();
+  await page.getByText("SYN signature line 2", { exact: true }).waitFor();
+  assert.match(await page.locator(".review-detail").innerText(), /structural classification does not verify rendered layout/);
   await page.screenshot({ path: join(artifacts, "23-application-fpl.png"), fullPage: true });
   await page.setViewportSize({ width: 390, height: 844 });
   assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth), true);

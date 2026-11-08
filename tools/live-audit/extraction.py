@@ -12,8 +12,9 @@ from pathlib import Path
 
 from pypdf import PdfReader, __version__ as PDF_VERSION
 from documents import LIMIT, now
+from docx_drawings import inventory as drawing_inventory
 
-PARSER = "document-text-v2"
+PARSER = "document-text-v4"
 MAX_PAGES = 200
 MAX_TEXT = 2_000_000
 
@@ -81,7 +82,12 @@ def extract_bytes(data, suffix):
             raise ValueError("text_limit_exceeded")
         result = segment(text, "DOCX body (paragraphs and tables; pagination unverified)")
         # Tracked changes, embedded objects and text outside the body need visual review.
-        unsupported = any(body.findall(f".//w:{tag}", ns) for tag in ("ins", "del", "altChunk", "object", "drawing", "txbxContent"))
+        drawings = drawing_inventory(body)
+        result["drawings"] = drawings
+        # Never silently omit drawings outside paragraphs or non-line shapes.
+        drawing_gap = (len(drawings) != len(body.findall(".//w:drawing", ns)) + len(body.findall(".//w:pict", ns))
+                       or any(d["classification"] == "requires_visual_review" for d in drawings))
+        unsupported = drawing_gap or any(body.findall(f".//w:{tag}", ns) for tag in ("ins", "del", "altChunk", "object", "txbxContent"))
         extra_parts = any(re.fullmatch(r"word/(header\d+|footer\d+|footnotes|endnotes)\.xml", m.filename) for m in members)
         if unsupported or extra_parts:
             result.update(status="needs_review", reason="docx_visual_or_extra_content_review_needed")
