@@ -48,7 +48,7 @@ Evidence IDs refer to the Ellenville packet above.
 | Both permit applying at any point during collections. This selected English application comparison does not establish a new submission deadline. | `application-57`, PDF page 3; `reference-31` |
 | Eligibility, discounts, installments and income-proof sections occur in both. PDF line wrapping and bullets are not evidence that sections are missing. | `application-80`–`application-95` / `reference-40`–`reference-47`; `application-106`–`application-126` / `reference-57`–`reference-65`; `application-128`–`application-169` / `reference-66`–`reference-79` |
 
-## Remaining limits
+## Remaining limits (before #76)
 
 The official DOCX now has **nine individually covered XML parts**, all extracted: body, footnotes, and seven empty endnote/header/footer parts. Empty parts are explicitly recorded, not treated as unreadable pages. The primary-language definition is formally cited as `reference-80`, locator `DOCX word/footnotes.xml (auxiliary part; pagination unverified)`. It corresponds to Little Falls `application-19` and Ellenville `application-28`–`application-31`. Unknown Word fields or unsupported auxiliary content still trigger review flags. XML coverage does not verify rendered pagination or visual layout.
 
@@ -59,3 +59,7 @@ Both whole-form findings remain **unclear** pending interpretation of permitted 
 - Verify visual fields, signature areas and table layout; decide permitted campus/MRN/extra-row customization; clarify treatment of the official numeric discrepancy. For Ellenville, decide whether the outdated table also fails whole-form currency under the approved rubric.
 
 Prior drafts and human decisions remain preserved; new drafts inherit no approvals. Wave 1's application drafts remain **9 yes / 1 no / 2 unclear**. Four additional Ellenville language versions and one Little Falls Spanish version remain unassessed. Live inbox at `http://127.0.0.1:8098/` was verified for both hospitals at 1440×1000 and 390×844, with 16 pending items and no decisions recorded. Local screenshots: `.audit/72-inspection/{Ellenville,Little Falls}-v5-{desktop,mobile}.png`; verification manifest: `.audit/72-inspection/v5-verification.json`.
+
+## #76 follow-up
+
+The [completed whole-form review](wave-one-whole-form-review.md) supersedes the visual-review blocker above. Every rendered page and all 80 reference text units are accounted for. New drafts contain the visual section matrix, derived-PDF page links, recommendations and narrower rubric-owner questions. Both remain unclear for explicit customization/scoring rules, with outcomes unchanged.

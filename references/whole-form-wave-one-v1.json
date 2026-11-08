@@ -1,0 +1,77 @@
+{
+  "review_id": "whole-form-wave-one-v1",
+  "parser_version": "document-text-v5",
+  "reviewed_at": "2026-11-08",
+  "reviewer": "GPT-6 Astra model review; not human approval",
+  "reference_sha256": "558cb8933ccabf12a6b86acea145f1077cebd4c9e71fc108bacf2d07f333811a",
+  "reference_render": {"sha256": "4da163d0c2a4775668da0e3c4c682cc787ee218e049a23dc6d6afab0575cee71", "pages": 6, "engine": "Microsoft Word 16.0 ExportAsFixedFormat PDF", "derived": true},
+  "authority": {
+    "url": "https://www.nysenate.gov/legislation/laws/PBH/2807-K",
+    "locator": "Public Health Law 2807-k(9), revision displayed 2026-05-29; accessed 2026-11-08",
+    "quote": "utilizing only a uniform financial assistance form developed and provided by the department",
+    "interpretation": "The statute requires the department's uniform form. This passage does not define permissible logo/MRN/row/layout changes or CSS's scoring overlap. The official reference itself supplies hospital-name and telephone placeholders. No verified customization ruling or approved CSS whole-form scoring rule was obtained in this review."
+  },
+  "resolved_points": [
+    "Hospital contact substitution is contemplated by the official HOSPITAL NAME and PHONE NUMBER placeholders (reference-38); it is not a missing section.",
+    "All 80 extracted reference units are accounted for by normalized text correspondence or explicitly reviewed differences. This coverage check supplements, rather than substitutes for, the visual review.",
+    "The six-person official 300% cell is visibly $133,880. HHS arithmetic is $44,360 x 3 = $133,080. Little Falls's correction is not a dollar-check failure. Whether a literal-copy whole-form rule permits that correction remains a rubric question, not an arithmetic uncertainty.",
+    "Both hospitals retain patient identity, household information, insurance questions, medical-expense amount, responsible-party certification/signature/date, rights, eligibility, discounts, installments and all nine income-proof categories. No missing section was identified in the reviewed renders."
+  ],
+  "limitations": "Local Word rendering, not a hospital-published PDF for the DOCX sources. Pagination can vary with fonts, printer settings and Word versions. Every page was visually inspected in this session; this is model review, not human or NYS approval. The original snapshots are preserved.",
+  "hospitals": {
+    "362": {
+      "source_sha256": "3b5149e5b95b27c043114aa6f287d49a2c2c69aa5cab75671ddcb3bd057c9fb8",
+      "application_render": {"sha256": "bb12b6c32b4c87161f42957a6c569627343606a48625cd2abaff49e8594d50ed", "pages": 5, "engine": "Microsoft Word 16.0 ExportAsFixedFormat PDF", "derived": true},
+      "result": "unclear",
+      "conclusion": "Content and visual completeness are supported: all required sections and writable fields were found across five rendered pages. The remaining whole-form uncertainty is the permitted-customization rule for campus/MRN additions, the eighth household row and the HHS-corrected official typo. It is no longer an extraction or unrendered-layout blocker.",
+      "recommendation": "Under a content-preserving customization rule, recommend yes for entire-form completeness. That rule has not been approved; retain unclear rather than infer a legal authorization or human decision.",
+      "questions": ["CSS rubric owner, or NYS DOH for legal form requirements: may campus/MRN additions, the eighth household row and corrected HHS arithmetic count as use of the entire Uniform Application when all required content is retained? Approve a cited rule before resolving this draft."],
+      "visual_sections": [
+        {"section": "Identity and primary-language definition", "reference_pages": [1], "application_pages": [1], "observation": "All identity boxes and the language definition are visible. Added network/campus heading and MRN line precede the common form; they do not obscure it."},
+        {"section": "Household table", "reference_pages": [1,2], "application_pages": [2], "observation": "Name, relationship, gross-income columns and blank household rows are present. The hospital puts the table together on page 2 instead of splitting it across pages."},
+        {"section": "Insurance, expenses and signature", "reference_pages": [2], "application_pages": [2], "observation": "Both Yes/No question sets, expense amount box, certification, printed name, relationship, date and signature areas are visible."},
+        {"section": "Rights, contacts and eligibility", "reference_pages": [3], "application_pages": [3], "observation": "All nine rights/contact bullets and the eligibility categories are retained; hospital contact placeholders are filled."},
+        {"section": "FPL, discounts and installments", "reference_pages": [4], "application_pages": [4], "observation": "Three FPL percentage columns, discount rows and installment text are readable. The hospital adds household size 8 and prints the HHS-correct six-person amount."},
+        {"section": "Income-proof instructions and table", "reference_pages": [5,6], "application_pages": [5], "observation": "All instructions and nine income categories fit on one hospital page; no category is omitted by the shorter pagination."}
+      ],
+      "exceptions": {
+        "reference-2": {"application_ids": ["application-6"], "reason": "Superscript footnote marker is included in hospital extraction; provision retained."},
+        "reference-23": {"application_ids": ["application-28"], "reason": "Dollar-only expense field verified visually; alphanumeric normalization would erase it."},
+        "reference-27": {"application_ids": ["application-33","application-34","application-36"], "reason": "Merged reference extraction versus separate hospital signature-table cells; all labels visible."},
+        "reference-38": {"application_ids": ["application-46"], "reason": "Hospital contact placeholder substitution."},
+        "reference-54": {"application_ids": ["application-63"], "reason": "Official numeric discrepancy; hospital matches HHS arithmetic."}
+      }
+    },
+    "1002": {
+      "source_sha256": "eebf29d4d7ae77615ba3841de0d93f7029230c0406711ea3d1aa373605f242c1",
+      "application_render": {"sha256": "eebf29d4d7ae77615ba3841de0d93f7029230c0406711ea3d1aa373605f242c1", "pages": 5, "engine": "Original hospital PDF viewed directly", "derived": false},
+      "result": "unclear",
+      "conclusion": "Content and visual completeness are supported across all five original PDF pages, but the FPL table is explicitly from 2024. That already fails the separate current-FPL measure. Whole-form scoring remains unclear because no approved rule says whether this same defect also fails entire-form completeness and triggers its automatic-F consequence.",
+      "recommendation": "Recommend recording the outdated table as the established FPL failure and withholding a second whole-form penalty until the rubric owner resolves overlap. Under a completeness-only rule the form retains the sections; under a current-template rule the table differs materially. These are alternatives for approval, not two recorded grades.",
+      "questions": ["CSS rubric owner: does the 2024 table also fail the entire-form measure (and its automatic-F override), or only the separate FPL currency measure? Specify whether whole-form means content completeness or exact current-year template use.","CSS rubric owner, or NYS DOH for legal form requirements: confirm that the logo, repeated table headers and pagination changes are acceptable when all required fields and instructions remain visible."],
+      "visual_sections": [
+        {"section": "Identity and primary-language definition", "reference_pages": [1], "application_pages": [1], "observation": "All identity fields and the footnote definition are visible. Hospital logo and page numbering are added."},
+        {"section": "Household table", "reference_pages": [1,2], "application_pages": [1,2], "observation": "Table continues on page 2 with repeated column labels; required columns and blank rows remain."},
+        {"section": "Insurance, expenses and signature", "reference_pages": [2], "application_pages": [2], "observation": "Checkboxes, paid-expense amount box, certification, name, relationship, date and signature fields are all visible."},
+        {"section": "Rights, contacts and eligibility", "reference_pages": [3], "application_pages": [3], "observation": "Rights/contact bullets and eligibility retained. Hospital adds numeric (10%) beside the written underinsurance percentage; meaning is unchanged."},
+        {"section": "FPL, discounts and installments", "reference_pages": [4], "application_pages": [4], "observation": "All table columns and discount/installment content are present. The 2024 year and dollar values differ from 2026; one-person 400% is $60,240 rather than $63,840."},
+        {"section": "Income-proof instructions and table", "reference_pages": [5,6], "application_pages": [5], "observation": "All instructions and nine income categories fit on page 5. The unemployment row has a visible leter typo for letter; alternatives and meaning remain identifiable."}
+      ],
+      "exceptions": {
+        "reference-2": {"application_ids": ["application-7","application-8"], "reason": "Line wrapping and footnote marker; provision retained."},
+        "reference-23": {"application_ids": ["application-43"], "reason": "Dollar-only expense field verified visually."},
+        "reference-38": {"application_ids": ["application-76","application-77"], "reason": "Hospital contact placeholder substitution."},
+        "reference-44": {"application_ids": ["application-87","application-88","application-89"], "reason": "Adds (10%) after ten percent; same eligibility meaning."},
+        "reference-47": {"application_ids": ["application-95","application-96"], "reason": "400% coverage retained; table year changes from 2026 to 2024."},
+        "reference-49": {"application_ids": ["application-98"], "reason": "2024 dollar values, independently failed under the FPL measure."},
+        "reference-50": {"application_ids": ["application-99"], "reason": "2024 dollar values."},
+        "reference-51": {"application_ids": ["application-100"], "reason": "2024 dollar values."},
+        "reference-52": {"application_ids": ["application-101"], "reason": "2024 dollar values."},
+        "reference-53": {"application_ids": ["application-102"], "reason": "2024 dollar values."},
+        "reference-54": {"application_ids": ["application-103"], "reason": "2024 dollar values; also distinct from the official 2026 reference typo."},
+        "reference-55": {"application_ids": ["application-104"], "reason": "2024 dollar values."},
+        "reference-73": {"application_ids": ["application-149","application-150","application-151","application-152","application-153","application-154","application-155"], "reason": "Visible leter typo for letter; other wording and proof options retained."}
+      }
+    }
+  }
+}

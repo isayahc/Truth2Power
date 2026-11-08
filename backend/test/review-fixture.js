@@ -49,6 +49,14 @@ export function applicationFixture(root, id = "c".repeat(32), checked = "2026-11
     observations: [{ kind: "reference_discrepancy", title: "SYN official numeric discrepancy",
       explanation: "SYN: use HHS arithmetic for dollar correctness.", evidence: [base.evidence[0]] }],
     unresolved_questions: ["SYN: Are the added fields permitted customizations?"],
+    whole_form_review: {
+      reviewed_at: "2026-11-08", reviewer: "SYN model review; not human approval", reference_units_reviewed: 1,
+      conclusion: "SYN visual review complete; customization rule pending.", recommendation: "SYN rubric owner must decide.",
+      limitations: "SYN derived visual artifact.", resolved_points: ["SYN contact fields retained."],
+      authority: { url: "https://example.org/SYN-authority", locator: "SYN section 9", quote: "SYN uniform form", interpretation: "SYN rule pending." },
+      renders: { reference: { snapshot_id: fixture.hash, pages: 1 }, application: { snapshot_id: fixture.hash, pages: 1 } },
+      visual_sections: [{ section: "SYN signature area", observation: "SYN fields visible.", reference_pages: [1], application_pages: [1] }],
+    },
   };
   fixture.result.findings = ["uniform_application", "contact_information", "income_discount_tables", "fpl_guidelines", "maximum_fpl", "installments_cap"]
     .map((name) => ({ ...base, measure_id: `application.${name}`, result: name === "uniform_application" ? "unclear" : name === "fpl_guidelines" ? "no" : "yes",

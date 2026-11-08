@@ -235,9 +235,9 @@ async def compare_application_template(hospital_key: str, extraction_id: str, ap
 
 
 @mcp.tool()
-def review_application_measures(hospital_key: str, extraction_id: str, application_url: str, review_date: str, template_comparison_id: str | None = None) -> dict:
-    """Issue #23/#72: evaluate six application-only drafts. review_date is YYYY-MM-DD. Optional template_comparison_id attaches a fresh source-verified comparison to a NEW 2026 draft for the inbox; stale parsers or mismatched evidence are rejected. Re-extracts original bytes. English uniform-form profile only; unsupported layouts/languages are unclear. Whole-form interpretation stays pending, original drafts preserved, no human approval."""
-    return review_application(hospital_key, extraction_id, application_url, review_date, DATA, save, template_comparison_id=template_comparison_id)
+def review_application_measures(hospital_key: str, extraction_id: str, application_url: str, review_date: str, template_comparison_id: str | None = None, whole_form_review_id: str | None = None) -> dict:
+    """Issue #23/#72/#76: evaluate six application-only drafts. review_date is YYYY-MM-DD. Optional template_comparison_id attaches a source-verified comparison to a NEW 2026 draft; stale parsers or mismatched evidence are rejected. Optional whole_form_review_id=whole-form-wave-one-v1 additionally attaches the hash-bound completed visual/model interpretation for the two pinned English sources; requires template_comparison_id and saved rendered PDFs. Unapproved rubric questions stay unclear. Re-extracts originals, preserves prior drafts, no human approval. Return saved result path and stop."""
+    return review_application(hospital_key, extraction_id, application_url, review_date, DATA, save, template_comparison_id=template_comparison_id, whole_form_review_id=whole_form_review_id)
 
 
 @mcp.tool()

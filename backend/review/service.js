@@ -108,7 +108,7 @@ export function createReviewService(root, hospitals = []) {
     const source = row.result.snapshots.find((s) => s.snapshot_id === citation.snapshot_id);
     if (!source) return { ...citation, unavailable: true };
     const page = /^page (\d+)$/.exec(citation.locator)?.[1];
-    return { ...citation, document: source.url?.split("/").at(-1) || source.document_type,
+    return { ...citation, document: source.display_name || source.url?.split("/").at(-1) || source.document_type,
       url: safeUrl(source.url), retrieved_at: source.retrieved_at,
       saved_url: `/api/reviews/${row.id}/sources/${source.snapshot_id}${page ? `#page=${page}` : ""}` };
   }
@@ -128,6 +128,13 @@ export function createReviewService(root, hospitals = []) {
           reference_url: safeUrl(row.result.template_comparison.reference_url),
           numeric_authority_url: safeUrl(row.result.reference?.authority_url),
           numeric_reference_version: row.result.reference_version,
+          whole_form_review: row.result.template_comparison.whole_form_review ? {
+            ...row.result.template_comparison.whole_form_review,
+            authority: { ...row.result.template_comparison.whole_form_review.authority,
+              url: safeUrl(row.result.template_comparison.whole_form_review.authority.url) },
+            renders: Object.fromEntries(Object.entries(row.result.template_comparison.whole_form_review.renders).map(([role, render]) =>
+              [role, { ...render, saved_url: sourceMetadata(row, render).saved_url }])),
+          } : null,
           observations: row.result.template_comparison.observations.map((o) => ({ ...o,
             evidence: o.evidence.map((c) => sourceMetadata(row, c)) })),
         } : null,
@@ -135,9 +142,9 @@ export function createReviewService(root, hospitals = []) {
         gaps: (row.result.gaps ?? []).map((g) => ({ reason: g.reason, detail: g.detail, url: safeUrl(g.url) })),
         coverage: row.result.coverage.map((c) => ({ source_id: c.source_id, language: c.language, status: c.status,
           total_pages: c.total_pages, reviewed_pages: c.reviewed_pages?.length ?? 0,
-          locator_unit: row.result.snapshots.some((s) => s.url === c.url && s.artifact_path.endsWith(".docx")) ? "DOCX parts (pagination unverified)" : "pages",
+          locator_unit: c.locator_unit ?? (row.result.snapshots.some((s) => s.url === c.url && s.artifact_path.endsWith(".docx")) ? "DOCX parts (pagination unverified)" : "pages"),
           url: safeUrl(c.url), notes: c.notes,
-          saved_url: row.result.snapshots.some((s) => s.url === c.url) ? `/api/reviews/${row.id}/sources/${row.result.snapshots.find((s) => s.url === c.url).snapshot_id}` : null })),
+          saved_url: c.snapshot_id ? sourceMetadata(row, c).saved_url : row.result.snapshots.some((s) => s.url === c.url) ? `/api/reviews/${row.id}/sources/${row.result.snapshots.find((s) => s.url === c.url).snapshot_id}` : null })),
         history: row.history, observations: (row.result.source_reviews ?? []).flatMap((s) =>
           (s.review?.observations ?? []).filter((o) => o.measure_id === row.measure_id).map((o) =>
             ({ source_id: s.source_id, position: o.position, context: o.context, explanation: o.explanation,
