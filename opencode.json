@@ -1,5 +1,11 @@
 {
   "$schema": "https://opencode.ai/config.json",
+  "providers": {
+    "amazon-bedrock": {
+      "env": ["AWS_BEARER_TOKEN_BEDROCK"],
+      "settings": { "region": "us-east-1" }
+    }
+  },
   "mcp": {
     "servers": {
       "truth2power": {
@@ -17,7 +23,7 @@
       "description": "Collect hospital documents, extract cited text, or check Little Falls' application against the 2026 FPL reference.",
       "mode": "primary",
       "steps": 8,
-      "model": "openrouter/openrouter/free",
+      "model": "amazon-bedrock/us.amazon.nova-lite-v1:0",
       "permissions": [
         { "action": "*", "resource": "*", "effect": "deny" },
         { "action": "truth2power_*", "resource": "*", "effect": "allow" }

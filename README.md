@@ -62,6 +62,18 @@ Record a reviewer note for the pilot with `node backend/audit/correction.js "rev
 
 Run the browser regression with `npm run test:audit`. It starts an isolated server and database, interrupts a claimed job, rechecks the same PDF under both references and opens its saved citation.
 
+### Connect the audit agent to Bedrock
+
+The project defaults `hospital-auditor` to `amazon-bedrock/us.amazon.nova-lite-v1:0` in `us-east-1`. Connect an existing Bedrock API key once in your terminal:
+
+```powershell
+opencode auth login amazon-bedrock
+```
+
+Choose **Bedrock API key**. OpenCode saves it in its own credential database; do not put keys in chat, source files or `.env`. This path does not require SSO or repeated script/key entry. Once connected, use `opencode run --agent hospital-auditor "Your task"`. An explicit `--model` overrides the default, including the OpenRouter examples below. Bedrock usage is billed and may be covered by eligible credits; the catalog alone does not prove account access. Nova Lite was successfully invoked with the saved credential.
+
+`scripts/start-bedrock.ps1` is an optional Ellenville sample shortcut using the same saved credentials. It no longer prompts for or manages API keys. Model-generated findings remain drafts requiring interpretation review, even when citation checks pass.
+
 ### Collect posted PDFs with the hospital-auditor agent (#17)
 
 After installing the Python dependencies below, use a hospital ID from `data/maps/hospitals.geojson`. Ellenville Regional Hospital (`1002`) is the second live sample; it is not a defined Wave 1 roster.
