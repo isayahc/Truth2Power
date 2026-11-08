@@ -44,6 +44,9 @@
 .review-evidence article { padding: 14px; border: 1px solid var(--line); border-radius: 6px; min-width: 0; }
 .review-evidence blockquote { margin: 14px 0; padding-left: 12px; border-left: 2px solid var(--deep); white-space: pre-wrap; font-size: 14px; line-height: 1.55; }
 .review-links { display: flex; flex-direction: column; gap: 10px; font-size: 13px; }
+.review-table-scroll { max-width: 100%; overflow-x: auto; }
+.review-table-scroll table { width: 100%; border-collapse: collapse; font-size: 14px; }
+.review-table-scroll th, .review-table-scroll td { text-align: left; padding: 10px; border-bottom: 1px solid var(--line); }
 .review-detail details { padding: 16px 0; border-top: 1px solid var(--line); margin-top: 18px; }
 .review-detail summary { cursor: pointer; font-weight: 600; }
 .review-form { display: grid; grid-template-columns: minmax(0, 1fr); min-width: 0; gap: 16px; margin: 24px 0; padding: 20px; background: #eef5f1; border-radius: 8px; }

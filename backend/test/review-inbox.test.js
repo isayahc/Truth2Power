@@ -4,7 +4,7 @@ import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { createReviewService } from "../review/service.js";
-import { reviewFixture } from "./review-fixture.js";
+import { reviewFixture, applicationFixture } from "./review-fixture.js";
 
 function setup(t) {
   const root = mkdtempSync(join(tmpdir(), "t2p-review-test-"));
@@ -84,4 +84,21 @@ test("unreadable draft is reported as a coverage warning, not silently complete"
   writeFileSync(join(root, "full-reviews", "b".repeat(32), "results", "d".repeat(32) + ".json"), "broken json");
   assert.equal(service.list().unavailable, 1);
   assert.equal(service.list().pending, 1);
+});
+
+test("application checks coexist with posted-material findings and retain their scope", (t) => {
+  const { service, root, id } = setup(t);
+  applicationFixture(root);
+  assert.equal(service.list().pending, 7);
+  const item = service.list().items.find((r) => r.measure_id === "application.fpl_guidelines");
+  const detail = service.detail(item.id);
+  assert.equal(detail.draft_result, "no");
+  assert.equal(detail.guideline_year, 2026);
+  assert.equal(detail.observed.cells[0].expected, 63840);
+  assert.match(detail.scope_label, /Selected application/);
+  assert.equal(detail.other_application_versions_not_assessed.length, 1);
+  service.decide(item.id, { ...decision, action: "confirm" });
+  applicationFixture(root, "d".repeat(32), "2026-11-09T13:00:00Z");
+  assert.equal(service.list().pending, 7);
+  assert.equal(service.detail(id).draft_result, "unclear");
 });

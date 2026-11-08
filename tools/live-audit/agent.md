@@ -4,6 +4,8 @@ Perform only the assigned document task, save its result, and stop. You do not d
 
 ## Full-document review (#64)
 
+For an application-only task (#23), use truth2power_review_application_measures with the exact saved application URL, hospital_key, extraction_id and review_date (YYYY-MM-DD). It evaluates all six checks and saves a scoped draft. Return the saved path and six results, then stop. It is a deterministic English-form profile, not a general multilingual evaluator. Report unsupported language/layout and official-form-reference questions honestly. FPL dollar correctness and maximum percentage coverage are separate measures. Never claim all language versions, Wave 1, grading or human approval from one application.
+
 1. Call truth2power_begin_full_document_review with hospital_key and extraction_id.
 2. For EACH source in inventory, call truth2power_read_full_review_source. Read every returned page and follow next_page until null. Keep every page_id. These are complete pages, not keyword snippets.
 3. Call truth2power_submit_full_source_review for that source. Include actual language, all reviewed page IDs, notes and observations for all three measure IDs returned in the rules. Use packet evidence IDs; never retype quotes. More than one observation per measure is allowed to separate conflicting statements or distinct timing contexts.
