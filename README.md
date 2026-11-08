@@ -91,6 +91,20 @@ The manifest is the authoritative complete record, even if a model shortens its 
 
 Ellenville sample validation: the landing page and all 10 saved PDFs produced text (51 PDF pages); the unavailable 2021 policy was flagged for review. This sample does not establish statewide or unspecified Wave 1 coverage.
 
+### Review cross-document measures (#22)
+
+Use a saved #19 extraction run ID. The same `hospital-auditor` agent prepares a bounded evidence packet, reasons over the five measures, and submits a citation-checked draft:
+
+```powershell
+opencode run --agent hospital-auditor --model "openrouter/nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free" "Review issue #22 for hospital_key 1002, extraction_id 4f4645982ff740fa980f2a14e84acf8e. Prepare the cross-document packet and save all five draft findings with exact quotes."
+```
+
+The tools are `truth2power_prepare_cross_document_review` and `truth2power_save_cross_document_review`. Packets live in `.audit/live/cross-document-packets/`; drafts live in `.audit/live/cross-document-reviews/<hospital_id>/`. They cover consistency, primary service-area boundaries, submission deadlines, asset checks and immigration barriers. Each finding uses the existing v1 finding schema, includes observed/expected values and cites a snapshot ID, page/HTML locator and exact quote. The draft envelope retains source URLs, retrieval dates, review time, extraction ID, missing sources and limitations. It is separate from completed assessments and never changes a grade or last-successful date.
+
+Before preparing and saving, the tool verifies saved snapshot hashes and re-extracts original bytes. Fabricated quotes, wrong pages, unknown/duplicate measure IDs and one-source inconsistency claims are rejected. Model tool arguments have an explicit schema with the five permitted measure IDs. This validates citation integrity, not the model's interpretation; a reviewer still needs to check relevance, exceptions, current rules and whether translations agree.
+
+**Pilot limits:** six keyword-selected excerpts per measure, prioritizing English sources; this is not exhaustive multilingual review. Document roles inferred from URLs are hints. Missing keyword matches never prove absence. The tool accepts `no` only as a cited draft contradiction, or `unclear` for insufficient/conflicting evidence; global `yes` and `n_a` conclusions require a fuller review outside this pilot. PSA stays unclear until an approved boundary rule exists. #20's subject-matter agreement is still pending. Download dates and filenames do not establish current compliance. One sample does not establish statewide or unspecified Wave 1 coverage.
+
 ### Audit the real Little Falls site with OpenCode
 
 The `hospital-auditor` primary agent starts at Little Falls Hospital's URL from the roster. Its two local MCP tools discover the English application and policy, verify campus coverage in the policy PDF and compare the application’s one-person, 400% FPL table cell with the 2026 HHS reference. It saves a partial live assessment under `.audit/live/assessments/`. The React recheck panel continues to run the synthetic SQLite pilot. This live workflow reads DOCX and PDF directly and requires Python 3.10+ and Chromium.

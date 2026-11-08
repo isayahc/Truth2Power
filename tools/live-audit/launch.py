@@ -10,4 +10,4 @@ if not python.is_file():
     sys.exit("Create .venv and install tools/live-audit/requirements.txt; see README.md.")
 
 if __name__ == "__main__":
-    sys.exit(subprocess.call([str(python), str(Path(__file__).with_name("server.py"))], cwd=ROOT))
+    sys.exit(subprocess.call([str(python), "-u", str(Path(__file__).with_name("server.py"))], cwd=ROOT))
