@@ -62,6 +62,21 @@ Record a reviewer note for the pilot with `node backend/audit/correction.js "rev
 
 Run the browser regression with `npm run test:audit`. It starts an isolated server and database, interrupts a claimed job, rechecks the same PDF under both references and opens its saved citation.
 
+### Collect posted PDFs with the hospital-auditor agent (#17)
+
+After installing the Python dependencies below, use a hospital ID from `data/maps/hospitals.geojson`. Ellenville Regional Hospital (`1002`) is the second live sample; it is not a defined Wave 1 roster.
+
+```powershell
+opencode mcp list
+opencode run --agent hospital-auditor --model "openrouter/nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free" "Collect posted PDFs for issue #17 at Ellenville Regional Hospital, hospital_key 1002. Return the manifest and limitations."
+```
+
+Wait for `truth2power` to report connected before running. The agent calls `truth2power_collect_posted_documents`; it selects the landing URL from the roster, saves the HTML, resolves relative PDF anchors, deduplicates URLs (preserving labels), and saves every directly linked PDF on the same HTTPS host. Redirects must stay on that host or its `www` alias. Each file is limited to 12 MiB, with at most 100 document requests per run. External hosts, invalid PDFs and failed requests are recorded for review.
+
+Immutable manifests live in `.audit/live/collections/<hospital_id>/`; files live in `.audit/live/snapshots/`. Each saved document includes its linked and final URL, hash, local path and successful retrieval time. Each attempt has a separate timestamp and failures never overwrite earlier successful manifests. Publisher update dates remain unknown. A collection is partial if any link fails or no PDFs are found. This collects all PDF anchors, including footer PDFs; it does not classify documents, establish campus applicability, follow nested pages, discover JavaScript/extensionless downloads or judge whether a policy is current.
+
+Run offline regressions with `python -m unittest discover -s tools/live-audit -p "test_*.py"` from the activated environment.
+
 ### Audit the real Little Falls site with OpenCode
 
 The `hospital-auditor` primary agent starts at Little Falls Hospital's URL from the roster. Its two local MCP tools discover the English application and policy, verify campus coverage in the policy PDF and compare the application’s one-person, 400% FPL table cell with the 2026 HHS reference. It saves a partial live assessment under `.audit/live/assessments/`. The React recheck panel continues to run the synthetic SQLite pilot. This live workflow reads DOCX and PDF directly and requires Python 3.10+ and Chromium.
