@@ -123,6 +123,21 @@ export default function ReviewInbox({ inbox, error, onRefresh, hospitalKey, hosp
           <p><strong>Criterion:</strong> {typeof item.expected === "string" ? item.expected : item.expected?.guideline_year ?
             `${item.expected.guideline_year} annual HHS guidelines; one-person 400% amount: $${item.expected.one_person_400_percent.toLocaleString()}.` : item.expected?.condition ?? JSON.stringify(item.expected)}</p>
           {item.authority_url && <p><a href={item.authority_url} target="_blank" rel="noreferrer">Reference source ↗</a></p>}
+          {item.template_comparison && <section aria-label="Verified template comparison">
+            <h3>Verified template comparison</h3>
+            <p>Text evidence verified against saved originals. Whole-form interpretation remains pending.</p>
+            <p className="review-meta">{item.template_comparison.reference_version} · Retrieved {date(item.template_comparison.reference_retrieved_at)} · {item.template_comparison.parser_version}</p>
+            {item.template_comparison.numeric_authority_url && <p><a href={item.template_comparison.numeric_authority_url} target="_blank" rel="noreferrer">HHS dollar-check authority ↗</a> · {item.template_comparison.numeric_reference_version}</p>}
+            <details><summary>Official reference part coverage ({item.template_comparison.reference_parts.length})</summary>
+              <p>{item.template_comparison.retrieval_method}</p>
+              <ul>{item.template_comparison.reference_parts.map((p) => <li key={p.locator}>{p.locator}: {p.status}{p.empty ? " · Empty part verified" : ""}{p.reason ? ` · ${p.reason}` : ""}</li>)}</ul>
+            </details>
+            {item.template_comparison.observations.map((o, i) => <details key={i}>
+              <summary>{o.title}</summary><p className="review-meta">{o.kind.replaceAll("_", " ")}</p>
+              <p>{o.explanation}</p><Evidence evidence={o.evidence} />
+            </details>)}
+            <h4>Remaining interpretation questions</h4><ul>{item.template_comparison.unresolved_questions.map((q) => <li key={q}>{q}</li>)}</ul>
+          </section>}
           {!!item.observed?.cells?.length && <details><summary>Published vs expected FPL amounts ({item.observed.cells.length} cells)</summary>
             <p>Published year: {item.observed.published_year ?? "Unverified"} · {item.observed.currency} · {item.observed.period}</p>
             <div className="review-table-scroll"><table><caption>Dollar comparison by household size and FPL percentage</caption>

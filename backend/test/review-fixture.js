@@ -39,6 +39,17 @@ export function applicationFixture(root, id = "c".repeat(32), checked = "2026-11
     })),
   };
   fixture.result.other_application_versions_not_assessed = ["https://example.org/SYN-spanish.pdf"];
+  fixture.result.template_comparison = {
+    comparison_id: "e".repeat(32), reference_version: "SYN-2026-English", parser_version: "document-text-v5",
+    reference_url: "https://example.org/SYN-reference.docx", reference_retrieved_at: checked,
+    retrieval_method: "SYN hash-verified capture", reference_parts: [
+      { locator: "DOCX word/footnotes.xml", status: "extracted", empty: false },
+      { locator: "DOCX word/footer1.xml", status: "extracted", empty: true },
+    ],
+    observations: [{ kind: "reference_discrepancy", title: "SYN official numeric discrepancy",
+      explanation: "SYN: use HHS arithmetic for dollar correctness.", evidence: [base.evidence[0]] }],
+    unresolved_questions: ["SYN: Are the added fields permitted customizations?"],
+  };
   fixture.result.findings = ["uniform_application", "contact_information", "income_discount_tables", "fpl_guidelines", "maximum_fpl", "installments_cap"]
     .map((name) => ({ ...base, measure_id: `application.${name}`, result: name === "uniform_application" ? "unclear" : name === "fpl_guidelines" ? "no" : "yes",
       explanation: "SYNTHETIC application-only test finding.", unresolved_questions: [] }));

@@ -49,6 +49,17 @@ try {
   await page.getByRole("cell", { name: "$63,840", exact: true }).waitFor();
   await page.screenshot({ path: join(artifacts, "23-application-fpl-mobile.png"), fullPage: true });
   await page.setViewportSize({ width: 1440, height: 1000 });
+  await page.getByRole("button", { name: /Needs review.*Ellenville.*Entire Uniform Application/ }).click();
+  await page.getByRole("heading", { name: "Verified template comparison", exact: true }).waitFor();
+  await page.getByText("SYN official numeric discrepancy", { exact: true }).click();
+  await page.getByText("Official reference part coverage (2)", { exact: true }).click();
+  assert.match(await page.locator(".review-detail").innerText(), /Empty part verified/);
+  assert.match(await page.locator(".review-detail").innerText(), /use HHS arithmetic/);
+  await page.screenshot({ path: join(artifacts, "72-template-desktop.png"), fullPage: true });
+  await page.setViewportSize({ width: 390, height: 844 });
+  assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth), true);
+  await page.screenshot({ path: join(artifacts, "72-template-mobile.png"), fullPage: true });
+  await page.setViewportSize({ width: 1440, height: 1000 });
   await page.getByRole("button", { name: /Needs review.*Ellenville.*Application deadlines/ }).click();
   await page.getByRole("heading", { name: "Quoted evidence" }).waitFor();
   assert.match(await page.locator(".review-detail").innerText(), /SYNTHETIC/);

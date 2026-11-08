@@ -9,7 +9,7 @@ from datetime import datetime
 
 from cross_documents import load_sources, identifier
 from documents import now
-from extraction import extract_bytes
+from extraction import extract_bytes, PARSER
 from full_review import json_save
 from playwright.sync_api import sync_playwright
 from documents import LIMIT
@@ -141,6 +141,7 @@ def compare_template(hospital_key, extraction_id, application_url, output, save,
         method = "direct HTTPS retrieval"
     comparison_id = uuid.uuid4().hex
     packet = dict(comparison_id=comparison_id, hospital_key=hospital_key, extraction_id=extraction_id,
+        extraction_parser=PARSER,
         application_url=application_url, reference_url=REFERENCE_URL, reference_version="NYS-2026-English",
         authority_url=AUTHORITY_URL, checked_at=now(), status="text_alignment_needs_human_review",
         reference_retrieval_method=method, reference_capture_id=reference_capture_id,
@@ -149,7 +150,7 @@ def compare_template(hospital_key, extraction_id, application_url, output, save,
         source_segments=selected[0]["segments"], reference_segments=reference["segments"], collection_gaps=gaps,
         limitations=["Alignment is not a determination of entire-form equivalence or legal compliance.",
                      "PDF line wrapping, DOCX table cells and hospital customization can produce text differences.",
-                     "DOCX body extraction does not verify rendered pagination, graphics or content in other parts.",
+                     "DOCX extraction covers body and listed auxiliary XML parts, not rendered pagination or visual equivalence. Check each part's extraction status.",
                      "Review required content and permitted customizations against official guidance; no draft is promoted."],
         **align(reference, selected[0]))
     path = output / "template-comparisons" / f"{comparison_id}.json"

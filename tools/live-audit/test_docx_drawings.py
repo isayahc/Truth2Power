@@ -92,7 +92,7 @@ class DrawingTests(unittest.TestCase):
                      docx('<w:p>' + line() + '<w:pict/></w:p>'),
                      docx(line()),  # Outside a paragraph: unsupported structure.
                      docx('<w:p>' + line() + '<w:drawing/></w:p>')]:
-            self.assertEqual(extract_bytes(data, ".docx")[0]["status"], "needs_review")
+            self.assertTrue(any(p["status"] == "needs_review" for p in extract_bytes(data, ".docx")))
 
 
 if __name__ == "__main__":
