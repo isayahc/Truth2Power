@@ -119,6 +119,35 @@ Before preparing and saving, the tool verifies saved snapshot hashes and re-extr
 
 Ellenville validation produced a citation-checked draft mismatch: policy page 3 and application page 4 include the 301–400% range, while the summary page 1 income table stops at 300%. The other four measures remain unclear under the pilot's coverage/rule limits, while acknowledging explicit evidence allowing applications during collections and prohibiting asset/immigration criteria. The initial model explanations were inaccurate despite valid citations; a supervising-assistant correction pass was necessary. The corrected draft is not human-approved. The provider reached its free daily limit after saving it, so the local artifact—not a final model reply—confirmed persistence. Older draft files are retained and should not be treated as approved findings.
 
+### Full-document review: deadlines, assets and immigration (#64)
+
+The full-review tools extend the excerpt pilot with complete source/page coverage:
+
+1. `truth2power_begin_full_document_review` creates an inventory from a saved extraction.
+2. `truth2power_read_full_review_source` delivers complete pages with exact passage IDs. Follow `next_page` until null.
+3. `truth2power_submit_full_source_review` records each source's language, reviewed pages and observations for all three measures. Delivery alone does not count as review. Untranslated/unreadable material stays a specific gap; unrelated material needs a complete read and scope citations.
+4. `truth2power_finalize_full_review` revalidates original snapshots and saves the aggregate draft with source-level coverage, citations and gaps.
+
+For bounded agent runs, assign one source from an existing review at a time: “Review only source_id s2 in review_id <ID>; read all pages, submit its review, then stop.” The auditor is restricted to audit MCP tools. Development, tests and repository maintenance belong to the calling coding session. OpenCode may still inject project instructions automatically; permissions deny the auditor code reads, edits and shell commands.
+
+Complete coverage plus favorable evidence and no relevant restriction permits `yes`. An explicit restriction permits `no`; conflicting evidence produces `unclear`. Missing sources, unreviewed languages or ambiguous observations block `yes`. Silence in an individual source is neutral. Application submission, appeal deadlines, processing time, collection waiting periods and award duration are separate contexts. Income documentation is not automatically an asset or immigration eligibility test. These are model-reviewed posted-material findings, not proof of actual hospital practice or legal compliance. Exact citations do not validate interpretation; English semantic tripwires catch only selected known mistakes.
+
+Artifacts live in `.audit/live/full-reviews/<review_id>/`: `state.json` retains appended source-review revisions; `results/<result_id>.json` preserves each finalized draft and its source reviews. The full-review envelope is separate from the existing per-measure v1 assessment schema. Human decisions are separate, hash-linked records and never silently modify a draft. An actual human reviewer can record a decision locally:
+
+```powershell
+python tools/live-audit/human_review.py <result-file> --decision needs_changes --reviewer-role policy-reviewer --notes "Reason for decision" --confirm-human-review
+```
+
+This CLI is not an MCP tool. Its role label is self-attested, not authenticated. No agent should invoke it to manufacture human approval.
+
+**Service-area question remains open:** [NYS Public Health Law §2807-k(9-a)(f)](https://www.nysenate.gov/legislation/laws/PBH/2807-K), displayed revision May 29, 2026, distinguishes emergency coverage for New York residents from medically necessary services in the hospital's primary service area under commissioner criteria. We still need the applicable commissioner criteria, their effective date, and Ellenville's filed/approved boundaries for the review date. The statute and a county list alone do not establish boundary compliance. Rule approval and subject-matter review remain pending.
+
+Run regression checks with `python -m unittest discover -s tools/live-audit -p "test_*.py"`. Tests use synthetic fixtures and cover full-page delivery, coverage gaps, exclusions, context distinctions, conflicts, revisions, snapshot mutation and separate human decisions.
+
+**Ellenville live validation:** review `f3855e2408eb437e84e45e0c1319c02e`, corrected result `0a59d1543b5844ed8a0268f5e9425748`, accounts for the landing page and all 51 collected PDF pages across English, Spanish, Polish, Ukrainian and Russian. Ten sources were reviewed for eligibility; the five-page privacy notice was read and explicitly excluded. The audit agent ran on saved Bedrock credentials with one-source assignments after its initial whole-review run became stuck. Supervising-model corrections were required for every source, including wrong passage selections, income-versus-assets mistakes and reversed immigration classifications. Each source retains both revisions. Independently checked 63 source-review citation occurrences against re-extracted original snapshots.
+
+All three aggregate drafts remain `unclear` for specific reasons: the linked 2021 policy was not downloaded (the collection reported 404); application timing includes unspecified “timely” completion and Russian wording about data collection; asset provisions need reconciliation with personal-resource exhaustion and weaker Spanish wording; Ukrainian immigration wording needs qualified translation interpretation. Favorable provisions remain cited. These are questions for review, not established violations. PSA criteria and human approval remain pending; the earlier incomplete result is retained for traceability.
+
 ### Audit the real Little Falls site with OpenCode
 
 The `hospital-auditor` primary agent starts at Little Falls Hospital's URL from the roster. Its two local MCP tools discover the English application and policy, verify campus coverage in the policy PDF and compare the application’s one-person, 400% FPL table cell with the 2026 HHS reference. It saves a partial live assessment under `.audit/live/assessments/`. The React recheck panel continues to run the synthetic SQLite pilot. This live workflow reads DOCX and PDF directly and requires Python 3.10+ and Chromium.
