@@ -58,6 +58,8 @@ SQLite stores queued jobs, rule and reference context, attempts, prior findings,
 
 To replay a saved assessment, read the JSON in the SQLite assessments.output column. It uses schemas/live-audit-v1.schema.json. The observations, expected values and immutable PDF citation are available without another browser call.
 
+The [output contract (#20)](docs/audit-format/README.md) defines one logical record per hospital/measure, evidence, separate date fields, draft/human-review labels and mappings for the full-review artifacts. [Technical and subject-matter agreement](docs/audit-format/agreement.md) is pending. Validate the synthetic contract examples with `python docs/audit-format/check_examples.py`.
+
 Record a reviewer note for the pilot with `node backend/audit/correction.js "reviewed correction"`. Subsequent jobs include it as prior context. The evaluator bases the new finding on the newly retrieved application.
 
 Run the browser regression with `npm run test:audit`. It starts an isolated server and database, interrupts a claimed job, rechecks the same PDF under both references and opens its saved citation.
