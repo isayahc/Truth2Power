@@ -1,0 +1,186 @@
+{
+  "schema_version": "1.0",
+  "hospital_key": "1002",
+  "rubric_version": "css-17-v1",
+  "reference_version": "wave-one-summary-v1",
+  "guideline_year": 2026,
+  "review_date": "2026-11-08",
+  "attempt": {
+    "attempt_id": "summary-1002-v1",
+    "attempted_at": "2026-11-09T01:54:24.970266+00:00",
+    "status": "completed"
+  },
+  "last_successful_assessment_at": "2026-11-09T01:54:24.970266+00:00",
+  "snapshots": [
+    {
+      "url": "https://erhny.org/wp-content/uploads/2024/01/2024-ERH-FA-Summary-English.pdf",
+      "sha256": "43520848e6f87fae9b2c60b93e3c69138f1a425eba7fadc8ac5e57513bb9a883",
+      "artifact_path": "snapshots/43520848e6f87fae9b2c60b93e3c69138f1a425eba7fadc8ac5e57513bb9a883.pdf",
+      "retrieved_at": "2026-11-09T00:39:36.156029+00:00",
+      "publisher_updated_at": "2024-01-17",
+      "snapshot_id": "43520848e6f87fae9b2c60b93e3c69138f1a425eba7fadc8ac5e57513bb9a883",
+      "document_type": "policy_summary"
+    },
+    {
+      "url": "https://erhny.org/wp-content/uploads/2024/01/2024-ERH-FA-Summary-Spanish.pdf",
+      "sha256": "e0c54eef21e7db1cdb65f37f777251556e63d77ddd381c5a4ae97fb34fc5bd13",
+      "artifact_path": "snapshots/e0c54eef21e7db1cdb65f37f777251556e63d77ddd381c5a4ae97fb34fc5bd13.pdf",
+      "retrieved_at": "2026-11-09T00:39:39.744462+00:00",
+      "publisher_updated_at": "2024-01-17",
+      "snapshot_id": "e0c54eef21e7db1cdb65f37f777251556e63d77ddd381c5a4ae97fb34fc5bd13",
+      "document_type": "policy_summary"
+    }
+  ],
+  "assessment": {
+    "assessment_id": "summary-1002-v1",
+    "completed_at": "2026-11-09T01:54:24.970266+00:00",
+    "findings": [
+      {
+        "measure_id": "policy_summary.primary_service_area_described",
+        "result": "yes",
+        "reason_code": "condition_met",
+        "explanation": "Both English and Spanish summaries describe New York State emergency coverage and name seven counties for other medically necessary services. Presence only; no boundary-compliance determination.",
+        "observed": {
+          "documents": [
+            {
+              "snapshot_id": "43520848e6f87fae9b2c60b93e3c69138f1a425eba7fadc8ac5e57513bb9a883",
+              "language": "English",
+              "reviewed_pages": [
+                "page 1",
+                "page 2"
+              ],
+              "result": "yes"
+            },
+            {
+              "snapshot_id": "e0c54eef21e7db1cdb65f37f777251556e63d77ddd381c5a4ae97fb34fc5bd13",
+              "language": "Spanish",
+              "reviewed_pages": [
+                "page 1",
+                "page 2"
+              ],
+              "result": "yes"
+            }
+          ],
+          "areas": [
+            "Ulster",
+            "Dutchess",
+            "Orange",
+            "Sullivan",
+            "Delaware",
+            "Greene",
+            "Columbia"
+          ]
+        },
+        "expected": {
+          "minimum_described_areas": 1
+        },
+        "evidence": [
+          {
+            "snapshot_id": "43520848e6f87fae9b2c60b93e3c69138f1a425eba7fadc8ac5e57513bb9a883",
+            "locator": "page 1",
+            "quote": "Financial assistance is offered to all patients who reside in New York State for emergency services. For all\nother necessary medical services, assistance is offered within our primary service area of Ulster, Dutchess,\nOrange, Sullivan, Delaware, Greene and Columbia counties. Anyone can apply, regardless of age, race,\ngender, creed, disability, national origin, or immigrant status."
+          },
+          {
+            "snapshot_id": "e0c54eef21e7db1cdb65f37f777251556e63d77ddd381c5a4ae97fb34fc5bd13",
+            "locator": "page 1",
+            "quote": "Todos los pacientes que viven en el Estado de New York pueden recibir asistencia económica para servicios\nde emergencia. Para todos los demás servicios médicos necesarios, se da asistencia dentro de nuestra área\nprincipal de servicio de los condados de Ulster, Dutchess, Orange, Sullivan, Delaware, Greene y Columbia.\nCualquiera puede enviar una solicitud, independientemente de su edad, raza, sexo, credo, discapacidad,\npaís de origen o estatus migratorio."
+          }
+        ]
+      },
+      {
+        "measure_id": "policy_summary.means_of_applying_explained",
+        "result": "yes",
+        "reason_code": "condition_met",
+        "explanation": "Both source-language summaries explain how to obtain an application and where to send the completed application.",
+        "observed": {
+          "documents": [
+            {
+              "snapshot_id": "43520848e6f87fae9b2c60b93e3c69138f1a425eba7fadc8ac5e57513bb9a883",
+              "language": "English",
+              "reviewed_pages": [
+                "page 1",
+                "page 2"
+              ],
+              "result": "yes"
+            },
+            {
+              "snapshot_id": "e0c54eef21e7db1cdb65f37f777251556e63d77ddd381c5a4ae97fb34fc5bd13",
+              "language": "Spanish",
+              "reviewed_pages": [
+                "page 1",
+                "page 2"
+              ],
+              "result": "yes"
+            }
+          ],
+          "application_routes": [
+            "Obtain from hospital or website; submit to Ellenville Business Office, 10 Healthy Way."
+          ]
+        },
+        "expected": {
+          "minimum_application_instructions": 1
+        },
+        "evidence": [
+          {
+            "snapshot_id": "43520848e6f87fae9b2c60b93e3c69138f1a425eba7fadc8ac5e57513bb9a883",
+            "locator": "page 2",
+            "quote": "You will need to fill out a financial assistance application. One can be requested/received from the\nhospital or downloaded from our website: www.erhny.org. You will need to provide proof of identify,\naddress and income. Completed applications and documentation can be sent to:\nEllenville Regional Hospital\nAttn: Business Office\n10 Healthy Way\nEllenville, NY 12428"
+          },
+          {
+            "snapshot_id": "e0c54eef21e7db1cdb65f37f777251556e63d77ddd381c5a4ae97fb34fc5bd13",
+            "locator": "page 2",
+            "quote": "Deberá completar una solicitud de asistencia económica. Puede pedir/recibir una del hospital o\ndescargarla de nuestro sitio web: www.erhny.org. Deberá presentar prueba de identidad, dirección\ne ingresos. Las solicitudes y la documentación completas se pueden enviar a:\nEllenville Regional Hospital\nAttn: Business Office\n10 Healthy Way\nEllenville, NY 12428"
+          }
+        ]
+      },
+      {
+        "measure_id": "policy_summary.income_levels_included",
+        "result": "yes",
+        "reason_code": "condition_met",
+        "explanation": "Both summaries include explicit income levels. This presence check does not validate current-year amounts, discount correctness or maximum eligibility. Ellenville prints a January 17, 2024 revision and 150/200/300% columns.",
+        "observed": {
+          "documents": [
+            {
+              "snapshot_id": "43520848e6f87fae9b2c60b93e3c69138f1a425eba7fadc8ac5e57513bb9a883",
+              "language": "English",
+              "reviewed_pages": [
+                "page 1",
+                "page 2"
+              ],
+              "result": "yes"
+            },
+            {
+              "snapshot_id": "e0c54eef21e7db1cdb65f37f777251556e63d77ddd381c5a4ae97fb34fc5bd13",
+              "language": "Spanish",
+              "reviewed_pages": [
+                "page 1",
+                "page 2"
+              ],
+              "result": "yes"
+            }
+          ],
+          "stated_fpl_percentages": [
+            150,
+            200,
+            300
+          ]
+        },
+        "expected": {
+          "minimum_stated_income_levels": 1
+        },
+        "evidence": [
+          {
+            "snapshot_id": "43520848e6f87fae9b2c60b93e3c69138f1a425eba7fadc8ac5e57513bb9a883",
+            "locator": "page 1",
+            "quote": "Discounts are determined by income and family size. Below are the annual income limits:\nFamily Size HHS Poverty Income $ 150% 200% 300%\n1 $15,060 $22,590 $30,120 $45,180\n2 $20,440 $30,660 $40,880 $61,320\n3 $25,820 $38,730 $51,640 $77,460\n4 $31,200 $46,800 $62,400 $93,600\n5 $36,580 $54,870 $73,160 $109,740\n6 $41,960 $62,940 $83,920 $125,880\n7 $47,340 $71,010 $94,680 $142,020\n8 $52,720 $79,080 $105,440 $158,160\n* For more than 8 persons, add $5,140 for each additional person"
+          },
+          {
+            "snapshot_id": "e0c54eef21e7db1cdb65f37f777251556e63d77ddd381c5a4ae97fb34fc5bd13",
+            "locator": "page 1",
+            "quote": "Los descuentos se determinan por los ingresos y el tamaño de la familia. Abajo se muestran los límites de\nlos ingresos anuales:\nTamaño de\nla familia\nIngresos en $ nivel\nde pobreza HHS 150 % 200 % 300 %\n1 $15,060 $22,590 $30,120 $45,180\n2 $20,440 $30,660 $40,880 $61,320\n3 $25,820 $38,730 $51,640 $77,460\n4 $31,200 $46,800 $62,400 $93,600\n5 $36,580 $54,870 $73,160 $109,740\n6 $41,960 $62,940 $83,920 $125,880\n7 $47,340 $71,010 $94,680 $142,020\n8 $52,720 $79,080 $105,440 $158,160\n* Para más de 8 personas, agregue $5,140 más por cada una"
+          }
+        ]
+      }
+    ]
+  }
+}

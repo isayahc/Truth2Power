@@ -1,0 +1,175 @@
+{
+  "schema_version": "1.0",
+  "hospital_key": "362",
+  "rubric_version": "css-17-v1",
+  "reference_version": "wave-one-summary-v1",
+  "guideline_year": 2026,
+  "review_date": "2026-11-08",
+  "attempt": {
+    "attempt_id": "summary-362-v1",
+    "attempted_at": "2026-11-09T01:54:24.970266+00:00",
+    "status": "completed"
+  },
+  "last_successful_assessment_at": "2026-11-09T01:54:24.970266+00:00",
+  "snapshots": [
+    {
+      "url": "https://www.bassett.org/sites/default/files/2025-03/FAP-Plain-Language-Summary.pdf",
+      "sha256": "b3aef8b3347234aec466321191ad6a7eca495ba6d95bbfb7d19f1d3290ef1733",
+      "artifact_path": "snapshots/b3aef8b3347234aec466321191ad6a7eca495ba6d95bbfb7d19f1d3290ef1733.pdf",
+      "retrieved_at": "2026-11-09T01:52:18.979610+00:00",
+      "publisher_updated_at": null,
+      "snapshot_id": "b3aef8b3347234aec466321191ad6a7eca495ba6d95bbfb7d19f1d3290ef1733",
+      "document_type": "policy_summary"
+    },
+    {
+      "url": "https://www.bassett.org/sites/default/files/2025-03/FAP-Plain-Language-Summary-Spanish.pdf",
+      "sha256": "58310a62ee2674f5926f8116c3ea718bf79ebda1cb773f78bbe941bb18f68523",
+      "artifact_path": "snapshots/58310a62ee2674f5926f8116c3ea718bf79ebda1cb773f78bbe941bb18f68523.pdf",
+      "retrieved_at": "2026-11-09T01:52:19.274857+00:00",
+      "publisher_updated_at": null,
+      "snapshot_id": "58310a62ee2674f5926f8116c3ea718bf79ebda1cb773f78bbe941bb18f68523",
+      "document_type": "policy_summary"
+    }
+  ],
+  "assessment": {
+    "assessment_id": "summary-362-v1",
+    "completed_at": "2026-11-09T01:54:24.970266+00:00",
+    "findings": [
+      {
+        "measure_id": "policy_summary.primary_service_area_described",
+        "result": "no",
+        "reason_code": "missing_after_search",
+        "explanation": "Neither designated English nor Spanish summary describes a geographic primary service area. The opening paragraph lists participating hospitals, including Little Falls; the mailing address identifies where to apply, not a service boundary. All three PDF pages and visible tables were reviewed.",
+        "observed": {
+          "documents": [
+            {
+              "snapshot_id": "b3aef8b3347234aec466321191ad6a7eca495ba6d95bbfb7d19f1d3290ef1733",
+              "language": "English",
+              "reviewed_pages": [
+                "page 1"
+              ],
+              "result": "no"
+            },
+            {
+              "snapshot_id": "58310a62ee2674f5926f8116c3ea718bf79ebda1cb773f78bbe941bb18f68523",
+              "language": "Spanish",
+              "reviewed_pages": [
+                "page 1",
+                "page 2"
+              ],
+              "result": "no"
+            }
+          ],
+          "areas": []
+        },
+        "expected": {
+          "minimum_described_areas": 1
+        },
+        "evidence": [
+          {
+            "snapshot_id": "b3aef8b3347234aec466321191ad6a7eca495ba6d95bbfb7d19f1d3290ef1733",
+            "locator": "page 1",
+            "quote": "The Financial Assistance Policy (“FAP”) of Bassett Healthcare Network, which includes The Mary\nImogene Bassett Hospital, d/b/a/ Bassett Medical Center (Bassett), A.O. Fox Memorial Hospital (FOX),\nO’Connor Hospital, Cobleskill Regional Hospital and Little Falls Hospital (collectively \"Bassett Healthcare\nNetwork\") is available to patients who are uninsured or underinsured with a demonstrated inability to\npay. Financial assistance applies to medical necessary services that are provided and billed by the\nentities above including emergency room care."
+          },
+          {
+            "snapshot_id": "58310a62ee2674f5926f8116c3ea718bf79ebda1cb773f78bbe941bb18f68523",
+            "locator": "page 1",
+            "quote": "La Política de Asistencia Financiera (Financial Assistance Policy, “FAP”) de Bassett Healthcare Network,\nque incluye The Mary Imogene Bassett Hospital, que opera bajo el nombre comercial de Bassett Medical\nCenter (Bassett), A.O. Fox Memorial Hospital (FOX), O’Connor Hospital, Cobleskill Regional Hospital y\nLittle Falls Hospital (en conjunto, “Bassett Healthcare Network”) está disponible para pacientes que no\ntienen seguro o tienen un seguro insuficiente con una incapacidad de pago demostrada. La asistencia\nfinanciera se aplica a los servicios médicos necesarios que son prestados y facturados por las entidades\nmencionadas anteriormente, incluida la atención en la sala de emergencias."
+          }
+        ],
+        "search_notes": "Read the complete English PDF page 1 and Spanish PDF pages 1–2, including visible income/discount tables, headings, eligibility, application, exclusion and contact paragraphs. No geographic PSA, county list, catchment boundary or residence-based coverage statement appears. Hospital names, service exclusions and the Cooperstown mailing address do not describe geographic coverage. The 15-page resource guide and policy/application documents are outside this summary-only measure."
+      },
+      {
+        "measure_id": "policy_summary.means_of_applying_explained",
+        "result": "yes",
+        "reason_code": "condition_met",
+        "explanation": "Both source-language summaries explain how to obtain an application and where to send the completed application.",
+        "observed": {
+          "documents": [
+            {
+              "snapshot_id": "b3aef8b3347234aec466321191ad6a7eca495ba6d95bbfb7d19f1d3290ef1733",
+              "language": "English",
+              "reviewed_pages": [
+                "page 1"
+              ],
+              "result": "yes"
+            },
+            {
+              "snapshot_id": "58310a62ee2674f5926f8116c3ea718bf79ebda1cb773f78bbe941bb18f68523",
+              "language": "Spanish",
+              "reviewed_pages": [
+                "page 1",
+                "page 2"
+              ],
+              "result": "yes"
+            }
+          ],
+          "application_routes": [
+            "Obtain online, by phone, on statement or at registration; submit/mail to Financial Assistance Program, One Atwell Road."
+          ]
+        },
+        "expected": {
+          "minimum_application_instructions": 1
+        },
+        "evidence": [
+          {
+            "snapshot_id": "b3aef8b3347234aec466321191ad6a7eca495ba6d95bbfb7d19f1d3290ef1733",
+            "locator": "page 1",
+            "quote": "If you are having trouble paying your medical bill, you may qualify for a discount. Patients are\nencouraged to complete & submit a financial assistance application, which are available online at\nbassett.org, by calling 607-547-3093, or on your statement as well as in all registration areas.\nSubmit or mail your completed application to: Attention: Financial Assistance Program, One Atwell\nRoad, Cooperstown, NY 13326"
+          },
+          {
+            "snapshot_id": "58310a62ee2674f5926f8116c3ea718bf79ebda1cb773f78bbe941bb18f68523",
+            "locator": "page 1",
+            "quote": "Si tiene problemas para pagar su factura médica, puede calificar para un descuento. Se recomienda a los\npacientes que completen y envíen una solicitud de asistencia financiera, que está disponible en línea en\nbassett.org, llamando al 607-547-3093 o en su estado de cuenta, así como en todas las áreas de\nregistro.\nEnvíe su solicitud completa por correo a: Attention: Financial Assistance Program, One Atwell Road,\nCooperstown, NY 13326"
+          }
+        ]
+      },
+      {
+        "measure_id": "policy_summary.income_levels_included",
+        "result": "yes",
+        "reason_code": "condition_met",
+        "explanation": "Both summaries expressly describe full assistance below 200% FPL and discounted care above 200% through 400% FPL. Presence only; the narrative/table boundary at exactly 200% is not adjudicated here.",
+        "observed": {
+          "documents": [
+            {
+              "snapshot_id": "b3aef8b3347234aec466321191ad6a7eca495ba6d95bbfb7d19f1d3290ef1733",
+              "language": "English",
+              "reviewed_pages": [
+                "page 1"
+              ],
+              "result": "yes"
+            },
+            {
+              "snapshot_id": "58310a62ee2674f5926f8116c3ea718bf79ebda1cb773f78bbe941bb18f68523",
+              "language": "Spanish",
+              "reviewed_pages": [
+                "page 1",
+                "page 2"
+              ],
+              "result": "yes"
+            }
+          ],
+          "stated_fpl_percentages": [
+            200,
+            400
+          ]
+        },
+        "expected": {
+          "minimum_stated_income_levels": 1
+        },
+        "evidence": [
+          {
+            "snapshot_id": "b3aef8b3347234aec466321191ad6a7eca495ba6d95bbfb7d19f1d3290ef1733",
+            "locator": "page 1",
+            "quote": "Financial Assistance Eligibility: Generally, uninsured and underinsured patients may be eligible for full\nfinancial assistance when their family household income is less than 200% of the Federal Poverty Level\n(“FPL”). Patients with household income greater than 200% but less than or equal to 400% of FPL may\nbe eligible for discounted care."
+          },
+          {
+            "snapshot_id": "58310a62ee2674f5926f8116c3ea718bf79ebda1cb773f78bbe941bb18f68523",
+            "locator": "page 1",
+            "quote": "Elegibilidad para asistencia financiera: por lo general, los pacientes sin seguro y con seguro insuficiente\npueden ser elegibles para recibir asistencia financiera completa cuando el ingreso de su familia sea\ninferior al 200 % del nivel federal de pobreza (Federal Poverty Level, “FPL”). Los pacientes con ingresos\nfamiliares superiores al 200 %, pero inferiores o iguales al 400 % del FPL pueden ser elegibles para\nrecibir atención con descuento."
+          }
+        ]
+      }
+    ]
+  }
+}
