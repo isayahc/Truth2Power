@@ -4,6 +4,7 @@ import { createReviewService } from "../review/service.js";
 
 import { gradingRoute } from "../grading/routes.js";
 import { reportingContext } from "../reporting/context.js";
+import { changesRoute } from "../changes/routes.js";
 import { overview } from "../overview/service.js";
 import { hospitalPage } from "../hospital-page/service.js";
 
@@ -51,6 +52,7 @@ function errorResponse(statusCode, message) {
 
 /** Serve an API Gateway HTTP API v2 event with a response usable by Node or Lambda. */
 export async function handler(event) {
+  if (event.rawPath === "/api/changes" || event.rawPath.startsWith("/api/changes/")) return changesRoute(event);
   if (event.rawPath === "/api/overview") {
     if (event.requestContext?.http?.method !== "GET") return errorResponse(405, "Use GET.");
     try {

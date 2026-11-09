@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import Changes from "./Changes.jsx";
 import Overview from "./Overview.jsx";
 import HospitalMap from "./HospitalMap.jsx";
 import HospitalSearch from "./HospitalSearch.jsx";
@@ -34,6 +35,7 @@ function Header({ onReview, pending }) {
         <span className="brand-unit">Health equity atlas</span>
       </div>
       <a className="overview-link" href="?view=overview">Audit overview</a>
+      <a className="changes-link" href="?view=changes">Recent changes</a>
       <button className="review-nav" onClick={onReview}>Review inbox <span>{pending ?? "…"}</span></button>
     </header>
   );
@@ -152,7 +154,7 @@ export default function App() {
             hospitalKey={reviewHospital} hospitals={data?.hospitals ?? []} onHospital={(hospital) => {
               if (hospital) { selectHospital(hospital); setMapKey((n) => n + 1); setReviewOpen(false); }
             }} />
-        </> : !selected && new URLSearchParams(window.location.search).get("view") === "overview" ?
+        </> : !selected && new URLSearchParams(window.location.search).get("view") === "changes" ? <Changes /> : !selected && new URLSearchParams(window.location.search).get("view") === "overview" ?
           (data ? <Overview features={data.hospitals} counties={data.counties} /> :
             <p role="status">{error ? <button onClick={() => setAttempt(attempt + 1)}>Retry loading atlas</button> : "Loading atlas…"}</p>) : <>
         <div className="intro">

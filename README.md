@@ -265,3 +265,7 @@ Regions use the facility county and the [NYS Regional Economic Development Counc
 For the 2026 audit, **last successful check** is the most recent successful, scoped measure assessment, including an unclear finding. The overview uses a rolling 30-day UTC monitoring window. A hospital is overdue at its due timestamp. A failed attempt leaves that clock unchanged. Never checked means no successful measure assessment in this audit year. Each facility counts once in its region, each grade bucket and each affected-measure count, regardless of its number of documents. Coverage warnings surface unreadable local records.
 
 Revision-bound links open the findings used for the overview. A later record triggers a refresh notice on an older link. Reproduce the feature tests with `node --test backend/test/overview.test.js`, then `npm run build && node scripts/test-overview-e2e.js`. Use `CHROMIUM_PATH` for an installed Chromium executable.
+
+### Recent changes
+
+Open **Recent changes** in the atlas header or go to `/?view=changes`. The read-only feed compares saved collection captures and shows the hospital, detection time, earlier/later evidence, and related checks. Little Falls has a dated **newly verified by the audit** entry for its designated summaries. The hospital page now shows a draft Yes for S. [Change detection and replay](docs/audit-format/changes/README.md)

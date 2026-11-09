@@ -1,11 +1,14 @@
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { sha256 } from "../review/identity.js";
-import { latestByScope, localRecords, validDate } from "./records.js";
+import { latestByScope, localRecords, validDate, projectRecord } from "./records.js";
 
 const load = (path) => JSON.parse(readFileSync(new URL(path, import.meta.url), "utf8"));
 const rubric = load("../../rubrics/css-17-v1.json");
 const baseline = ["1002", "362"].flatMap((key) => load(`../../docs/hospital-pages/${key}.json`).records);
+const successorPath = "docs/audit-format/changes/362-summary-posting.json";
+const successor = projectRecord(readFileSync(new URL("../../" + successorPath, import.meta.url)), successorPath, "posting");
+baseline.push({ ...successor, scope_label: "Posting reassessment · designated summary page and both linked summaries" });
 const law = "https://www.nysenate.gov/legislation/laws/PBH/2807-K";
 const explanations = {
   R: ["Can patients find a financial assistance application?", "§ 2807-k(9), (9-a)(e)", "The law requires the state form and help applying. Website posting is the CSS audit check."],
