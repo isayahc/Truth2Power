@@ -6,6 +6,7 @@ import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 import { setTimeout as sleep } from "node:timers/promises";
 import { directory, openStore, claim, finish, now } from "./store.js";
+import { runPipeline } from "./pipeline.js";
 
 const db = openStore();
 const origin = "http://127.0.0.1:" + (process.env.PORT || 8000);
@@ -35,11 +36,17 @@ async function extract(pdf) {
     .prepare("SELECT observation FROM extractions WHERE hash=? AND parser=?")
     .get(pdf.sha256, parser);
   if (cached) return JSON.parse(cached.observation);
-  const { stdout } = await run(
-    "pdftotext",
-    ["-layout", join(directory, pdf.artifact_path), "-"],
-    { timeout: 15000 },
-  );
+  let stdout;
+  try {
+    ({ stdout } = await run("pdftotext", ["-layout", join(directory, pdf.artifact_path), "-"], { timeout: 15000 }));
+  } catch (error) {
+    if (error.code !== "ENOENT") throw error;
+    // Reuse the installed Python PDF reader on machines without Poppler.
+    ({ stdout } = await run(process.env.T2P_PYTHON || "python", ["-c",
+      "import sys,json;from pypdf import PdfReader;print(json.dumps([p.extract_text() or '' for p in PdfReader(sys.argv[1]).pages]))",
+      join(directory, pdf.artifact_path)], { timeout: 15000 }));
+    stdout = JSON.parse(stdout).join("\f");
+  }
   const matches = [];
   for (const [index, page] of stdout.split("\f").entries()) {
     for (const line of page.split("\n")) {
@@ -175,9 +182,10 @@ do {
       20000,
     );
     try {
-      finish(db, job, await audit(job));
+      if (job.context.pipeline) await runPipeline(db, job);
+      else finish(db, job, await audit(job));
     } catch (error) {
-      finish(
+      if (!job.context.pipeline) finish(
         db,
         job,
         null,

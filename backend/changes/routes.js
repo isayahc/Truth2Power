@@ -5,6 +5,7 @@ import { fileURLToPath } from "node:url";
 import { resolve } from "node:path";
 import { readBounded } from "../hospital-page/records.js";
 import { sha256 } from "../review/identity.js";
+import { publications } from "../audit/pipeline-store.js";
 
 const execute = promisify(execFile);
 const script = fileURLToPath(new URL("../../tools/live-audit/changes.py", import.meta.url));
@@ -22,7 +23,9 @@ export async function changesRoute(event) {
   if (event.rawPath === "/api/changes") {
     try {
       const {stdout} = await execute(process.env.T2P_PYTHON || "python", [script,"--root",root], {timeout:60000,maxBuffer:16*1024*1024});
-      return json(200,JSON.parse(stdout));
+      const data = JSON.parse(stdout);
+      data.events = [...publications(root).events, ...data.events];
+      return json(200,data);
     } catch { return json(503,{error:"Could not replay the saved captures."}); }
   }
   const assessment = /^\/api\/changes\/assessments\/([a-f0-9]{64})$/.exec(event.rawPath);

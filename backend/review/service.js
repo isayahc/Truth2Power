@@ -3,6 +3,9 @@ import { join, resolve, sep } from "node:path";
 import { randomUUID } from "node:crypto";
 
 import { reviewIdentity, sha256 as digest } from "./identity.js";
+import { publications } from "../audit/pipeline-store.js";
+import { reviewEnvelope } from "../audit/pipeline-views.js";
+import { rubric } from "../grading/data.js";
 const titles = {
   "posted_materials.no_submission_time_limit": "Application deadlines",
   "posted_materials.no_evidence_of_asset_checks": "Asset eligibility checks",
@@ -15,6 +18,7 @@ const titles = {
   "application.maximum_fpl": "Application coverage through 400% FPL",
   "application.installments_cap": "Monthly installment cap",
 };
+for (const measure of rubric.measures) titles[measure.measure_id] ??= measure.title;
 function fail(status, message) { throw Object.assign(new Error(message), { status }); }
 function files(path) {
   try { return readdirSync(path); } catch (error) { if (error.code === "ENOENT") return []; throw error; }
@@ -52,7 +56,16 @@ export function createReviewService(root, hospitals = []) {
         } catch { unavailable++; }
       }
     }
+    for (const bundle of publications(root).bundles) {
+      const result = reviewEnvelope(bundle), hash = digest(JSON.stringify(result));
+      const identity = { group: `pipeline:${bundle.input.hospital_key}:${bundle.input.guideline_year}:${bundle.input.synthetic}`, identity_status: "declared",
+        documents: bundle.input.sources.map((s) => ({ source_id: s.source_id, role: s.role, language: s.language,
+          snapshot_sha256: s.snapshot?.sha256, name: s.source_id.split("/").at(-1) })) };
+      if (!groups.has(identity.group)) groups.set(identity.group, []);
+      groups.get(identity.group).push({ result, hash, identity, namespace: "pipeline" });
+    }
     for (const versions of groups.values()) versions.sort((a, b) =>
+      (a.namespace === "pipeline" && b.namespace === "pipeline" ? b.result.publication_job - a.result.publication_job : 0) ||
       Date.parse(b.result.checked_at) - Date.parse(a.result.checked_at) || b.result.result_id.localeCompare(a.result.result_id) ||
       b.hash.localeCompare(a.hash));
     return { groups, unavailable };
@@ -121,7 +134,7 @@ export function createReviewService(root, hospitals = []) {
   function verifiedSource(row, snapshotId) {
     const source = row.result.snapshots.find((s) => s.snapshot_id === snapshotId);
     if (!source || !/^[a-f0-9]{64}$/.test(snapshotId) || !/^[a-f0-9]{64}$/.test(source.sha256) ||
-        !new RegExp(`^snapshots/${source.sha256}\\.(pdf|html|docx)$`).test(source.artifact_path)) fail(404, "Saved source not found.");
+        !new RegExp(`^snapshots/${source.sha256}\\.(pdf|html|docx|json)$`).test(source.artifact_path)) fail(404, "Saved source not found.");
     let raw;
     try { raw = bytes(join(root, source.artifact_path), root); } catch { fail(404, "Saved source unavailable."); }
     if (digest(raw) !== source.sha256) fail(422, "Saved source failed integrity verification.");

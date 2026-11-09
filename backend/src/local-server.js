@@ -52,7 +52,7 @@ const server = createServer(async (req, res) => {
       await auditRoute(req, res, path, port);
     } else if (path === "/api" || path.startsWith("/api/")) {
       let body;
-      if (path.startsWith("/api/reviews/") && req.method === "POST") {
+      if ((path.startsWith("/api/reviews/") || path.startsWith("/api/pilot/")) && req.method === "POST") {
         const hosts = [`127.0.0.1:${port}`, `localhost:${port}`];
         if (!hosts.includes(req.headers.host) || req.headers["x-review-request"] !== "1" ||
             (req.headers.origin && !hosts.some((host) => req.headers.origin === `http://${host}`))) {

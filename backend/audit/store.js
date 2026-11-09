@@ -5,9 +5,9 @@ import { resolve, join } from "node:path";
 
 export const directory = resolve(process.env.AUDIT_DIR || ".audit");
 export const now = () => new Date().toISOString();
-export function openStore() {
-  mkdirSync(directory, { recursive: true });
-  const db = new DatabaseSync(join(directory, "audit.sqlite"));
+export function openStore(root = directory) {
+  mkdirSync(root, { recursive: true });
+  const db = new DatabaseSync(join(root, "audit.sqlite"));
   db.exec(`PRAGMA busy_timeout=5000; PRAGMA journal_mode=WAL;
     CREATE TABLE IF NOT EXISTS jobs (
       id INTEGER PRIMARY KEY, hospital TEXT NOT NULL, year INTEGER NOT NULL, rule TEXT NOT NULL,
@@ -17,7 +17,10 @@ export function openStore() {
     CREATE INDEX IF NOT EXISTS assessment_history ON assessments(hospital,job);
     CREATE TABLE IF NOT EXISTS extractions (hash TEXT, parser TEXT, observation TEXT, PRIMARY KEY(hash,parser));
     CREATE TABLE IF NOT EXISTS corrections (id INTEGER PRIMARY KEY, hospital TEXT, rule TEXT, note TEXT, recorded TEXT);
-    CREATE TABLE IF NOT EXISTS attempts (token TEXT PRIMARY KEY, job INTEGER, started TEXT, status TEXT, error TEXT);`);
+    CREATE TABLE IF NOT EXISTS attempts (token TEXT PRIMARY KEY, job INTEGER, started TEXT, status TEXT, error TEXT);
+    CREATE TABLE IF NOT EXISTS pipeline_requests (request_key TEXT PRIMARY KEY, job INTEGER NOT NULL, context_hash TEXT NOT NULL);
+    CREATE TABLE IF NOT EXISTS pipeline_events (id TEXT PRIMARY KEY, job INTEGER NOT NULL, output TEXT NOT NULL);`);
+  if (!db.prepare("PRAGMA table_info(jobs)").all().some((c) => c.name === "available_at")) db.exec("ALTER TABLE jobs ADD COLUMN available_at INTEGER NOT NULL DEFAULT 0");
   return db;
 }
 export function transaction(db, fn) {
@@ -78,14 +81,14 @@ export function enqueue(db, year) {
     );
   });
 }
-export function claim(db, leaseMs = 90000) {
+export function claim(db, leaseMs = 90000, { id = null, rule = null } = {}) {
   return transaction(db, () => {
     const time = Date.now();
     const job = db
       .prepare(
-        "SELECT * FROM jobs WHERE status='queued' OR (status='running' AND lease<=?) ORDER BY id LIMIT 1",
+        "SELECT * FROM jobs WHERE ((status='queued' AND available_at<=?) OR (status='running' AND lease<=?)) AND (? IS NULL OR id=?) AND (? IS NULL OR rule=?) ORDER BY id LIMIT 1",
       )
-      .get(time);
+      .get(time, time, id, id, rule, rule);
     if (!job) return null;
     if (job.token)
       db.prepare("UPDATE attempts SET status='interrupted' WHERE token=?").run(

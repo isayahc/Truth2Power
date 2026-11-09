@@ -31,6 +31,9 @@ export default function HospitalAssessment({ hospitalKey, hospitalName }) {
   const report = state.data;
   return <section className="hospital-assessment" aria-label="Current hospital findings">
     <h3>Current financial assistance findings</h3>
+    {report.synthetic && <p role="status"><strong>SYNTHETIC DEMO — fabricated evidence, not hospital compliance findings.</strong></p>}
+    {report.integrated_report_url && <p><a href={report.integrated_report_url}>Inspect immutable 17-measure assessment</a> · revision {report.revision.slice(0, 12)}</p>}
+    {report.integrated_report_url && <p>Evidence coverage: {report.evidence_complete ? "complete for this scope" : "partial — see blockers"}. Source freshness clock: {date(report.monitoring_at)}. Replaying saved bytes does not reset their retrieval date.</p>}
     <p><strong>Current grade: pending</strong></p><p>{report.grade_note}</p>
     <dl className="assessment-dates">
       <dt>Latest successful assessment</dt><dd>{date(report.latest_successful_assessment_at)}</dd>
