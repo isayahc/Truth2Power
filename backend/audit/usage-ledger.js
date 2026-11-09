@@ -104,7 +104,7 @@ export function costReceipt(db, job) {
   try { return readReceipt(db, job); } finally { db.exec("END"); }
 }
 
-function readReceipt(db, job) {
+export function readReceipt(db, job) {
   const run = db.prepare("SELECT status,hospital,json_extract(context,'$.mode') AS mode FROM jobs WHERE id=? AND rule='css-17-v1'").get(job);
   if (!run) throw Error("Unknown audit run");
   const card = JSON.parse(db.prepare("SELECT card FROM audit_prices WHERE job=?").get(job)?.card ?? "null");

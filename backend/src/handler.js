@@ -1,3 +1,4 @@
+import { reportingRoute } from "../audit/reporting-api.js";
 import { readFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import { createReviewService } from "../review/service.js";
@@ -53,6 +54,7 @@ function errorResponse(statusCode, message) {
 
 /** Serve an API Gateway HTTP API v2 event with a response usable by Node or Lambda. */
 export async function handler(event) {
+  if (event.rawPath.startsWith("/api/pilot/v1/")) return reportingRoute(event);
   if (event.rawPath.startsWith("/api/pilot/")) return pipelineRoute(event);
   if (event.rawPath === "/api/changes" || event.rawPath.startsWith("/api/changes/")) return changesRoute(event);
   if (event.rawPath === "/api/overview") {

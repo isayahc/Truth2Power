@@ -225,3 +225,5 @@ node backend/audit/pipeline-cli.js receipt --job 12 | jq '{run:.audit_run_id,mod
 ```
 
 Back up `audit_prices` and `audit_usage` with the existing SQLite backup. Receipts replay persisted quantities with the frozen card. Subsequent billing reconciliation appends a row and changes the reconciled receipt.
+
+The [audit reporting API v1](reporting-api.md) exposes hospital histories, monitoring clocks, filtered statewide totals, and JSON/CSV run receipts.
