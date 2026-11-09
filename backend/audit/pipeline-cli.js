@@ -1,3 +1,4 @@
+import { costReceipt, providerEvent } from "./usage-ledger.js";
 import { hospitalHistory, runId } from "./run-history.js";
 import { randomUUID } from "node:crypto";
 import { readFileSync } from "node:fs";
@@ -15,7 +16,15 @@ const year = Number(option("--year", "2026"));
 const date = option("--date", `${year}-11-09`);
 let db, targetId;
 try {
-  if (command === "cancel") {
+  if (command === "import-usage") {
+    const entry = JSON.parse(readFileSync(option("--file"), "utf8"));
+    db = openStore();
+    providerEvent(db, entry);
+    console.log(JSON.stringify({ audit_run_id: runId(entry.job), usage_id: entry.usage_id }));
+  } else if (command === "receipt") {
+    db = openStore();
+    console.log(JSON.stringify(costReceipt(db, Number(option("--job"))), null, 2));
+  } else if (command === "cancel") {
     const id = Number(option("--job"));
     if (!Number.isSafeInteger(id) || id < 1) throw Error("Pass a numeric --job ID");
     db = openStore();

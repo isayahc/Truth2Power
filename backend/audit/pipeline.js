@@ -1,3 +1,4 @@
+import { meterAttempt, meterStage, measure } from "./usage-ledger.js";
 import { stage } from "./run-history.js";
 import { readFileSync, existsSync } from "node:fs";
 import { join } from "node:path";
@@ -23,10 +24,19 @@ async function bridge(root, request) {
   return new Promise((resolve, reject) => {
     const child = execFile(process.env.T2P_PYTHON || "python", [fileURLToPath(new URL("../../tools/live-audit/pipeline_bridge.py", import.meta.url)), "--root", root],
       { timeout: request.mode === "live" ? 180000 : 120000, maxBuffer: 32 * 1024 * 1024 }, (error, stdout) => {
-        if (error) reject(Error("Collection or extraction failed")); else { try { resolve(JSON.parse(stdout)); } catch { reject(Error("Invalid extraction output")); } }
+        try {
+          if (error) throw Error();
+          const packet = JSON.parse(stdout);
+          measure(packet.usage);
+          if (packet.failed) return reject(Error("Collection or extraction failed"));
+          resolve(packet.result);
+        } catch {
+          measure({ telemetry_missing: 1 });
+          reject(Error("Bridge terminated without complete usage"));
+        }
       });
     child.stdin.on("error", () => {});
-    child.stdin.end(JSON.stringify(request));
+    child.stdin.end(JSON.stringify({ ...request, meter: true }));
   });
 }
 function context(job) {
@@ -88,6 +98,7 @@ async function real(db, job, collect) {
     if (e && !seeds.some((d) => d.source_id === s.url)) seeds.push({ source_id: s.url, role: "landing_page", language: "en", digest: e.sha256, retrieved_at: e.retrieved_at });
   }
   const replay = job.context.mode === "replay", scan = job.context.mode === "discovery_only";
+  meterStage(replay ? "load_saved_evidence" : "collect_sources");
   stage(db, job, replay ? "load_saved_evidence" : "collect_sources");
   const collection = replay ? savedCollection(originalRoot, job.hospital) : (await collect(root, {
     mode: "live", hospital_key: job.hospital, bounds: job.context.discovery_bounds, discovery_only: scan,
@@ -137,6 +148,7 @@ async function real(db, job, collect) {
   inventory.gaps = [...new Set(gaps)];
   if (scan) return { inventory, discovery: collection };
   input.scope.required_sources = input.sources.map((s) => s.source_id);
+  meterStage("extract_documents");
   stage(db, job, "extract_documents");
   const analysis = await bridge(root, { mode: "extract", sources: input.sources, application_review_date: job.review_date });
   const extracted = analysis.sources;
@@ -235,8 +247,12 @@ async function real(db, job, collect) {
 }
 
 export async function runPipeline(db, job, collect = bridge) {
+  if (!db.prepare("SELECT id FROM jobs WHERE id=? AND token=? AND status='running'").get(job.id, job.token)) return null;
+  return meterAttempt(db, job, () => executePipeline(db, job, collect));
+}
+
+async function executePipeline(db, job, collect) {
   try {
-    if (!db.prepare("SELECT id FROM jobs WHERE id=? AND token=? AND status='running'").get(job.id, job.token)) return null;
     if (job.context.engine_version !== "multilingual-v1") throw Error("Pipeline engine changed; enqueue a new job");
     if (job.context.application_profile_sha256 !== applicationProfileHash) throw Error("Application profile changed; enqueue a new job");
     if (job.context.application_visual_sha256 !== applicationVisualHash) throw Error("Application visual review changed; enqueue a new job");
@@ -248,6 +264,7 @@ export async function runPipeline(db, job, collect = bridge) {
         stage(db, job, "restore_checkpoint");
         const raw = readArtifact(job.context.root, checkpoint.path);
         if (sha256(raw) !== checkpoint.sha256) throw Error("Checkpoint changed");
+        measure({ checkpoint_hits: 1 });
         prepared = JSON.parse(raw);
         if (prepared.job_context_sha256 !== fingerprint(job.context)) throw Error("Checkpoint context mismatch");
       }
@@ -260,6 +277,7 @@ export async function runPipeline(db, job, collect = bridge) {
       db.prepare("UPDATE jobs SET checkpoint=? WHERE id=? AND token=? AND status='running'").run(JSON.stringify({ pipeline: 1, path, sha256: digest }), job.id, job.token);
     }
     if (job.context.mode === "discovery_only") {
+      meterStage("publish");
       const scan = { mode: job.context.mode, job: job.id, ...prepared };
       scan.id = fingerprint(scan);
       const path = `pipeline-scans/${scan.id}.json`;
@@ -268,11 +286,13 @@ export async function runPipeline(db, job, collect = bridge) {
     }
     prepared.input = { ...prepared.input, ...context(job) };
     prepared.input.findings = prepared.input.findings.map((f) => ({ ...f, ...contextOf(prepared.input) }));
+    meterStage("grade");
     stage(db, job, "grade");
     const report = grade(prepared.input, { root: job.context.root });
     validateSchema(report, "grading-report-v1.schema.json");
     const bundle = { pipeline: 1, mode: job.context.mode, root: job.context.root, rubric_sha256: fingerprint(rubric), ...prepared, report, content_fingerprint: fingerprint(prepared.content) };
     bundle.id = fingerprint({ input: bundle.input, report });
+    meterStage("publish");
     immutable(job.context.root, `pipeline-assessments/${bundle.id}.json`, Buffer.from(JSON.stringify(bundle, null, 2) + "\n"));
     return publishPipeline(db, job, bundle) ? bundle : null;
   } catch (error) {

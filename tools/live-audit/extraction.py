@@ -94,7 +94,17 @@ def segment(text, locator):
                 reason=None if usable else "empty_or_sparse_or_garbled_text")
 
 
-def extract_bytes(data, suffix):
+def extract_bytes(data: bytes, suffix: str) -> list[dict]:
+    """Count successful parser invocations and PDF pages returned by the parser."""
+    from usage import measured
+    segments = _extract_bytes(data, suffix)
+    measured({".docx": "docx_parsed", ".html": "html_parsed", ".pdf": "pdf_parsed"}[suffix])
+    if suffix == ".pdf":
+        measured("pdf_pages", len(segments))
+    return segments
+
+
+def _extract_bytes(data, suffix):
     if suffix == ".docx":
         # DOCX page numbers depend on rendering. Cite the body, never invented pages.
         with zipfile.ZipFile(io.BytesIO(data)) as archive:

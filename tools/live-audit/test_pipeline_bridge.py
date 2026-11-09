@@ -20,6 +20,10 @@ class PipelineBridgeTest(unittest.TestCase):
             self.assertEqual(target.read_bytes(), b'SYN complete bytes')
 
     def test_multilingual_original_bytes_and_links_are_preserved(self):
+        from collections import Counter
+        from usage import usage
+        counters = Counter()
+        self.addCleanup(usage.reset, usage.set(counters))
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             raw = '<html><p>SYN Asistencia financiera para todos — Українська мова.</p><a href="application.pdf">SYN application</a></html>'.encode('utf-8')
@@ -32,6 +36,7 @@ class PipelineBridgeTest(unittest.TestCase):
             self.assertEqual(result[-1]['locator'], 'link https://example.org/SYN/application.pdf')
             self.assertEqual(result[-1]['text'], 'SYN application')
             save(root / path, raw)
+            self.assertEqual(counters, dict(artifacts_written=1, storage_bytes=len(raw), html_parsed=1, artifact_reuses=1))
             with self.assertRaisesRegex(ValueError, 'immutable'):
                 save(root / path, b'SYN changed')
             (root / path).write_bytes(b'SYN corruption')

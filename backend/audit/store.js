@@ -1,3 +1,4 @@
+import { installLedger } from "./usage-ledger.js";
 import { event } from "./run-history.js";
 import { DatabaseSync } from "node:sqlite";
 import { randomUUID } from "node:crypto";
@@ -31,6 +32,7 @@ export function openStore(root = directory) {
     CREATE INDEX IF NOT EXISTS audit_jobs_by_hospital ON jobs(hospital,rule,id);
     CREATE TABLE IF NOT EXISTS pipeline_events (id TEXT PRIMARY KEY, job INTEGER NOT NULL, output TEXT NOT NULL);`);
   if (!db.prepare("PRAGMA table_info(jobs)").all().some((c) => c.name === "available_at")) db.exec("ALTER TABLE jobs ADD COLUMN available_at INTEGER NOT NULL DEFAULT 0");
+  installLedger(db);
   return db;
 }
 export function transaction(db, fn) {

@@ -1,3 +1,4 @@
+import { pinPrices, measure } from "./usage-ledger.js";
 import { event, recordPublication } from "./run-history.js";
 import { DatabaseSync } from "node:sqlite";
 import { existsSync, readFileSync, mkdirSync, writeFileSync, linkSync, unlinkSync } from "node:fs";
@@ -19,8 +20,8 @@ export function immutable(root, path, bytes) {
   mkdirSync(join(target, ".."), { recursive: true });
   const temporary = target + "." + randomUUID() + ".tmp";
   writeFileSync(temporary, bytes, { flag: "wx" });
-  try { linkSync(temporary, target); }
-  catch (e) { if (e.code !== "EEXIST" || !readFileSync(target).equals(Buffer.from(bytes))) throw Error("Immutable artifact collision"); }
+  try { linkSync(temporary, target); measure({ artifacts_written: 1, storage_bytes: bytes.length }); }
+  catch (e) { if (e.code !== "EEXIST" || !readFileSync(target).equals(Buffer.from(bytes))) throw Error("Immutable artifact collision"); measure({ artifact_reuses: 1 }); }
   finally { unlinkSync(temporary); }
   return path;
 }
@@ -55,6 +56,7 @@ export function enqueuePipeline(db, { hospital_key, year = 2026, review_date, mo
     const id = Number(db.prepare("INSERT INTO jobs(hospital,year,rule,review_date,context) VALUES(?,?,?,?,?)")
       .run(hospital_key, year, "css-17-v1", review_date, JSON.stringify(context)).lastInsertRowid);
     db.prepare("INSERT INTO pipeline_requests VALUES(?,?,?)").run(request_key, id, hash);
+    pinPrices(db, id);
     event(db, id, null, "queued");
     return id;
   });
