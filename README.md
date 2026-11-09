@@ -253,3 +253,5 @@ For a provider-independent live smoke test, run `python tools/live-audit/smoke.p
 ### Wave 1 posted materials
 
 The [Wave 1 posting results and replay commands](docs/audit-format/posting/README.md) cover application, summary and policy-statement availability for Ellenville and Little Falls. Each positive finding joins an actual landing-page anchor to a saved document and a content-confirmed role excerpt. The CLI reads saved captures offline.
+
+The [Wave 1 CSS agreement report](docs/validation/wave-one-css-agreement.md) compares the September 2025 hospital row exports with the published Wave 1 draft projections for all 17 measures. Run `node scripts/compare-wave-one.js --json` for the cell, assessment scope, date and citation metadata behind each comparison.
