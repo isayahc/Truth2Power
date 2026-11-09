@@ -6,7 +6,7 @@ import os
 import uuid
 from pathlib import Path
 from documents import collect, LIMIT, Links, Bounds
-from extraction import extract_collection, extract_bytes
+from extraction import extract_collection, extract_bytes, layout_inventory
 
 
 def save(path, data):
@@ -35,6 +35,7 @@ def run(root, request):
         extracted = extract_collection(request['hospital_key'], Path(result['manifest_file']).stem, root, save)
         return dict(collection=result['output'], extraction_manifest=str(Path(extracted['manifest_file']).relative_to(root)))
     sources = {}
+    applications = []
     for source in request['sources']:
         snapshot = source.get('snapshot')
         if not snapshot:
@@ -52,6 +53,24 @@ def run(root, request):
             segments += [dict(locator='link ' + url, text=next((label for label in labels if label), ''), status='extracted')
                          for url, labels in parser.links.items()]
         sources[source['source_id']] = segments
+        if request.get('application_review_date') and source['role'] == 'application':
+            from applications import evaluate, REFERENCE
+            findings, status = evaluate(dict(segments=segments, snapshot=snapshot), request['application_review_date'],
+                                        json.loads(REFERENCE.read_bytes()), source['language'])
+            from template_comparison import application_template_context, attach_application_context
+            template = application_template_context(dict(segments=segments, snapshot=snapshot), source['hospital_key'], source['language']) if request['application_review_date'].startswith('2026-') else None
+            if template:
+                attach_application_context(findings, template)
+            applications.append(dict(source_id=source['source_id'], hospital_key=source['hospital_key'],
+                language=source['language'], snapshot=snapshot, findings=findings, status=status,
+                parser_version='document-text-v5', profile_version='application-language-profiles-v1',
+                reference_sha256=hashlib.sha256(REFERENCE.read_bytes()).hexdigest(), human_review='pending',
+                template_comparison=template,
+                layout=layout_inventory(raw, path.suffix),
+                reviewed_segments=[p['locator'] for p in segments],
+                drawings=[d for p in segments for d in p.get('drawings', [])]))
+    if request.get('application_review_date'):
+        return dict(sources=sources, application_reviews=applications)
     return sources
 
 

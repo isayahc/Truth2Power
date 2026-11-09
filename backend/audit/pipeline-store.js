@@ -5,6 +5,7 @@ import { join, resolve } from "node:path";
 import { directory, transaction, now } from "./store.js";
 import { fingerprint, rubric, hhs, referenceHash } from "../grading/data.js";
 import { sha256 } from "../review/identity.js";
+import { applicationProfileHash } from "../grading/profiles.js";
 
 export const pipelineRoot = () => resolve(process.env.T2P_REVIEW_DIRECTORY || join(directory, "live"));
 export const roster = JSON.parse(readFileSync(new URL("../../data/maps/hospitals.geojson", import.meta.url))).features;
@@ -27,7 +28,7 @@ export function enqueuePipeline(db, { hospital_key, year = 2026, review_date, mo
     !Number.isFinite(Date.parse(review_date)) || new Date(review_date).toISOString().slice(0, 10) !== review_date || Number(review_date.slice(0, 4)) !== year) throw Error("Invalid audit job context");
   if (mode !== "synthetic" && !["1002", "362"].includes(hospital_key)) throw Error("Only Wave 1 has a verified classification inventory; other sites remain due");
   if (mode === "synthetic" && hospital_key !== "1002") throw Error("Synthetic fixture is bound to its labeled hospital key 1002");
-  const context = { pipeline: 1, engine_version: "multihop-v1", discovery_bounds, mode, variant, root: resolve(root), evidence_root: resolve(evidence_root),
+  const context = { pipeline: 1, engine_version: "multilingual-v1", application_profile_sha256: applicationProfileHash, discovery_bounds, mode, variant, root: resolve(root), evidence_root: resolve(evidence_root),
     hospital_key, year, review_date, rubric_version: rubric.version, rubric_sha256: fingerprint(rubric), reference_version: hhs.reference_version, reference_sha256: referenceHash,
     facility: roster.find((h) => String(h.id) === hospital_key).properties.name };
   const hash = fingerprint(context);

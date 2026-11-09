@@ -96,6 +96,11 @@ try {
   const publicBundle = await get(`/api/pilot/assessments/${publicId}`);
   assert.equal(publicBundle.report.findings.find((f) => f.css_column === "S").result, "yes");
   assert.equal(publicBundle.report.final_grade, null);
+  assert.deepEqual(publicBundle.application_reviews.map((r) => r.language).sort(), ['en', 'es']);
+  for (const id of ['application.fpl_guidelines', 'application.maximum_fpl', 'application.installments_cap']) {
+    assert.equal(publicBundle.input.findings.find((f) => f.measure_id === id).observed.length, 2);
+    assert.equal(publicBundle.report.findings.find((f) => f.measure_id === id).result, 'unclear');
+  }
   const publicPage = await get("/api/hospitals/362/page");
   assert.equal(publicPage.revision, publicId);
   assert.equal(publicPage.measures.find((m) => m.column === "S").result, "yes");

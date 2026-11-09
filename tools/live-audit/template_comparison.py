@@ -5,6 +5,8 @@ import re
 import uuid
 from pathlib import Path
 import json
+import zipfile
+from functools import lru_cache
 from datetime import datetime
 
 from cross_documents import load_sources, identifier
@@ -16,6 +18,91 @@ from documents import LIMIT
 
 REFERENCE_URL = "https://www.health.ny.gov/facilities/hospital/financial_assist/hosp_info/docs/2026_uniform_financial_assistance_application.docx"
 AUTHORITY_URL = "https://www.health.ny.gov/facilities/hospital/financial_assist/hosp_info/"
+
+# Source-language anchors are structural coverage only, never a translation-equivalence test.
+COMPONENTS = {
+    'patient_fields': ['Patient Name', 'Nombre del paciente', 'Imię i nazwisko pacjenta', 'Дані пацієнта', 'Имя и фамилия пациента'],
+    'family_income': ['Family Information', '(?:Información de la familia|Información familiar)', 'Informacje o rodzinie', 'Інформація про членів родини', 'Информация о семье'],
+    'insurance': ['Health Insurance Status', 'Estado del seguro médico', 'Status ubezpieczenia zdrowotnego', 'Статус медичного страхування', 'Статус медицинского страхования'],
+    'declaration': ['I certify', '(?:Declaro|Certifico)', 'Potwierdzam', 'Я підтверджую', 'Я подтверждаю'],
+    'signature': ['^Signature\\s*$', '^Firma\\s*$', '^Podpis\\s*$', '^Підпис\\s*$', '^Подпись\\s*$'],
+    'rights_instructions': ['Application Timeline', '(?:Línea de tiempo de la solicitud|Plazos de solicitud)', 'Ramy czasowe wniosku', 'Терміни подання заявки', 'Сроки подачи заявления'],
+    'income_table': ['Federal Poverty Levels', '(?:Nivel federal de pobreza|Niveles federales de pobreza)', 'Federalne progi ubóstwa', 'Федеральний прожитковий мінімум', 'Федеральный уровень бедности'],
+    'discount_table': ['Minimum Discount Rates', '(?:Tarifas mínimas de descuento|Tasas de descuento mínimo)', 'Minimalne stawki obniżenia', 'Мінімальні облікові ставки', 'Минимальный размер скидки'],
+    'installments': ['Installment Plans', '(?:Plan de pago en cuotas|Planes de pago a plazos)', 'Plany spłaty ratalnej', 'Надання розстрочки', 'Оплата по частям'],
+    'income_documentation': ['Request for Proof of Household Income', 'Solicitud de prueba de ingresos', 'Żądanie dostarczenia dokumentu', 'Запит на підтвердження доходу', 'Запрос на подтверждение дохода'],
+    'language_disclosure': ['[Pp]rimary languages', 'Idiomas principales|idiomas principales', 'Główne języki', 'Основна мова', 'Основные языки']
+}
+FIELDS = {
+    'birth_date': ['Date of Birth', 'Fecha de nacimiento', 'Data urodzenia', 'Дата народження', 'Дата рождения'],
+    'address': ['Address', 'Dirección', 'Adres', 'Адреса', 'Адрес'],
+    'telephone': ['Contact Phone', 'Teléfono de contacto|N.º de teléfono de contacto', 'Telefon', 'Номер телефону', 'Контактный номер телефона'],
+    'guardian': ['Parent/Guardian|Parent / Guardian', 'padre/madre/tutor|padre, la madre, el tutor', 'rodzica/opiekuna', 'батька/матері/опікуна', 'родителя / опекуна'],
+    'email': ['Email', 'correo electrónico', 'e-mail', 'Електронна адреса', 'Электронная почта'],
+    'gross_income_definition': ['Gross income means', 'Ingreso bruto significa|El ingreso bruto es', 'Dochód brutto oznacza', 'Валовий дохід', 'Валовой доход'],
+    'paid_medical_expenses': ['past 12 months', 'últimos 12 meses', 'ostatnich 12 miesięcy', 'останні 12 місяців', 'последние 12 месяцев'],
+    'external_verification': ['external sources', 'fuentes externas', 'podmioty zewnętrzne', 'сторонні особи', 'внешними источниками'],
+    'signer_relationship': ['Relationship to Patient', 'Relación con el paciente', 'Stosunek prawny do pacjenta', 'Ким приходиться пацієнту', 'Кем приходится пациенту'],
+    'no_income_option': ['No Income', 'Sin ingresos', 'Brak dochodów', 'Без доходу', 'Отсутствие дохода']
+}
+
+
+def component_review(source, reference, language):
+    """Cite structural anchors against original reference; nonmatches remain unknown."""
+    index = ['en', 'es', 'pl', 'uk', 'ru'].index(language)
+    def locate(segments, pattern):
+        return [dict(locator=p['locator'], quote=p['text']) for p in segments
+                if p['status'] == 'extracted' and (re.search(pattern, p['text'], re.I | re.M) or re.search(pattern, re.sub(r'\s+', ' ', p['text']), re.I))]
+    return dict(language=language, semantic_equivalence='unverified', customization_rule='unresolved',
+        components=[dict(component=name, status='present_anchor' if locate(source, patterns[index]) else 'not_established',
+                         hospital_evidence=locate(source, patterns[index]), reference_evidence=locate(reference, patterns[0]))
+                    for name, patterns in {**COMPONENTS, **FIELDS}.items()],
+        limitations=['Anchors establish component presence only, not completeness of every field or disclosure.',
+                     'No missing component is asserted solely from a pattern nonmatch.',
+                     'Authoritative translated-template applicability, semantic equivalence and permitted customization remain human-review questions.'])
+
+
+@lru_cache(maxsize=1)
+def offline_template():
+    root = Path(__file__).resolve().parents[2]
+    spec = json.loads((root / 'references/whole-form-wave-one-v1.json').read_bytes())
+    with zipfile.ZipFile(root / 'docs/validation/application-reference-evidence.zip') as archive:
+        capture = json.loads(archive.read('reference-captures/9d1674693c5249fa854b159cf2010f3a.json'))
+        if capture['snapshot']['sha256'] != spec['reference_sha256'] or capture['reference_url'] != REFERENCE_URL:
+            raise ValueError('Unpinned official template capture')
+        def verified(path, digest):
+            if archive.getinfo(path).file_size > LIMIT:
+                raise ValueError('Reference byte limit')
+            data = archive.read(path)
+            if hashlib.sha256(data).hexdigest() != digest:
+                raise ValueError('Reference checksum mismatch')
+            return data
+        original = verified(capture['snapshot']['artifact_path'], spec['reference_sha256'])
+        for render in [spec['reference_render'], *(h['application_render'] for h in spec['hospitals'].values())]:
+            verified('snapshots/' + render['sha256'] + '.pdf', render['sha256'])
+    return dict(snapshot=capture['snapshot'], segments=extract_bytes(original, '.docx')), spec
+
+
+def application_template_context(source, hospital, language):
+    official, spec = offline_template()
+    if language not in ['en', 'es', 'pl', 'uk', 'ru']:
+        return dict(status='unsupported_language', result='unclear')
+    context = component_review(source['segments'], official['segments'], language)
+    context['reference_snapshot'] = official['snapshot']
+    prior = spec['hospitals'].get(hospital)
+    context['preserved_english_visual_review'] = prior if prior and prior['source_sha256'] == source['snapshot']['sha256'] else None
+    context['result'] = 'unclear'
+    context['drawings'] = [d for p in source['segments'] for d in p.get('drawings', [])]
+    return context
+
+
+def attach_application_context(findings, context):
+    """Update only a newly computed draft; preserved producer records are never edited."""
+    uniform = next(f for f in findings if f['measure_id'] == 'application.uniform_application')
+    prior = context.get('preserved_english_visual_review')
+    uniform.update(result='unclear', reason_code='insufficient_evidence',
+        explanation=prior['conclusion'] if prior else 'Source-language structural components are cited; translated semantic equivalence, layout and customization rules remain unverified.',
+        unresolved_questions=prior['questions'] if prior else context.get('limitations', ['Review unsupported language.']))
 
 
 def fetch_reference(url, host):

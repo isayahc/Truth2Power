@@ -4,7 +4,7 @@ import { fileURLToPath } from "node:url";
 import { execFile } from "node:child_process";
 import { rubric, hhs, referenceHash, contextOf, expectedFor, readArtifact, fingerprint, validateSchema, confirmedDocuments, assistancePages } from "../grading/data.js";
 import { grade } from "../grading/grade.js";
-import { parseProfile } from "../grading/profiles.js";
+import { parseProfile, applicationProfileHash } from "../grading/profiles.js";
 import { fplComparison } from "../grading/measures.js";
 import { sha256, languageTag } from "../review/identity.js";
 import { reportingContext } from "../reporting/context.js";
@@ -133,7 +133,8 @@ async function real(job) {
     input.sources.push(source);
   }
   input.scope.required_sources = input.sources.map((s) => s.source_id);
-  const extracted = await bridge(root, { mode: "extract", sources: input.sources });
+  const analysis = await bridge(root, { mode: "extract", sources: input.sources, application_review_date: job.review_date });
+  const extracted = analysis.sources;
   const content = {};
   for (const s of input.sources) if (s.snapshot) {
     const segments = extracted[s.source_id];
@@ -154,6 +155,7 @@ async function real(job) {
       normalization.push({ producer_sha256: record.record_id, ...normalized,
         reference_binding: { observed_version: producer.reference_version || null, observed_sha256: producer.reference_sha256 || null,
           expected_version: hhs.reference_version, expected_sha256: referenceHash },
+        reference_compatibility: adapted.provenance.reference_compatibility || null,
         decisions: adapted.provenance.decisions || [], blockers: adapted.blockers });
     } catch (error) { normalization.push({ producer_sha256: record.record_id, accepted: [], rejected: [error.message] }); }
   }
@@ -161,6 +163,10 @@ async function real(job) {
     const originals = scoped.filter((s) => s.success?.measure_id === m.measure_id).map((s) => s.success);
     const f = { ...contextOf(input), measure_id: m.measure_id, expected: expectedFor(m, job.year), result: "unclear", human_review: "pending", evidence: [], observed: [],
       unresolved_evidence: originals.length ? [...new Set(originals.map((r) => `Source draft ${r.record_id}: ${r.finding.explanation}`))] : [`Collect and review ${m.evidence_requirement}`] };
+    for (const review of analysis.application_reviews) {
+      const draft = review.findings.find((finding) => finding.measure_id === m.measure_id);
+      for (const e of draft?.evidence || []) f.evidence.push({ ...e, source_id: review.source_id, sha256: review.snapshot.sha256 });
+    }
     for (const r of originals) for (const e of r.finding.evidence) {
       const s = input.sources.find((s) => s.source_id === e.url && s.snapshot?.sha256 === e.sha256 && m.roles.includes(s.role));
       const segment = s && extracted[s.source_id]?.find((p) => p.locator === e.locator && p.text.includes(e.quote));
@@ -178,8 +184,8 @@ async function real(job) {
       }
     } else if (["fpl", "maximum", "installments"].includes(m.evaluator)) {
       const numeric = [];
-      for (const s of input.sources.filter((s) => s.role === "application" && s.language === "en" && s.snapshot && s.status !== "unreadable")) {
-        const matches = extracted[s.source_id].map((p) => ({ p, value: parseProfile(m.evaluator, p.text) })).filter((v) => v.value);
+      for (const s of input.sources.filter((s) => s.role === "application" && s.snapshot && s.status !== "unreadable")) {
+        const matches = extracted[s.source_id].map((p) => ({ p, value: parseProfile(m.evaluator, p.text, s.language) })).filter((v) => v.value);
         if (matches.length !== 1) continue;
         const { p, value } = matches[0];
         const index = f.evidence.push({ source_id: s.source_id, snapshot_id: s.snapshot.sha256, sha256: s.snapshot.sha256, locator: p.locator, quote: p.text }) - 1;
@@ -208,14 +214,15 @@ async function real(job) {
     f.unresolved_evidence = [...new Set(f.unresolved_evidence)];
     input.findings.push(f);
   }
-  return { input, content, producer_records: records, normalization, discovery: collection || savedDiscovery,
+  return { input, content, producer_records: records, normalization, application_reviews: analysis.application_reviews, discovery: collection || savedDiscovery,
     extraction: { parser: "document-text-v5", collection_status: collection?.status ?? "saved_evidence_replay" } };
 }
 
 export async function runPipeline(db, job) {
   try {
     if (!db.prepare("SELECT id FROM jobs WHERE id=? AND token=? AND status='running'").get(job.id, job.token)) return null;
-    if (job.context.engine_version !== "multihop-v1") throw Error("Pipeline engine changed; enqueue a new job");
+    if (job.context.engine_version !== "multilingual-v1") throw Error("Pipeline engine changed; enqueue a new job");
+    if (job.context.application_profile_sha256 !== applicationProfileHash) throw Error("Application profile changed; enqueue a new job");
     if (job.context.reference_sha256 !== referenceHash || job.context.rubric_version !== rubric.version || job.context.rubric_sha256 !== fingerprint(rubric)) throw Error("Pinned rules changed; enqueue a new job");
     let prepared;
     if (job.checkpoint) {

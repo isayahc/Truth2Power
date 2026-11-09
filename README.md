@@ -6,6 +6,8 @@ The persistent audit worker now publishes one immutable assessment revision acro
 
 The collector supports bounded same-host multi-hop HTML discovery with public-IP-pinned TLS, immutable page/link provenance and explicit coverage gaps. Little Falls's saved landing → summary page → English/Spanish PDF chain now resolves measure S through the deterministic grader. Both Wave 1 hospitals have 3 resolved posting measures and 14 unclear measures. See the operating guide for traversal limits, safe historical-observation reuse and offline regression commands.
 
+All seven Wave 1 application-language versions now have reproducible six-measure drafts and source-bound numeric observations. See the [application coverage matrix](docs/validation/wave-one-application-coverage.md). Historical LF/CRLF reference compatibility is verified narrowly; translations, whole-form customizations and institutional authorization remain explicit review questions.
+
 Truth2Power maps how 212 New York hospitals scored in the Community Service Society of New York’s September 2025 financial assistance review. Select a hospital to see its rating, latitude and longitude, financial assistance page, and source audit row.
 
 ## Run the React app

@@ -19,6 +19,44 @@ MAX_PAGES = 200
 MAX_TEXT = 2_000_000
 
 
+def layout_inventory(data, suffix):
+    """Structural inspection alongside text extraction; does not claim rendered equivalence."""
+    if len(data) > LIMIT:
+        raise ValueError('layout_byte_limit_exceeded')
+    if suffix == '.pdf':
+        reader = PdfReader(io.BytesIO(data))
+        if len(reader.pages) > MAX_PAGES:
+            raise ValueError('layout_page_limit_exceeded')
+        return dict(format='pdf', rendered_equivalence='unverified', pages=[dict(locator=f'page {i+1}',
+            width=float(page.mediabox.width), height=float(page.mediabox.height), rotation=int(page.get('/Rotate', 0)))
+            for i, page in enumerate(reader.pages)])
+    if suffix != '.docx':
+        return dict(format=suffix, status='unsupported')
+    with zipfile.ZipFile(io.BytesIO(data)) as archive:
+        if sum(m.file_size for m in archive.infolist()) > LIMIT * 4:
+            raise ValueError('docx_expansion_limit_exceeded')
+        xml = archive.read('word/document.xml')
+    if b'<!DOCTYPE' in xml.upper() or b'<!ENTITY' in xml.upper():
+        raise ValueError('docx_xml_declarations_not_supported')
+    ns = {'w': 'http://schemas.openxmlformats.org/wordprocessingml/2006/main'}
+    body = ET.fromstring(xml).find('w:body', ns)
+    tables = []
+    for i, table in enumerate(body.findall('.//w:tbl', ns)):
+        rows = []
+        for j, row in enumerate(table.findall('w:tr', ns)):
+            rows.append([dict(locator=f'word/document.xml table {i+1} row {j+1} cell {k+1}',
+                text=' '.join(t.text or '' for t in cell.findall('.//w:t', ns)),
+                grid_span=[s.attrib for s in cell.findall('w:tcPr/w:gridSpan', ns)],
+                vertical_merge=[s.attrib for s in cell.findall('w:tcPr/w:vMerge', ns)])
+                for k, cell in enumerate(row.findall('w:tc', ns))])
+        tables.append(dict(index=i+1, rows=rows))
+    return dict(format='docx', rendered_equivalence='unverified', pagination='unverified', tables=tables,
+                section_properties=[dict(locator=f'word/document.xml section {i+1}', xml=ET.tostring(s, encoding='unicode'))
+                                    for i, s in enumerate(body.findall('.//w:sectPr', ns))],
+                limitations=['XML cell/grid locators are structural observations; original body citations remain the evidence contract.',
+                             'Borders and merged cells require visual interpretation; pagination is not inferred from XML.'])
+
+
 class VisibleText(HTMLParser):
     """Remove non-content HTML without executing scripts or loading resources."""
     def __init__(self):

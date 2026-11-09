@@ -12,9 +12,12 @@ export function normalizeObservations(candidate, input, root) {
   }
   const store = evidenceStore(candidate, root);
   for (const f of candidate.findings) {
-    if (!f.observed.length) continue;
     const m = rubric.measures.find((m) => m.measure_id === f.measure_id);
     if (!m || !["contact", "tables", "fpl", "maximum", "installments", "summary_area", "summary_process", "summary_income"].includes(m.evaluator)) continue;
+    if (!f.observed.length) {
+      rejected.push(`${f.measure_id}: no independently verifiable structured observation in this producer.`);
+      continue;
+    }
     const review = candidate.origin?.finding_review?.[f.measure_id];
     if (f.unresolved_evidence.length || ["reject", "needs_changes", "conflict"].includes(review?.status) ||
         f.observed.some((o) => !["text_profile", "source_field"].includes(o.method))) {
