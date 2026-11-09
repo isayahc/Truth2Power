@@ -37,7 +37,7 @@ export function transaction(db, fn) {
 export function history(db, hospital) {
   const row = db
     .prepare(
-      "SELECT output FROM assessments WHERE hospital=? ORDER BY job DESC LIMIT 1",
+      "SELECT a.output FROM assessments a JOIN jobs j ON j.id=a.job WHERE a.hospital=? AND j.rule='application.fpl_guidelines' ORDER BY a.job DESC LIMIT 1",
     )
     .get(hospital);
   return row ? JSON.parse(row.output) : null;
@@ -48,7 +48,7 @@ export function enqueue(db, year) {
   return transaction(db, () => {
     const pending = db
       .prepare(
-        "SELECT id FROM jobs WHERE hospital=? AND year=? AND status IN ('queued','running')",
+        "SELECT id FROM jobs WHERE hospital=? AND year=? AND rule='application.fpl_guidelines' AND status IN ('queued','running')",
       )
       .get(hospital, year);
     if (pending) return pending.id;

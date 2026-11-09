@@ -145,13 +145,13 @@ export function adaptArtifact(raw, { root, reviewDate, previous } = {}) {
         blockers: [blockers("failed_recheck", "Retain the prior successful assessment and retry the failed retrieval.")] };
     }
     if (a.attempt) requireValue(a.last_successful_assessment_at === a.assessment.completed_at, "Invalid last completed assessment");
+    const sourceReview = originalReviews(root, a, hash, format);
+    provenance.decisions = sourceReview;
     if (format === "application-reviews") requireValue(a.reference_version === hhs.reference_version && a.reference_sha256 === referenceHash, "Unpinned application reference bytes");
     if (format === "full-reviews" && a.reference_version && a.reference_version !== hhs.reference_version)
       throw Error("Unmapped full-review reference version");
     if (a.review_date && reviewDate && a.review_date !== reviewDate) throw Error("Review date conflicts with original assessment");
     const date = a.review_date ?? reviewDate;
-    const sourceReview = originalReviews(root, a, hash, format);
-    provenance.decisions = sourceReview;
     if (!a.attempt) provenance.identity = reviewIdentity(a, format, hash);
     requireValue(date, "Supply the actual review date with --review-date; checked_at is the execution time");
     provenance.review_date_origin = a.review_date ? "artifact" : "explicit_adapter_input";

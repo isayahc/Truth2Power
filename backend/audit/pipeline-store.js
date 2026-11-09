@@ -18,14 +18,16 @@ export function immutable(root, path, bytes) {
   finally { unlinkSync(temporary); }
   return path;
 }
-export function enqueuePipeline(db, { hospital_key, year = 2026, review_date, mode = "replay", variant = "original", request_key, root = pipelineRoot(), evidence_root = root }) {
+export function enqueuePipeline(db, { hospital_key, year = 2026, review_date, mode = "replay", variant = "original", request_key, root = pipelineRoot(), evidence_root = root, discovery_bounds = {} }) {
+  const caps = { depth: 8, pages: 100, documents: 100, bytes_per_resource: 12582912, total_bytes: 134217728, timeout: 30, seconds: 150, redirects: 8 };
+  if (!discovery_bounds || Array.isArray(discovery_bounds) || Object.entries(discovery_bounds).some(([k, v]) => !Object.hasOwn(caps, k) || !Number.isInteger(v) || v < 1 || v > caps[k])) throw Error("Invalid discovery bounds");
   if (!roster.some((h) => String(h.id) === hospital_key) || ![2025, 2026].includes(year) ||
     !["synthetic", "replay", "live"].includes(mode) || !["original", "corrected", "multilingual"].includes(variant) ||
     !/^[a-zA-Z0-9-]{1,100}$/.test(request_key || "") || !/^\d{4}-\d{2}-\d{2}$/.test(review_date || "") ||
     !Number.isFinite(Date.parse(review_date)) || new Date(review_date).toISOString().slice(0, 10) !== review_date || Number(review_date.slice(0, 4)) !== year) throw Error("Invalid audit job context");
   if (mode !== "synthetic" && !["1002", "362"].includes(hospital_key)) throw Error("Only Wave 1 has a verified classification inventory; other sites remain due");
   if (mode === "synthetic" && hospital_key !== "1002") throw Error("Synthetic fixture is bound to its labeled hospital key 1002");
-  const context = { pipeline: 1, mode, variant, root: resolve(root), evidence_root: resolve(evidence_root),
+  const context = { pipeline: 1, engine_version: "multihop-v1", discovery_bounds, mode, variant, root: resolve(root), evidence_root: resolve(evidence_root),
     hospital_key, year, review_date, rubric_version: rubric.version, rubric_sha256: fingerprint(rubric), reference_version: hhs.reference_version, reference_sha256: referenceHash,
     facility: roster.find((h) => String(h.id) === hospital_key).properties.name };
   const hash = fingerprint(context);

@@ -6,6 +6,7 @@ import { isDeepStrictEqual } from "node:util";
 import { sourceUrl, sha256, languageTag } from "../review/identity.js";
 import { readArtifact, requireValue, fingerprint, confirmedDocuments, assistancePages } from "./data.js";
 import { parseProfile } from "./profiles.js";
+import { postingPaths } from "./posting-paths.js";
 
 /** Bind testimony to the exact observations, citations, inventory and completed assessment. */
 export function reviewSubject(input, finding) {
@@ -40,6 +41,11 @@ export function evidenceStore(input, root, decisionDirectory) {
     if (doc.snapshot) {
       const s = doc.snapshot;
       requireValue(sourceUrl(s.url) === url, "Snapshot URL does not match logical source");
+      if (s.final_url) {
+        const final = new URL(s.final_url), original = new URL(url);
+        requireValue(final.protocol === "https:" && !final.username && !final.password && (!final.port || final.port === "443") &&
+          final.hostname.replace(/^www\./, "") === original.hostname.replace(/^www\./, ""), "Untrusted snapshot redirect destination");
+      }
       const raw = readArtifact(root, s.artifact_path);
       requireValue(sha256(raw) === s.sha256, "Snapshot failed SHA-256 verification");
       byteCache.set(url, raw);
@@ -69,7 +75,7 @@ export function evidenceStore(input, root, decisionDirectory) {
       let segments;
       if (suffix === ".txt") segments = Object.fromEntries(raw.toString("utf8").split(/\r?\n/).map((s, i) => ["line " + (i + 1), s]));
       else if ([".html", ".pdf", ".docx"].includes(suffix)) {
-        const proc = spawnSync(process.env.T2P_PYTHON || "python", [fileURLToPath(new URL("extract.py", import.meta.url)), suffix, ...(doc.role === "landing_page" && measureLinks ? [doc.source_id] : [])],
+        const proc = spawnSync(process.env.T2P_PYTHON || "python", [fileURLToPath(new URL("extract.py", import.meta.url)), suffix, ...(doc.role === "landing_page" && measureLinks ? [doc.snapshot.final_url || doc.source_id] : [])],
           { input: raw, encoding: "utf8", timeout: 30000, maxBuffer: 16 * 1024 * 1024 });
         requireValue(proc.status === 0, "Offline source extraction unavailable");
         segments = JSON.parse(proc.stdout);
@@ -111,18 +117,13 @@ export function evidenceStore(input, root, decisionDirectory) {
       } else if (o.method === "posted_link") {
         requireValue(measure.evaluator === "posting" && c.doc.role === "landing_page" &&
           c.doc.source_id === assistancePages.get(input.hospital_key), "Expected the hospital roster landing page");
-        const links = [];
+        const extracted = {};
         for (const [index, e] of finding.evidence.entries()) {
-          if (cited[index].doc !== c.doc) continue;
-          requireValue(e.locator.startsWith("link ") && e.quote === cited[index].content, "Expected the exact saved anchor label");
-          const target = e.locator.slice(5);
-          const targetDoc = registry.get(target);
-          const roleRecord = confirmedDocuments.find((d) => d.hospital_key === input.hospital_key && d.sha256 === targetDoc?.snapshot?.sha256 &&
-            d.role === targetDoc.role && measure.expected.any_accessible_role.includes(d.role));
-          requireValue(roleRecord && finding.evidence.some((citation) => citation.source_id === target &&
-            citation.quote === roleRecord.quote && citation.locator === roleRecord.locator), "Missing linked document role evidence");
-          links.push(target);
+          if (e.locator.startsWith("link ")) requireValue(e.quote === cited[index].content, "Expected the exact saved anchor label");
+          (extracted[e.source_id] ??= []).push({ locator: e.locator, text: e.quote, status: "extracted" });
         }
+        const paths = postingPaths(input.sources, extracted, c.doc.source_id, measure.expected.any_accessible_role, confirmedDocuments, input.hospital_key);
+        const links = [...new Set(paths.map((p) => p.target))];
         requireValue(links.length > 0, "Missing posting links");
         value = { links, search_complete: false };
       } else if (o.method === "text_profile") {

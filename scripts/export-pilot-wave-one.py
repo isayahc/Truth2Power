@@ -8,6 +8,23 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 
+BLOCKERS = {
+    'U': 'Source discovery; conflicting evidence; structured-observation coverage',
+    'V': 'Governing policy; human review or authorization',
+    'W': 'Language interpretation; structured-observation coverage; human review or authorization',
+    'Y': 'Language interpretation; structured-observation coverage; human review or authorization',
+    'Z': 'Language interpretation; structured-observation coverage; human review or authorization',
+    'AD': 'Extraction or layout interpretation; language interpretation; governing policy; human review or authorization',
+    'AE': 'Structured-observation coverage; language interpretation; human review or authorization',
+    'AG': 'Structured-observation coverage; language interpretation; human review or authorization',
+    'AH': 'Language interpretation; structured-observation coverage',
+    'AI': 'Language interpretation; structured-observation coverage',
+    'AJ': 'Language interpretation; structured-observation coverage',
+    'AL': 'Structured-observation coverage; human review or authorization',
+    'AM': 'Structured-observation coverage; human review or authorization',
+    'AN': 'Structured-observation coverage; human review or authorization',
+}
+
 
 def export(store, destination):
     db = sqlite3.connect((store / 'audit.sqlite').resolve().as_uri() + '?mode=ro', uri=True)
@@ -25,6 +42,15 @@ def export(store, destination):
     lines = ['# Wave 1 integrated assessment validation', '',
              'These are completed **software executions**, partial **evidence assessments**, and **unapproved** institutional results.', '',
              'Replay package: [`pilot-wave-one-evidence.zip`](pilot-wave-one-evidence.zip). It contains the existing grading input/report formats and all available original source snapshots. No new source or decision is invented.', '']
+    lines += ['## Coverage compared with PR #87', '', '| Hospital | Before resolved / unclear | After resolved / unclear | Changed outcomes |', '|---|---:|---:|---|']
+    for key, b in sorted(chosen.items()):
+        unclear = len(b['report']['unresolved_measures'])
+        before = '3 / 14' if key == '1002' else '2 / 15'
+        baseline_pass = {'R', 'S', 'T'} if key == '1002' else {'R', 'T'}
+        changes = [f"{f['css_column']}: {'yes' if f['css_column'] in baseline_pass else 'unclear'} → {f['result']}"
+                   for f in b['report']['findings'] if f['result'] != ('yes' if f['css_column'] in baseline_pass else 'unclear')]
+        lines.append(f'| {key} | {before} | {17-unclear} / {unclear} | ' + ('; '.join(changes) or 'None') + ' |')
+    lines += ['', 'The only changed compliance outcome is Little Falls S. No language review or qualitative approval was inferred from discovery. The earlier PR #87 package remains in git history; local prior assessments are append-only.', '']
     rubric = json.loads((ROOT / 'rubrics/css-17-v1.json').read_bytes())
     for key, b in sorted(chosen.items()):
         report, inp = b['report'], b['input']
@@ -45,13 +71,25 @@ def export(store, destination):
         lines += [f'## Hospital {key}', '', f'- Revision: `{b["id"]}`', f'- Review date / reference year: {inp["review_date"]} / {inp["guideline_year"]}',
                   f'- Completed: {report["last_successful_assessment_at"]}; mode: {b["mode"]}. This is saved-evidence verification, not a new website capture.',
                   f'- 17 outcomes; {len(report["unresolved_measures"])} unresolved; human review **{report["human_review_status"]}**; institutional grade **{report["grade_status"]}**.', '',
-                  '| Measure | Integrated outcome | Submitted bounded observation | Verified citations | Coverage / next action |', '|---|---|---|---:|---|']
+                  '| Measure | Integrated outcome | Submitted bounded observation | Verified citations | Blocker categories | Coverage / next action |', '|---|---|---|---:|---|---|']
         for m, f in zip(rubric['measures'], report['findings']):
             action = f['reason'].replace('|', '\\|').replace('\n', ' ')
             # Full exact blockers and quotations remain in the existing report/input inside the archive.
             if len(action) > 260:
                 action = action[:257] + '… (full blockers in report)'
-            lines.append(f'| {m["css_column"]} · {m["title"]} | {f["result"]} | {f["submitted_result"]} | {len(f["evidence"])} | {action} |')
+            categories = BLOCKERS.get(m['css_column'], 'Source discovery; missing original evidence') if f['result'] == 'unclear' else 'Resolved posting evidence; institutional authorization still pending'
+            if key == '362' and m['css_column'] == 'U':
+                categories = 'Source discovery; structured-observation coverage (no verified conflict asserted)'
+            if key == '1002' and m['css_column'] in ('W', 'Y', 'Z'):
+                categories += '; missing original evidence (2021 policy)'
+            lines.append(f'| {m["css_column"]} · {m["title"]} | {f["result"]} | {f["submitted_result"]} | {len(f["evidence"])} | {categories} | {action} |')
+        lines += ['', '### Historical observation normalization', '']
+        for n in b.get('normalization', []):
+            reasons = [x['action'] for x in n.get('blockers', []) if x['code'] == 'invalid_or_missing_provenance'] + n.get('rejected', [])
+            lines.append(f'- Producer `{n["producer_sha256"]}`: {len(n["accepted"])} reused observations. ' + ' '.join(reasons))
+            if n.get('reference_binding'):
+                binding = n['reference_binding']
+                lines.append(f'  - Reference hash: producer `{binding["observed_sha256"]}`; required `{binding["expected_sha256"]}`. Re-extract under the current pinned reference; never substitute an approval.')
         lines += ['', '### Sources and language coverage', '', '| Role | Language | Coverage | Source / SHA-256 |', '|---|---|---|---|']
         for s in inp['sources']:
             digest = s['snapshot']['sha256'] if s.get('snapshot') else 'unavailable — no snapshot asserted'

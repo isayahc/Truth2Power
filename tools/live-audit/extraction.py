@@ -159,6 +159,7 @@ def extract_collection(hospital_key, collection_id, output, save):
     results = []
     records = [manifest.get("landing_page") or {"source_url": manifest["landing_url"], "status": "failed"}]
     records += manifest["documents"]
+    records += [p for p in manifest.get("pages", []) if p.get("source_url") != manifest["landing_url"]]
     started = now()
     for index, record in enumerate(records):
         result = dict(source_url=record.get("source_url", record.get("url")),

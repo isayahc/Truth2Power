@@ -2,25 +2,34 @@
 import argparse
 import hashlib
 import json
+import os
+import uuid
 from pathlib import Path
-from documents import collect, LIMIT, Links
+from documents import collect, LIMIT, Links, Bounds
 from extraction import extract_collection, extract_bytes
 
 
 def save(path, data):
     path.parent.mkdir(parents=True, exist_ok=True)
+    temporary = path.with_name(path.name + '.' + uuid.uuid4().hex + '.tmp')
     try:
-        with path.open('xb') as stream:
+        with temporary.open('xb') as stream:
             stream.write(data)
-    except FileExistsError:
-        if path.read_bytes() != data:
-            raise ValueError('immutable_artifact_collision')
+            stream.flush()
+            os.fsync(stream.fileno())
+        try:
+            os.link(temporary, path)
+        except FileExistsError:
+            if path.read_bytes() != data:
+                raise ValueError('immutable_artifact_collision')
+    finally:
+        temporary.unlink(missing_ok=True)
 
 
 def run(root, request):
     root = root.resolve()
     if request['mode'] == 'live':
-        result = collect(request['hospital_key'], Path(__file__).resolve().parents[2], root, save)
+        result = collect(request['hospital_key'], Path(__file__).resolve().parents[2], root, save, bounds=Bounds(**request.get('bounds', {})))
         if result['output']['status'] == 'failed':
             raise ValueError('landing_collection_failed')
         extracted = extract_collection(request['hospital_key'], Path(result['manifest_file']).stem, root, save)
@@ -38,7 +47,7 @@ def run(root, request):
             raise ValueError('snapshot_hash_mismatch')
         segments = extract_bytes(raw, path.suffix)
         if path.suffix == '.html':
-            parser = Links(source['source_id'])
+            parser = Links(snapshot.get('final_url', source['source_id']), all_links=True)
             parser.feed(raw.decode('utf-8', errors='replace'))
             segments += [dict(locator='link ' + url, text=next((label for label in labels if label), ''), status='extracted')
                          for url, labels in parser.links.items()]
