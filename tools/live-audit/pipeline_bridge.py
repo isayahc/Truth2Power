@@ -1,4 +1,6 @@
 """Bounded worker bridge to the existing collector and extractor. No model calls."""
+from collections import Counter
+from usage import measured, usage
 import argparse
 import hashlib
 import json
@@ -19,9 +21,12 @@ def save(path, data):
             os.fsync(stream.fileno())
         try:
             os.link(temporary, path)
+            measured("artifacts_written")
+            measured("storage_bytes", len(data))
         except FileExistsError:
             if path.read_bytes() != data:
                 raise ValueError('immutable_artifact_collision')
+            measured('artifact_reuses')
     finally:
         temporary.unlink(missing_ok=True)
 
@@ -91,4 +96,14 @@ if __name__ == '__main__':
     parser.add_argument('--root', type=Path, required=True)
     args = parser.parse_args()
     # Internal IPC output, not application logging. The Node worker logs metadata only.
-    print(json.dumps(run(args.root, json.load(sys.stdin)), ensure_ascii=True))
+    request = json.load(sys.stdin)
+    if request.pop("meter", False):
+        counters: Counter[str] = Counter()
+        usage.set(counters)
+        try:
+            response = {"result": run(args.root, request)}
+        except Exception:
+            response = {"failed": True}
+        print(json.dumps({**response, "usage": counters}, ensure_ascii=True))
+    else:
+        print(json.dumps(run(args.root, request), ensure_ascii=True))

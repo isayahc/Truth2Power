@@ -115,6 +115,10 @@ class MultihopTests(unittest.TestCase):
 
     def test_tls_connects_to_validated_ip_with_original_hostname_and_bounds_redirects(self):
         import io
+        from collections import Counter
+        from usage import usage
+        counters = Counter()
+        self.addCleanup(usage.reset, usage.set(counters))
         from email.message import Message
         from unittest.mock import MagicMock
         response = MagicMock()
@@ -139,6 +143,7 @@ class MultihopTests(unittest.TestCase):
             response.getheader.return_value = '/a.pdf'
             with self.assertRaisesRegex(ValueError, 'Redirect limit'):
                 download('https://example.org/a.pdf', 'example.org', Bounds(redirects=1))
+            self.assertEqual(counters, {'network_requests': 4, 'network_bytes': len(data)})
 
     def test_little_falls_original_html_discovers_both_campus_confirmed_summaries(self):
         import zipfile

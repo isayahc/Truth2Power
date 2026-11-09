@@ -195,3 +195,33 @@ The local read contract returns jobs newest first, original pinned context (incl
 - Last eligible assessment uses the highest published live/full job ID, including partial evidence-backed assessments. A late older job cannot supersede it. Replays never advance this clock.
 
 Legacy integrated jobs keep their original IDs, attempts, request keys, recorded completion times and revisions. Historical events, capture clocks and missing timestamps are not synthesized. The older single-measure demo has a separate history contract. Keep the SQLite database and the complete evidence directory together for the lifetime of the audit history. Stop all writers before backup, preserve SQLite WAL files if present, and restore both database and artifacts together. An older application can ignore the additive table; restoring a pre-upgrade backup loses subsequent runs.
+
+## Per-run cost receipts (#96)
+
+Run `npm run audit:pilot -- receipt --job 12` against the same SQLite store as the worker. The JSON receipt joins every attempt, including retries. It contains the raw usage rows, stage and run totals, pinned rates, native billed subtotals, the known USD billed subtotal, calculated provider cost, estimated local cost and unpriced units. A missing bill yields a pending warning. A deterministic run with no provider calls can show zero incremental API cost while its local workload remains unpriced. Receipts for legacy, interrupted or still-running attempts flag incomplete coverage.
+
+To configure pricing, set `T2P_RATE_CARD` to a JSON file before enqueueing. Its contents are copied to the immutable `audit_prices` row in the queue transaction. Reusing an idempotency key keeps the original prices. Without a card, positive resource usage remains unpriced. The following empty template contains no rate assumptions:
+
+```json
+{"currency":"USD","version":"operator-v1","effective_date":"2026-11-09","local":{},"models":{}}
+```
+
+Local keys are USD per `elapsed_ms` of worker wall time, per `network_bytes` received and per `storage_bytes` of newly retained artifact payload. Choose a storage attribution period and record it and the rate source in the card. Model rates are keyed by `provider/region/model` and specify USD per individual `input_tokens`, `cached_input_tokens` and `output_tokens`. Input excludes cache reads. Omitted prices are unknown. Adding a zero price is an explicit assumption.
+
+For reported usage from an external provider, run `npm run audit:pilot -- import-usage --file usage.json` locally. For example, the structure below illustrates a fabricated provider response:
+
+```json
+{"job":12,"attempt":"<existing attempt token>","stage":"model","provider":"bedrock","region":"us-east-1","model":"example","usage_id":"SYN-example","usage":{"input_tokens":15,"cached_input_tokens":8,"output_tokens":3}}
+```
+
+Use the actual provider response and omit unavailable token categories. To reconcile a bill, use the same identity with `bill` in place of `usage`, containing `amount` and `currency`. An optional `fx` object carries `usd_per_unit`, `source` and `as_of`. Foreign bills without conversion remain in their native subtotal. Each provider/region/request identity supports one usage record and one bill. Identical redelivery is idempotent. Conflicting attribution or values fail. A bill supersedes the calculated request estimate in totals. Imports do not contact a paid service.
+
+The worker measures actual HTTPS GET attempts (including redirects), response body bytes read, successful bridge parser invocations and PDF pages, checkpoint hits, immutable artifact reuse/writes and logical storage growth. Repeated parsing and download work count again; identical retained artifacts only grow storage on first creation. Stage elapsed time includes waiting. Independent grading-verifier parser invocations are included in grading time but excluded from parser counts. Network headers, transient files, SQLite/WAL overhead, physical disk allocation, outside services without imported records and retention beyond the selected rate period are outside the receipt. Hard process termination can lose the unfinished stage counters. Inspect completeness before using any subtotal.
+
+For #41, export `units`, `stages` and the money subtotals from one representative live run. For #42, this example produces a one-run-per-hospital monthly scenario from recorded quantities. Repeat with different campuses and workload sizes to estimate a range. Preserve the rate card and missing-price warnings with each projection.
+
+```bash
+node backend/audit/pipeline-cli.js receipt --job 12 | jq '{run:.audit_run_id,mode,complete,warnings,unknown_unpriced,monthly_units:(.units | del(.meter_finished,.telemetry_missing) | with_entries(.value *= 212)),monthly_estimated_subtotal_usd:(.estimated_subtotal_usd * 212),monthly_known_billed_usd:(if .known_billed_usd == null then null else .known_billed_usd * 212 end)}'
+```
+
+Back up `audit_prices` and `audit_usage` with the existing SQLite backup. Receipts replay persisted quantities with the frozen card. Subsequent billing reconciliation appends a row and changes the reconciled receipt.

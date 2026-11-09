@@ -1,4 +1,5 @@
 """Bounded, same-host resource discovery extending the original immutable collector."""
+from usage import measured
 import hashlib
 import json
 import re
@@ -157,6 +158,7 @@ def download(url, host, bounds=None, trace=None):
         try:
             sock = socket.create_connection((address, 443), timeout=remaining)
             connection.sock = ssl.create_default_context().wrap_socket(sock, server_hostname=parsed.hostname)
+            measured("network_requests")
             connection.request("GET", parsed.path + ("?" + parsed.query if parsed.query else "") or "/",
                                headers={"User-Agent": "Truth2Power public document collection", "Accept-Encoding": "identity"})
             response = connection.getresponse()
@@ -179,6 +181,7 @@ def download(url, host, bounds=None, trace=None):
                 if not part:
                     break
                 chunks.append(part)
+                measured("network_bytes", len(part))
                 size += len(part)
                 if size > bounds.bytes_per_resource:
                     raise ValueError("Resource byte limit reached")
