@@ -1,7 +1,32 @@
 // Bounded profiles for the existing Python application review and Node synthetic worker.
 // Only the cited original text supplies values. Expected amounts in a worker/model draft are ignored.
-export function parseProfile(name, quote) {
+import { readFileSync } from "node:fs";
+import { sha256 } from "../review/identity.js";
+const profileBytes = readFileSync(new URL("../../references/application-language-profiles-v1.json", import.meta.url));
+export const applicationProfileHash = sha256(profileBytes);
+export const applicationVisualHash = sha256(readFileSync(new URL('../../references/application-visual-review-v1.json', import.meta.url)));
+const languages = JSON.parse(profileBytes).languages;
+
+export function parseProfile(name, quote, language = "en") {
   const text = quote.replace(/\s+/g, " ").trim();
+  if (language !== "en") {
+    const p = languages[language];
+    if (!p) return null;
+    if (["maximum", "installments"].includes(name)) {
+      const matches = [...text.matchAll(new RegExp(p[name], "gi"))];
+      return matches.length === 1 ? { percent: Number(matches[0][1]), ...(name === "maximum" ? { hard_ceiling: false } : { basis: "gross_monthly_income" }) } : null;
+    }
+    if (name !== "fpl") return null;
+    const headers = [...text.matchAll(new RegExp(p.header, "gi"))];
+    if (headers.length !== 1) return null;
+    const header = headers[0], tail = text.slice(header.index + header[0].length).split(new RegExp(p.discount), 1)[0];
+    if (new RegExp(p.nonannual, "i").test(tail)) return null;
+    const money = "(\\d{1,3}(?:,\\d{3})+|\\d+)";
+    const rows = [...tail.matchAll(new RegExp("\\b(\\d{1,2})\\s+" + p.row_label + "\\s+\\$" + money + "\\s+\\$" + money + "\\s+\\$" + money + "(?=\\s|$)", "g"))];
+    if (!rows.length || new Set(rows.map((r) => Number(r[1]))).size !== rows.length || rows.some((r) => Number(r[1]) < 1)) return null;
+    return { published_year: Number(header[1]), currency: "USD", period: "annual", cells: rows.flatMap((row) =>
+      [200, 300, 400].map((pct, i) => ({ household_size: Number(row[1]), fpl_percent: pct, amount: Number(row[i+2].replaceAll(",", "")) }))) };
+  }
   if (name === "maximum") {
     const values = [...text.matchAll(/Individuals up to (\d{2,3})% of the federal poverty level are eligible for financial assistance\./ig)];
     return values.length === 1 ? { percent: Number(values[0][1]), hard_ceiling: false } : null;

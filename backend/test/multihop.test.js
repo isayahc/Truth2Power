@@ -22,12 +22,26 @@ after(() => { db.close(); rmSync(root, { recursive: true, force: true }); });
 test("Little Falls full saved summary chain resolves S with both languages and preserves all 17 outcomes", async () => {
   const unzip = spawnSync(process.env.T2P_PYTHON || "python", ["-m", "zipfile", "-e", "docs/validation/pilot-wave-one-evidence.zip", root]);
   assert.equal(unzip.status, 0);
+  const references = spawnSync(process.env.T2P_PYTHON || "python", ["-m", "zipfile", "-e", "docs/validation/application-reference-evidence.zip", root]);
+  assert.equal(references.status, 0);
   enqueuePipeline(db, { hospital_key: "362", year: 2026, review_date: "2026-11-09", mode: "replay", request_key: "SYN-public-replay", evidence_root: root });
   const b = await runPipeline(db, claim(db));
   const s = b.report.findings.find((f) => f.css_column === "S");
   assert.equal(s.result, "yes");
   assert.equal(b.report.findings.length, 17);
   assert.equal(b.report.final_grade, null);
+  assert.ok(b.normalization.some((n) => n.accepted.length === 3 && n.reference_compatibility?.accepted));
+  assert.ok(b.normalization.every((n) => n.reference_compatibility?.approval_transferred === false));
+  assert.equal(b.application_reviews.length, 2);
+  assert.deepEqual(b.application_reviews.map((r) => r.language).sort(), ['en', 'es']);
+  for (const r of b.application_reviews) {
+    assert.equal(r.findings.length, 6);
+    assert.equal(r.human_review, 'pending');
+    assert.equal(r.template_comparison.result, 'unclear');
+  }
+  for (const id of ['application.fpl_guidelines', 'application.maximum_fpl', 'application.installments_cap']) {
+    assert.equal(b.input.findings.find((f) => f.measure_id === id).observed.length, 2);
+  }
   const inputS = b.input.findings.find((f) => f.measure_id === s.measure_id);
   const anchors = inputS.evidence.filter((e) => e.locator.startsWith("link "));
   assert.equal(new Set(anchors.map((e) => e.source_id)).size, 2);
@@ -45,6 +59,13 @@ test("Little Falls full saved summary chain resolves S with both languages and p
   assert.throws(() => grade(b.input, { root: process.env.T2P_REVIEW_DIRECTORY }), /SHA-256/);
   writeFileSync(path, bytes);
   assert.equal(publications().bundles.length, 1);
+  enqueuePipeline(db, { hospital_key: '1002', year: 2026, review_date: '2026-11-09', mode: 'replay', request_key: 'SYN-five-language-public', evidence_root: root });
+  const ellenville = await runPipeline(db, claim(db));
+  assert.equal(ellenville.application_reviews.length, 5);
+  assert.equal(ellenville.report.findings.length, 17);
+  assert.equal(ellenville.report.unresolved_measures.length, 14);
+  assert.equal(ellenville.input.findings.find((f) => f.measure_id === 'application.fpl_guidelines').observed.length, 5);
+  assert.deepEqual(grade(ellenville.input, { root: process.env.T2P_REVIEW_DIRECTORY }), ellenville.report);
   assert.equal(history(db, "362"), null, "Legacy fixture history must not return the integrated envelope");
   const pendingPilot = enqueuePipeline(db, { hospital_key: "362", year: 2026, review_date: "2026-11-09", mode: "replay", request_key: "SYN-next-public", evidence_root: root });
   const legacy = enqueue(db, 2026);

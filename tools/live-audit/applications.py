@@ -1,6 +1,6 @@
-"""Bounded English uniform-application profile; deterministic, cited drafts for #23.
+"""Bounded source-language application profiles; deterministic, cited drafts for #23/#72.
 
-Other layouts/languages and full official-template equivalence need review. No network
+Unsupported layouts/languages and full official-template equivalence need review. No network
 or model is used to calculate amounts. Original source bytes are always re-extracted.
 """
 import hashlib
@@ -15,6 +15,7 @@ from documents import now
 from full_review import json_save
 from extraction import PARSER
 from review_identity import application_language, review_identity
+from language_profiles import SPEC, parse_profile, discount_rows
 
 MEASURES = {
     "application.uniform_application": "The entire applicable NYS Uniform Hospital Financial Assistance Application is used.",
@@ -37,12 +38,20 @@ def evidence(source, pages):
             for p in pages if p["text"].strip()]
 
 
-def evaluate(source, review_date, reference):
+def evaluate(source, review_date, reference, language=None):
     year = date.fromisoformat(review_date).year
     if str(year) not in reference["years"]:
         raise ValueError("No versioned HHS reference for this review year")
     pages = source["segments"]
     text = normalized(" ".join(p["text"] for p in pages))
+    detected = [code for code, spec in SPEC['languages'].items() if re.search(spec['title'], text, re.I)]
+    if language in SPEC['languages'] or (language is None and len(detected) == 1):
+        return evaluate_translated(source, review_date, reference, language or detected[0])
+    if language not in (None, 'en'):
+        return [dict(measure_id=m, result='unclear', reason_code='insufficient_evidence',
+                     explanation='Unsupported source language.', observed=None, expected=expected,
+                     evidence=evidence(source, pages), unresolved_questions=['Review source language.'])
+                for m, expected in MEASURES.items()], 'translation_or_layout_review_needed'
     readable = bool(pages) and all(p["status"] == "extracted" and (p["text"].strip() or p.get("empty_auxiliary_part")) for p in pages)
     profile = readable and bool(re.search(r"NYS Uniform Hospital Financial Assistance Application", normalized(pages[0]["text"])))
     findings = []
@@ -76,7 +85,8 @@ def evaluate(source, review_date, reference):
     contacts = [p for p in pages if re.search(
         r"If you need assistance with this application, please contact .{1,180}financial assistance office at\s*\(?\d{3}\)?[\s-]*\d{3}[\s-]*\d{4}", normalized(p["text"]), re.I)]
     finding("application.contact_information", "yes" if contacts else "unclear",
-        "Hospital application-assistance contact and telephone number are stated." if contacts else "No hospital-help contact was established by the supported pattern; review the application rather than infer absence.", contacts)
+        "Hospital application-assistance contact and telephone number are stated." if contacts else "No hospital-help contact was established by the supported pattern; review the application rather than infer absence.", contacts,
+        observed=dict(contact_passages=[p['text'] for p in contacts]))
 
     table_pages = [p for p in pages if "Federal Poverty Levels" in p["text"] and "Minimum Discount Rates" in p["text"]]
     table = table_pages[0] if len(table_pages) == 1 else None
@@ -88,7 +98,9 @@ def evaluate(source, review_date, reference):
     discounts = bool(re.search(r"Income Level Payment.*Below 200% FPL Waive all charges.*200%\s*-\s*300% FPL.*301%\s*-\s*400% FPL", table_text))
     tables_present = bool(header and rows and discounts)
     finding("application.income_discount_tables", "yes" if tables_present else "unclear",
-        "Income table with 200/300/400% columns and discount bands is present. This checks presence, not correctness of the dollar values." if tables_present else "Could not establish both tables in the supported layout; manual table review required.", table_pages)
+        "Income table with 200/300/400% columns and discount bands is present. This checks presence, not correctness of the dollar values." if tables_present else "Could not establish both tables in the supported layout; manual table review required.", table_pages,
+        observed=dict(income_rows=[dict(household_size=int(r[0]), amounts=[int(v.replace(',', '')) for v in r[1:]], fpl_columns=[200, 300, 400]) for r in rows],
+                      discount_rows=discount_rows(table_text, 'en')))
 
     reference_year = reference["years"][str(year)]
     cells, problems = [], []
@@ -142,6 +154,55 @@ def evaluate(source, review_date, reference):
     return findings, "reviewed"
 
 
+def evaluate_translated(source, review_date, reference, language):
+    """Bounded original-language analysis; qualitative presence remains a review draft."""
+    pages, findings = source['segments'], []
+    spec = SPEC['languages'][language]
+    readable = all(p['status'] == 'extracted' for p in pages)
+    title = any(re.search(spec['title'], normalized(p['text']), re.I) for p in pages)
+    year = date.fromisoformat(review_date).year
+    for measure in MEASURES:
+        name = {'application.fpl_guidelines': 'fpl', 'application.maximum_fpl': 'maximum',
+                'application.installments_cap': 'installments', 'application.contact_information': 'contact',
+                'application.income_discount_tables': 'fpl'}.get(measure)
+        matches = [(p, parse_profile(name, p['text'], language)) for p in pages] if name else []
+        matches = [(p, value) for p, value in matches if value]
+        result, observed = 'unclear', None
+        questions = []
+        if readable and title and len(matches) == 1:
+            observed = matches[0][1]
+            if measure.endswith('fpl_guidelines'):
+                amounts = reference['years'][str(year)]
+                cells = [dict(household_size=c['household_size'], fpl_percent=c['fpl_percent'], observed=c['amount'],
+                              expected=(amounts['household_amounts'][c['household_size']-1] if c['household_size'] <= 8 else
+                                        amounts['household_amounts'][-1] + (c['household_size']-8)*amounts['additional_person'])*c['fpl_percent']//100)
+                         for c in observed['cells']]
+                observed = dict(observed, cells=cells)
+                mismatch = observed['published_year'] != year or any(c['observed'] != c['expected'] for c in cells)
+                result = 'no' if mismatch else 'yes' if set(range(1, 9)).issubset({c['household_size'] for c in cells}) else 'unclear'
+            elif name == 'maximum':
+                result = 'yes' if observed['percent'] >= 400 else 'unclear'
+            elif name == 'installments':
+                result = 'yes' if observed['percent'] <= 5 else 'no'
+            elif name == 'contact':
+                result = 'yes'
+            elif measure.endswith('income_discount_tables'):
+                discounts = discount_rows(matches[0][0]['text'], language)
+                result = 'yes' if len(discounts) == 3 and discounts[1]['printed_payment_percentages'] == [10, 10] and discounts[2]['printed_payment_percentages'] == [20, 20] else 'unclear'
+                observed = dict(income_table=observed, discount_rows=discounts)
+        if measure.endswith('uniform_application'):
+            questions = ['Authoritative translated-template applicability and full semantic/layout equivalence require review; presence patterns do not prove the entire form.',
+                         'Resolve permitted hospital customizations and AD/AH scoring overlap without treating formatting alone as noncompliance.']
+        elif result == 'unclear':
+            questions = ['Reconcile missing, duplicate, unreadable or unsupported source-language statements; no absence inferred.']
+        findings.append(dict(measure_id=measure, result=result,
+            reason_code={'yes': 'condition_met', 'no': 'contradicted', 'unclear': 'insufficient_evidence'}[result],
+            explanation='Bounded source-language profile; original quotations retained. Numeric results are separate from translation approval and whole-form equivalence.',
+            observed=observed, expected=MEASURES[measure], evidence=evidence(source, [p for p, _ in matches] or pages),
+            unresolved_questions=questions))
+    return findings, 'reviewed' if readable and title else 'translation_or_layout_review_needed'
+
+
 def review_application(hospital_key, extraction_id, application_url, review_date, output, save, template_comparison_id=None, whole_form_review_id=None):
     # Date parsing/reference lookup occurs before producing any artifact.
     year = date.fromisoformat(review_date).year
@@ -155,16 +216,20 @@ def review_application(hospital_key, extraction_id, application_url, review_date
                            s["snapshot"]["sha256"] != selected[0]["snapshot"]["sha256"] for s in selected):
         raise ValueError("Select an existing application URL from the saved extraction; policy and summary evidence cannot be substituted")
     source = selected[0]
-    findings, status = evaluate(source, review_date, reference)
+    language = application_language(hospital_key, source['snapshot'], False)
+    code = {'English': 'en', 'Spanish': 'es', 'Polish': 'pl', 'Ukrainian': 'uk', 'Russian': 'ru'}.get(language)
+    findings, status = evaluate(source, review_date, reference, code)
     review_id, result_id, checked = uuid.uuid4().hex, uuid.uuid4().hex, now()
-    language = application_language(hospital_key, source["snapshot"], status == "reviewed")
+    if language == 'unknown':
+        detected = [c for c, spec in SPEC['languages'].items() if re.search(spec['title'], normalized(' '.join(p['text'] for p in source['segments'])), re.I)]
+        language = detected[0] if len(detected) == 1 else application_language(hospital_key, source['snapshot'], status == 'reviewed')
     other_applications = sorted({s["snapshot"]["url"] for s in sources
                                  if s["snapshot"]["document_type"] == "application" and s["snapshot"]["url"] != application_url})
     result = dict(schema_version="1.0", review_type="application", review_id=review_id, result_id=result_id,
         hospital_key=hospital_key, extraction_id=extraction_id, checked_at=checked, review_date=review_date,
         guideline_year=year, reference_version=reference["reference_version"], reference_sha256=hashlib.sha256(raw_reference).hexdigest(),
-        reference=reference, rubric_version="english-uniform-application-profile-v1", human_review="pending", status="draft_needs_human_review",
-        scope_label="Selected application only; English profile" if status == "reviewed" else "Selected application; language/layout review needed",
+        reference=reference, rubric_version="multilingual-uniform-application-profile-v1" if language.lower() not in ('en', 'english') else "english-uniform-application-profile-v1", human_review="pending", status="draft_needs_human_review",
+        scope_label=f"Selected application only; {language} profile" if status == "reviewed" else "Selected application; language/layout review needed",
         findings=findings, snapshots=[source["snapshot"]],
         extraction_details=dict(parser_version=PARSER, snapshot_id=source["snapshot"]["snapshot_id"],
             drawings=[d for p in source["segments"] for d in p.get("drawings", [])],

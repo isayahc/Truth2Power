@@ -128,18 +128,18 @@ export function evidenceStore(input, root, decisionDirectory) {
         value = { links, search_complete: false };
       } else if (o.method === "text_profile") {
         requireValue(typeof c.content === "string", "Text profile needs located text");
-        const confirmed = confirmedDocuments.some((d) => d.hospital_key === c.doc.hospital_key && d.role === c.doc.role && d.sha256 === c.doc.snapshot.sha256);
+        const confirmed = confirmedDocuments.some((d) => d.hospital_key === c.doc.hospital_key && d.role === c.doc.role && d.sha256 === c.doc.snapshot.sha256 && languageTag(d.language) === c.doc.language);
         if (!input.synthetic && !confirmed && review !== "approved") {
           gaps.push("Verify the hospital and document role for the exact snapshot before using extracted numbers.");
           continue;
         }
         const quote = finding.evidence[o.evidence_index].quote;
-        value = parseProfile(measure.evaluator, quote);
+        value = parseProfile(measure.evaluator, quote, c.doc.language);
         const segments = Object.values(textCache.get(c.doc.source_id));
         const workerRow = /^One-person household\s*\|/.test(quote);
         const units = workerRow ? segments.flatMap((s) => s?.split("\n") ?? [null]) : segments;
         const located = c.content === quote || c.content.split("\n").includes(quote);
-        const matches = units.filter((s) => typeof s === "string").map((s) => parseProfile(measure.evaluator, s)).filter(Boolean);
+        const matches = units.filter((s) => typeof s === "string").map((s) => parseProfile(measure.evaluator, s, c.doc.language)).filter(Boolean);
         if (!value || !located || segments.includes(null) || matches.length !== 1 || !isDeepStrictEqual(matches[0], value)) {
           gaps.push("Verify the full source and reconcile competing or incomplete " + measure.evaluator + " observations.");
           continue;

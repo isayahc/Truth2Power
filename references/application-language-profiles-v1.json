@@ -1,0 +1,46 @@
+{
+  "version": "application-language-profiles-v1",
+  "limitations": "Bounded source-language patterns, not certified translation or whole-form equivalence. No match is unknown, never absence.",
+  "languages": {
+    "es": {
+      "title": "Solicitud de (?:ayuda económica de NYS Uniform Hospital|asistencia económica uniforme para hospitales del estado de Nueva York)",
+      "header": "(?:Nivel federal de pobreza \\(Federal Poverty Levels, FPL\\)|Niveles federales de pobreza)\\s*\\((20\\d{2})\\)\\s*Tamaño del (?:grupo familiar|hogar)\\s+200\\s*%\\s+300\\s*%\\s+400\\s*%",
+      "row_label": "[Pp]ersonas?",
+      "discount": "(?:Tarifas mínimas de descuento|Tasas de descuento mínimo)",
+      "maximum": "Las personas que (?:alcanzan hasta|se encuentren en hasta) el (\\d{2,3})\\s*% del nivel federal de pobreza son elegibles para recibir (?:ayuda económica|asistencia financiera)\\.",
+      "installments": "Los pagos mensuales no pueden exceder el (\\d+(?:\\.\\d+)?)\\s*% de (?:los ingresos mensuales brutos|su ingreso bruto mensual)",
+      "contact": "Si necesita ayuda con esta solicitud, comuníquese con (?:la Oficina de Ayuda Económica de Ellenville Regional Hospital|la oficina de asistencia financiera de Bassett Healthcare Network) al ",
+      "nonannual": "mensual|semanal|por mes|por semana"
+    },
+    "pl": {
+      "title": "Jednolity wniosek NYS o pomoc finansową szpitala",
+      "header": "Federalne progi ubóstwa \\(Federal Poverty Levels, FPL\\) w (20\\d{2}) roku\\s*Wielkość gospodarstwa domowego\\s+200\\s*%\\s+300\\s*%\\s+400\\s*%",
+      "row_label": "(?:osoba|osoby|osób)",
+      "discount": "Minimalne stawki obniżenia",
+      "maximum": "Do pomocy finansowej kwalifikują się osoby spełniające wymóg do (\\d{2,3})\\s*% federalnego progu ubóstwa\\.",
+      "installments": "Płatności miesięczne nie mogą przekroczyć (\\d+(?:\\.\\d+)?)\\s*% dochodu miesięcznego brutto",
+      "contact": "Jeśli potrzebujesz wsparcia w odniesieniu do tego wniosku, skontaktuj się z biurem pomocy finansowej szpitala Ellenville Regional Hospital pod numerem ",
+      "nonannual": "miesięcz|tygodni"
+    },
+    "uk": {
+      "title": "Заявка на отримання фінансової медичної допомоги від лікарень штату Нью-Йорк",
+      "header": "Федеральний прожитковий мінімум \\(Federal Poverty Levels, FPL\\) \\((20\\d{2}) р\\.\\)\\s*Склад сім’ї\\s+200\\s*%\\s+300\\s*%\\s+400\\s*%",
+      "row_label": "(?:особа|особи|осіб)",
+      "discount": "Мінімальні облікові ставки",
+      "maximum": "Право на фінансову допомогу мають особи з доходом до (\\d{2,3})\\s*% від федерального прожиткового мінімуму\\.",
+      "installments": "Щомісячні платежі не мають перевищувати (\\d+(?:\\.\\d+)?)\\s*% від валового місячного доходу",
+      "contact": "Якщо у вас виникнуть запитання щодо цієї заявки, звертайтеся до працівників Відділу з питань фінансової допомоги лікарні Ellenville Regional Hospital за номером ",
+      "nonannual": "місяч|тижнев"
+    },
+    "ru": {
+      "title": "Заявление на получение финансовой помощи в NYS Uniform Hospital",
+      "header": "Федеральный уровень бедности \\(Federal Poverty Leve, FPL\\) \\((20\\d{2})\\)\\s*Количество членов семьи\\s+200\\s*%\\s+300\\s*%\\s+400\\s*%",
+      "row_label": "человек(?:а)?",
+      "discount": "Минимальный размер скидки",
+      "maximum": "На финансовую помощь могут претендовать лица, доход которых составляет до (\\d{2,3})\\s*% от федерального уровня бедности\\.",
+      "installments": "Ежемесячные платежи не могут превышать (\\d+(?:\\.\\d+)?)\\s*% от вашего валового ежемесячного дохода",
+      "contact": "Если вам требуется помощь в подаче заявления, свяжитесь с офисом по вопросам финансовой помощи Ellenville Regional Hospital по номеру ",
+      "nonannual": "месяч|недел"
+    }
+  }
+}

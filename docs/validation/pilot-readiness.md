@@ -1,6 +1,33 @@
 # Pilot readiness — 9 November 2026
 
-Updated for the #56 multi-hop follow-up to merged PR #87. Issue #37 is closed; the remaining policy/coverage issues remain open.
+Updated for the #72 multilingual follow-up to merged PRs #87/#88. Issue #37 is closed; policy and approval issues remain open.
+
+## Multilingual application engineering (#72)
+
+Final visual follow-up: `references/application-visual-review-v1.json` records model inspection of all 25 translated Ellenville PDF pages. Attachment requires exact hospital/language/hash, complete readable page coverage and verbatim question quotations. Fields and continuations are visible with no observed clipping; specific semantic questions remain. This resolves the uninspected-PDF-layout gap, not semantic equivalence or approval. Little Falls Spanish DOCX rendering remains unresolved. Pipeline job identity pins this review file's hash.
+
+All **seven application versions / 42 source-specific drafts** are reproducible from original public bytes. See [coverage matrix](wave-one-application-coverage.md) and `wave-one-application-reviews.json`. Source-language profiles share a versioned specification between Python and the independent JavaScript verifier. Every hospital now has AH/AI/AJ numeric observations for every application language: **21 source/measure observations**, versus six English-only observations before this change. All five Ellenville tables fail 2026 currency; both Little Falls tables match HHS arithmetic. AE/AG presence drafts retain contacts and linked income/discount rows.
+
+Compared with #88, **no integrated outcome changes**: 6 resolved / 28 unclear across both hospitals, grades pending. The five translated sources retain `translation_needed` at the integrated scope boundary; bounded extraction does not certify whole-form translation or satisfy independent qualitative review. Full-source/complete-inventory gates are unchanged.
+
+The historical HHS mismatch was CRLF versus LF serialization, not a substantive source revision. The adapter reconstructs both exact byte hashes and requires matching embedded reference content for non-current serialization. Six historical numeric observations (three per English form) are now accepted after independent byte/citation/profile verification. An older Little Falls extraction draft has no reusable facts and remains rejected for observation reuse. Every accepted/rejected fact and reference binding is in the exported bundle. Historical records and decisions remain unchanged; no approval transfers.
+
+English #78 visual findings and rendered-byte hashes are preserved. The five translated comparisons add 21 source-language checks (eleven sections and ten fields), original reference citations, DOCX table/cell/grid and section-property inventories, PDF page dimensions, and drawing metadata. They do not prove authoritative translated-template applicability or complete semantic/layout equivalence. Little Falls Spanish DOCX pagination remains unverified; AD remains unclear for explicit customization, translation and AD/AH overlap questions. Missing anchors remain unknown rather than asserted omissions.
+
+An attempted read-only Microsoft Word PDF export of the Spanish DOCX exceeded the 120-second automation timeout. No new rendered evidence was accepted. The five Spanish structural drawing records and table/grid inventory remain available; this is an explicit technical layout limitation, not a hospital failure.
+
+| #72 acceptance area | Current status |
+|---|---|
+| Seven application-language identities and six-measure drafts | Implemented; exact URLs/hashes, original-language quotations, contacts, linked income/discount rows and historical-record pointers are portable. |
+| Deterministic AH/AI/AJ extraction and verification | Implemented; 21 source-bound numeric observations verified independently, with mutation/ambiguity/language regression cases. |
+| HHS reference mismatch | Repaired for exact LF/CRLF representation equivalence only; original IDs/hashes/decisions retained. Other bindings rejected. |
+| Official reference and English visual evidence | Captured official bytes and prior English rendered evidence verified offline; known $133,880/$133,080 discrepancy retained. |
+| Translated whole-form comparison | Structural coverage implemented; authoritative translation applicability and full semantic/visual equivalence remain unresolved. Spanish Word rendering timed out. |
+| Permitted customization and AD/AH overlap | External rule decision required; AD remains unclear without an approved authority. |
+| Integrated publication, recovery and shared revisions | Existing safeguards retained; Node/browser regressions pass; no institutional approval inferred. |
+| Subject-matter review / institutional authorization | Pending #20/#67 and exact-subject human decisions; #72 is **not eligible for closure**. |
+
+The complete browser run passed all seven suites; the expanded pipeline suite was rerun after final source-language integration. An initial legacy-browser regression revealed that the English demo fixture had an unspecified language; its adapter now explicitly identifies that fixed synthetic fixture as English rather than letting unknown-language real sources fall back to English. No language gate was relaxed. A combined Node/Python run hit a 120-second harness timeout; the full suites subsequently passed with a sufficient timeout. Python dependency security auditing remains outstanding because the existing environment does not include `pip_audit`; no dependency was added.
 
 ## Verdict
 
@@ -38,8 +65,8 @@ These are saved-evidence executions, not new website captures. Little Falls S no
 
 1. **Discovery/classification engineering:** multi-hop HTML traversal, nested resources and trusted redirects are implemented, including Little Falls's designated summary page. JavaScript-only resources, external search for moved pages and statewide live classification remain gaps. Bounded traversal never proves exhaustive absence.
 2. **Missing source:** obtain Ellenville's unavailable 2021 policy or document its authoritative withdrawal. Do not treat an inaccessible URL as an absence finding.
-3. **Language coverage:** review Ellenville Spanish, Polish, Ukrainian and Russian applications and Little Falls Spanish application under the same six-measure contract. Preserve existing multilingual source reviews and resolve translation/interpretation exceptions rather than declaring their evidence absent.
-4. **Qualitative integration:** supply grading-contract observations and scope coverage for contact, tables, summary content, consistency, deadlines, assets and immigration. The new deterministic normalizer supports source facts while rejecting unsupported qualitative testimony. Actual historical application drafts failed the existing reference-byte pin check; regenerate/review them against the current pinned reference before reuse. Numeric facts are still independently re-extracted. Exact quotes and model interpretations are not approvals.
+3. **Language interpretation:** all five additional versions now have six-measure source-specific drafts and verified numeric facts. Obtain independent translation/whole-form interpretation and applicable translated-reference decisions; extracted text and component anchors are not certified equivalence.
+4. **Qualitative integration:** supply independently reviewed grading-contract observations and scope coverage for contact, tables, summary content, consistency, deadlines, assets and immigration. Historical reference compatibility is repaired narrowly; numeric facts are independently re-extracted. Exact quotes and model interpretations are not approvals.
 5. **Policy decisions:** obtain authoritative PSA boundary rules and effective dates (#64); resolve permitted whole-form customization/current-FPL interaction (#72/#76); approve or revise missing-statement override (#10). Preserve the known official-template/HHS arithmetic discrepancy.
 6. **Human review:** record subject-matter agreement on a named commit (#67/#20), then independent finding/translation decisions and assessment-bound institutional authorization. Technical review and merge are not substitutes.
 
@@ -47,12 +74,18 @@ For Ellenville's W/Y/Z follow-up specifically, retain the favorable original cit
 
 ## Verification log
 
+### #72 clean-clone reproduction
+
+Final follow-up: fast-forwarded that clone to `19d2bd9`, including the translated visual attachment. Both updated integrated reports replayed identically; application JSON and Markdown regenerated with a clean working tree. Six targeted Node tests, seven multilingual Python tests and the build passed. This final check covers the added visual binding; the earlier check below describes the initial implementation.
+
+Cloned implementation commit `e322027` with `git clone --no-hardlinks --branch feat/72-multilingual-applications`, installed cached Node dependencies with `npm ci --offline`, and extracted both checked-in evidence ZIPs. Both grading replay commands returned **identical** 17-measure reports with pending grades. Regenerating all seven application reviews reproduced the tracked JSON exactly. Six targeted Node tests and six multilingual Python tests passed from the clone, including full new pipeline runs for both hospitals and historical normalization; the production build passed. Generated Markdown also has explicit LF attributes for Windows reproducibility. Python dependencies were reused via the existing virtual environment, not freshly installed. This is not independent operator or subject-matter sign-off.
+
 Executed on Windows, Node 22.14.0, existing Python virtual environment; no paid models:
 
 | Command | Observed result |
 |---|---|
-| `node --test --test-reporter=dot backend/test/*.test.js` | 66 tests passed, including three new multi-hop/normalization tests, 10 integrated pipeline tests and existing grading boundary/override/evidence/review tests. |
-| `.venv/Scripts/python.exe -m unittest discover -s tools/live-audit -p 'test_*.py'` | 88 tests passed, including nine new traversal/security/original-Little-Falls tests and atomic interrupted-file publication. Existing Pydantic forward-reference warning remains. |
+| `node --test --test-reporter=dot backend/test/*.test.js` | 69 tests passed, including seven-source profile parity, reference compatibility/mismatch tests and expanded real seven-language pipeline verification; existing recovery/history/review tests retained. |
+| `.venv/Scripts/python.exe -m unittest discover -s tools/live-audit -p 'test_*.py'` | 95 tests passed, including seven multilingual methods covering originals, mutations, linked cells and visual-review hash/page/quotation binding. Existing Pydantic warning remains. |
 | `npm run build` | Passed. |
 | `node scripts/test-audit-e2e.js` | Passed; legacy fixture uses existing Python PDF reader if Poppler is absent. |
 | `node scripts/test-changes-e2e.js` | Passed. |
@@ -96,7 +129,7 @@ Cloned commit `d2a7c8f` into a separate directory using `git clone --no-hardlink
 | #37 stale data | Already closed; overview and failed/aged integrated refresh tests still pass. | Remains closed. |
 | #64 cross-document review | Full-review machinery and preserved evidence exist; missing source, boundary decisions and human interpretations unresolved. | Keep open. |
 | #67 agreement | Blocked on subject-matter reviewer and named-commit decision. | Keep open. |
-| #72 application reviews | English evidence retained; five additional application-language reviews and governing interpretation remain. | Keep open. |
+| #72 application reviews | Seven source-specific six-measure drafts, linked numeric observations, reference compatibility and structural comparisons implemented. Translated semantic/layout equivalence, authoritative template applicability, customization decisions and independent approval remain. | Keep open. |
 | #10 policy override | Blocked on governing decision; grader preserves possible outcomes rather than inventing approval. | Keep open. |
 | #20 output format | Technically complete; subject-matter agreement pending under #67. | Keep open. |
 

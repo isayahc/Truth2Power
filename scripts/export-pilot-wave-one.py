@@ -42,15 +42,15 @@ def export(store, destination):
     lines = ['# Wave 1 integrated assessment validation', '',
              'These are completed **software executions**, partial **evidence assessments**, and **unapproved** institutional results.', '',
              'Replay package: [`pilot-wave-one-evidence.zip`](pilot-wave-one-evidence.zip). It contains the existing grading input/report formats and all available original source snapshots. No new source or decision is invented.', '']
-    lines += ['## Coverage compared with PR #87', '', '| Hospital | Before resolved / unclear | After resolved / unclear | Changed outcomes |', '|---|---:|---:|---|']
+    lines += ['## Coverage compared with PR #88', '', '| Hospital | Before resolved / unclear | After resolved / unclear | Changed outcomes |', '|---|---:|---:|---|']
     for key, b in sorted(chosen.items()):
         unclear = len(b['report']['unresolved_measures'])
-        before = '3 / 14' if key == '1002' else '2 / 15'
-        baseline_pass = {'R', 'S', 'T'} if key == '1002' else {'R', 'T'}
+        before = '3 / 14'
+        baseline_pass = {'R', 'S', 'T'}
         changes = [f"{f['css_column']}: {'yes' if f['css_column'] in baseline_pass else 'unclear'} → {f['result']}"
                    for f in b['report']['findings'] if f['result'] != ('yes' if f['css_column'] in baseline_pass else 'unclear')]
         lines.append(f'| {key} | {before} | {17-unclear} / {unclear} | ' + ('; '.join(changes) or 'None') + ' |')
-    lines += ['', 'The only changed compliance outcome is Little Falls S. No language review or qualitative approval was inferred from discovery. The earlier PR #87 package remains in git history; local prior assessments are append-only.', '']
+    lines += ['', 'Source-specific coverage now includes all seven application languages and 42 drafts. See [application coverage](wave-one-application-coverage.md). Complete-scope and independent-review gates remain unchanged; no translation approval is inferred from numeric extraction. Earlier packages remain in git history; local prior assessments are append-only.', '']
     rubric = json.loads((ROOT / 'rubrics/css-17-v1.json').read_bytes())
     for key, b in sorted(chosen.items()):
         report, inp = b['report'], b['input']
@@ -89,7 +89,13 @@ def export(store, destination):
             lines.append(f'- Producer `{n["producer_sha256"]}`: {len(n["accepted"])} reused observations. ' + ' '.join(reasons))
             if n.get('reference_binding'):
                 binding = n['reference_binding']
-                lines.append(f'  - Reference hash: producer `{binding["observed_sha256"]}`; required `{binding["expected_sha256"]}`. Re-extract under the current pinned reference; never substitute an approval.')
+                lines.append(f'  - Reference hash: producer `{binding["observed_sha256"]}`; current `{binding["expected_sha256"]}`. Compatibility: `{n.get("reference_compatibility", {}).get("reason", "not_verified")}`. No approval transfers.')
+        lines += ['', '### New application observations', '']
+        for review in b.get('application_reviews', []):
+            lines.append(f'- {review["language"]}: {len(review["findings"])} source-specific drafts, {len(review["reviewed_segments"])} extracted segments, human review pending; `{review["snapshot"]["sha256"]}`.')
+        for f in inp['findings']:
+            if f['measure_id'] in ('application.fpl_guidelines', 'application.maximum_fpl', 'application.installments_cap'):
+                lines.append(f'- `{f["measure_id"]}`: {len(f["observed"])} source-bound numeric observations; integrated `{next(r["result"] for r in report["findings"] if r["measure_id"] == f["measure_id"])}`.')
         lines += ['', '### Sources and language coverage', '', '| Role | Language | Coverage | Source / SHA-256 |', '|---|---|---|---|']
         for s in inp['sources']:
             digest = s['snapshot']['sha256'] if s.get('snapshot') else 'unavailable — no snapshot asserted'

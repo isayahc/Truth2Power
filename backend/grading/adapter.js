@@ -6,6 +6,7 @@ import { byId, rubric, hhs, referenceHash, confirmedDocuments, postingReference,
 import { parseProfile } from "./profiles.js";
 import { fplComparison } from "./measures.js";
 import { evidenceStore } from "./evidence.js";
+import { referenceCompatibility } from "./reference-compatibility.js";
 
 const blockers = (code, action, measure_id) => ({ code, action, ...(measure_id ? { measure_id } : {}) });
 const rubricForFormat = { "application-reviews": "english-uniform-application-profile-v1", "full-reviews": "full-text-three-measures-v1", worker: "demo-v1", posting: "wave-one-posting-v1" };
@@ -62,7 +63,7 @@ function inventory(artifact, format) {
     const known = format === "posting" && confirmedDocuments.find((d) => d.hospital_key === artifact.hospital_key && d.sha256 === s.sha256 && d.role === role);
     const status = format === "posting" ? (role === "landing_page" ? "reviewed" : "available") : c?.status === "reviewed" || demoWorker ? "reviewed" : c?.status === "unrelated" ? "unrelated" :
       c?.status === "extracted" ? "available" : c?.status?.includes("translation") ? "translation_needed" : "not_reviewed";
-    add({ source_id, hospital_key: artifact.hospital_key, role, language: languageTag(c?.language || known?.language), status,
+    add({ source_id, hospital_key: artifact.hospital_key, role, language: languageTag(c?.language || known?.language || (demoWorker ? 'en' : 'und')), status,
       snapshot: { snapshot_id: s.snapshot_id, sha256: s.sha256, url: s.url, artifact_path: s.artifact_path,
         retrieved_at: s.retrieved_at, publisher_updated_at: s.publisher_updated_at ?? null } });
   }
@@ -98,7 +99,7 @@ function projectFinding(m, original, input, review, store, blockersOut) {
     f.observed = [{ evidence_index: index, method: "posted_link", value: { links: original.observed.links, search_complete: false } }];
     f.result = "yes";
   } else {
-    const observations = f.evidence.map((e, index) => ({ evidence_index: index, method: "text_profile", value: parseProfile(m.evaluator, e.quote) })).filter((o) => o.value);
+    const observations = f.evidence.map((e, index) => ({ evidence_index: index, method: "text_profile", value: parseProfile(m.evaluator, e.quote, input.sources.find((s) => s.source_id === e.source_id)?.language) })).filter((o) => o.value);
     if (observations.length === 1) {
       f.observed = observations;
       const v = observations[0].value;
@@ -131,7 +132,7 @@ export function adaptArtifact(raw, { root, reviewDate, previous } = {}) {
     requireValue(format && root, "Provide one supported artifact and its evidence root");
     provenance = { ...provenance, format, original: a };
     if (a.attempt) validateSchema(a, "live-audit-v1.schema.json");
-    requireValue(rubricForFormat[format] === a.rubric_version, "Unmapped producer rubric version");
+    requireValue(rubricForFormat[format] === a.rubric_version || (format === 'application-reviews' && a.rubric_version === 'multilingual-uniform-application-profile-v1'), "Unmapped producer rubric version");
     if (format === "posting") requireValue(a.reference_version === postingReference && a.attempt.status === "completed", "Unverified posting inventory or incomplete assessment");
     if (format === "worker" && a.reference_version !== `hhs-${a.guideline_year}-contiguous-us`) throw Error("Unmapped worker reference version");
     if (format === "worker") requireValue(a.hospital_key === "362", "This synthetic worker rubric is bound to hospital 362");
@@ -147,7 +148,10 @@ export function adaptArtifact(raw, { root, reviewDate, previous } = {}) {
     if (a.attempt) requireValue(a.last_successful_assessment_at === a.assessment.completed_at, "Invalid last completed assessment");
     const sourceReview = originalReviews(root, a, hash, format);
     provenance.decisions = sourceReview;
-    if (format === "application-reviews") requireValue(a.reference_version === hhs.reference_version && a.reference_sha256 === referenceHash, "Unpinned application reference bytes");
+    if (format === "application-reviews") {
+      provenance.reference_compatibility = referenceCompatibility(a);
+      requireValue(provenance.reference_compatibility.accepted, "Unpinned application reference bytes: " + provenance.reference_compatibility.reason);
+    }
     if (format === "full-reviews" && a.reference_version && a.reference_version !== hhs.reference_version)
       throw Error("Unmapped full-review reference version");
     if (a.review_date && reviewDate && a.review_date !== reviewDate) throw Error("Review date conflicts with original assessment");
@@ -186,6 +190,7 @@ export function adaptArtifact(raw, { root, reviewDate, previous } = {}) {
         projected.unresolved_evidence.push(a.psa.unresolved_question);
         issues.push(blockers("unresolved_psa_authority", a.psa.unresolved_question, m.measure_id));
       }
+      projected.unresolved_evidence = [...new Set(projected.unresolved_evidence)];
       input.findings.push(projected);
     }
     input.origin = { format, artifact_sha256: hash, original_id: input.assessment_id, rubric_version: a.rubric_version,
