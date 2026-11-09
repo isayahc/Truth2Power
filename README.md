@@ -4,6 +4,8 @@
 
 The persistent audit worker now publishes one immutable assessment revision across hospital pages, grading, overview, review inbox and changes. See the [offline demo and operating guide](docs/validation/pilot-operations.md), [release-readiness report](docs/validation/pilot-readiness.md), and [reproducible Wave 1 results](docs/validation/wave-one-pilot-results.md). Run `npm run test:pilot` with the existing Python grading dependencies configured. Real Wave 1 evidence remains partial; institutional grades and subject-matter approval remain pending.
 
+All 212 roster facilities support manual document scans, 17-measure audits and saved-evidence replay through the CLI and local API. See the [manual audit commands and classification workflow](docs/validation/pilot-operations.md#live-operation-and-monitoring).
+
 The collector supports bounded same-host multi-hop HTML discovery with public-IP-pinned TLS, immutable page/link provenance and explicit coverage gaps. Little Falls's saved landing → summary page → English/Spanish PDF chain now resolves measure S through the deterministic grader. Both Wave 1 hospitals have 3 resolved posting measures and 14 unclear measures. See the operating guide for traversal limits, safe historical-observation reuse and offline regression commands.
 
 All seven Wave 1 application-language versions now have reproducible six-measure drafts and source-bound numeric observations. See the [application coverage matrix](docs/validation/wave-one-application-coverage.md). Historical LF/CRLF reference compatibility is verified narrowly; translations, whole-form customizations and institutional authorization remain explicit review questions.

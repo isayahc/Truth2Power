@@ -1,12 +1,12 @@
 import { openStore } from "./store.js";
 import { enqueuePipeline, publications, pipelineRoot } from "./pipeline-store.js";
-import { readArtifact } from "../grading/data.js";
+import { fingerprint, readArtifact } from "../grading/data.js";
 import { sha256 } from "../review/identity.js";
 
 const json = (statusCode, data) => ({ statusCode, headers: { "Content-Type": "application/json", "Cache-Control": "no-store" }, body: JSON.stringify(data) });
 export function pipelineRoute(event) {
   const method = event.requestContext?.http?.method;
-  const match = /^\/api\/pilot\/hospitals\/(\d{1,8})$/.exec(event.rawPath);
+  const match = /^\/api\/pilot\/hospitals\/(\d{1,8}|t2p-\d{1,8})$/.exec(event.rawPath);
   if (match && method === "POST") {
     if (event.headers?.["x-review-request"] !== "1") return json(403, { error: "Local request header required." });
     let db;
@@ -25,7 +25,20 @@ export function pipelineRoute(event) {
   if (match) {
     const job = data.jobs.find((j) => j.hospital === match[1]);
     const publicJob = job && Object.fromEntries(["id", "status", "attempted", "attempts", "error", "year"].map((k) => [k, job[k]]));
-    return json(200, { job: publicJob ?? null, latest: data.bundles.find((b) => b.input.hospital_key === match[1])?.id ?? null });
+    const scan = data.jobs.find((j) => j.hospital === match[1] && j.context.mode === "discovery_only" && j.status === "completed");
+    return json(200, { job: publicJob ? { ...publicJob, mode: job.context.mode } : null,
+      latest_scan: scan ? JSON.parse(scan.checkpoint).scan_id : null, latest: data.bundles.find((b) => b.input.hospital_key === match[1])?.id ?? null });
+  }
+  const scanPath = /^\/api\/pilot\/scans\/([a-f0-9]{64})$/.exec(event.rawPath);
+  if (scanPath) {
+    const id = scanPath[1];
+    const job = data.jobs.find((j) => j.context.mode === "discovery_only" && j.status === "completed" && JSON.parse(j.checkpoint).scan_id === id);
+    if (!job) return json(404, { error: "Scan not found." });
+    try {
+      const { id: savedId, ...scan } = JSON.parse(readArtifact(job.context.root, `pipeline-scans/${id}.json`));
+      if (savedId !== id || fingerprint(scan) !== id || scan.job !== job.id) throw Error();
+      return json(200, { id, ...scan });
+    } catch { return json(422, { error: "Scan integrity check failed." }); }
   }
   const assessment = /^\/api\/pilot\/assessments\/([a-f0-9]{64})$/.exec(event.rawPath);
   if (assessment) {

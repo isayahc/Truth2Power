@@ -6,7 +6,8 @@ import { isDeepStrictEqual } from "node:util";
 import { sourceUrl, sha256, languageTag } from "../review/identity.js";
 import { readArtifact, requireValue, fingerprint, confirmedDocuments, assistancePages } from "./data.js";
 import { parseProfile } from "./profiles.js";
-import { postingPaths } from "./posting-paths.js";
+import { readClassifications } from "./source-classification.js";
+import { postingPaths, isPostingPage } from "./posting-paths.js";
 
 /** Bind testimony to the exact observations, citations, inventory and completed assessment. */
 export function reviewSubject(input, finding) {
@@ -75,7 +76,7 @@ export function evidenceStore(input, root, decisionDirectory) {
       let segments;
       if (suffix === ".txt") segments = Object.fromEntries(raw.toString("utf8").split(/\r?\n/).map((s, i) => ["line " + (i + 1), s]));
       else if ([".html", ".pdf", ".docx"].includes(suffix)) {
-        const proc = spawnSync(process.env.T2P_PYTHON || "python", [fileURLToPath(new URL("extract.py", import.meta.url)), suffix, ...(doc.role === "landing_page" && measureLinks ? [doc.snapshot.final_url || doc.source_id] : [])],
+        const proc = spawnSync(process.env.T2P_PYTHON || "python", [fileURLToPath(new URL("extract.py", import.meta.url)), suffix, ...(isPostingPage(doc) && measureLinks ? [doc.snapshot.final_url || doc.source_id] : [])],
           { input: raw, encoding: "utf8", timeout: 30000, maxBuffer: 16 * 1024 * 1024 });
         requireValue(proc.status === 0, "Offline source extraction unavailable");
         segments = JSON.parse(proc.stdout);
@@ -83,6 +84,18 @@ export function evidenceStore(input, root, decisionDirectory) {
       textCache.set(cacheKey, segments);
     }
     return textCache.get(cacheKey)[locator];
+  }
+
+  const verifiedDocuments = [...confirmedDocuments];
+  const classificationFiles = new Map();
+  for (const doc of input.sources.filter((s) => s.classification_sha256)) {
+    const hash = doc.classification_sha256;
+    if (!classificationFiles.has(hash)) classificationFiles.set(hash, readClassifications(root, hash, input.hospital_key));
+    const review = classificationFiles.get(hash).find((r) => r.source_id === doc.source_id && r.role === doc.role &&
+      r.sha256 === doc.snapshot?.sha256 && r.language === doc.language);
+    requireValue(review && [review, review.applicability].every((c) => segment(doc, c.locator)?.includes(c.quote)),
+      "Unverified classification citation or source identity");
+    verifiedDocuments.push(review);
   }
 
   function evidence(measure, finding) {
@@ -93,7 +106,7 @@ export function evidenceStore(input, root, decisionDirectory) {
     const cited = finding.evidence.map((e) => {
       const doc = registry.get(e.source_id);
       requireValue(doc?.snapshot && doc.snapshot.sha256 === e.sha256 && doc.snapshot.snapshot_id === e.snapshot_id, "Unbound evidence snapshot");
-      requireValue(measure.roles.includes(doc.role), "Wrong-document evidence for " + measure.measure_id);
+      requireValue(measure.roles.includes(doc.role) || (measure.evaluator === "posting" && isPostingPage(doc) && e.locator.startsWith("link ")), "Wrong-document evidence for " + measure.measure_id);
       if (publishedFields.has(doc.source_id)) {
         const fields = publishedFields.get(doc.source_id);
         // The field name is fixed by the rubric, never chosen to fit an answer.
@@ -122,13 +135,13 @@ export function evidenceStore(input, root, decisionDirectory) {
           if (e.locator.startsWith("link ")) requireValue(e.quote === cited[index].content, "Expected the exact saved anchor label");
           (extracted[e.source_id] ??= []).push({ locator: e.locator, text: e.quote, status: "extracted" });
         }
-        const paths = postingPaths(input.sources, extracted, c.doc.source_id, measure.expected.any_accessible_role, confirmedDocuments, input.hospital_key);
+        const paths = postingPaths(input.sources, extracted, c.doc.source_id, measure.expected.any_accessible_role, verifiedDocuments, input.hospital_key);
         const links = [...new Set(paths.map((p) => p.target))];
         requireValue(links.length > 0, "Missing posting links");
         value = { links, search_complete: false };
       } else if (o.method === "text_profile") {
         requireValue(typeof c.content === "string", "Text profile needs located text");
-        const confirmed = confirmedDocuments.some((d) => d.hospital_key === c.doc.hospital_key && d.role === c.doc.role && d.sha256 === c.doc.snapshot.sha256 && languageTag(d.language) === c.doc.language);
+        const confirmed = verifiedDocuments.some((d) => (!d.source_id || d.source_id === c.doc.source_id) && d.hospital_key === c.doc.hospital_key && d.role === c.doc.role && d.sha256 === c.doc.snapshot.sha256 && languageTag(d.language) === c.doc.language);
         if (!input.synthetic && !confirmed && review !== "approved") {
           gaps.push("Verify the hospital and document role for the exact snapshot before using extracted numbers.");
           continue;

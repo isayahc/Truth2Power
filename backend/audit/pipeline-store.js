@@ -7,8 +7,12 @@ import { fingerprint, rubric, hhs, referenceHash } from "../grading/data.js";
 import { sha256 } from "../review/identity.js";
 import { applicationProfileHash, applicationVisualHash } from "../grading/profiles.js";
 
+import { facilityFor } from "./roster-inventory.js";
+import { classificationFile } from "../grading/source-classification.js";
+export { roster } from "./roster-inventory.js";
+
 export const pipelineRoot = () => resolve(process.env.T2P_REVIEW_DIRECTORY || join(directory, "live"));
-export const roster = JSON.parse(readFileSync(new URL("../../data/maps/hospitals.geojson", import.meta.url))).features;
+
 export function immutable(root, path, bytes) {
   const target = join(root, path);
   mkdirSync(join(target, ".."), { recursive: true });
@@ -19,26 +23,49 @@ export function immutable(root, path, bytes) {
   finally { unlinkSync(temporary); }
   return path;
 }
-export function enqueuePipeline(db, { hospital_key, year = 2026, review_date, mode = "replay", variant = "original", request_key, root = pipelineRoot(), evidence_root = root, discovery_bounds = {} }) {
+export function enqueuePipeline(db, { hospital_key, year = 2026, review_date, mode = "replay", variant = "original", request_key, root = pipelineRoot(), evidence_root = root, discovery_bounds = {}, classifications }) {
   const caps = { depth: 8, pages: 100, documents: 100, bytes_per_resource: 12582912, total_bytes: 134217728, timeout: 30, seconds: 150, redirects: 8 };
-  if (!discovery_bounds || Array.isArray(discovery_bounds) || Object.entries(discovery_bounds).some(([k, v]) => !Object.hasOwn(caps, k) || !Number.isInteger(v) || v < 1 || v > caps[k])) throw Error("Invalid discovery bounds");
-  if (!roster.some((h) => String(h.id) === hospital_key) || ![2025, 2026].includes(year) ||
-    !["synthetic", "replay", "live"].includes(mode) || !["original", "corrected", "multilingual"].includes(variant) ||
+  if (!discovery_bounds || typeof discovery_bounds !== "object" || Array.isArray(discovery_bounds) || Object.entries(discovery_bounds).some(([k, v]) => !Object.hasOwn(caps, k) || !Number.isInteger(v) || v < 1 || v > caps[k])) throw Error("Invalid discovery bounds");
+  const facility = facilityFor(hospital_key);
+  if (![2025, 2026].includes(year) ||
+    !["synthetic", "replay", "live", "discovery_only", "full_audit"].includes(mode) || !["original", "corrected", "multilingual"].includes(variant) ||
     !/^[a-zA-Z0-9-]{1,100}$/.test(request_key || "") || !/^\d{4}-\d{2}-\d{2}$/.test(review_date || "") ||
     !Number.isFinite(Date.parse(review_date)) || new Date(review_date).toISOString().slice(0, 10) !== review_date || Number(review_date.slice(0, 4)) !== year) throw Error("Invalid audit job context");
-  if (mode !== "synthetic" && !["1002", "362"].includes(hospital_key)) throw Error("Only Wave 1 has a verified classification inventory; other sites remain due");
   if (mode === "synthetic" && hospital_key !== "1002") throw Error("Synthetic fixture is bound to its labeled hospital key 1002");
   const context = { pipeline: 1, engine_version: "multilingual-v1", application_visual_sha256: applicationVisualHash, application_profile_sha256: applicationProfileHash, discovery_bounds, mode, variant, root: resolve(root), evidence_root: resolve(evidence_root),
     hospital_key, year, review_date, rubric_version: rubric.version, rubric_sha256: fingerprint(rubric), reference_version: hhs.reference_version, reference_sha256: referenceHash,
-    facility: roster.find((h) => String(h.id) === hospital_key).properties.name };
+    facility: facility.name };
+  if (mode !== "synthetic") context.roster_sha256 = fingerprint(facility);
+  if (classifications !== undefined) {
+    if (!Buffer.isBuffer(classifications) || classifications.length > 256 * 1024 || ["synthetic", "discovery_only"].includes(mode)) throw Error("Invalid classification input");
+    classificationFile(classifications, hospital_key);
+    context.classification_sha256 = sha256(classifications);
+    immutable(context.root, `source-classifications/${context.classification_sha256}.json`, classifications);
+  }
   const hash = fingerprint(context);
   return transaction(db, () => {
     const old = db.prepare("SELECT * FROM pipeline_requests WHERE request_key=?").get(request_key);
-    if (old) { if (old.context_hash !== hash) throw Error("Idempotency key already used with different context"); return Number(old.job); }
+    if (old) {
+      // Previously queued Wave 1 jobs predate the roster binding. Their original request still identifies them.
+      const { roster_sha256, ...legacy } = context;
+      if (old.context_hash !== hash && old.context_hash !== fingerprint(legacy)) throw Error("Idempotency key already used with different context");
+      return Number(old.job);
+    }
     const id = Number(db.prepare("INSERT INTO jobs(hospital,year,rule,review_date,context) VALUES(?,?,?,?,?)")
       .run(hospital_key, year, "css-17-v1", review_date, JSON.stringify(context)).lastInsertRowid);
     db.prepare("INSERT INTO pipeline_requests VALUES(?,?,?)").run(request_key, id, hash);
     return id;
+  });
+}
+
+/** Fence scan publication with its attempt without writing an assessment or a change event. */
+export function publishScan(db, job, id) {
+  return transaction(db, () => {
+    const result = db.prepare("UPDATE jobs SET status='completed',lease=NULL,error=NULL,checkpoint=? WHERE id=? AND token=? AND status='running'")
+      .run(JSON.stringify({ scan_id: id }), job.id, job.token);
+    if (!result.changes) return false;
+    db.prepare("UPDATE attempts SET status='completed',error=NULL WHERE token=?").run(job.token);
+    return true;
   });
 }
 
@@ -56,7 +83,8 @@ export function publishPipeline(db, job, bundle) {
       const changed = bundle.input.sources.filter((s) => s.snapshot && previous.content[s.source_id] !== bundle.content[s.source_id]);
       for (const s of changed) {
         const before = previous.input.sources.find((d) => d.source_id === s.source_id && d.snapshot);
-        if (!before) continue; // New-source discovery remains a coverage change, not a fabricated before image.
+        // New sources and reclassification of identical bytes are coverage changes.
+        if (!before || before.snapshot.sha256 === s.snapshot.sha256) continue;
         const evidence = (source, b) => ({ ...source.snapshot, locator: "Saved source bytes", excerpt: "Content changed; inspect the immutable source and assessment.",
           saved_url: `/api/pilot/snapshots/${source.snapshot.sha256}`, assessment_id: b.id, assessment_url: `/api/pilot/assessments/${b.id}` });
         const event = { id: sha256(`${previous.id}:${bundle.id}:${s.source_id}`), hospital_key: job.hospital,
@@ -91,10 +119,11 @@ export function publications(root = pipelineRoot(), { includeSynthetic = process
     if (!db.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name='pipeline_events'").get()) return { bundles: [], failures: [], events: [], jobs: [] };
     const rows = db.prepare("SELECT a.output,a.job FROM assessments a JOIN jobs j ON j.id=a.job WHERE j.rule='css-17-v1' ORDER BY a.job DESC").all();
     const bundles = rows.map((r) => ({ ...JSON.parse(r.output), job: r.job })).filter((b) => b.root === resolve(root) && (includeSynthetic || !b.input.synthetic));
-    if (bundles.some((b) => b.id !== fingerprint({ input: b.input, report: b.report }))) throw Error("Persisted assessment identity mismatch");
+    if (bundles.some((b) => b.id !== fingerprint({ input: b.input, report: b.report }) ||
+      (b.input.scope.inventory_sha256 && b.input.scope.inventory_sha256 !== fingerprint(b.inventory)))) throw Error("Persisted assessment identity mismatch");
     const jobs = db.prepare("SELECT * FROM jobs WHERE rule='css-17-v1' ORDER BY id DESC").all()
       .map((j) => ({ ...j, context: JSON.parse(j.context) })).filter((j) => j.context.root === resolve(root) && (includeSynthetic || j.context.mode !== "synthetic"));
-    const failures = jobs.filter((j) => j.error);
+    const failures = jobs.filter((j) => j.error && j.context.mode !== "discovery_only");
     const ids = new Set(bundles.map((b) => b.job));
     const events = db.prepare("SELECT job,output FROM pipeline_events ORDER BY job DESC").all().filter((r) => ids.has(r.job)).map((r) => JSON.parse(r.output));
     return { bundles, failures, events, jobs };

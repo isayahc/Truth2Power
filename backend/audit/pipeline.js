@@ -1,4 +1,4 @@
-import { readFileSync, existsSync, readdirSync } from "node:fs";
+import { readFileSync, existsSync } from "node:fs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { execFile } from "node:child_process";
@@ -9,7 +9,9 @@ import { fplComparison } from "../grading/measures.js";
 import { sha256, languageTag } from "../review/identity.js";
 import { reportingContext } from "../reporting/context.js";
 import { localRecords, latestByScope, projectRecord } from "../hospital-page/records.js";
-import { immutable, publishPipeline, failPipeline } from "./pipeline-store.js";
+import { immutable, publishPipeline, publishScan, failPipeline } from "./pipeline-store.js";
+import { facilityFor, sourceInventory, savedCollection } from "./roster-inventory.js";
+import { readClassifications } from "../grading/source-classification.js";
 import { postingPaths } from "../grading/posting-paths.js";
 import { adaptArtifact } from "../grading/adapter.js";
 import { normalizeObservations } from "./normalize-observations.js";
@@ -63,10 +65,13 @@ function synthetic(job) {
   return { input, content, producer_records: [], extraction: { mode: "published-fields-v1", note: "Synthetic original structured publications; not a PDF transcription." } };
 }
 
-async function real(job) {
+async function real(job, collect) {
   const root = job.context.root, originalRoot = job.context.evidence_root;
   const display = reportingContext(job.hospital), gaps = ["Complete website/online-application discovery and governing interpretations require review; direct links do not prove absence."];
-  const pinned = JSON.parse(readFileSync(new URL(`../../docs/hospital-pages/${job.hospital}.json`, import.meta.url))).records;
+  const facility = facilityFor(job.hospital);
+  if (job.context.roster_sha256 && fingerprint(facility) !== job.context.roster_sha256) throw Error("Roster changed; enqueue a new job");
+  const curated = new URL(`../../docs/hospital-pages/${job.hospital}.json`, import.meta.url);
+  const pinned = existsSync(curated) ? JSON.parse(readFileSync(curated)).records : [];
   if (job.hospital === "362") {
     const path = "docs/audit-format/changes/362-summary-posting.json";
     pinned.push(projectRecord(readFileSync(new URL("../../" + path, import.meta.url)), path, "posting"));
@@ -75,72 +80,71 @@ async function real(job) {
   if (local.unavailable.length) gaps.push(`${local.unavailable.length} source-review artifacts could not be read.`);
   const records = [...new Map([...pinned, ...local.records.filter((r) => r.hospital_key === job.hospital)].map((r) => [r.record_id, r])).values()];
   const candidates = records.flatMap((r) => r.findings.flatMap((f) => f.evidence));
-  const documents = display.documents.map((d) => ({ source_id: d.url, role: d.role, language: languageTag(d.language), digest: d.sha256,
+  const seeds = (display?.documents ?? []).map((d) => ({ source_id: d.url, role: d.role, language: languageTag(d.language), digest: d.sha256,
     retrieved_at: d.retrieved_at, publisher_updated_at: null }));
-  for (const r of records) for (const s of r.landing_page || []) {
+  for (const r of pinned) for (const s of r.landing_page || []) {
     const e = candidates.find((e) => e.url === s.url);
-    if (e && !documents.some((d) => d.source_id === s.url)) documents.push({ source_id: s.url, role: "landing_page", language: "en", digest: e.sha256, retrieved_at: e.retrieved_at });
+    if (e && !seeds.some((d) => d.source_id === s.url)) seeds.push({ source_id: s.url, role: "landing_page", language: "en", digest: e.sha256, retrieved_at: e.retrieved_at });
   }
-  const collectionDir = join(originalRoot, "collections", job.hospital);
-  let savedDiscovery = null;
-  if (job.context.mode === "replay" && existsSync(collectionDir)) {
-    const saved = readdirSync(collectionDir).filter((f) => /^[a-f0-9]{32}\.json$/.test(f)).map((f) => JSON.parse(readArtifact(originalRoot, `collections/${job.hospital}/${f}`)))
-      .filter((c) => c.hospital_key === job.hospital && c.landing_page).sort((a, b) => Date.parse(b.attempted_at) - Date.parse(a.attempted_at))[0];
-    if (saved) {
-      savedDiscovery = saved;
-      const landing = saved.landing_page;
-      const d = documents.find((d) => d.source_id === landing.url);
-      const captured = { source_id: landing.url, role: "landing_page", language: "en", digest: landing.sha256, retrieved_at: landing.retrieved_at };
-      if (d) Object.assign(d, captured); else documents.push(captured);
-      for (const s of [...(saved.pages || []), ...saved.documents].filter((s) => s.sha256 && s.status === "saved")) {
-        const id = s.source_url || s.url;
-        if (documents.some((d) => d.source_id === id)) continue;
-        const known = confirmedDocuments.find((d) => d.hospital_key === job.hospital && d.sha256 === s.sha256);
-        documents.push({ source_id: id, final_url: s.final_url || s.url, role: s.artifact_path.endsWith(".html") ? "landing_page" : known?.role || "supplement",
-          language: known ? languageTag(known.language) : "und", digest: s.sha256, retrieved_at: s.retrieved_at });
-      }
-    }
-  }
-  let collection;
-  if (job.context.mode === "live") {
-    const collected = await bridge(root, { mode: "live", hospital_key: job.hospital, bounds: job.context.discovery_bounds });
-    collection = collected.collection;
-    const fetched = [collection.landing_page, ...(collection.pages || []), ...collection.documents];
-    for (const d of documents) {
-      const s = fetched.find((s) => s && (s.url === d.source_id || s.source_url === d.source_id));
-      if (!s?.sha256) { d.digest = null; gaps.push(`Not captured in this collection: ${d.source_id}`); }
-      else { d.digest = s.sha256; d.retrieved_at = s.retrieved_at; d.final_url = s.final_url || s.url; }
-    }
-    for (const s of fetched.filter((s) => s?.sha256 && !documents.some((d) => d.source_id === (s.source_url || s.url)))) {
-      const known = confirmedDocuments.find((d) => d.hospital_key === job.hospital && d.sha256 === s.sha256);
-      documents.push({ source_id: s.source_url || s.url, final_url: s.final_url || s.url, role: s.artifact_path.endsWith(".html") ? "landing_page" : known?.role || "supplement", language: known ? languageTag(known.language) : s.artifact_path.endsWith(".html") ? "en" : "und", digest: s.sha256, retrieved_at: s.retrieved_at });
-      gaps.push(`Classify campus, document role and language before evaluation: ${s.url}`);
-    }
-  }
+  const replay = job.context.mode === "replay", scan = job.context.mode === "discovery_only";
+  const collection = replay ? savedCollection(originalRoot, job.hospital) : (await collect(root, {
+    mode: "live", hospital_key: job.hospital, bounds: job.context.discovery_bounds, discovery_only: scan,
+  })).collection;
+  const inventory = sourceInventory(facility, collection, seeds);
+  const documents = inventory.sources;
+  gaps.push(...inventory.gaps);
+  const classifications = readClassifications(root, job.context.classification_sha256, job.hospital);
+  const verified = [...confirmedDocuments];
   const input = { ...context(job), scope: { inventory_status: "partial", online_application: "unknown", required_sources: [], gaps }, sources: [], findings: [] };
   for (const d of documents) {
     const source = { source_id: d.source_id, hospital_key: job.hospital, role: d.role, language: d.language, status: "unavailable", snapshot: null };
-    const from = collection ? root : originalRoot;
-    const suffix = [".pdf", ".docx", ".html"].find((ext) => d.digest && existsSync(join(from, `snapshots/${d.digest}${ext}`)));
+    const from = replay ? originalRoot : root;
+    const suffix = [".pdf", ".docx", ".html"].find((ext) => d.digest && (!d.artifact_path || d.artifact_path.endsWith(ext)) && existsSync(join(from, `snapshots/${d.digest}${ext}`)));
     if (suffix) {
       const path = `snapshots/${d.digest}${suffix}`, raw = readArtifact(from, path);
+      Object.assign(d, { artifact_path: path, capture_status: "saved" });
       if (sha256(raw) !== d.digest) throw Error("Source snapshot checksum mismatch");
       immutable(root, path, raw);
       source.snapshot = { snapshot_id: d.digest, sha256: d.digest, artifact_path: path, url: d.source_id, retrieved_at: d.retrieved_at, publisher_updated_at: null };
       if (d.final_url && d.final_url !== d.source_id) source.snapshot.final_url = d.final_url;
       source.status = "available";
-    } else gaps.push(`Obtain original snapshot or recollect unavailable source: ${d.source_id}`);
+      const review = classifications.find((c) => c.source_id === d.source_id && c.sha256 === d.digest);
+      if (review && d.role === "unclassified" && d.campus_applicability !== "other_campus_requires_review") {
+        source.role = review.role;
+        source.language = review.language;
+        source.classification_sha256 = job.context.classification_sha256;
+        Object.assign(d, { role: review.role, language: review.language, campus_applicability: "applicable",
+          provenance: "operator_classification", classification_sha256: source.classification_sha256 });
+        verified.push(review);
+      }
+      if (source.role === "unclassified") gaps.push(`Classify document role and campus (${d.campus_applicability}): ${d.source_id}`);
+      if (source.language === "und") gaps.push(`Unknown language: ${d.source_id}`);
+    } else {
+      if (d.digest) d.capture_status = "snapshot_unavailable";
+      gaps.push(`Obtain original snapshot or recollect unavailable source: ${d.source_id}`);
+    }
     input.sources.push(source);
   }
+  if (!documents.some((d) => d.role === "psa_reference")) gaps.push("Independent governing service-area reference unavailable.");
+  for (const review of classifications) {
+    if (!documents.some((d) => d.source_id === review.source_id && d.classification_sha256)) gaps.push(`Classification did not bind to the captured document: ${review.source_id}`);
+  }
+  inventory.gaps = [...new Set(gaps)];
+  if (scan) return { inventory, discovery: collection };
   input.scope.required_sources = input.sources.map((s) => s.source_id);
   const analysis = await bridge(root, { mode: "extract", sources: input.sources, application_review_date: job.review_date });
   const extracted = analysis.sources;
   const content = {};
   for (const s of input.sources) if (s.snapshot) {
     const segments = extracted[s.source_id];
-    content[s.source_id] = fingerprint(segments.map((p) => [p.locator, p.text]));
+    if (s.classification_sha256) {
+      const review = classifications.find((c) => c.source_id === s.source_id);
+      if (![review, review.applicability].every((c) => segments.some((p) =>
+        p.status === "extracted" && p.locator === c.locator && p.text.includes(c.quote)))) throw Error("Unverified classification citation");
+    }
+    content[s.source_id] = !segments.length ? s.snapshot.sha256 : fingerprint(segments.map((p) => [p.locator, p.text]));
     if (segments.some((p) => p.status !== "extracted")) { s.status = "unreadable"; gaps.push(`Review extraction gaps in ${s.source_id}`); }
-    else if (s.language !== "en") { s.status = "translation_needed"; gaps.push(`Qualified language/measure interpretation needed: ${s.source_id} [${s.language}]`); }
+    else if (s.language !== "en" && !(s.snapshot.artifact_path.endsWith(".html") && s.language === "und")) { s.status = "translation_needed"; gaps.push(`Qualified language/measure interpretation needed: ${s.source_id} [${s.language}]`); }
     else if (s.role === "application" && records.some((r) => r.kind === "application-reviews" && r.findings.some((f) => f.evidence.some((e) => e.url === s.source_id && e.sha256 === s.snapshot.sha256)))) s.status = "reviewed";
   }
   const scoped = latestByScope(records.filter((r) => r.guideline_year === job.year));
@@ -175,7 +179,7 @@ async function real(job) {
     }
     if (m.evaluator === "posting") {
       f.evidence = [];
-      const paths = postingPaths(input.sources, extracted, assistancePages.get(job.hospital), m.expected.any_accessible_role, confirmedDocuments, job.hospital, job.context.discovery_bounds?.depth || 3);
+      const paths = postingPaths(input.sources, extracted, assistancePages.get(job.hospital), m.expected.any_accessible_role, verified, job.hospital, job.context.discovery_bounds?.depth || 3);
       const links = [...new Set(paths.map((p) => p.target))];
       f.evidence = [...new Map(paths.flatMap((p) => p.evidence).map((e) => [JSON.stringify(e), e])).values()];
       if (links.length) {
@@ -214,11 +218,17 @@ async function real(job) {
     f.unresolved_evidence = [...new Set(f.unresolved_evidence)];
     input.findings.push(f);
   }
-  return { input, content, producer_records: records, normalization, application_reviews: analysis.application_reviews, discovery: collection || savedDiscovery,
+  for (const review of analysis.application_reviews) {
+    if (review.template_comparison?.result !== "yes") gaps.push(`Template equivalence requires review: ${review.source_id}`);
+  }
+  input.scope.gaps = [...new Set(gaps)];
+  inventory.gaps = input.scope.gaps;
+  input.scope.inventory_sha256 = fingerprint(inventory);
+  return { input, content, inventory, producer_records: records, normalization, application_reviews: analysis.application_reviews, discovery: collection,
     extraction: { parser: "document-text-v5", collection_status: collection?.status ?? "saved_evidence_replay" } };
 }
 
-export async function runPipeline(db, job) {
+export async function runPipeline(db, job, collect = bridge) {
   try {
     if (!db.prepare("SELECT id FROM jobs WHERE id=? AND token=? AND status='running'").get(job.id, job.token)) return null;
     if (job.context.engine_version !== "multilingual-v1") throw Error("Pipeline engine changed; enqueue a new job");
@@ -236,11 +246,18 @@ export async function runPipeline(db, job) {
       }
     }
     if (!prepared) {
-      prepared = job.context.mode === "synthetic" ? synthetic(job) : await real(job);
+      prepared = job.context.mode === "synthetic" ? synthetic(job) : await real(job, collect);
       prepared.job_context_sha256 = fingerprint(job.context);
       const raw = Buffer.from(JSON.stringify(prepared)), digest = sha256(raw), path = `pipeline-checkpoints/${digest}.json`;
       immutable(job.context.root, path, raw);
       db.prepare("UPDATE jobs SET checkpoint=? WHERE id=? AND token=? AND status='running'").run(JSON.stringify({ pipeline: 1, path, sha256: digest }), job.id, job.token);
+    }
+    if (job.context.mode === "discovery_only") {
+      const scan = { mode: job.context.mode, job: job.id, ...prepared };
+      scan.id = fingerprint(scan);
+      const path = `pipeline-scans/${scan.id}.json`;
+      immutable(job.context.root, path, Buffer.from(JSON.stringify(scan)));
+      return publishScan(db, job, scan.id) ? scan : null;
     }
     prepared.input = { ...prepared.input, ...context(job) };
     prepared.input.findings = prepared.input.findings.map((f) => ({ ...f, ...contextOf(prepared.input) }));
