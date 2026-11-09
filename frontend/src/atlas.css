@@ -625,6 +625,23 @@ h2 {
   font-size: 13px;
   line-height: 1.4;
 }
+.reporting-context {
+  margin: 20px 0;
+  padding: 16px;
+  border: 1px solid #c7d8cf;
+  border-radius: 8px;
+  background: #f5f9f6;
+  overflow-wrap: anywhere;
+}
+.reporting-context h3 { margin-top: 0; }
+.reporting-context h4 { margin: 16px 0 6px; }
+.reporting-context p, .reporting-context li { font-size: 13px; line-height: 1.6; }
+.reporting-context details { margin: 10px 0; }
+.reporting-context summary { cursor: pointer; font-size: 13px; font-weight: 600; }
+.reporting-context ul { padding-left: 20px; }
+.reporting-context li { margin-bottom: 14px; }
+.reporting-context blockquote { margin: 8px 0; padding-left: 10px; border-left: 3px solid #638b76; white-space: pre-line; }
+.reporting-context .context-note { color: #42584b; }
 .detail .coords {
   font:
     600 14px ui-monospace,

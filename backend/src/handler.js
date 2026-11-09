@@ -3,6 +3,7 @@ import { fileURLToPath } from "node:url";
 import { createReviewService } from "../review/service.js";
 
 import { gradingRoute } from "../grading/routes.js";
+import { reportingContext } from "../reporting/context.js";
 
 let reviewService;
 async function reviewHandler(event) {
@@ -48,6 +49,19 @@ function errorResponse(statusCode, message) {
 
 /** Serve an API Gateway HTTP API v2 event with a response usable by Node or Lambda. */
 export async function handler(event) {
+  const reporting = /^\/api\/hospitals\/(\d{1,8}|t2p-\d+)\/reporting-context$/.exec(event.rawPath);
+  if (reporting) {
+    const method = event.requestContext?.http?.method;
+    if (!["GET", "HEAD"].includes(method)) return { ...errorResponse(405, "Use GET or HEAD."), headers: { "Content-Type": "application/json", Allow: "GET, HEAD" } };
+    try {
+      const context = reportingContext(reporting[1]);
+      if (!context) return errorResponse(404, "Reporting context has not been assessed for this hospital.");
+      return { statusCode: 200, headers: { "Content-Type": "application/json; charset=utf-8" }, body: method === "HEAD" ? "" : JSON.stringify(context) };
+    } catch (error) {
+      console.error("reporting_context_failed", error.name);
+      return errorResponse(500, "Reporting context could not be loaded.");
+    }
+  }
   if (event.rawPath.startsWith("/api/grading/")) return gradingRoute(event);
   if (event.rawPath === "/api/reviews" || event.rawPath.startsWith("/api/reviews/")) return reviewHandler(event);
   const dataset = datasets.get(event.rawPath);

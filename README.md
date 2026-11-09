@@ -198,6 +198,10 @@ The new English draft is `.audit/live/application-reviews/866a1fe3befb44ebb186a0
 
 [Wave 1 summary results](docs/audit-format/summaries/README.md) cover both English and Spanish summaries for Ellenville and Little Falls. Ellenville describes its service area, application process and income levels; Little Falls explains applying and income levels but omits a geographic service-area description. Bassett's designated summaries were found on its linked PLS page and explicitly include Little Falls. All three findings per hospital include exact quotes, source hashes and page/language coverage. These draft presence checks do not establish current-dollar accuracy or a hospital grade. Verify locally with `.\.venv\Scripts\python.exe tools/live-audit/verify_summaries.py --root .audit/live` (omit `--root` for contract-only checks).
 
+### Document languages and PSA counties (#25)
+
+Ellenville and Little Falls hospital records show a **Languages and service area** panel with all 18 document-language records, exact PSA source quotes, and separate expected-county status. Ellenville reports seven counties; Little Falls's policy lists localities rather than counties. Expected county comparisons remain pending an independent reference. These informational fields are excluded from grade counts; the two distinct graded service-area checks remain. See [scope, provenance and verification](docs/audit-format/wave-one-reporting-context.md).
+
 ### Human review inbox (#27)
 
 Open **Review inbox** in the header, or **Review notifications** on a hospital record. The badge counts pending and information-requested items. The local inbox reads the newest finalized full-document result per hospital from `.audit/live/full-reviews/`; it includes all three model findings and the unresolved service-area question. The existing Ellenville result supplies four notifications. A fresh checkout with no local drafts shows an empty inbox, not invented findings. Earlier result files remain on disk; the inbox explicitly shows the current result ID and date.
