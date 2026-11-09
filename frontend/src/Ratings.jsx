@@ -5,8 +5,10 @@ import PilotAudit from "./PilotAudit.jsx";
 import AuditPanel from "./AuditPanel.jsx";
 import React from "react";
 import { ratings, ratingByStars } from "./ratings.js";
+import { useLocale } from './locale.jsx';
 
 export function Ratings({ hospitals, filter, onFilter }) {
+  const { t } = useLocale();
   const counts = new Map(ratings.map((r) => [r.stars, 0]));
   for (const h of hospitals) counts.set(h.properties.stars, counts.get(h.properties.stars) + 1);
   let stop = 0;
@@ -17,7 +19,7 @@ export function Ratings({ hospitals, filter, onFilter }) {
   });
   return (
     <>
-      <div className="section-tag">Compliance rating system</div>
+      <div className="section-tag">{t('Compliance rating system')}</div>
       <div className="stats-head">
         <div
           className="ring"
@@ -25,13 +27,13 @@ export function Ratings({ hospitals, filter, onFilter }) {
           style={{ background: "conic-gradient(" + slices.join(",") + ")" }}
         />
         <div>
-          <h2>Statewide ratings</h2>
-          <p>September 2025 audit</p>
+          <h2>{t('Statewide ratings')}</h2>
+          <p>{t('September 2025 audit')}</p>
         </div>
       </div>
       <div className="table-head">
-        <span>Rating</span>
-        <span>Hospitals</span>
+        <span>{t('Rating')}</span>
+        <span>{t('Hospitals')}</span>
       </div>
       {ratings.map((r) => (
         <button
@@ -42,31 +44,31 @@ export function Ratings({ hospitals, filter, onFilter }) {
         >
           <span className="swatch" style={{ background: r.color }} />
           <span className="stars">{r.stars} ★</span>
-          <span className="rating-label">{r.label}</span>
+          <span className="rating-label">{t(r.label)}</span>
           <span className="quantity">{counts.get(r.stars)}</span>
         </button>
       ))}
       <div className="filter-state">
         {filter === null ? (
-          "Select a rating to filter the map."
+          t('Select a rating to filter the map.')
         ) : (
           <>
-            Showing {filter} stars ·{" "}
+            {t('Showing')} {filter} {t(filter === 1 ? 'star' : 'stars')} ·{" "}
             <button className="plain" onClick={() => onFilter(null)}>
-              Show all
+              {t('Show all')}
             </button>
           </>
         )}
       </div>
       <div className="legend-foot">
-        One-star facilities received an F with an application posted. Zero stars means no application was
-        posted.
+        {t('One-star facilities received an F with an application posted. Zero stars means no application was posted.')}
       </div>
     </>
   );
 }
 
 export function HospitalDetail({ hospital, onClose, onReview, pendingReviews }) {
+  const { t, language, localHref } = useLocale();
   const p = hospital.properties;
   const [longitude, latitude] = hospital.geometry.coordinates;
   return (
@@ -78,41 +80,44 @@ export function HospitalDetail({ hospital, onClose, onReview, pendingReviews }) 
       }}
     >
       <button className="back plain" onClick={onClose}>
-        ← Statewide ratings
+        {t('← Statewide ratings')}
       </button>
-      <div className="section-tag">Hospital record</div>
+      <div className="section-tag">{t('Hospital record')}</div>
       <h2>{p.name}</h2>
       <span className="pill">
         <span className="swatch" style={{ background: ratingByStars.get(p.stars).color }} />
-        {p.stars} ★ · Grade {p.grade} · September 2025
+        {p.stars} ★ · {t('Grade')} {p.grade} · {t('September 2025')}
       </span>
       <dl>
-        <dt>Address</dt>
+        <dt>{t('Address')}</dt>
         <dd>
           {p.address}, {p.city}
         </dd>
-        <dt>County</dt>
+        <dt>{t('County')}</dt>
         <dd>{p.county}</dd>
-        <dt>Latitude</dt>
+        <dt>{t('Latitude')}</dt>
         <dd className="coords">{latitude}</dd>
-        <dt>Longitude</dt>
+        <dt>{t('Longitude')}</dt>
         <dd className="coords">{longitude}</dd>
-        <dt>Coordinate source</dt>
+        <dt>{t('Coordinate source')}</dt>
         <dd>
           <a href={p.coordinate_source_url}>{p.coordinate_source}</a>
         </dd>
       </dl>
-      {p.assistance_url && <p><a href={p.assistance_url} target="_blank" rel="noreferrer">Get hospital financial assistance (HFA) ↗</a></p>}
-      <a href={`?hospital=${encodeURIComponent(hospital.id)}`}>Permanent link to this hospital page</a>
+      {p.assistance_url && <p><a href={p.assistance_url} target="_blank" rel="noreferrer">{t('Get hospital financial assistance (HFA) ↗')}</a></p>}
+      <a href={localHref(`?hospital=${encodeURIComponent(hospital.id)}`)}>{t('Permanent link to this hospital page')}</a>
+      {language === 'es' && <p className="translation-scope">{t('Detailed audit and review panels below are in English. Quotations retain the original document language.')}</p>}
+      <div lang="en">
       <HospitalAssessment key={`assessment-${hospital.id}`} hospitalKey={hospital.id} hospitalName={p.name} />
       <PilotAudit key={`pilot-${hospital.id}`} hospitalKey={hospital.id} />
       <ReportingContext key={`reporting-${hospital.id}`} hospitalKey={hospital.id} />
       <GradingPanel key={`grading-${hospital.id}`} hospitalKey={hospital.id} />
       {hospital.id === "362" && <AuditPanel />}
-      <button className="review-nav" onClick={onReview}>Review notifications ({pendingReviews ?? "…"})</button>
+      </div>
+      <button className="review-nav" onClick={onReview}>{t('Review notifications')} ({pendingReviews ?? "…"})</button>
       <div className="links">
-        <a href={p.audit_url}>Audit row ↗</a>
-        {p.assistance_url && <a href={p.assistance_url}>Financial assistance ↗</a>}
+        <a href={p.audit_url}>{t('Audit row ↗')}</a>
+        {p.assistance_url && <a href={p.assistance_url}>{t('Financial assistance ↗')}</a>}
       </div>
     </div>
   );

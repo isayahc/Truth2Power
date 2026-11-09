@@ -23,6 +23,8 @@ npm run dev
 
 Open [http://127.0.0.1:8000/](http://127.0.0.1:8000/) in your browser. The same app is available at `/maps/`. The Node.js server serves the React frontend and the local datasets on one port. Press **Ctrl+C** to stop it.
 
+Choose **Español** in the header or visit `/?lang=es` for the Spanish main atlas page, search, rating legend and hospital summary. Your browser remembers the choice. Detailed audit/review panels remain labeled English. The translation is awaiting the fluent-reader approval required by #45; see [Spanish UI review and verification](docs/validation/spanish-ui.md).
+
 ### Run the production build
 
 After installing dependencies, stop the development server, then run:
