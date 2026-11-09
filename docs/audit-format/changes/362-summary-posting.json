@@ -1,0 +1,113 @@
+{
+  "schema_version": "1.0",
+  "hospital_key": "362",
+  "rubric_version": "wave-one-summary-discovery-v1",
+  "reference_version": "wave-one-summary-v1",
+  "guideline_year": 2026,
+  "review_date": "2026-11-09",
+  "attempt": {
+    "attempt_id": "17a66741087fe1541f7dbc6a6946e105536b418aba6dd13fb8dfd4d258aaee06",
+    "attempted_at": "2026-11-09T03:08:38.586034+00:00",
+    "status": "completed"
+  },
+  "last_successful_assessment_at": "2026-11-09T03:08:38.586034+00:00",
+  "snapshots": [
+    {
+      "url": "https://www.bassett.org/patients-visitors/billing-insurance/financial-assistance",
+      "sha256": "226373789547027be6f33106a3360e0716ca85bf64faa1f3f780c17bfbcb710c",
+      "retrieved_at": "2026-11-09T00:38:55.969272+00:00",
+      "artifact_path": "snapshots/226373789547027be6f33106a3360e0716ca85bf64faa1f3f780c17bfbcb710c.html",
+      "publisher_updated_at": null,
+      "snapshot_id": "282e4b0111f83b72960bc1153ec92a076d8aaeab18dc6157f3758bd1fc7b6843",
+      "document_type": "landing_page"
+    },
+    {
+      "url": "https://www.bassett.org/patients-visitors/billing-insurance/financial-assistance/financial-assistance-plain-language",
+      "sha256": "2d93d9880035f4deb81d104430f7bc588b383ce9d6cda560656c47e97659b87b",
+      "retrieved_at": "2026-11-09T01:52:18.686504+00:00",
+      "artifact_path": "snapshots/2d93d9880035f4deb81d104430f7bc588b383ce9d6cda560656c47e97659b87b.html",
+      "publisher_updated_at": null,
+      "snapshot_id": "eddd6d9e147ed774ae700679e68e94d636eb2cf72847b8622a090101cb36e57a",
+      "document_type": "landing_page"
+    },
+    {
+      "url": "https://www.bassett.org/sites/default/files/2025-03/FAP-Plain-Language-Summary.pdf",
+      "sha256": "b3aef8b3347234aec466321191ad6a7eca495ba6d95bbfb7d19f1d3290ef1733",
+      "artifact_path": "snapshots/b3aef8b3347234aec466321191ad6a7eca495ba6d95bbfb7d19f1d3290ef1733.pdf",
+      "retrieved_at": "2026-11-09T01:52:18.979610+00:00",
+      "publisher_updated_at": null,
+      "snapshot_id": "b3aef8b3347234aec466321191ad6a7eca495ba6d95bbfb7d19f1d3290ef1733",
+      "document_type": "policy_summary"
+    },
+    {
+      "url": "https://www.bassett.org/sites/default/files/2025-03/FAP-Plain-Language-Summary-Spanish.pdf",
+      "sha256": "58310a62ee2674f5926f8116c3ea718bf79ebda1cb773f78bbe941bb18f68523",
+      "artifact_path": "snapshots/58310a62ee2674f5926f8116c3ea718bf79ebda1cb773f78bbe941bb18f68523.pdf",
+      "retrieved_at": "2026-11-09T01:52:19.274857+00:00",
+      "publisher_updated_at": null,
+      "snapshot_id": "58310a62ee2674f5926f8116c3ea718bf79ebda1cb773f78bbe941bb18f68523",
+      "document_type": "policy_summary"
+    }
+  ],
+  "assessment": {
+    "assessment_id": "posting-17a66741087fe1541f7dbc6a6946e105536b418aba6dd13fb8dfd4d258aaee06",
+    "completed_at": "2026-11-09T03:08:38.586034+00:00",
+    "findings": [
+      {
+        "measure_id": "posted_materials.policy_summary_posted",
+        "result": "yes",
+        "reason_code": "condition_met",
+        "explanation": "The saved roster page links to a designated summary page. Its English and Spanish summaries explicitly include Little Falls Hospital.",
+        "observed": {
+          "languages": [
+            "English",
+            "Spanish"
+          ],
+          "discovery_page": "https://www.bassett.org/patients-visitors/billing-insurance/financial-assistance/financial-assistance-plain-language",
+          "prior_posting_assessment_id": "posting-b2e8499be8d08ff3379efde12593f73f1a50458e1a9eac6309c8d86655aab717",
+          "summary_review_assessment_id": "summary-362-v1"
+        },
+        "expected": {
+          "document_type": "policy_summary"
+        },
+        "evidence": [
+          {
+            "snapshot_id": "282e4b0111f83b72960bc1153ec92a076d8aaeab18dc6157f3758bd1fc7b6843",
+            "locator": "anchor href",
+            "quote": "/patients-visitors/billing-insurance/financial-assistance/financial-assistance-plain-language"
+          },
+          {
+            "snapshot_id": "eddd6d9e147ed774ae700679e68e94d636eb2cf72847b8622a090101cb36e57a",
+            "locator": "link https://www.bassett.org/sites/default/files/2025-03/FAP-Plain-Language-Summary.pdf",
+            "quote": "Financial Assistance Policy – Plain Language Summary (English)"
+          },
+          {
+            "snapshot_id": "eddd6d9e147ed774ae700679e68e94d636eb2cf72847b8622a090101cb36e57a",
+            "locator": "link https://www.bassett.org/sites/default/files/2025-03/FAP-Plain-Language-Summary-Spanish.pdf",
+            "quote": "Financial Assistance Policy – Plain Language Summary (Spanish)"
+          },
+          {
+            "snapshot_id": "b3aef8b3347234aec466321191ad6a7eca495ba6d95bbfb7d19f1d3290ef1733",
+            "locator": "page 1",
+            "quote": "Bassett Healthcare Network Financial Assistance Policy – Plain Language Summary"
+          },
+          {
+            "snapshot_id": "b3aef8b3347234aec466321191ad6a7eca495ba6d95bbfb7d19f1d3290ef1733",
+            "locator": "page 1",
+            "quote": "The Financial Assistance Policy (“FAP”) of Bassett Healthcare Network, which includes The Mary\nImogene Bassett Hospital, d/b/a/ Bassett Medical Center (Bassett), A.O. Fox Memorial Hospital (FOX),\nO’Connor Hospital, Cobleskill Regional Hospital and Little Falls Hospital (collectively \"Bassett Healthcare\nNetwork\") is available to patients who are uninsured or underinsured with a demonstrated inability to\npay. Financial assistance applies to medical necessary services that are provided and billed by the\nentities above including emergency room care."
+          },
+          {
+            "snapshot_id": "58310a62ee2674f5926f8116c3ea718bf79ebda1cb773f78bbe941bb18f68523",
+            "locator": "page 1",
+            "quote": "Política de asistencia financiera de Bassett Healthcare Network – Resumen en lenguaje sencillo"
+          },
+          {
+            "snapshot_id": "58310a62ee2674f5926f8116c3ea718bf79ebda1cb773f78bbe941bb18f68523",
+            "locator": "page 1",
+            "quote": "La Política de Asistencia Financiera (Financial Assistance Policy, “FAP”) de Bassett Healthcare Network,\nque incluye The Mary Imogene Bassett Hospital, que opera bajo el nombre comercial de Bassett Medical\nCenter (Bassett), A.O. Fox Memorial Hospital (FOX), O’Connor Hospital, Cobleskill Regional Hospital y\nLittle Falls Hospital (en conjunto, “Bassett Healthcare Network”) está disponible para pacientes que no\ntienen seguro o tienen un seguro insuficiente con una incapacidad de pago demostrada. La asistencia\nfinanciera se aplica a los servicios médicos necesarios que son prestados y facturados por las entidades\nmencionadas anteriormente, incluida la atención en la sala de emergencias."
+          }
+        ]
+      }
+    ]
+  }
+}

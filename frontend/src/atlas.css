@@ -909,3 +909,8 @@ h2 {
 .correction-draft label { display:grid; gap:6px; margin:8px 0; }
 .correction-draft textarea { width:100%; padding:8px; font:inherit; }
 .overview-heading { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; }
+.changes-link { color:inherit; font-weight:600; margin-right:12px; }
+.changes-feed { padding:24px 0; max-width:960px; }
+.changes-feed article { margin:20px 0; padding:20px; border:1px solid var(--line); background:white; border-radius:8px; overflow-wrap:anywhere; }
+.changes-feed blockquote { margin:10px 0; padding-left:12px; border-left:3px solid var(--deep); white-space:pre-line; }
+.change-measure { margin-right:0.8em; }
