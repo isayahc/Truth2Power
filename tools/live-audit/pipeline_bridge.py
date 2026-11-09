@@ -32,6 +32,8 @@ def run(root, request):
         result = collect(request['hospital_key'], Path(__file__).resolve().parents[2], root, save, bounds=Bounds(**request.get('bounds', {})))
         if result['output']['status'] == 'failed':
             raise ValueError('landing_collection_failed')
+        if request.get('discovery_only'):
+            return dict(collection=result['output'])
         extracted = extract_collection(request['hospital_key'], Path(result['manifest_file']).stem, root, save)
         return dict(collection=result['output'], extraction_manifest=str(Path(extracted['manifest_file']).relative_to(root)))
     sources = {}
@@ -46,7 +48,16 @@ def run(root, request):
         raw = path.read_bytes()
         if hashlib.sha256(raw).hexdigest() != snapshot['sha256']:
             raise ValueError('snapshot_hash_mismatch')
-        segments = extract_bytes(raw, path.suffix)
+        # Preserve unknown bytes for later classification without interpreting their contents.
+        if source.get('role') == 'unclassified' and path.suffix != '.html':
+            sources[source['source_id']] = []
+            continue
+        try:
+            segments = extract_bytes(raw, path.suffix)
+        except Exception:
+            sources[source['source_id']] = [dict(locator='Original document', text='', status='needs_review',
+                                                  reason='unsupported_or_unreadable_document')]
+            continue
         if path.suffix == '.html':
             parser = Links(snapshot.get('final_url', source['source_id']), all_links=True)
             parser.feed(raw.decode('utf-8', errors='replace'))

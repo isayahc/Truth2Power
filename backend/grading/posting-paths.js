@@ -1,3 +1,7 @@
+/** Unclassified child HTML may supply a transport edge, never a classified document. */
+export const isPostingPage = (source) => source.role === "landing_page" ||
+  (source.role === "unclassified" && source.snapshot?.artifact_path.endsWith(".html"));
+
 /** Construct paths from already extracted ORIGINAL HTML. No URL is fetched here. */
 export function postingPaths(sources, extracted, start, roles, confirmed, hospital, maxDepth = 8) {
   const queue = [{ url: start, path: [] }], seen = new Set(), found = [];
@@ -6,7 +10,7 @@ export function postingPaths(sources, extracted, start, roles, confirmed, hospit
     const { url, path } = queue.shift();
     if (seen.has(url) || path.length >= Math.min(maxDepth, 8)) continue;
     seen.add(url);
-    const page = sources.find((s) => s.source_id === url && s.role === "landing_page" && s.snapshot && !["unavailable", "unreadable"].includes(s.status));
+    const page = sources.find((s) => s.source_id === url && isPostingPage(s) && s.snapshot && !["unavailable", "unreadable"].includes(s.status));
     if (!page) continue;
     for (const anchor of extracted[url] || []) {
       if (!anchor.locator.startsWith("link ") || anchor.status !== "extracted") continue;
@@ -18,8 +22,8 @@ export function postingPaths(sources, extracted, start, roles, confirmed, hospit
       const chain = [...path, edge];
       const doc = sources.find((s) => s.source_id === target && s.snapshot && !["unavailable", "unreadable"].includes(s.status));
       if (!doc) continue;
-      if (doc.role === "landing_page") { queue.push({ url: target, path: chain }); continue; }
-      const known = confirmed.find((d) => d.hospital_key === hospital && d.sha256 === doc.snapshot.sha256 && d.role === doc.role && roles.includes(d.role));
+      if (isPostingPage(doc)) { queue.push({ url: target, path: chain }); continue; }
+      const known = confirmed.find((d) => d.hospital_key === hospital && (!d.source_id || d.source_id === target) && d.sha256 === doc.snapshot.sha256 && d.role === doc.role && roles.includes(d.role));
       if (!known) continue;
       const citations = [{ locator: known.locator, quote: known.quote }, ...(known.applicability ? [known.applicability] : [])];
       if (!citations.every((c) => extracted[target]?.some((p) => p.status === "extracted" && p.locator === c.locator && p.text.includes(c.quote)))) continue;

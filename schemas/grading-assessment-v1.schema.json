@@ -54,6 +54,7 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "inventory_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
         "inventory_status": {
           "enum": [
             "complete",
@@ -100,6 +101,7 @@
         "type": "object",
         "additionalProperties": false,
         "properties": {
+          "classification_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
           "source_id": {
             "type": "string",
             "format": "uri",
@@ -118,6 +120,7 @@
               "policy_summary",
               "psa_reference",
               "supplement",
+              "unclassified",
               "uniform_reference"
             ]
           },

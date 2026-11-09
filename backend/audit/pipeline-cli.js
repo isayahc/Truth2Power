@@ -28,6 +28,7 @@ try {
     if (command !== "work") {
       const id = enqueuePipeline(db, { hospital_key: option("--hospital", "1002"), year, review_date: date, mode: option("--mode", "replay"),
         variant: option("--variant", "original"), request_key: option("--request", randomUUID()), evidence_root: resolve(option("--evidence-root", pipelineRoot())),
+        classifications: args.includes("--classifications") ? readFileSync(option("--classifications")) : undefined,
         discovery_bounds: JSON.parse(option("--discovery-bounds", "{}")) });
       console.log(JSON.stringify({ job_id: id, queued: true }));
       targetId = id;
@@ -37,7 +38,9 @@ try {
       const job = claim(db, 600000, { id: targetId ?? null, rule: "css-17-v1" });
       if (job) {
         const b = await runPipeline(db, job);
-        console.log(JSON.stringify({ job_id: job.id, revision: b?.id, findings: b?.report.findings.length, grade_status: b?.report.grade_status,
+        if (b?.mode === "discovery_only") console.log(JSON.stringify({ job_id: job.id, scan: b.id, sources: b.inventory.sources.length,
+          gaps: b.inventory.gaps.length, path: `pipeline-scans/${b.id}.json` }));
+        else console.log(JSON.stringify({ job_id: job.id, revision: b?.id, findings: b?.report.findings.length, grade_status: b?.report.grade_status,
           calculated_grade: b?.report.calculated_grade, unresolved: b?.report.unresolved_measures.length, path: b && `pipeline-assessments/${b.id}.json` }));
       } else console.log(JSON.stringify({ idle: true }));
     }

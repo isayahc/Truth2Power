@@ -190,8 +190,8 @@ def download(url, host, bounds=None, trace=None):
 
 def collect(hospital_key, root, output, save, fetch=download, bounds=None):
     """Persist an immutable attempt manifest, including failures and source URLs."""
-    if not re.fullmatch(r"\d{1,8}", hospital_key):
-        raise ValueError("Use a numeric hospital ID from the roster")
+    if not re.fullmatch(r"(?:\d{1,8}|t2p-\d{1,8})", hospital_key):
+        raise ValueError("Use a hospital key from the roster")
     roster = json.loads((root / "data/maps/hospitals.geojson").read_text(encoding="utf-8"))
     facility = next((f for f in roster["features"] if str(f["id"]) == hospital_key), None)
     if facility is None:

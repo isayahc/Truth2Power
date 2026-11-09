@@ -51,7 +51,48 @@ The original evidence root must include collector manifests, original snapshots 
 
 ## Live operation and monitoring
 
-Use a separate non-demo `AUDIT_DIR` and `T2P_REVIEW_DIRECTORY`. Select **Collect current public documents** or use `run --mode live`. This invokes the existing collector/extractor with bounded multi-hop traversal for the two Wave 1 hospitals. It has network access but no model calls. New or changed documents need classification and interpretation; inaccessible sources cannot establish violations. This release was validated against saved public bytes and offline transport fixtures, not a new live collection.
+Use a separate non-demo `AUDIT_DIR` and `T2P_REVIEW_DIRECTORY`. All 212 facility keys in `data/maps/hospitals.geojson` work through the CLI and local queue API. Use the exact key, including `t2p-0001` for the facility with no assigned PFI. The worker chooses the roster's assistance URL. Facilities sharing a health-system URL keep separate inventories and review scopes.
+
+| Manual mode | Source | Committed result |
+|---|---|---|
+| `discovery_only` | Bounded public collection | A document inventory, saved originals, link graph and coverage gaps. A scan creates no assessment and leaves prior findings in place. |
+| `full_audit` (also `live`) | Bounded public collection and local extraction | An inventory and exactly 17 draft results. Insufficient evidence yields `unclear`. The institutional grade stays pending. |
+| `replay` | Latest saved successful collection in `--evidence-root`, or available curated originals for Wave 1 | A new 17-result assessment using the original retrieval dates. An empty evidence directory yields explicit missing-evidence gaps. |
+
+From the repository root on Linux or WSL, for example:
+
+```bash
+npm run audit:pilot -- run --mode discovery_only --hospital 739 --date 2026-11-09 --request scan-739-1
+npm run audit:pilot -- run --mode replay --hospital 739 --date 2026-11-09 --request replay-739-1
+npm run audit:pilot -- queue --mode full_audit --hospital t2p-0001 --date 2026-11-09 --request full-local-1
+npm run audit:pilot -- work
+```
+
+`run` executes the specified job immediately. Alternatively, POST to `/api/pilot/hospitals/{key}` with the `X-Review-Request: 1` header and a JSON body containing `mode`, `year`, `review_date` and `request_key`. The worker consumes queued jobs. GET the same route for the job ID, mode, status, latest assessment ID and `latest_scan`. Retrieve a committed scan at `/api/pilot/scans/{latest_scan}`. The CLI also prints its immutable file path under the review directory. Each captured inventory entry identifies the original bytes by `artifact_path` and SHA-256 (`digest`). Open the bytes locally for classification. The collector manifest preserves failed and cross-host candidates, parent links, redirects, bounds and dates. A failed landing fetch uses the existing retry policy and leaves its attempt manifest in `collections/{key}/`.
+
+**Classifying a new document.** Inspect the exact saved original. Record a source-language quotation and locator for its role, and a quotation and locator demonstrating campus applicability. An operator can supply a local JSON record with the following shape. Replace every example value with verified evidence.
+
+```json
+{
+  "schema_version": "hospital-classifications-v1",
+  "hospital_key": "739",
+  "reviewed_at": "2026-11-09T19:00:00Z",
+  "reviewer_role": "Document reviewer",
+  "documents": [{
+    "source_id": "https://example.invalid/verified-source.pdf",
+    "sha256": "<64 lowercase hex digits from the inventory>",
+    "role": "policy_summary",
+    "language": "en",
+    "locator": "page 1",
+    "quote": "<exact role quotation>",
+    "applicability": { "locator": "page 2", "quote": "<exact campus quotation>" }
+  }]
+}
+```
+
+Pass `--classifications ./review.json` with a new request key to a full run or saved-evidence replay. The CLI stores the exact record by hash under `source-classifications/` and binds that hash to the job. Include this directory when copying evidence for independent report replay. Only an exact hospital, source URL and snapshot match can use that classification. The verifier checks both quotations against the saved text. A different URL/hash stays unclassified, an invalid bound citation fails verification, and a known other-campus original stays unresolved. Supported document roles are `application`, `policy_statement`, `policy_summary` and `supplement`. Language uses a canonical language tag. Classification allows the grading adapter to evaluate supported evidence. Finding-level review and grade authorization remain separate.
+
+A limited search, unavailable source, script-only page, unsupported form, or missing governing reference leaves an explicit gap. Positive posting evidence requires a saved path from the roster landing page to applicable, classified bytes. Live requests use no model. Offline regression commands are `node --test backend/test/roster-audit.test.js backend/test/multihop.test.js`. They exercise two non-Wave-1 facilities through the real collector with local responses and replay both Wave 1 hospitals from the packaged originals.
 
 `npm run audit:pilot -- due` reports the full 212-hospital denominator and next due dates. It does not install a scheduler or assert monthly coverage. Saved-evidence replay updates the execution timestamp but retains source retrieval dates; the monitoring clock conservatively uses the oldest captured hospital source. Stop refreshes and overdue/never-checked states remain visible. Failed refreshes retain the prior successful revision and expose retry status.
 
@@ -93,7 +134,7 @@ Only HTTPS port 443 on the exact roster hostname or its `www` alias is trusted. 
 
 Scripts are never executed. Pages containing scripts retain a JavaScript coverage warning; HTML-only discovery remains partial. There is no arbitrary browser navigation fallback or external search-engine authority in this release. Moved documents are found through allowed redirects or newly linked resource pages; documents outside those boundaries require operator discovery and classification. HTTP 404/410 is recorded as inaccessible/gone, **not** independently confirmed withdrawal or a violation.
 
-Classification requires the existing pinned campus/document inventory, or the later #81/#86 summary classification with exact title and campus citations. Link labels alone cannot establish campus applicability. Unknown or other-campus documents remain review tasks. A changed URL with identical verified bytes can reuse classification while preserving both URL identities. Old snapshots survive failed attempts, but are not silently relabeled as current captures. Publisher dates remain null unless independently established.
+Classification uses the pinned Wave 1 campus inventory, the #81/#86 summary citations, or an explicit hash-bound operator classification as described above. Link labels alone cannot establish campus applicability. Unknown or other-campus documents remain review tasks. A Wave 1 pinned content hash can match at a new URL for the same campus. Operator classifications also bind the exact URL. Old snapshots survive failed attempts, but are not silently relabeled as current captures. Publisher dates remain null unless independently established.
 
 ## Reproduce Little Falls discovery and observation normalization
 

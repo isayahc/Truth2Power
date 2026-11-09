@@ -186,7 +186,7 @@ def extract_bytes(data, suffix):
 
 
 def extract_collection(hospital_key, collection_id, output, save):
-    if not re.fullmatch(r"\d{1,8}", hospital_key) or not re.fullmatch(r"[0-9a-f]{32}", collection_id):
+    if not re.fullmatch(r"(?:\d{1,8}|t2p-\d{1,8})", hospital_key) or not re.fullmatch(r"[0-9a-f]{32}", collection_id):
         raise ValueError("Use a hospital ID and saved collection ID")
     source = Path("collections") / hospital_key / (collection_id + ".json")
     manifest = json.loads((output / source).read_text(encoding="utf-8"))
