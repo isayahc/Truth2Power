@@ -2,6 +2,7 @@ import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { sha256 } from "../review/identity.js";
 import { latestByScope, localRecords, validDate, projectRecord } from "./records.js";
+import { publishedRecords } from "../audit/pipeline-views.js";
 
 const load = (path) => JSON.parse(readFileSync(new URL(path, import.meta.url), "utf8"));
 const rubric = load("../../rubrics/css-17-v1.json");
@@ -34,14 +35,16 @@ const explanations = {
 export function pageInputs(root = process.env.T2P_REVIEW_DIRECTORY || fileURLToPath(new URL("../../.audit/live/", import.meta.url))) {
   const local = localRecords(root);
   const merged = new Map([...local.records, ...baseline].map((r) => [r.record_id, r]));
-  return { records: [...merged.values()], unavailable: local.unavailable };
+  return { records: [...merged.values(), ...publishedRecords(root)], unavailable: local.unavailable };
 }
 
 export function hospitalPage(key, { root, records, year = 2026, unavailable = [] } = {}) {
   const inputs = records ? { records, unavailable } : pageInputs(root);
-  const all = inputs.records.filter((r) => r.hospital_key === key && r.guideline_year === year);
+  let all = inputs.records.filter((r) => r.hospital_key === key && r.guideline_year === year);
+  if (all.some((r) => r.kind === "pipeline" && r.status === "completed")) all = all.filter((r) => r.kind === "pipeline");
   if (!all.length && !["1002", "362"].includes(key)) return null;
-  const revision = sha256(JSON.stringify([key, year, all.map((r) => r.record_id).sort()]));
+  const integrated = all.find((r) => r.kind === "pipeline" && r.status === "completed");
+  const revision = integrated?.record_id ?? sha256(JSON.stringify([key, year, all.map((r) => r.record_id).sort()]));
   const scopes = latestByScope(all);
   const measures = rubric.measures.map((m) => {
     const versions = scopes.filter((s) => s.latest.measure_id === m.measure_id).map((s) => ({
@@ -62,8 +65,10 @@ export function hospitalPage(key, { root, records, year = 2026, unavailable = []
   });
   const successes = scopes.map((s) => s.success?.checked_at).filter(Boolean).sort((a, b) => Date.parse(b) - Date.parse(a));
   const landing = all.flatMap((r) => r.landing_page || []).filter((s) => validDate(s.retrieved_at)).sort((a,b) => Date.parse(b.retrieved_at)-Date.parse(a.retrieved_at))[0];
-  return { hospital_key: key, revision, guideline_year: year, current_grade: null,
-    grade_note: "Current institutional grade pending. These source-scoped drafts are not a single approved hospital assessment.",
+  return { hospital_key: key, revision, guideline_year: year, current_grade: null, synthetic: integrated?.synthetic ?? false,
+    ...(integrated ? { monitoring_at: integrated.monitoring_at, audit_mode: integrated.audit_mode, evidence_complete: integrated.report.coverage_gaps.length === 0 && integrated.report.unresolved_measures.length === 0 } : {}),
+    integrated_report_url: integrated ? `/api/pilot/assessments/${revision}` : null,
+    grade_note: integrated ? `Integrated 17-measure assessment completed (${integrated.audit_mode}). Institutional grade and human authorization remain pending. Saved-evidence replay does not assert a new website capture.` : "Current institutional grade pending. These source-scoped drafts are not a single approved hospital assessment.",
     latest_successful_assessment_at: successes[0] ?? null,
     publisher_updated_at: landing?.publisher_updated_at ?? null, publisher_page_url: landing?.url ?? null,
     landing_retrieved_at: landing?.retrieved_at ?? null,

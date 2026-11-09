@@ -2,6 +2,7 @@ import { fileURLToPath } from "node:url";
 import { resolve } from "node:path";
 import { grade } from "./grade.js";
 import { readArtifact } from "./data.js";
+import { publications } from "../audit/pipeline-store.js";
 
 const demoRoot = fileURLToPath(new URL("../../docs/grading/examples/", import.meta.url));
 const defaultRoot = fileURLToPath(new URL("../../.audit/grading/", import.meta.url));
@@ -15,6 +16,8 @@ export function gradingRoute(event) {
   if (!demo && !key) return response(404, { error: "Unknown assessment." });
   const root = demo ? demoRoot : resolve(process.env.T2P_GRADING_DIRECTORY || defaultRoot);
   try {
+    const integrated = !demo && publications().bundles.find((b) => b.input.hospital_key === key && b.input.guideline_year === 2026);
+    if (integrated) return response(200, { ...integrated.report, revision: integrated.id });
     const input = JSON.parse(readArtifact(root, demo ? "SYN-multilingual.json" : key + ".json"));
     if (!demo && key !== input.hospital_key) return response(422, { error: "Assessment hospital mismatch." });
     return response(200, grade(input, { root, decisions: demo ? undefined : process.env.T2P_OBSERVATION_DECISIONS }));

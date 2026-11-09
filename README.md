@@ -1,5 +1,9 @@
 # Truth2Power
 
+## Integrated 17-measure pilot
+
+The persistent audit worker now publishes one immutable assessment revision across hospital pages, grading, overview, review inbox and changes. See the [offline demo and operating guide](docs/validation/pilot-operations.md), [release-readiness report](docs/validation/pilot-readiness.md), and [reproducible Wave 1 results](docs/validation/wave-one-pilot-results.md). Run `npm run test:pilot` with the existing Python grading dependencies configured. Real Wave 1 evidence remains partial; institutional grades and subject-matter approval remain pending.
+
 Truth2Power maps how 212 New York hospitals scored in the Community Service Society of New York’s September 2025 financial assistance review. Select a hospital to see its rating, latitude and longitude, financial assistance page, and source audit row.
 
 ## Run the React app

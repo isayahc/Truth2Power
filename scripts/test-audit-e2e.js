@@ -23,13 +23,14 @@ const server = spawn(process.execPath, ["backend/src/local-server.js"], {
 });
 const state = async () => (await fetch(base + "/api/audits/362")).json();
 let browser, db;
-function work() {
-  const result = spawnSync(
+async function work() {
+  const child = spawn(
     process.execPath,
     ["backend/audit/worker.js", "--once"],
     { env, stdio: "inherit", timeout: 60000 },
   );
-  assert.equal(result.status, 0);
+  const [status] = await once(child, "exit");
+  assert.equal(status, 0);
 }
 try {
   for (let i = 0; i < 60; i++) {
@@ -54,7 +55,7 @@ try {
   db = new DatabaseSync(join(directory, "audit.sqlite"));
   for (const year of ["2025", "2026"]) {
     let page = await openHospital();
-    await page.getByRole("combobox").selectOption(year);
+    await page.getByLabel("Guideline year").selectOption(year);
     await page.getByRole("button", { name: "Recheck application" }).click();
     await page.getByText("queued", { exact: true }).waitFor();
     await page.close();
@@ -72,7 +73,7 @@ try {
       assert.equal(crashed.status, 17);
       db.exec("UPDATE jobs SET lease=0 WHERE status='running'");
     }
-    work();
+    await work();
     const { job, latest } = await state();
     assert.equal(job.status, "completed");
     assert.equal(

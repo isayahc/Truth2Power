@@ -6,7 +6,7 @@ import { compareCell, comparison, historicalResult, markdown, summarize } from "
 test("replay matches the saved report, keeps 17 CSS columns and counts each facility once per column", () => {
   const report = comparison();
   const saved = readFileSync(new URL("../../docs/validation/wave-one-css-agreement.md", import.meta.url), "utf8");
-  assert.equal(markdown(report), saved);
+  assert.equal(markdown(report), saved.replaceAll("\r\n", "\n"));
   assert.deepEqual(report.rows.map((r) => r.column), "R S T U V W Y Z AD AE AG AH AI AJ AL AM AN".split(" "));
   for (const row of report.rows) {
     assert.deepEqual(row.pairs.map((p) => p.hospital_key), ["1002", "362"]);
