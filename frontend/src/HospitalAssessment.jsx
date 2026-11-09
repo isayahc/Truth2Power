@@ -1,0 +1,68 @@
+import React, { useEffect, useState } from "react";
+
+const labels = { yes: "Yes", no: "No", unclear: "Unclear", n_a: "Not applicable" };
+const date = (value) => value ? new Date(value).toISOString().replace("T", " ").replace(/\.\d+Z$/, " UTC") : "Unknown";
+const safeUrl = (url) => typeof url === "string" && /^https:\/\//.test(url) ? url : undefined;
+
+export default function HospitalAssessment({ hospitalKey }) {
+  const [state, setState] = useState({ loading: true });
+  const [reload, setReload] = useState(0);
+  useEffect(() => {
+    const controller = new AbortController();
+    setState({ loading: true });
+    fetch(`/api/hospitals/${encodeURIComponent(hospitalKey)}/page`, { signal: controller.signal }).then(async (r) => {
+      if (r.status === 404) return { unavailable: true };
+      if (!r.ok) throw Error();
+      return { data: await r.json() };
+    }).then((next) => { if (!controller.signal.aborted) setState(next); })
+      .catch(() => { if (!controller.signal.aborted) setState({ error: true }); });
+    return () => controller.abort();
+  }, [hospitalKey, reload]);
+  if (state.loading) return <p role="status">Loading hospital findings…</p>;
+  if (state.unavailable) return <p>Current measure-by-measure page: not yet assessed.</p>;
+  if (state.error) return <div role="alert">Hospital findings could not be loaded. <button onClick={() => setReload((n) => n + 1)}>Try again</button></div>;
+  const report = state.data;
+  return <section className="hospital-assessment" aria-label="Current hospital findings">
+    <h3>Current financial assistance findings</h3>
+    <p><strong>Current grade: pending</strong></p><p>{report.grade_note}</p>
+    <dl className="assessment-dates">
+      <dt>Latest successful assessment</dt><dd>{date(report.latest_successful_assessment_at)}</dd>
+      <dt>Hospital page retrieved</dt><dd>{date(report.landing_retrieved_at)}</dd>
+      <dt>Publisher’s page update date</dt><dd>{date(report.publisher_updated_at)}</dd>
+    </dl>
+    <p>The publisher’s update date is not the date we retrieved or assessed the page. Each measure has its own assessment date and scope.</p>
+    {report.unavailable_records > 0 && <p role="status">Some local review records could not be read. Saved findings remain visible; refresh coverage is incomplete.</p>}
+    <h4>Checks with a “No” finding ({report.failed_measures.length})</h4>
+    <p>Draft findings below identify the affected check and related law. Human review remains separate.</p>
+    <ul>{report.failed_measures.map((id) => { const m = report.measures.find((m) => m.measure_id === id); return <li key={id}><a href={`#measure-${hospitalKey}-${m.column}`}>{m.question}</a></li>; })}</ul>
+    {!report.failed_measures.length && <p>No “No” finding in the available drafts. Unclear or unassessed checks are not passes.</p>}
+    <h4>All 17 measures · {report.guideline_year} review</h4>
+    {report.measures.map((m) => <article className="measure-card" id={`measure-${hospitalKey}-${m.column}`} key={m.measure_id}>
+      <h4>{m.column} · {m.question}</h4>
+      <p><strong className={`measure-result result-${m.result}`}>{labels[m.result]}{m.versions.length ? " · draft" : " · not assessed"}</strong></p>
+      <p>{m.reason}</p>
+      {m.versions.flatMap((v) => v.failures.map((f) => ({ ...f, scope: v.scope, retained: Boolean(v.finding) }))).map((f, i) =>
+        <p className="recheck-failed" key={`${f.scope}-${i}`}><strong>Failed recheck · {date(f.attempted_at)}</strong> — {f.retained ? "Last successful finding retained below." : "No successful finding yet."}</p>)}
+      <p><a href={m.law.url} target="_blank" rel="noreferrer">{m.law.section}</a>: {m.law.plain_language}</p>
+      <details><summary>Evidence, dates and scope ({m.versions.length})</summary>
+        <p>{m.law.interpretation_status}. Law revision: {m.law.revision}.</p>
+        {m.versions.map((v) => <section key={v.scope} className="measure-scope">
+          <h5>{v.label}</h5>
+          {v.failures.map((f, i) => <p className="recheck-failed" key={i}><strong>Failed recheck · {date(f.attempted_at)}</strong> — {f.reason}</p>)}
+          <p>Latest successful assessment: {date(v.assessed_at)}{v.review_date && ` · Review date: ${v.review_date}`}</p>
+          <p><strong>{v.finding ? labels[v.finding.result] : "No successful finding"}</strong> — {v.finding?.explanation || "Evidence still needed."}</p>
+          <p>{v.human_review_status}</p>
+          {v.finding?.evidence.map((e, i) => <details className="measure-evidence" key={`${e.snapshot_id}-${i}`}>
+            <summary>Source · {e.locator} · retrieved {date(e.retrieved_at)}</summary>
+            <a href={safeUrl(e.url)} target="_blank" rel="noreferrer">Open cited document ↗</a>
+            <p>Publisher’s document update date: {date(e.publisher_updated_at)}</p>
+            <blockquote>{e.quote}</blockquote>
+            <p>Snapshot SHA-256: <code>{e.sha256}</code></p>
+            {e.export_verification === "original_snapshot_unavailable" && <p>Original snapshot is unavailable in this checkout. The saved assessment citation is retained; the live link may have changed.</p>}
+          </details>)}
+          {!v.finding?.evidence.length && <p>No located evidence supplied; review needed.</p>}
+        </section>)}
+      </details>
+    </article>)}
+  </section>;
+}

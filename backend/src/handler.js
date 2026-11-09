@@ -4,6 +4,7 @@ import { createReviewService } from "../review/service.js";
 
 import { gradingRoute } from "../grading/routes.js";
 import { reportingContext } from "../reporting/context.js";
+import { hospitalPage } from "../hospital-page/service.js";
 
 let reviewService;
 async function reviewHandler(event) {
@@ -49,6 +50,17 @@ function errorResponse(statusCode, message) {
 
 /** Serve an API Gateway HTTP API v2 event with a response usable by Node or Lambda. */
 export async function handler(event) {
+  const page = /^\/api\/hospitals\/(\d{1,8}|t2p-\d+)\/page$/.exec(event.rawPath);
+  if (page) {
+    if (event.requestContext?.http?.method !== "GET") return errorResponse(405, "Use GET.");
+    try {
+      const data = hospitalPage(page[1]);
+      return data ? { statusCode: 200, headers: { "Content-Type": "application/json", "Cache-Control": "no-store" }, body: JSON.stringify(data) } : errorResponse(404, "Hospital page not yet assessed.");
+    } catch (error) {
+      console.error("hospital_page_failed", error.name);
+      return errorResponse(500, "Hospital page could not be loaded.");
+    }
+  }
   const reporting = /^\/api\/hospitals\/(\d{1,8}|t2p-\d+)\/reporting-context$/.exec(event.rawPath);
   if (reporting) {
     const method = event.requestContext?.http?.method;
