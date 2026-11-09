@@ -72,6 +72,7 @@
             "enum": [
               "source_field",
               "text_profile",
+              "posted_link",
               "human_coded"
             ]
           },

@@ -8,9 +8,13 @@ const here = (path) => fileURLToPath(new URL(path, import.meta.url));
 export const rubric = JSON.parse(readFileSync(here("../../rubrics/css-17-v1.json")));
 export const hhs = JSON.parse(readFileSync(here("../../references/hhs-poverty-contiguous-v1.json")));
 export const referenceHash = sha256(readFileSync(here("../../references/hhs-poverty-contiguous-v1.json")));
-const { hospitals: waveOne } = JSON.parse(readFileSync(here("../../docs/audit-format/wave-one-document-inventory.json")));
+const inventoryBytes = readFileSync(here("../../docs/audit-format/wave-one-document-inventory.json"));
+export const postingReference = "wave-one-document-inventory-sha256:" + sha256(inventoryBytes);
+const { hospitals: waveOne } = JSON.parse(inventoryBytes);
+const roster = JSON.parse(readFileSync(here("../../data/maps/hospitals.geojson")));
+export const assistancePages = new Map(roster.features.map((f) => [String(f.id), f.properties.assistance_url]));
 export const confirmedDocuments = waveOne.flatMap((h) => h.documents.filter((d) => d.status === "content_confirmed")
-  .map((d) => ({ hospital_key: h.hospital_key, role: d.type, sha256: d.sha256 })));
+  .map((d) => ({ hospital_key: h.hospital_key, role: d.type, sha256: d.sha256, quote: d.quote, locator: d.locator, language: d.language_label })));
 export const byId = new Map(rubric.measures.map((m) => [m.measure_id, m]));
 export const contextKeys = ["hospital_key", "assessment_id", "scope_id", "rubric_version", "reference_version", "guideline_year", "review_date"];
 export const contextOf = (input) => Object.fromEntries(contextKeys.map((key) => [key, input[key]]));

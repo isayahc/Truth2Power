@@ -1,0 +1,199 @@
+{
+  "schema_version": "1.0",
+  "hospital_key": "362",
+  "rubric_version": "wave-one-posting-v1",
+  "reference_version": "wave-one-document-inventory-sha256:9e56cd40bf6989a2cb33f40c08ffbf8699a8e5c09ff1f1ab1cb0892e7b1c3634",
+  "guideline_year": 2026,
+  "review_date": "2026-11-09",
+  "attempt": {
+    "attempt_id": "b2e8499be8d08ff3379efde12593f73f1a50458e1a9eac6309c8d86655aab717",
+    "attempted_at": "2026-11-09T00:38:50.318979+00:00",
+    "status": "completed"
+  },
+  "last_successful_assessment_at": "2026-11-09T00:40:30.440441+00:00",
+  "snapshots": [
+    {
+      "url": "https://www.bassett.org/patients-visitors/billing-insurance/financial-assistance",
+      "sha256": "226373789547027be6f33106a3360e0716ca85bf64faa1f3f780c17bfbcb710c",
+      "retrieved_at": "2026-11-09T00:38:55.969272+00:00",
+      "artifact_path": "snapshots/226373789547027be6f33106a3360e0716ca85bf64faa1f3f780c17bfbcb710c.html",
+      "publisher_updated_at": null,
+      "snapshot_id": "282e4b0111f83b72960bc1153ec92a076d8aaeab18dc6157f3758bd1fc7b6843",
+      "document_type": "landing_page"
+    },
+    {
+      "url": "https://www.bassett.org/sites/default/files/2026-01/2026-NYS-Bassett-FA-Form-English.docx",
+      "sha256": "3b5149e5b95b27c043114aa6f287d49a2c2c69aa5cab75671ddcb3bd057c9fb8",
+      "retrieved_at": "2026-11-09T00:38:59.513465+00:00",
+      "artifact_path": "snapshots/3b5149e5b95b27c043114aa6f287d49a2c2c69aa5cab75671ddcb3bd057c9fb8.docx",
+      "publisher_updated_at": null,
+      "snapshot_id": "3b335e9cd9dd54b9009cff5e9f8952a68d9874a78425793c50064159f1866b92",
+      "document_type": "application"
+    },
+    {
+      "url": "https://www.bassett.org/sites/default/files/2026-01/2026-NYS-Bassett-FA-Form-Spanish.docx",
+      "sha256": "ae1641c61feb9d723b29af2f33d6d0bbe41f3d76670923dc2dc6a32764c10be6",
+      "retrieved_at": "2026-11-09T00:39:03.338557+00:00",
+      "artifact_path": "snapshots/ae1641c61feb9d723b29af2f33d6d0bbe41f3d76670923dc2dc6a32764c10be6.docx",
+      "publisher_updated_at": null,
+      "snapshot_id": "01d17323f5445948053dee949f9155eee634175b0025a60dd4dc60c9947933e4",
+      "document_type": "application"
+    },
+    {
+      "url": "https://www.bassett.org/sites/default/files/2026-07/Bassett-Healthcare-Network-Charity-Care-and-Financial-Assistance-07-09-2026.pdf",
+      "sha256": "bdf455f21be644f06d7d1e9275fcf21eef9453d1846bc74a82d44c60db431619",
+      "retrieved_at": "2026-11-09T00:39:06.967333+00:00",
+      "artifact_path": "snapshots/bdf455f21be644f06d7d1e9275fcf21eef9453d1846bc74a82d44c60db431619.pdf",
+      "publisher_updated_at": null,
+      "snapshot_id": "31191be522d32c76d5d913b502c94d2a2290b8480d315cb46f726b973a241e59",
+      "document_type": "policy_statement"
+    },
+    {
+      "url": "https://www.bassett.org/sites/default/files/2026-08/Charity-Care-and-Financial-Assistance-Spanish.pdf",
+      "sha256": "4b63c772ce75253028f883b76e6abe549dce7fcc25e3c7d867476942fcabf692",
+      "retrieved_at": "2026-11-09T00:39:10.197760+00:00",
+      "artifact_path": "snapshots/4b63c772ce75253028f883b76e6abe549dce7fcc25e3c7d867476942fcabf692.pdf",
+      "publisher_updated_at": null,
+      "snapshot_id": "cb6c5684b8dabf5031c5ec11166667ea0b2e62e37a9bc57ad45fd8b399480a5f",
+      "document_type": "policy_statement"
+    },
+    {
+      "url": "https://www.bassett.org/sites/default/files/hg_features/mercury_standard_layout/46607191876acfcc504a7cc8048608fc.pdf",
+      "sha256": "46e36a10a8964085dd8c30a81f53c6407fccc9d14bed712824576c8e199c7b96",
+      "retrieved_at": "2026-11-09T00:39:13.546716+00:00",
+      "artifact_path": "snapshots/46e36a10a8964085dd8c30a81f53c6407fccc9d14bed712824576c8e199c7b96.pdf",
+      "publisher_updated_at": null,
+      "snapshot_id": "b99526678124528e3b88ee502bb90903ae30cebd149682be64e4b9b8c7810e0c",
+      "document_type": "supplement"
+    }
+  ],
+  "assessment": {
+    "assessment_id": "posting-b2e8499be8d08ff3379efde12593f73f1a50458e1a9eac6309c8d86655aab717",
+    "completed_at": "2026-11-09T00:40:30.440441+00:00",
+    "findings": [
+      {
+        "measure_id": "posted_materials.application_posted",
+        "result": "yes",
+        "reason_code": "condition_met",
+        "explanation": "Saved landing links resolve to content-confirmed application documents.",
+        "observed": {
+          "links": [
+            "https://www.bassett.org/sites/default/files/2026-01/2026-NYS-Bassett-FA-Form-English.docx",
+            "https://www.bassett.org/sites/default/files/2026-01/2026-NYS-Bassett-FA-Form-Spanish.docx"
+          ],
+          "coverage_gaps": [
+            {
+              "url": "https://www.bassett.org/sites/default/files/hg_features/mercury_standard_layout/46607191876acfcc504a7cc8048608fc.pdf",
+              "reason": "summary_scope_needs_review",
+              "snapshot_sha256": "46e36a10a8964085dd8c30a81f53c6407fccc9d14bed712824576c8e199c7b96",
+              "locator": "page 1",
+              "quote": "Patient Financial\nAssistance Guide",
+              "question": "Does this 15-page resource guide contain the designated hospital financial-assistance plain-language summary? Until section and campus scope are verified under #24, keep it as other/supplement rather than substituting policy or guide text for summary evidence."
+            }
+          ]
+        },
+        "expected": {
+          "document_type": "application"
+        },
+        "evidence": [
+          {
+            "snapshot_id": "282e4b0111f83b72960bc1153ec92a076d8aaeab18dc6157f3758bd1fc7b6843",
+            "locator": "link https://www.bassett.org/sites/default/files/2026-01/2026-NYS-Bassett-FA-Form-English.docx",
+            "quote": "Bassett NYS Uniform Hospital Financial Assistance Application (English)"
+          },
+          {
+            "snapshot_id": "3b335e9cd9dd54b9009cff5e9f8952a68d9874a78425793c50064159f1866b92",
+            "locator": "DOCX body (paragraphs and tables; pagination unverified)",
+            "quote": "NYS Uniform Hospital Financial Assistance Application"
+          },
+          {
+            "snapshot_id": "282e4b0111f83b72960bc1153ec92a076d8aaeab18dc6157f3758bd1fc7b6843",
+            "locator": "link https://www.bassett.org/sites/default/files/2026-01/2026-NYS-Bassett-FA-Form-Spanish.docx",
+            "quote": "Bassett NYS Uniform Hospital Financial Assistance Application (Spanish)"
+          },
+          {
+            "snapshot_id": "01d17323f5445948053dee949f9155eee634175b0025a60dd4dc60c9947933e4",
+            "locator": "DOCX body (paragraphs and tables; pagination unverified)",
+            "quote": "Solicitud de asistencia económica uniforme para hospitales del estado de Nueva York"
+          }
+        ]
+      },
+      {
+        "measure_id": "posted_materials.policy_summary_posted",
+        "result": "unclear",
+        "reason_code": "insufficient_evidence",
+        "explanation": "No designated policy_summary was verified in this direct-link capture. Review candidate documents and campus scope.",
+        "observed": {
+          "links": [],
+          "coverage_gaps": [
+            {
+              "url": "https://www.bassett.org/sites/default/files/hg_features/mercury_standard_layout/46607191876acfcc504a7cc8048608fc.pdf",
+              "reason": "summary_scope_needs_review",
+              "snapshot_sha256": "46e36a10a8964085dd8c30a81f53c6407fccc9d14bed712824576c8e199c7b96",
+              "locator": "page 1",
+              "quote": "Patient Financial\nAssistance Guide",
+              "question": "Does this 15-page resource guide contain the designated hospital financial-assistance plain-language summary? Until section and campus scope are verified under #24, keep it as other/supplement rather than substituting policy or guide text for summary evidence."
+            }
+          ]
+        },
+        "expected": {
+          "document_type": "policy_summary"
+        },
+        "evidence": [
+          {
+            "snapshot_id": "282e4b0111f83b72960bc1153ec92a076d8aaeab18dc6157f3758bd1fc7b6843",
+            "locator": "link https://www.bassett.org/sites/default/files/hg_features/mercury_standard_layout/46607191876acfcc504a7cc8048608fc.pdf",
+            "quote": "Financial Assistance Resource Guide"
+          }
+        ]
+      },
+      {
+        "measure_id": "posted_materials.policy_statement_posted",
+        "result": "yes",
+        "reason_code": "condition_met",
+        "explanation": "Saved landing links resolve to content-confirmed policy_statement documents.",
+        "observed": {
+          "links": [
+            "https://www.bassett.org/sites/default/files/2026-07/Bassett-Healthcare-Network-Charity-Care-and-Financial-Assistance-07-09-2026.pdf",
+            "https://www.bassett.org/sites/default/files/2026-08/Charity-Care-and-Financial-Assistance-Spanish.pdf"
+          ],
+          "coverage_gaps": [
+            {
+              "url": "https://www.bassett.org/sites/default/files/hg_features/mercury_standard_layout/46607191876acfcc504a7cc8048608fc.pdf",
+              "reason": "summary_scope_needs_review",
+              "snapshot_sha256": "46e36a10a8964085dd8c30a81f53c6407fccc9d14bed712824576c8e199c7b96",
+              "locator": "page 1",
+              "quote": "Patient Financial\nAssistance Guide",
+              "question": "Does this 15-page resource guide contain the designated hospital financial-assistance plain-language summary? Until section and campus scope are verified under #24, keep it as other/supplement rather than substituting policy or guide text for summary evidence."
+            }
+          ]
+        },
+        "expected": {
+          "document_type": "policy_statement"
+        },
+        "evidence": [
+          {
+            "snapshot_id": "282e4b0111f83b72960bc1153ec92a076d8aaeab18dc6157f3758bd1fc7b6843",
+            "locator": "link https://www.bassett.org/sites/default/files/2026-07/Bassett-Healthcare-Network-Charity-Care-and-Financial-Assistance-07-09-2026.pdf",
+            "quote": "Charity Care & Financial Assistance (English)"
+          },
+          {
+            "snapshot_id": "31191be522d32c76d5d913b502c94d2a2290b8480d315cb46f726b973a241e59",
+            "locator": "page 1",
+            "quote": "Policy Title: Charity Care and Financial Assistance"
+          },
+          {
+            "snapshot_id": "282e4b0111f83b72960bc1153ec92a076d8aaeab18dc6157f3758bd1fc7b6843",
+            "locator": "link https://www.bassett.org/sites/default/files/2026-08/Charity-Care-and-Financial-Assistance-Spanish.pdf",
+            "quote": "Charity Care & Financial Assistance (Spanish)"
+          },
+          {
+            "snapshot_id": "cb6c5684b8dabf5031c5ec11166667ea0b2e62e37a9bc57ad45fd8b399480a5f",
+            "locator": "page 1",
+            "quote": "Título de la política: Atención de beneficencia y asistencia financiera"
+          }
+        ]
+      }
+    ]
+  }
+}

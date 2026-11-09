@@ -237,3 +237,7 @@ opencode run --agent hospital-auditor --model "openrouter/nvidia/nemotron-3-nano
 ```
 
 For a provider-independent live smoke test, run `python tools/live-audit/smoke.py`. Both entry points use the same MCP tools. Review the reported URLs, snapshot hashes, PDF page and DOCX table locator. Source files are stored under `.audit/live/snapshots/`; paths inside each assessment resolve relative to `.audit/live/`. If the documents or link labels change, inspect the live sources and the reported limitation. An ambiguous table or unverified campus produces an unclear finding. The reference for this single check is [the 2026 HHS contiguous-state poverty guideline](https://aspe.hhs.gov/poverty-guidelines), $15,960 annually for one person (400% = $63,840).
+
+### Wave 1 posted materials
+
+The [Wave 1 posting results and replay commands](docs/audit-format/posting/README.md) cover application, summary and policy-statement availability for Ellenville and Little Falls. Each positive finding joins an actual landing-page anchor to a saved document and a content-confirmed role excerpt. The CLI reads saved captures offline.

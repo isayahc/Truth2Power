@@ -223,7 +223,8 @@
           "enum": [
             "worker",
             "application-reviews",
-            "full-reviews"
+            "full-reviews",
+            "posting"
           ]
         },
         "artifact_sha256": {

@@ -3,3 +3,4 @@ docs/audit-format/examples/application.txt text eol=lf
 docs/grading/examples/sources/*.json text eol=lf
 docs/grading/examples/*.expected.json text eol=lf
 references/hhs-poverty-contiguous-v1.json text eol=lf
+docs/audit-format/wave-one-document-inventory.json text eol=lf
