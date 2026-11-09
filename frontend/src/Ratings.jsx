@@ -1,3 +1,4 @@
+import GradingPanel from "./GradingPanel.jsx";
 import AuditPanel from "./AuditPanel.jsx";
 import React from "react";
 import { ratings, ratingByStars } from "./ratings.js";
@@ -80,7 +81,7 @@ export function HospitalDetail({ hospital, onClose, onReview, pendingReviews }) 
       <h2>{p.name}</h2>
       <span className="pill">
         <span className="swatch" style={{ background: ratingByStars.get(p.stars).color }} />
-        {p.stars} ★ · Grade {p.grade}
+        {p.stars} ★ · Grade {p.grade} · September 2025
       </span>
       <dl>
         <dt>Address</dt>
@@ -98,6 +99,7 @@ export function HospitalDetail({ hospital, onClose, onReview, pendingReviews }) 
           <a href={p.coordinate_source_url}>{p.coordinate_source}</a>
         </dd>
       </dl>
+      <GradingPanel key={hospital.id} hospitalKey={hospital.id} />
       {hospital.id === "362" && <AuditPanel />}
       <button className="review-nav" onClick={onReview}>Review notifications ({pendingReviews ?? "…"})</button>
       <div className="links">

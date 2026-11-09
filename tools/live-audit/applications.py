@@ -14,6 +14,7 @@ from cross_documents import load_sources
 from documents import now
 from full_review import json_save
 from extraction import PARSER
+from review_identity import application_language, review_identity
 
 MEASURES = {
     "application.uniform_application": "The entire applicable NYS Uniform Hospital Financial Assistance Application is used.",
@@ -150,12 +151,15 @@ def review_application(hospital_key, extraction_id, application_url, review_date
         raise ValueError("No versioned HHS reference for this review year")
     sources, unavailable = load_sources(hospital_key, extraction_id, output)
     selected = [s for s in sources if s["snapshot"]["url"] == application_url]
-    if len(selected) != 1 or selected[0]["snapshot"]["document_type"] != "application":
+    if not selected or any(s["snapshot"]["document_type"] != "application" or
+                           s["snapshot"]["sha256"] != selected[0]["snapshot"]["sha256"] for s in selected):
         raise ValueError("Select an existing application URL from the saved extraction; policy and summary evidence cannot be substituted")
     source = selected[0]
     findings, status = evaluate(source, review_date, reference)
     review_id, result_id, checked = uuid.uuid4().hex, uuid.uuid4().hex, now()
-    other_applications = [s["snapshot"]["url"] for s in sources if s["snapshot"]["document_type"] == "application" and s is not source]
+    language = application_language(hospital_key, source["snapshot"], status == "reviewed")
+    other_applications = sorted({s["snapshot"]["url"] for s in sources
+                                 if s["snapshot"]["document_type"] == "application" and s["snapshot"]["url"] != application_url})
     result = dict(schema_version="1.0", review_type="application", review_id=review_id, result_id=result_id,
         hospital_key=hospital_key, extraction_id=extraction_id, checked_at=checked, review_date=review_date,
         guideline_year=year, reference_version=reference["reference_version"], reference_sha256=hashlib.sha256(raw_reference).hexdigest(),
@@ -165,7 +169,8 @@ def review_application(hospital_key, extraction_id, application_url, review_date
         extraction_details=dict(parser_version=PARSER, snapshot_id=source["snapshot"]["snapshot_id"],
             drawings=[d for p in source["segments"] for d in p.get("drawings", [])],
             limitations="Structural drawing classification does not verify rendered layout or entire-form equivalence."),
-        coverage=[dict(source_id="application", url=application_url, language="English" if status == "reviewed" else "unverified",
+        review_identity=review_identity("selected_application", [(source["snapshot"], language)]),
+        coverage=[dict(source_id="application", url=application_url, language=language, snapshot_sha256=source["snapshot"]["sha256"],
             status=status, total_pages=len(source["segments"]), reviewed_pages=[p["locator"] for p in source["segments"]] if status == "reviewed" else [],
             notes="Source segments extracted; DOCX body locators are not rendered pages. Deterministic profile checks, not human approval or complete official-template equivalence.")],
         gaps=([dict(url=application_url, reason=status)] if status != "reviewed" else []), source_reviews=[],

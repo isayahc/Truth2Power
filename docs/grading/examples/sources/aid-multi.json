@@ -1,0 +1,39 @@
+{
+  "format": "published-fields-v1",
+  "synthetic": true,
+  "hospital_key": "1002",
+  "role": "landing_page",
+  "url": "https://example.org/SYN-hospital/aid",
+  "language": "en",
+  "fields": {
+    "consistency": {
+      "complete": true,
+      "terms": {
+        "eligibility_percent": 400
+      },
+      "online_application_search": "searched_absent"
+    },
+    "deadline": {
+      "application_submission": "not_addressed"
+    },
+    "assets": {
+      "eligibility_asset_test": "not_addressed"
+    },
+    "immigration": {
+      "immigration_eligibility": "not_addressed"
+    },
+    "posting": {
+      "links": [
+        "https://example.org/SYN-hospital/application-en",
+        "https://example.org/SYN-hospital/application-es",
+        "https://example.org/SYN-hospital/application-pl",
+        "https://example.org/SYN-hospital/application-uk",
+        "https://example.org/SYN-hospital/application-ru",
+        "https://example.org/SYN-hospital/summary",
+        "https://example.org/SYN-hospital/statement"
+      ],
+      "search_complete": true,
+      "search_notes": "SYN reviewed all designated financial assistance links."
+    }
+  }
+}

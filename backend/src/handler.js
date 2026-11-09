@@ -2,6 +2,8 @@ import { readFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import { createReviewService } from "../review/service.js";
 
+import { gradingRoute } from "../grading/routes.js";
+
 let reviewService;
 async function reviewHandler(event) {
   reviewService ??= createReviewService(process.env.T2P_REVIEW_DIRECTORY || fileURLToPath(new URL("../../.audit/live/", import.meta.url)),
@@ -10,7 +12,7 @@ async function reviewHandler(event) {
   const match = /^\/api\/reviews\/([a-f0-9]{64})(?:\/(decisions|sources)(?:\/([a-f0-9]{64}))?)?$/.exec(event.rawPath);
   try {
     let result;
-    if (event.rawPath === "/api/reviews" && method === "GET") result = reviewService.list();
+    if (event.rawPath === "/api/reviews" && method === "GET") result = reviewService.list(event.queryStringParameters);
     else if (match && !match[2] && method === "GET") result = reviewService.detail(match[1]);
     else if (match?.[2] === "sources" && match[3] && method === "GET") return { statusCode: 200, ...reviewService.source(match[1], match[3]) };
     else if (match?.[2] === "decisions" && !match[3] && method === "POST") {
@@ -46,6 +48,7 @@ function errorResponse(statusCode, message) {
 
 /** Serve an API Gateway HTTP API v2 event with a response usable by Node or Lambda. */
 export async function handler(event) {
+  if (event.rawPath.startsWith("/api/grading/")) return gradingRoute(event);
   if (event.rawPath === "/api/reviews" || event.rawPath.startsWith("/api/reviews/")) return reviewHandler(event);
   const dataset = datasets.get(event.rawPath);
   if (!dataset) return errorResponse(404, "Dataset not found.");

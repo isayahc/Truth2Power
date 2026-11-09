@@ -1,0 +1,45 @@
+{
+  "format": "published-fields-v1",
+  "synthetic": true,
+  "hospital_key": "1002",
+  "role": "policy_summary",
+  "url": "https://example.org/SYN-hospital/summary",
+  "language": "en",
+  "fields": {
+    "consistency": {
+      "complete": true,
+      "terms": {
+        "eligibility_percent": 400
+      }
+    },
+    "deadline": {
+      "application_submission": "any_time"
+    },
+    "assets": {
+      "eligibility_asset_test": "no_asset_test"
+    },
+    "immigration": {
+      "immigration_eligibility": "regardless_of_status"
+    },
+    "summary_area": {
+      "complete": true,
+      "areas": [
+        "SYN County"
+      ]
+    },
+    "summary_process": {
+      "complete": true,
+      "application_instructions": [
+        "Submit to SYN aid desk"
+      ]
+    },
+    "summary_income": {
+      "complete": true,
+      "fpl_levels": [
+        200,
+        300,
+        400
+      ]
+    }
+  }
+}

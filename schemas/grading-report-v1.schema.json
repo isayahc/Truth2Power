@@ -1,0 +1,316 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://truth2power.local/schemas/grading-report-v1.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "synthetic": {
+      "$ref": "grading-assessment-v1.schema.json#/properties/synthetic"
+    },
+    "hospital_key": {
+      "$ref": "grading-assessment-v1.schema.json#/properties/hospital_key"
+    },
+    "assessment_id": {
+      "$ref": "grading-assessment-v1.schema.json#/properties/assessment_id"
+    },
+    "scope_id": {
+      "$ref": "grading-assessment-v1.schema.json#/properties/scope_id"
+    },
+    "rubric_version": {
+      "$ref": "grading-assessment-v1.schema.json#/properties/rubric_version"
+    },
+    "reference_version": {
+      "$ref": "grading-assessment-v1.schema.json#/properties/reference_version"
+    },
+    "guideline_year": {
+      "$ref": "grading-assessment-v1.schema.json#/properties/guideline_year"
+    },
+    "review_date": {
+      "$ref": "grading-assessment-v1.schema.json#/properties/review_date"
+    },
+    "last_successful_assessment_at": {
+      "$ref": "grading-assessment-v1.schema.json#/properties/last_successful_assessment_at"
+    },
+    "refresh_status": {
+      "$ref": "grading-assessment-v1.schema.json#/properties/refresh_status"
+    },
+    "origin": {
+      "$ref": "grading-assessment-v1.schema.json#/properties/origin"
+    },
+    "schema_version": {
+      "const": "grading-report-v1"
+    },
+    "reference_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "assessment_status": {
+      "const": "completed"
+    },
+    "last_attempt": {
+      "$ref": "grading-assessment-v1.schema.json#/properties/attempt"
+    },
+    "guideline_status": {
+      "enum": [
+        "applicable",
+        "inapplicable_year"
+      ]
+    },
+    "human_review_status": {
+      "enum": [
+        "complete",
+        "partial",
+        "pending"
+      ]
+    },
+    "source_coverage": {
+      "$ref": "grading-assessment-v1.schema.json#/properties/sources"
+    },
+    "coverage_gaps": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "findings": {
+      "type": "array",
+      "minItems": 17,
+      "maxItems": 17,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "measure_id": {
+            "$ref": "grading-finding-v1.schema.json#/properties/measure_id"
+          },
+          "css_column": {
+            "type": "string",
+            "minLength": 1
+          },
+          "result": {
+            "$ref": "grading-finding-v1.schema.json#/properties/result"
+          },
+          "submitted_result": {
+            "$ref": "grading-finding-v1.schema.json#/properties/result"
+          },
+          "human_review": {
+            "$ref": "grading-finding-v1.schema.json#/properties/human_review"
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1
+          },
+          "coverage_gaps": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "expected": {
+            "$ref": "grading-finding-v1.schema.json#/properties/expected"
+          },
+          "evidence": {
+            "$ref": "grading-finding-v1.schema.json#/properties/evidence"
+          },
+          "document_results": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "source_id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "language": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "result": {
+                  "enum": [
+                    "yes",
+                    "no",
+                    "unclear",
+                    "not_addressed"
+                  ]
+                }
+              },
+              "required": [
+                "source_id",
+                "language",
+                "result"
+              ]
+            }
+          },
+          "comparisons": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "source_id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "result": {
+                  "$ref": "grading-finding-v1.schema.json#/properties/result"
+                },
+                "cells": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "household_size": {
+                        "type": "integer",
+                        "minimum": 0
+                      },
+                      "fpl_percent": {
+                        "type": "integer",
+                        "minimum": 0
+                      },
+                      "observed": {
+                        "type": "integer",
+                        "minimum": 0
+                      },
+                      "expected": {
+                        "type": "number"
+                      }
+                    },
+                    "required": [
+                      "household_size",
+                      "fpl_percent",
+                      "observed",
+                      "expected"
+                    ]
+                  }
+                }
+              },
+              "required": [
+                "source_id",
+                "result",
+                "cells"
+              ]
+            }
+          }
+        },
+        "required": [
+          "measure_id",
+          "css_column",
+          "result",
+          "submitted_result",
+          "human_review",
+          "reason",
+          "coverage_gaps",
+          "expected",
+          "evidence",
+          "document_results",
+          "comparisons"
+        ]
+      }
+    },
+    "failed_measures": {
+      "type": "array",
+      "items": {
+        "$ref": "grading-finding-v1.schema.json#/properties/measure_id"
+      }
+    },
+    "verified_errors": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "unresolved_measures": {
+      "type": "array",
+      "items": {
+        "$ref": "grading-finding-v1.schema.json#/properties/measure_id"
+      }
+    },
+    "applicable_overrides": {
+      "type": "array",
+      "items": {
+        "$ref": "grading-finding-v1.schema.json#/properties/measure_id"
+      }
+    },
+    "policy_can_change_grade": {
+      "type": "boolean"
+    },
+    "possible_grades": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "A",
+          "B",
+          "C",
+          "D",
+          "F"
+        ]
+      }
+    },
+    "calculated_grade": {
+      "anyOf": [
+        {
+          "enum": [
+            "A",
+            "B",
+            "C",
+            "D",
+            "F"
+          ]
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "grade_status": {
+      "const": "pending"
+    },
+    "final_grade": {
+      "const": null
+    },
+    "reasons": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "authority": {
+      "$ref": "grading-rubric-v1.schema.json#/properties/authority_status"
+    }
+  },
+  "required": [
+    "synthetic",
+    "hospital_key",
+    "assessment_id",
+    "scope_id",
+    "rubric_version",
+    "reference_version",
+    "guideline_year",
+    "review_date",
+    "last_successful_assessment_at",
+    "refresh_status",
+    "schema_version",
+    "reference_sha256",
+    "assessment_status",
+    "last_attempt",
+    "guideline_status",
+    "human_review_status",
+    "source_coverage",
+    "coverage_gaps",
+    "findings",
+    "failed_measures",
+    "verified_errors",
+    "unresolved_measures",
+    "applicable_overrides",
+    "policy_can_change_grade",
+    "possible_grades",
+    "calculated_grade",
+    "grade_status",
+    "final_grade",
+    "reasons",
+    "authority"
+  ]
+}

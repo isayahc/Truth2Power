@@ -10,7 +10,9 @@
     "build": "vite build",
     "start": "node backend/src/local-server.js",
     "audit:worker": "node backend/audit/worker.js",
-    "test:audit": "npm run build && node scripts/test-audit-e2e.js"
+    "test:audit": "npm run build && node scripts/test-audit-e2e.js",
+    "grade": "node backend/grading/cli.js",
+    "test:review": "node scripts/test-review-e2e.js"
   },
   "dependencies": {
     "playwright": "1.65.0",

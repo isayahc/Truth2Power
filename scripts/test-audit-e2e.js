@@ -6,6 +6,8 @@ import { join } from "node:path";
 import { setTimeout as sleep } from "node:timers/promises";
 import { once } from "node:events";
 import { DatabaseSync } from "node:sqlite";
+import { adaptArtifact } from "../backend/grading/adapter.js";
+import { grade } from "../backend/grading/grade.js";
 import { chromium } from "playwright";
 
 const directory = await mkdtemp(join(tmpdir(), "t2p-e2e-"));
@@ -77,6 +79,12 @@ try {
       latest.assessment.findings[0].result,
       year === "2025" ? "yes" : "no",
     );
+    const adapted = adaptArtifact(Buffer.from(JSON.stringify(latest)), { root: directory });
+    assert.equal(adapted.status, "partial", JSON.stringify(adapted.blockers.at(0)));
+    const assessment = grade(adapted.input, { root: directory });
+    const dollars = assessment.findings.find((f) => f.css_column === "AH");
+    assert.equal(dollars.document_results[0].result, year === "2025" ? "unclear" : "no");
+    assert.equal(assessment.final_grade, null);
     page = await openHospital();
     await page.getByText("Source evidence", { exact: true }).click();
     const href = await page.getByText("Open saved PDF").getAttribute("href");

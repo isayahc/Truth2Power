@@ -144,6 +144,7 @@ async function audit(job) {
       rubric_version: job.context.rubric,
       reference_version: job.context.reference_version,
       guideline_year: job.year,
+      review_date: job.review_date,
       attempt: {
         attempt_id: job.token,
         attempted_at: job.attempted,

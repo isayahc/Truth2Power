@@ -1,0 +1,1058 @@
+{
+  "schema_version": "grading-report-v1",
+  "synthetic": true,
+  "hospital_key": "1002",
+  "assessment_id": "SYN-multilingual",
+  "scope_id": "SYN-institutional-review",
+  "rubric_version": "css-17-v1",
+  "reference_version": "hhs-contiguous-2025-2026-v1",
+  "guideline_year": 2026,
+  "review_date": "2026-09-20",
+  "reference_sha256": "a5d7f1a25efdc18e4b1907dde8a5923bd249276b1a521a975f0a966e0a481973",
+  "assessment_status": "completed",
+  "last_attempt": {
+    "attempt_id": "SYN-multilingual-attempt",
+    "status": "completed",
+    "attempted_at": "2026-09-20T14:00:00Z"
+  },
+  "last_successful_assessment_at": "2026-09-20T14:00:00Z",
+  "refresh_status": "overdue",
+  "guideline_status": "applicable",
+  "human_review_status": "pending",
+  "source_coverage": [
+    {
+      "source_id": "https://example.org/SYN-hospital/aid",
+      "hospital_key": "1002",
+      "role": "landing_page",
+      "language": "en",
+      "status": "reviewed",
+      "snapshot": {
+        "snapshot_id": "ff0887f7eb0ddd09afe8c13ef2cfdb4d172e114f3342c512c635695c35e44e17",
+        "sha256": "ff0887f7eb0ddd09afe8c13ef2cfdb4d172e114f3342c512c635695c35e44e17",
+        "artifact_path": "sources/aid-multi.json",
+        "retrieved_at": "2025-09-01T00:00:00Z",
+        "publisher_updated_at": null,
+        "url": "https://example.org/SYN-hospital/aid"
+      }
+    },
+    {
+      "source_id": "https://example.org/SYN-hospital/application-en",
+      "hospital_key": "1002",
+      "role": "application",
+      "language": "en",
+      "status": "reviewed",
+      "snapshot": {
+        "snapshot_id": "5141f590024de42f40c12fe99f7019e733f97d645a6668a189e9c057073c57bc",
+        "sha256": "5141f590024de42f40c12fe99f7019e733f97d645a6668a189e9c057073c57bc",
+        "artifact_path": "sources/application-en.json",
+        "retrieved_at": "2025-09-01T00:00:00Z",
+        "publisher_updated_at": null,
+        "url": "https://example.org/SYN-hospital/application-en"
+      }
+    },
+    {
+      "source_id": "https://example.org/SYN-hospital/application-es",
+      "hospital_key": "1002",
+      "role": "application",
+      "language": "es",
+      "status": "reviewed",
+      "snapshot": {
+        "snapshot_id": "962f846f826ae725051588cef37e07fb8f2ecc09947ad3bce4aa90464fede598",
+        "sha256": "962f846f826ae725051588cef37e07fb8f2ecc09947ad3bce4aa90464fede598",
+        "artifact_path": "sources/application-es.json",
+        "retrieved_at": "2025-09-01T00:00:00Z",
+        "publisher_updated_at": null,
+        "url": "https://example.org/SYN-hospital/application-es"
+      }
+    },
+    {
+      "source_id": "https://example.org/SYN-hospital/application-pl",
+      "hospital_key": "1002",
+      "role": "application",
+      "language": "pl",
+      "status": "not_reviewed",
+      "snapshot": null
+    },
+    {
+      "source_id": "https://example.org/SYN-hospital/application-uk",
+      "hospital_key": "1002",
+      "role": "application",
+      "language": "uk",
+      "status": "not_reviewed",
+      "snapshot": null
+    },
+    {
+      "source_id": "https://example.org/SYN-hospital/application-ru",
+      "hospital_key": "1002",
+      "role": "application",
+      "language": "ru",
+      "status": "not_reviewed",
+      "snapshot": null
+    },
+    {
+      "source_id": "https://example.org/SYN-hospital/summary",
+      "hospital_key": "1002",
+      "role": "policy_summary",
+      "language": "en",
+      "status": "reviewed",
+      "snapshot": {
+        "snapshot_id": "82e625b23f7baac8437f8cc019b7c428afa76000aa6b9903a3e78fda974ef97f",
+        "sha256": "82e625b23f7baac8437f8cc019b7c428afa76000aa6b9903a3e78fda974ef97f",
+        "artifact_path": "sources/summary.json",
+        "retrieved_at": "2025-09-01T00:00:00Z",
+        "publisher_updated_at": null,
+        "url": "https://example.org/SYN-hospital/summary"
+      }
+    },
+    {
+      "source_id": "https://example.org/SYN-hospital/statement",
+      "hospital_key": "1002",
+      "role": "policy_statement",
+      "language": "en",
+      "status": "reviewed",
+      "snapshot": {
+        "snapshot_id": "a5c2930491ff0ef2d13980629600b2e63c9d56c617701e5581b0e1b74af08481",
+        "sha256": "a5c2930491ff0ef2d13980629600b2e63c9d56c617701e5581b0e1b74af08481",
+        "artifact_path": "sources/statement.json",
+        "retrieved_at": "2025-09-01T00:00:00Z",
+        "publisher_updated_at": null,
+        "url": "https://example.org/SYN-hospital/statement"
+      }
+    },
+    {
+      "source_id": "https://example.org/SYN-hospital/template-2026",
+      "hospital_key": "1002",
+      "role": "uniform_reference",
+      "language": "en",
+      "status": "reviewed",
+      "snapshot": {
+        "snapshot_id": "fbe94e896fc87a398a1963a61e5c5ceb8e1e0605571381fe40dc22e6370c21cb",
+        "sha256": "fbe94e896fc87a398a1963a61e5c5ceb8e1e0605571381fe40dc22e6370c21cb",
+        "artifact_path": "sources/template-2026.json",
+        "retrieved_at": "2025-09-01T00:00:00Z",
+        "publisher_updated_at": null,
+        "url": "https://example.org/SYN-hospital/template-2026"
+      }
+    },
+    {
+      "source_id": "https://example.org/SYN-hospital/service-area-2026",
+      "hospital_key": "1002",
+      "role": "psa_reference",
+      "language": "en",
+      "status": "reviewed",
+      "snapshot": {
+        "snapshot_id": "cc50ad708377e388fbec29d6b948738282ea643eb5f664c07b5fbc7441b71b0a",
+        "sha256": "cc50ad708377e388fbec29d6b948738282ea643eb5f664c07b5fbc7441b71b0a",
+        "artifact_path": "sources/service-area-2026.json",
+        "retrieved_at": "2025-09-01T00:00:00Z",
+        "publisher_updated_at": null,
+        "url": "https://example.org/SYN-hospital/service-area-2026"
+      }
+    }
+  ],
+  "coverage_gaps": [
+    "application [pl] https://example.org/SYN-hospital/application-pl: not_reviewed.",
+    "application [uk] https://example.org/SYN-hospital/application-uk: not_reviewed.",
+    "application [ru] https://example.org/SYN-hospital/application-ru: not_reviewed."
+  ],
+  "findings": [
+    {
+      "measure_id": "posted_materials.application_posted",
+      "css_column": "R",
+      "result": "yes",
+      "submitted_result": "yes",
+      "human_review": "pending",
+      "reason": "Verified R observations evaluate to yes under posting.",
+      "coverage_gaps": [],
+      "expected": {
+        "any_accessible_role": [
+          "application",
+          "online_application"
+        ]
+      },
+      "evidence": [
+        {
+          "source_id": "https://example.org/SYN-hospital/aid",
+          "snapshot_id": "ff0887f7eb0ddd09afe8c13ef2cfdb4d172e114f3342c512c635695c35e44e17",
+          "sha256": "ff0887f7eb0ddd09afe8c13ef2cfdb4d172e114f3342c512c635695c35e44e17",
+          "locator": "/fields/posting",
+          "quote": "{\"links\":[\"https://example.org/SYN-hospital/application-en\",\"https://example.org/SYN-hospital/application-es\",\"https://example.org/SYN-hospital/application-pl\",\"https://example.org/SYN-hospital/application-uk\",\"https://example.org/SYN-hospital/application-ru\",\"https://example.org/SYN-hospital/summary\",\"https://example.org/SYN-hospital/statement\"],\"search_complete\":true,\"search_notes\":\"SYN reviewed all designated financial assistance links.\"}"
+        }
+      ],
+      "document_results": [],
+      "comparisons": []
+    },
+    {
+      "measure_id": "posted_materials.policy_summary_posted",
+      "css_column": "S",
+      "result": "yes",
+      "submitted_result": "yes",
+      "human_review": "pending",
+      "reason": "Verified S observations evaluate to yes under posting.",
+      "coverage_gaps": [],
+      "expected": {
+        "any_accessible_role": [
+          "policy_summary"
+        ]
+      },
+      "evidence": [
+        {
+          "source_id": "https://example.org/SYN-hospital/aid",
+          "snapshot_id": "ff0887f7eb0ddd09afe8c13ef2cfdb4d172e114f3342c512c635695c35e44e17",
+          "sha256": "ff0887f7eb0ddd09afe8c13ef2cfdb4d172e114f3342c512c635695c35e44e17",
+          "locator": "/fields/posting",
+          "quote": "{\"links\":[\"https://example.org/SYN-hospital/application-en\",\"https://example.org/SYN-hospital/application-es\",\"https://example.org/SYN-hospital/application-pl\",\"https://example.org/SYN-hospital/application-uk\",\"https://example.org/SYN-hospital/application-ru\",\"https://example.org/SYN-hospital/summary\",\"https://example.org/SYN-hospital/statement\"],\"search_complete\":true,\"search_notes\":\"SYN reviewed all designated financial assistance links.\"}"
+        }
+      ],
+      "document_results": [],
+      "comparisons": []
+    },
+    {
+      "measure_id": "posted_materials.policy_statement_posted",
+      "css_column": "T",
+      "result": "yes",
+      "submitted_result": "yes",
+      "human_review": "pending",
+      "reason": "Verified T observations evaluate to yes under posting.",
+      "coverage_gaps": [],
+      "expected": {
+        "any_accessible_role": [
+          "policy_statement"
+        ]
+      },
+      "evidence": [
+        {
+          "source_id": "https://example.org/SYN-hospital/aid",
+          "snapshot_id": "ff0887f7eb0ddd09afe8c13ef2cfdb4d172e114f3342c512c635695c35e44e17",
+          "sha256": "ff0887f7eb0ddd09afe8c13ef2cfdb4d172e114f3342c512c635695c35e44e17",
+          "locator": "/fields/posting",
+          "quote": "{\"links\":[\"https://example.org/SYN-hospital/application-en\",\"https://example.org/SYN-hospital/application-es\",\"https://example.org/SYN-hospital/application-pl\",\"https://example.org/SYN-hospital/application-uk\",\"https://example.org/SYN-hospital/application-ru\",\"https://example.org/SYN-hospital/summary\",\"https://example.org/SYN-hospital/statement\"],\"search_complete\":true,\"search_notes\":\"SYN reviewed all designated financial assistance links.\"}"
+        }
+      ],
+      "document_results": [],
+      "comparisons": []
+    },
+    {
+      "measure_id": "posted_materials.consistent_across_documents",
+      "css_column": "U",
+      "result": "unclear",
+      "submitted_result": "unclear",
+      "human_review": "pending",
+      "reason": "SYN: not all listed application languages have reviewed evidence for this measure. Review application [es] https://example.org/SYN-hospital/application-es for this measure. Review application [pl] https://example.org/SYN-hospital/application-pl for this measure. Review application [uk] https://example.org/SYN-hospital/application-uk for this measure. Review application [ru] https://example.org/SYN-hospital/application-ru for this measure. Compare like terms across all applicable materials including online applications. Identify conflicts and gaps.",
+      "coverage_gaps": [
+        "SYN: not all listed application languages have reviewed evidence for this measure.",
+        "Review application [es] https://example.org/SYN-hospital/application-es for this measure.",
+        "Review application [pl] https://example.org/SYN-hospital/application-pl for this measure.",
+        "Review application [uk] https://example.org/SYN-hospital/application-uk for this measure.",
+        "Review application [ru] https://example.org/SYN-hospital/application-ru for this measure.",
+        "Compare like terms across all applicable materials including online applications. Identify conflicts and gaps."
+      ],
+      "expected": {
+        "conflicting_terms": 0,
+        "include_online_application": true
+      },
+      "evidence": [
+        {
+          "source_id": "https://example.org/SYN-hospital/aid",
+          "snapshot_id": "ff0887f7eb0ddd09afe8c13ef2cfdb4d172e114f3342c512c635695c35e44e17",
+          "sha256": "ff0887f7eb0ddd09afe8c13ef2cfdb4d172e114f3342c512c635695c35e44e17",
+          "locator": "/fields/consistency",
+          "quote": "{\"complete\":true,\"terms\":{\"eligibility_percent\":400},\"online_application_search\":\"searched_absent\"}"
+        },
+        {
+          "source_id": "https://example.org/SYN-hospital/application-en",
+          "snapshot_id": "5141f590024de42f40c12fe99f7019e733f97d645a6668a189e9c057073c57bc",
+          "sha256": "5141f590024de42f40c12fe99f7019e733f97d645a6668a189e9c057073c57bc",
+          "locator": "/fields/consistency",
+          "quote": "{\"complete\":true,\"terms\":{\"eligibility_percent\":400}}"
+        },
+        {
+          "source_id": "https://example.org/SYN-hospital/summary",
+          "snapshot_id": "82e625b23f7baac8437f8cc019b7c428afa76000aa6b9903a3e78fda974ef97f",
+          "sha256": "82e625b23f7baac8437f8cc019b7c428afa76000aa6b9903a3e78fda974ef97f",
+          "locator": "/fields/consistency",
+          "quote": "{\"complete\":true,\"terms\":{\"eligibility_percent\":400}}"
+        },
+        {
+          "source_id": "https://example.org/SYN-hospital/statement",
+          "snapshot_id": "a5c2930491ff0ef2d13980629600b2e63c9d56c617701e5581b0e1b74af08481",
+          "sha256": "a5c2930491ff0ef2d13980629600b2e63c9d56c617701e5581b0e1b74af08481",
+          "locator": "/fields/consistency",
+          "quote": "{\"complete\":true,\"terms\":{\"eligibility_percent\":400}}"
+        }
+      ],
+      "document_results": [],
+      "comparisons": []
+    },
+    {
+      "measure_id": "posted_materials.primary_service_area_boundaries_compliant",
+      "css_column": "V",
+      "result": "yes",
+      "submitted_result": "yes",
+      "human_review": "pending",
+      "reason": "Verified V observations evaluate to yes under service_area.",
+      "coverage_gaps": [],
+      "expected": {
+        "required_counties": "applicable_facility_reference"
+      },
+      "evidence": [
+        {
+          "source_id": "https://example.org/SYN-hospital/statement",
+          "snapshot_id": "a5c2930491ff0ef2d13980629600b2e63c9d56c617701e5581b0e1b74af08481",
+          "sha256": "a5c2930491ff0ef2d13980629600b2e63c9d56c617701e5581b0e1b74af08481",
+          "locator": "/fields/service_area",
+          "quote": "{\"complete\":true,\"published_counties\":[\"SYN County\"]}"
+        },
+        {
+          "source_id": "https://example.org/SYN-hospital/service-area-2026",
+          "snapshot_id": "cc50ad708377e388fbec29d6b948738282ea643eb5f664c07b5fbc7441b71b0a",
+          "sha256": "cc50ad708377e388fbec29d6b948738282ea643eb5f664c07b5fbc7441b71b0a",
+          "locator": "/fields/service_area",
+          "quote": "{\"required_counties\":[\"SYN County\"],\"guideline_year\":2026,\"version\":\"SYN-area-2026\"}"
+        }
+      ],
+      "document_results": [],
+      "comparisons": []
+    },
+    {
+      "measure_id": "posted_materials.no_submission_time_limit",
+      "css_column": "W",
+      "result": "unclear",
+      "submitted_result": "unclear",
+      "human_review": "pending",
+      "reason": "SYN: not all listed application languages have reviewed evidence for this measure. Review application [es] https://example.org/SYN-hospital/application-es for this measure. Review application [pl] https://example.org/SYN-hospital/application-pl for this measure. Review application [uk] https://example.org/SYN-hospital/application-uk for this measure. Review application [ru] https://example.org/SYN-hospital/application-ru for this measure. Distinguish a time limit for submitting applications from collection or processing intervals.",
+      "coverage_gaps": [
+        "SYN: not all listed application languages have reviewed evidence for this measure.",
+        "Review application [es] https://example.org/SYN-hospital/application-es for this measure.",
+        "Review application [pl] https://example.org/SYN-hospital/application-pl for this measure.",
+        "Review application [uk] https://example.org/SYN-hospital/application-uk for this measure.",
+        "Review application [ru] https://example.org/SYN-hospital/application-ru for this measure.",
+        "Distinguish a time limit for submitting applications from collection or processing intervals."
+      ],
+      "expected": {
+        "application_submission": "any_time"
+      },
+      "evidence": [
+        {
+          "source_id": "https://example.org/SYN-hospital/aid",
+          "snapshot_id": "ff0887f7eb0ddd09afe8c13ef2cfdb4d172e114f3342c512c635695c35e44e17",
+          "sha256": "ff0887f7eb0ddd09afe8c13ef2cfdb4d172e114f3342c512c635695c35e44e17",
+          "locator": "/fields/deadline",
+          "quote": "{\"application_submission\":\"not_addressed\"}"
+        },
+        {
+          "source_id": "https://example.org/SYN-hospital/application-en",
+          "snapshot_id": "5141f590024de42f40c12fe99f7019e733f97d645a6668a189e9c057073c57bc",
+          "sha256": "5141f590024de42f40c12fe99f7019e733f97d645a6668a189e9c057073c57bc",
+          "locator": "/fields/deadline",
+          "quote": "{\"application_submission\":\"any_time\"}"
+        },
+        {
+          "source_id": "https://example.org/SYN-hospital/summary",
+          "snapshot_id": "82e625b23f7baac8437f8cc019b7c428afa76000aa6b9903a3e78fda974ef97f",
+          "sha256": "82e625b23f7baac8437f8cc019b7c428afa76000aa6b9903a3e78fda974ef97f",
+          "locator": "/fields/deadline",
+          "quote": "{\"application_submission\":\"any_time\"}"
+        },
+        {
+          "source_id": "https://example.org/SYN-hospital/statement",
+          "snapshot_id": "a5c2930491ff0ef2d13980629600b2e63c9d56c617701e5581b0e1b74af08481",
+          "sha256": "a5c2930491ff0ef2d13980629600b2e63c9d56c617701e5581b0e1b74af08481",
+          "locator": "/fields/deadline",
+          "quote": "{\"application_submission\":\"any_time\"}"
+        }
+      ],
+      "document_results": [
+        {
+          "source_id": "https://example.org/SYN-hospital/aid",
+          "language": "en",
+          "result": "not_addressed"
+        },
+        {
+          "source_id": "https://example.org/SYN-hospital/application-en",
+          "language": "en",
+          "result": "yes"
+        },
+        {
+          "source_id": "https://example.org/SYN-hospital/summary",
+          "language": "en",
+          "result": "yes"
+        },
+        {
+          "source_id": "https://example.org/SYN-hospital/statement",
+          "language": "en",
+          "result": "yes"
+        }
+      ],
+      "comparisons": []
+    },
+    {
+      "measure_id": "posted_materials.no_evidence_of_asset_checks",
+      "css_column": "Y",
+      "result": "unclear",
+      "submitted_result": "unclear",
+      "human_review": "pending",
+      "reason": "SYN: not all listed application languages have reviewed evidence for this measure. Review application [es] https://example.org/SYN-hospital/application-es for this measure. Review application [pl] https://example.org/SYN-hospital/application-pl for this measure. Review application [uk] https://example.org/SYN-hospital/application-uk for this measure. Review application [ru] https://example.org/SYN-hospital/application-ru for this measure. Review eligibility provisions for required asset tests, including exceptions.",
+      "coverage_gaps": [
+        "SYN: not all listed application languages have reviewed evidence for this measure.",
+        "Review application [es] https://example.org/SYN-hospital/application-es for this measure.",
+        "Review application [pl] https://example.org/SYN-hospital/application-pl for this measure.",
+        "Review application [uk] https://example.org/SYN-hospital/application-uk for this measure.",
+        "Review application [ru] https://example.org/SYN-hospital/application-ru for this measure.",
+        "Review eligibility provisions for required asset tests, including exceptions."
+      ],
+      "expected": {
+        "eligibility_asset_test": "no_asset_test"
+      },
+      "evidence": [
+        {
+          "source_id": "https://example.org/SYN-hospital/aid",
+          "snapshot_id": "ff0887f7eb0ddd09afe8c13ef2cfdb4d172e114f3342c512c635695c35e44e17",
+          "sha256": "ff0887f7eb0ddd09afe8c13ef2cfdb4d172e114f3342c512c635695c35e44e17",
+          "locator": "/fields/assets",
+          "quote": "{\"eligibility_asset_test\":\"not_addressed\"}"
+        },
+        {
+          "source_id": "https://example.org/SYN-hospital/application-en",
+          "snapshot_id": "5141f590024de42f40c12fe99f7019e733f97d645a6668a189e9c057073c57bc",
+          "sha256": "5141f590024de42f40c12fe99f7019e733f97d645a6668a189e9c057073c57bc",
+          "locator": "/fields/assets",
+          "quote": "{\"eligibility_asset_test\":\"no_asset_test\"}"
+        },
+        {
+          "source_id": "https://example.org/SYN-hospital/summary",
+          "snapshot_id": "82e625b23f7baac8437f8cc019b7c428afa76000aa6b9903a3e78fda974ef97f",
+          "sha256": "82e625b23f7baac8437f8cc019b7c428afa76000aa6b9903a3e78fda974ef97f",
+          "locator": "/fields/assets",
+          "quote": "{\"eligibility_asset_test\":\"no_asset_test\"}"
+        },
+        {
+          "source_id": "https://example.org/SYN-hospital/statement",
+          "snapshot_id": "a5c2930491ff0ef2d13980629600b2e63c9d56c617701e5581b0e1b74af08481",
+          "sha256": "a5c2930491ff0ef2d13980629600b2e63c9d56c617701e5581b0e1b74af08481",
+          "locator": "/fields/assets",
+          "quote": "{\"eligibility_asset_test\":\"no_asset_test\"}"
+        }
+      ],
+      "document_results": [
+        {
+          "source_id": "https://example.org/SYN-hospital/aid",
+          "language": "en",
+          "result": "not_addressed"
+        },
+        {
+          "source_id": "https://example.org/SYN-hospital/application-en",
+          "language": "en",
+          "result": "yes"
+        },
+        {
+          "source_id": "https://example.org/SYN-hospital/summary",
+          "language": "en",
+          "result": "yes"
+        },
+        {
+          "source_id": "https://example.org/SYN-hospital/statement",
+          "language": "en",
+          "result": "yes"
+        }
+      ],
+      "comparisons": []
+    },
+    {
+      "measure_id": "posted_materials.no_immigration_status_barrier",
+      "css_column": "Z",
+      "result": "unclear",
+      "submitted_result": "unclear",
+      "human_review": "pending",
+      "reason": "SYN: not all listed application languages have reviewed evidence for this measure. Review application [es] https://example.org/SYN-hospital/application-es for this measure. Review application [pl] https://example.org/SYN-hospital/application-pl for this measure. Review application [uk] https://example.org/SYN-hospital/application-uk for this measure. Review application [ru] https://example.org/SYN-hospital/application-ru for this measure. Review immigration eligibility restrictions separately from optional demographic fields.",
+      "coverage_gaps": [
+        "SYN: not all listed application languages have reviewed evidence for this measure.",
+        "Review application [es] https://example.org/SYN-hospital/application-es for this measure.",
+        "Review application [pl] https://example.org/SYN-hospital/application-pl for this measure.",
+        "Review application [uk] https://example.org/SYN-hospital/application-uk for this measure.",
+        "Review application [ru] https://example.org/SYN-hospital/application-ru for this measure.",
+        "Review immigration eligibility restrictions separately from optional demographic fields."
+      ],
+      "expected": {
+        "immigration_eligibility": "regardless_of_status"
+      },
+      "evidence": [
+        {
+          "source_id": "https://example.org/SYN-hospital/aid",
+          "snapshot_id": "ff0887f7eb0ddd09afe8c13ef2cfdb4d172e114f3342c512c635695c35e44e17",
+          "sha256": "ff0887f7eb0ddd09afe8c13ef2cfdb4d172e114f3342c512c635695c35e44e17",
+          "locator": "/fields/immigration",
+          "quote": "{\"immigration_eligibility\":\"not_addressed\"}"
+        },
+        {
+          "source_id": "https://example.org/SYN-hospital/application-en",
+          "snapshot_id": "5141f590024de42f40c12fe99f7019e733f97d645a6668a189e9c057073c57bc",
+          "sha256": "5141f590024de42f40c12fe99f7019e733f97d645a6668a189e9c057073c57bc",
+          "locator": "/fields/immigration",
+          "quote": "{\"immigration_eligibility\":\"regardless_of_status\"}"
+        },
+        {
+          "source_id": "https://example.org/SYN-hospital/summary",
+          "snapshot_id": "82e625b23f7baac8437f8cc019b7c428afa76000aa6b9903a3e78fda974ef97f",
+          "sha256": "82e625b23f7baac8437f8cc019b7c428afa76000aa6b9903a3e78fda974ef97f",
+          "locator": "/fields/immigration",
+          "quote": "{\"immigration_eligibility\":\"regardless_of_status\"}"
+        },
+        {
+          "source_id": "https://example.org/SYN-hospital/statement",
+          "snapshot_id": "a5c2930491ff0ef2d13980629600b2e63c9d56c617701e5581b0e1b74af08481",
+          "sha256": "a5c2930491ff0ef2d13980629600b2e63c9d56c617701e5581b0e1b74af08481",
+          "locator": "/fields/immigration",
+          "quote": "{\"immigration_eligibility\":\"regardless_of_status\"}"
+        }
+      ],
+      "document_results": [
+        {
+          "source_id": "https://example.org/SYN-hospital/aid",
+          "language": "en",
+          "result": "not_addressed"
+        },
+        {
+          "source_id": "https://example.org/SYN-hospital/application-en",
+          "language": "en",
+          "result": "yes"
+        },
+        {
+          "source_id": "https://example.org/SYN-hospital/summary",
+          "language": "en",
+          "result": "yes"
+        },
+        {
+          "source_id": "https://example.org/SYN-hospital/statement",
+          "language": "en",
+          "result": "yes"
+        }
+      ],
+      "comparisons": []
+    },
+    {
+      "measure_id": "application.uniform_application",
+      "css_column": "AD",
+      "result": "unclear",
+      "submitted_result": "unclear",
+      "human_review": "pending",
+      "reason": "SYN: not all listed application languages have reviewed evidence for this measure. Review application [es] https://example.org/SYN-hospital/application-es for this measure. Review application [pl] https://example.org/SYN-hospital/application-pl for this measure. Review application [uk] https://example.org/SYN-hospital/application-uk for this measure. Review application [ru] https://example.org/SYN-hospital/application-ru for this measure. Compare the whole designated form with its versioned official template, including required sections and customization questions.",
+      "coverage_gaps": [
+        "SYN: not all listed application languages have reviewed evidence for this measure.",
+        "Review application [es] https://example.org/SYN-hospital/application-es for this measure.",
+        "Review application [pl] https://example.org/SYN-hospital/application-pl for this measure.",
+        "Review application [uk] https://example.org/SYN-hospital/application-uk for this measure.",
+        "Review application [ru] https://example.org/SYN-hospital/application-ru for this measure.",
+        "Compare the whole designated form with its versioned official template, including required sections and customization questions."
+      ],
+      "expected": {
+        "required_sections": "applicable_uniform_template",
+        "visual_review_complete": true
+      },
+      "evidence": [
+        {
+          "source_id": "https://example.org/SYN-hospital/application-en",
+          "snapshot_id": "5141f590024de42f40c12fe99f7019e733f97d645a6668a189e9c057073c57bc",
+          "sha256": "5141f590024de42f40c12fe99f7019e733f97d645a6668a189e9c057073c57bc",
+          "locator": "/fields/uniform",
+          "quote": "{\"complete\":true,\"present_sections\":[\"SYN eligibility\",\"SYN signature\"],\"customizations\":\"none\",\"visual_review_complete\":true}"
+        },
+        {
+          "source_id": "https://example.org/SYN-hospital/template-2026",
+          "snapshot_id": "fbe94e896fc87a398a1963a61e5c5ceb8e1e0605571381fe40dc22e6370c21cb",
+          "sha256": "fbe94e896fc87a398a1963a61e5c5ceb8e1e0605571381fe40dc22e6370c21cb",
+          "locator": "/fields/uniform",
+          "quote": "{\"required_sections\":[\"SYN eligibility\",\"SYN signature\"],\"guideline_year\":2026,\"version\":\"SYN-template-2026\"}"
+        }
+      ],
+      "document_results": [],
+      "comparisons": []
+    },
+    {
+      "measure_id": "application.contact_information",
+      "css_column": "AE",
+      "result": "unclear",
+      "submitted_result": "unclear",
+      "human_review": "pending",
+      "reason": "SYN: not all listed application languages have reviewed evidence for this measure. Review application [es] https://example.org/SYN-hospital/application-es for this measure. Review application [pl] https://example.org/SYN-hospital/application-pl for this measure. Review application [uk] https://example.org/SYN-hospital/application-uk for this measure. Review application [ru] https://example.org/SYN-hospital/application-ru for this measure. Cite the application-assistance contact and usable contact channel.",
+      "coverage_gaps": [
+        "SYN: not all listed application languages have reviewed evidence for this measure.",
+        "Review application [es] https://example.org/SYN-hospital/application-es for this measure.",
+        "Review application [pl] https://example.org/SYN-hospital/application-pl for this measure.",
+        "Review application [uk] https://example.org/SYN-hospital/application-uk for this measure.",
+        "Review application [ru] https://example.org/SYN-hospital/application-ru for this measure.",
+        "Cite the application-assistance contact and usable contact channel."
+      ],
+      "expected": {
+        "minimum_application_assistance_channels": 1
+      },
+      "evidence": [
+        {
+          "source_id": "https://example.org/SYN-hospital/application-en",
+          "snapshot_id": "5141f590024de42f40c12fe99f7019e733f97d645a6668a189e9c057073c57bc",
+          "sha256": "5141f590024de42f40c12fe99f7019e733f97d645a6668a189e9c057073c57bc",
+          "locator": "/fields/contact",
+          "quote": "{\"complete\":true,\"channels\":[{\"purpose\":\"application_assistance\",\"type\":\"office\",\"value\":\"SYN aid desk\"}]}"
+        }
+      ],
+      "document_results": [
+        {
+          "source_id": "https://example.org/SYN-hospital/application-en",
+          "language": "en",
+          "result": "yes"
+        }
+      ],
+      "comparisons": []
+    },
+    {
+      "measure_id": "application.income_discount_tables",
+      "css_column": "AG",
+      "result": "unclear",
+      "submitted_result": "unclear",
+      "human_review": "pending",
+      "reason": "SYN: not all listed application languages have reviewed evidence for this measure. Review application [es] https://example.org/SYN-hospital/application-es for this measure. Review application [pl] https://example.org/SYN-hospital/application-pl for this measure. Review application [uk] https://example.org/SYN-hospital/application-uk for this measure. Review application [ru] https://example.org/SYN-hospital/application-ru for this measure. Identify both the income thresholds and the discount table in the application.",
+      "coverage_gaps": [
+        "SYN: not all listed application languages have reviewed evidence for this measure.",
+        "Review application [es] https://example.org/SYN-hospital/application-es for this measure.",
+        "Review application [pl] https://example.org/SYN-hospital/application-pl for this measure.",
+        "Review application [uk] https://example.org/SYN-hospital/application-uk for this measure.",
+        "Review application [ru] https://example.org/SYN-hospital/application-ru for this measure.",
+        "Identify both the income thresholds and the discount table in the application."
+      ],
+      "expected": {
+        "income_table": true,
+        "discount_table": true
+      },
+      "evidence": [
+        {
+          "source_id": "https://example.org/SYN-hospital/application-en",
+          "snapshot_id": "5141f590024de42f40c12fe99f7019e733f97d645a6668a189e9c057073c57bc",
+          "sha256": "5141f590024de42f40c12fe99f7019e733f97d645a6668a189e9c057073c57bc",
+          "locator": "/fields/tables",
+          "quote": "{\"complete\":true,\"income_table\":true,\"discount_table\":true}"
+        }
+      ],
+      "document_results": [
+        {
+          "source_id": "https://example.org/SYN-hospital/application-en",
+          "language": "en",
+          "result": "yes"
+        }
+      ],
+      "comparisons": []
+    },
+    {
+      "measure_id": "application.fpl_guidelines",
+      "css_column": "AH",
+      "result": "unclear",
+      "submitted_result": "unclear",
+      "human_review": "pending",
+      "reason": "SYN: not all listed application languages have reviewed evidence for this measure. Review application [es] https://example.org/SYN-hospital/application-es for this measure. Review application [pl] https://example.org/SYN-hospital/application-pl for this measure. Review application [uk] https://example.org/SYN-hospital/application-uk for this measure. Review application [ru] https://example.org/SYN-hospital/application-ru for this measure. Compare the published annual USD year and household-size cells to the pinned HHS table. A complete profile covers sizes 1–8 at 200/300/400%.",
+      "coverage_gaps": [
+        "SYN: not all listed application languages have reviewed evidence for this measure.",
+        "Review application [es] https://example.org/SYN-hospital/application-es for this measure.",
+        "Review application [pl] https://example.org/SYN-hospital/application-pl for this measure.",
+        "Review application [uk] https://example.org/SYN-hospital/application-uk for this measure.",
+        "Review application [ru] https://example.org/SYN-hospital/application-ru for this measure.",
+        "Compare the published annual USD year and household-size cells to the pinned HHS table. A complete profile covers sizes 1–8 at 200/300/400%."
+      ],
+      "expected": {
+        "currency": "USD",
+        "period": "annual",
+        "reference_version": "hhs-contiguous-2025-2026-v1",
+        "required_household_sizes": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "required_fpl_percentages": [
+          200,
+          300,
+          400
+        ],
+        "guideline_year": 2026
+      },
+      "evidence": [
+        {
+          "source_id": "https://example.org/SYN-hospital/application-en",
+          "snapshot_id": "5141f590024de42f40c12fe99f7019e733f97d645a6668a189e9c057073c57bc",
+          "sha256": "5141f590024de42f40c12fe99f7019e733f97d645a6668a189e9c057073c57bc",
+          "locator": "/fields/fpl",
+          "quote": "{\"published_year\":2025,\"currency\":\"USD\",\"period\":\"annual\",\"cells\":[{\"household_size\":1,\"fpl_percent\":200,\"amount\":31300},{\"household_size\":1,\"fpl_percent\":300,\"amount\":46950},{\"household_size\":1,\"fpl_percent\":400,\"amount\":62600},{\"household_size\":2,\"fpl_percent\":200,\"amount\":42300},{\"household_size\":2,\"fpl_percent\":300,\"amount\":63450},{\"household_size\":2,\"fpl_percent\":400,\"amount\":84600},{\"household_size\":3,\"fpl_percent\":200,\"amount\":53300},{\"household_size\":3,\"fpl_percent\":300,\"amount\":79950},{\"household_size\":3,\"fpl_percent\":400,\"amount\":106600},{\"household_size\":4,\"fpl_percent\":200,\"amount\":64300},{\"household_size\":4,\"fpl_percent\":300,\"amount\":96450},{\"household_size\":4,\"fpl_percent\":400,\"amount\":128600},{\"household_size\":5,\"fpl_percent\":200,\"amount\":75300},{\"household_size\":5,\"fpl_percent\":300,\"amount\":112950},{\"household_size\":5,\"fpl_percent\":400,\"amount\":150600},{\"household_size\":6,\"fpl_percent\":200,\"amount\":86300},{\"household_size\":6,\"fpl_percent\":300,\"amount\":129450},{\"household_size\":6,\"fpl_percent\":400,\"amount\":172600},{\"household_size\":7,\"fpl_percent\":200,\"amount\":97300},{\"household_size\":7,\"fpl_percent\":300,\"amount\":145950},{\"household_size\":7,\"fpl_percent\":400,\"amount\":194600},{\"household_size\":8,\"fpl_percent\":200,\"amount\":108300},{\"household_size\":8,\"fpl_percent\":300,\"amount\":162450},{\"household_size\":8,\"fpl_percent\":400,\"amount\":216600}]}"
+        }
+      ],
+      "document_results": [
+        {
+          "source_id": "https://example.org/SYN-hospital/application-en",
+          "language": "en",
+          "result": "no"
+        }
+      ],
+      "comparisons": [
+        {
+          "source_id": "https://example.org/SYN-hospital/application-en",
+          "result": "no",
+          "cells": [
+            {
+              "household_size": 1,
+              "fpl_percent": 200,
+              "observed": 31300,
+              "expected": 31920
+            },
+            {
+              "household_size": 1,
+              "fpl_percent": 300,
+              "observed": 46950,
+              "expected": 47880
+            },
+            {
+              "household_size": 1,
+              "fpl_percent": 400,
+              "observed": 62600,
+              "expected": 63840
+            },
+            {
+              "household_size": 2,
+              "fpl_percent": 200,
+              "observed": 42300,
+              "expected": 43280
+            },
+            {
+              "household_size": 2,
+              "fpl_percent": 300,
+              "observed": 63450,
+              "expected": 64920
+            },
+            {
+              "household_size": 2,
+              "fpl_percent": 400,
+              "observed": 84600,
+              "expected": 86560
+            },
+            {
+              "household_size": 3,
+              "fpl_percent": 200,
+              "observed": 53300,
+              "expected": 54640
+            },
+            {
+              "household_size": 3,
+              "fpl_percent": 300,
+              "observed": 79950,
+              "expected": 81960
+            },
+            {
+              "household_size": 3,
+              "fpl_percent": 400,
+              "observed": 106600,
+              "expected": 109280
+            },
+            {
+              "household_size": 4,
+              "fpl_percent": 200,
+              "observed": 64300,
+              "expected": 66000
+            },
+            {
+              "household_size": 4,
+              "fpl_percent": 300,
+              "observed": 96450,
+              "expected": 99000
+            },
+            {
+              "household_size": 4,
+              "fpl_percent": 400,
+              "observed": 128600,
+              "expected": 132000
+            },
+            {
+              "household_size": 5,
+              "fpl_percent": 200,
+              "observed": 75300,
+              "expected": 77360
+            },
+            {
+              "household_size": 5,
+              "fpl_percent": 300,
+              "observed": 112950,
+              "expected": 116040
+            },
+            {
+              "household_size": 5,
+              "fpl_percent": 400,
+              "observed": 150600,
+              "expected": 154720
+            },
+            {
+              "household_size": 6,
+              "fpl_percent": 200,
+              "observed": 86300,
+              "expected": 88720
+            },
+            {
+              "household_size": 6,
+              "fpl_percent": 300,
+              "observed": 129450,
+              "expected": 133080
+            },
+            {
+              "household_size": 6,
+              "fpl_percent": 400,
+              "observed": 172600,
+              "expected": 177440
+            },
+            {
+              "household_size": 7,
+              "fpl_percent": 200,
+              "observed": 97300,
+              "expected": 100080
+            },
+            {
+              "household_size": 7,
+              "fpl_percent": 300,
+              "observed": 145950,
+              "expected": 150120
+            },
+            {
+              "household_size": 7,
+              "fpl_percent": 400,
+              "observed": 194600,
+              "expected": 200160
+            },
+            {
+              "household_size": 8,
+              "fpl_percent": 200,
+              "observed": 108300,
+              "expected": 111440
+            },
+            {
+              "household_size": 8,
+              "fpl_percent": 300,
+              "observed": 162450,
+              "expected": 167160
+            },
+            {
+              "household_size": 8,
+              "fpl_percent": 400,
+              "observed": 216600,
+              "expected": 222880
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "measure_id": "application.maximum_fpl",
+      "css_column": "AI",
+      "result": "unclear",
+      "submitted_result": "unclear",
+      "human_review": "pending",
+      "reason": "SYN: not all listed application languages have reviewed evidence for this measure. Review application [pl] https://example.org/SYN-hospital/application-pl for this measure. Review application [uk] https://example.org/SYN-hospital/application-uk for this measure. Review application [ru] https://example.org/SYN-hospital/application-ru for this measure. Explicit eligibility limit and the scope of exclusions; a table heading alone does not establish eligibility.",
+      "coverage_gaps": [
+        "SYN: not all listed application languages have reviewed evidence for this measure.",
+        "Review application [pl] https://example.org/SYN-hospital/application-pl for this measure.",
+        "Review application [uk] https://example.org/SYN-hospital/application-uk for this measure.",
+        "Review application [ru] https://example.org/SYN-hospital/application-ru for this measure.",
+        "Explicit eligibility limit and the scope of exclusions; a table heading alone does not establish eligibility."
+      ],
+      "expected": {
+        "minimum_percent": 400
+      },
+      "evidence": [
+        {
+          "source_id": "https://example.org/SYN-hospital/application-en",
+          "snapshot_id": "5141f590024de42f40c12fe99f7019e733f97d645a6668a189e9c057073c57bc",
+          "sha256": "5141f590024de42f40c12fe99f7019e733f97d645a6668a189e9c057073c57bc",
+          "locator": "/fields/maximum",
+          "quote": "{\"percent\":400,\"hard_ceiling\":false}"
+        },
+        {
+          "source_id": "https://example.org/SYN-hospital/application-es",
+          "snapshot_id": "962f846f826ae725051588cef37e07fb8f2ecc09947ad3bce4aa90464fede598",
+          "sha256": "962f846f826ae725051588cef37e07fb8f2ecc09947ad3bce4aa90464fede598",
+          "locator": "/fields/maximum",
+          "quote": "{\"percent\":400,\"hard_ceiling\":false}"
+        }
+      ],
+      "document_results": [
+        {
+          "source_id": "https://example.org/SYN-hospital/application-en",
+          "language": "en",
+          "result": "yes"
+        },
+        {
+          "source_id": "https://example.org/SYN-hospital/application-es",
+          "language": "es",
+          "result": "yes"
+        }
+      ],
+      "comparisons": []
+    },
+    {
+      "measure_id": "application.installments_cap",
+      "css_column": "AJ",
+      "result": "unclear",
+      "submitted_result": "unclear",
+      "human_review": "pending",
+      "reason": "SYN: not all listed application languages have reviewed evidence for this measure. Review application [es] https://example.org/SYN-hospital/application-es for this measure. Review application [pl] https://example.org/SYN-hospital/application-pl for this measure. Review application [uk] https://example.org/SYN-hospital/application-uk for this measure. Review application [ru] https://example.org/SYN-hospital/application-ru for this measure. Explicit cap on monthly installments as a percentage of gross monthly income, distinct from interest.",
+      "coverage_gaps": [
+        "SYN: not all listed application languages have reviewed evidence for this measure.",
+        "Review application [es] https://example.org/SYN-hospital/application-es for this measure.",
+        "Review application [pl] https://example.org/SYN-hospital/application-pl for this measure.",
+        "Review application [uk] https://example.org/SYN-hospital/application-uk for this measure.",
+        "Review application [ru] https://example.org/SYN-hospital/application-ru for this measure.",
+        "Explicit cap on monthly installments as a percentage of gross monthly income, distinct from interest."
+      ],
+      "expected": {
+        "maximum_percent": 5,
+        "basis": "gross_monthly_income"
+      },
+      "evidence": [
+        {
+          "source_id": "https://example.org/SYN-hospital/application-en",
+          "snapshot_id": "5141f590024de42f40c12fe99f7019e733f97d645a6668a189e9c057073c57bc",
+          "sha256": "5141f590024de42f40c12fe99f7019e733f97d645a6668a189e9c057073c57bc",
+          "locator": "/fields/installments",
+          "quote": "{\"percent\":5,\"basis\":\"gross_monthly_income\"}"
+        }
+      ],
+      "document_results": [
+        {
+          "source_id": "https://example.org/SYN-hospital/application-en",
+          "language": "en",
+          "result": "yes"
+        }
+      ],
+      "comparisons": []
+    },
+    {
+      "measure_id": "policy_summary.primary_service_area_described",
+      "css_column": "AL",
+      "result": "yes",
+      "submitted_result": "yes",
+      "human_review": "pending",
+      "reason": "Verified AL observations evaluate to yes under summary_area.",
+      "coverage_gaps": [],
+      "expected": {
+        "minimum_described_areas": 1
+      },
+      "evidence": [
+        {
+          "source_id": "https://example.org/SYN-hospital/summary",
+          "snapshot_id": "82e625b23f7baac8437f8cc019b7c428afa76000aa6b9903a3e78fda974ef97f",
+          "sha256": "82e625b23f7baac8437f8cc019b7c428afa76000aa6b9903a3e78fda974ef97f",
+          "locator": "/fields/summary_area",
+          "quote": "{\"complete\":true,\"areas\":[\"SYN County\"]}"
+        }
+      ],
+      "document_results": [
+        {
+          "source_id": "https://example.org/SYN-hospital/summary",
+          "language": "en",
+          "result": "yes"
+        }
+      ],
+      "comparisons": []
+    },
+    {
+      "measure_id": "policy_summary.means_of_applying_explained",
+      "css_column": "AM",
+      "result": "yes",
+      "submitted_result": "yes",
+      "human_review": "pending",
+      "reason": "Verified AM observations evaluate to yes under summary_process.",
+      "coverage_gaps": [],
+      "expected": {
+        "minimum_application_instructions": 1
+      },
+      "evidence": [
+        {
+          "source_id": "https://example.org/SYN-hospital/summary",
+          "snapshot_id": "82e625b23f7baac8437f8cc019b7c428afa76000aa6b9903a3e78fda974ef97f",
+          "sha256": "82e625b23f7baac8437f8cc019b7c428afa76000aa6b9903a3e78fda974ef97f",
+          "locator": "/fields/summary_process",
+          "quote": "{\"complete\":true,\"application_instructions\":[\"Submit to SYN aid desk\"]}"
+        }
+      ],
+      "document_results": [
+        {
+          "source_id": "https://example.org/SYN-hospital/summary",
+          "language": "en",
+          "result": "yes"
+        }
+      ],
+      "comparisons": []
+    },
+    {
+      "measure_id": "policy_summary.income_levels_included",
+      "css_column": "AN",
+      "result": "yes",
+      "submitted_result": "yes",
+      "human_review": "pending",
+      "reason": "Verified AN observations evaluate to yes under summary_income.",
+      "coverage_gaps": [],
+      "expected": {
+        "minimum_stated_income_levels": 1
+      },
+      "evidence": [
+        {
+          "source_id": "https://example.org/SYN-hospital/summary",
+          "snapshot_id": "82e625b23f7baac8437f8cc019b7c428afa76000aa6b9903a3e78fda974ef97f",
+          "sha256": "82e625b23f7baac8437f8cc019b7c428afa76000aa6b9903a3e78fda974ef97f",
+          "locator": "/fields/summary_income",
+          "quote": "{\"complete\":true,\"fpl_levels\":[200,300,400]}"
+        }
+      ],
+      "document_results": [
+        {
+          "source_id": "https://example.org/SYN-hospital/summary",
+          "language": "en",
+          "result": "yes"
+        }
+      ],
+      "comparisons": []
+    }
+  ],
+  "failed_measures": [],
+  "verified_errors": 0,
+  "unresolved_measures": [
+    "posted_materials.consistent_across_documents",
+    "posted_materials.no_submission_time_limit",
+    "posted_materials.no_evidence_of_asset_checks",
+    "posted_materials.no_immigration_status_barrier",
+    "application.uniform_application",
+    "application.contact_information",
+    "application.income_discount_tables",
+    "application.fpl_guidelines",
+    "application.maximum_fpl",
+    "application.installments_cap"
+  ],
+  "applicable_overrides": [],
+  "policy_can_change_grade": false,
+  "possible_grades": [
+    "A",
+    "B",
+    "C",
+    "D",
+    "F"
+  ],
+  "calculated_grade": null,
+  "grade_status": "pending",
+  "final_grade": null,
+  "reasons": [
+    "10 measures require evidence, scope or exemption review.",
+    "Declared assessment scope has outstanding coverage gaps.",
+    "Exact observation review recorded for 0/17 measures.",
+    "Subject-matter agreement on the output contract (#67) and institutional grade authorization are pending."
+  ],
+  "authority": {
+    "format_technical": "agreed_v1_at_576aa33",
+    "format_subject_matter": "pending",
+    "institutional_release": "pending"
+  }
+}

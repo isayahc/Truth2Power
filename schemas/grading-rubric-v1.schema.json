@@ -1,0 +1,341 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://truth2power.local/schemas/grading-rubric-v1.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "version": {
+      "const": "css-17-v1"
+    },
+    "authority": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    },
+    "reference_version": {
+      "const": "hhs-contiguous-2025-2026-v1"
+    },
+    "decisions": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "grade_rules": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https?://",
+          "maxLength": 4096
+        },
+        "policy_statement": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https?://",
+          "maxLength": 4096
+        },
+        "css_questions": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https?://",
+          "maxLength": 4096
+        },
+        "format": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https?://",
+          "maxLength": 4096
+        },
+        "subject_matter": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https?://",
+          "maxLength": 4096
+        }
+      },
+      "required": [
+        "grade_rules",
+        "policy_statement",
+        "css_questions",
+        "format",
+        "subject_matter"
+      ]
+    },
+    "authority_status": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "format_technical": {
+          "const": "agreed_v1_at_576aa33"
+        },
+        "format_subject_matter": {
+          "const": "pending"
+        },
+        "institutional_release": {
+          "const": "pending"
+        }
+      },
+      "required": [
+        "format_technical",
+        "format_subject_matter",
+        "institutional_release"
+      ]
+    },
+    "measures": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "measure_id": {
+            "enum": [
+              "posted_materials.application_posted",
+              "posted_materials.policy_summary_posted",
+              "posted_materials.policy_statement_posted",
+              "posted_materials.consistent_across_documents",
+              "posted_materials.primary_service_area_boundaries_compliant",
+              "posted_materials.no_submission_time_limit",
+              "posted_materials.no_evidence_of_asset_checks",
+              "posted_materials.no_immigration_status_barrier",
+              "application.uniform_application",
+              "application.contact_information",
+              "application.income_discount_tables",
+              "application.fpl_guidelines",
+              "application.maximum_fpl",
+              "application.installments_cap",
+              "policy_summary.primary_service_area_described",
+              "policy_summary.means_of_applying_explained",
+              "policy_summary.income_levels_included"
+            ]
+          },
+          "css_column": {
+            "enum": [
+              "R",
+              "S",
+              "T",
+              "U",
+              "V",
+              "W",
+              "Y",
+              "Z",
+              "AD",
+              "AE",
+              "AG",
+              "AH",
+              "AI",
+              "AJ",
+              "AL",
+              "AM",
+              "AN"
+            ]
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          },
+          "roles": {
+            "type": "array",
+            "items": {
+              "enum": [
+                "application",
+                "landing_page",
+                "online_application",
+                "policy_statement",
+                "policy_summary",
+                "psa_reference",
+                "supplement",
+                "uniform_reference"
+              ]
+            },
+            "minItems": 1,
+            "uniqueItems": true
+          },
+          "evaluator": {
+            "enum": [
+              "posting",
+              "posting",
+              "posting",
+              "consistency",
+              "service_area",
+              "deadline",
+              "assets",
+              "immigration",
+              "uniform",
+              "contact",
+              "tables",
+              "fpl",
+              "maximum",
+              "installments",
+              "summary_area",
+              "summary_process",
+              "summary_income"
+            ]
+          },
+          "evidence_requirement": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S"
+          },
+          "exemptions": {
+            "type": "array",
+            "maxItems": 0
+          },
+          "expected": {
+            "type": "object",
+            "minProperties": 1
+          }
+        },
+        "required": [
+          "measure_id",
+          "css_column",
+          "title",
+          "roles",
+          "evaluator",
+          "evidence_requirement",
+          "exemptions",
+          "expected"
+        ]
+      },
+      "minItems": 17,
+      "maxItems": 17
+    },
+    "bands": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "grade": {
+            "enum": [
+              "A",
+              "B",
+              "C",
+              "D",
+              "F"
+            ]
+          },
+          "min_errors": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "max_errors": {
+            "type": "integer",
+            "maximum": 17
+          }
+        },
+        "required": [
+          "grade",
+          "min_errors",
+          "max_errors"
+        ]
+      },
+      "minItems": 5,
+      "maxItems": 5
+    },
+    "overrides": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "measure_id": {
+            "enum": [
+              "posted_materials.application_posted",
+              "posted_materials.policy_summary_posted",
+              "posted_materials.policy_statement_posted",
+              "posted_materials.consistent_across_documents",
+              "posted_materials.primary_service_area_boundaries_compliant",
+              "posted_materials.no_submission_time_limit",
+              "posted_materials.no_evidence_of_asset_checks",
+              "posted_materials.no_immigration_status_barrier",
+              "application.uniform_application",
+              "application.contact_information",
+              "application.income_discount_tables",
+              "application.fpl_guidelines",
+              "application.maximum_fpl",
+              "application.installments_cap",
+              "policy_summary.primary_service_area_described",
+              "policy_summary.means_of_applying_explained",
+              "policy_summary.income_levels_included"
+            ]
+          },
+          "on_result": {
+            "const": "no"
+          },
+          "grade": {
+            "const": "F"
+          },
+          "status": {
+            "enum": [
+              "applicable",
+              "disputed"
+            ]
+          }
+        },
+        "required": [
+          "measure_id",
+          "on_result",
+          "grade",
+          "status"
+        ]
+      }
+    },
+    "precedence": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "pattern": "\\S"
+      },
+      "uniqueItems": true
+    },
+    "results": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "yes": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "no": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "unclear": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "n_a": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        }
+      },
+      "required": [
+        "yes",
+        "no",
+        "unclear",
+        "n_a"
+      ]
+    },
+    "unresolved_policy": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    }
+  },
+  "required": [
+    "version",
+    "authority",
+    "reference_version",
+    "decisions",
+    "authority_status",
+    "measures",
+    "bands",
+    "overrides",
+    "precedence",
+    "results",
+    "unresolved_policy"
+  ]
+}

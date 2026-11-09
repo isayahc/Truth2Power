@@ -1,0 +1,31 @@
+{
+  "format": "published-fields-v1",
+  "synthetic": true,
+  "hospital_key": "1002",
+  "role": "policy_statement",
+  "url": "https://example.org/SYN-hospital/statement",
+  "language": "en",
+  "fields": {
+    "consistency": {
+      "complete": true,
+      "terms": {
+        "eligibility_percent": 400
+      }
+    },
+    "deadline": {
+      "application_submission": "any_time"
+    },
+    "assets": {
+      "eligibility_asset_test": "no_asset_test"
+    },
+    "immigration": {
+      "immigration_eligibility": "regardless_of_status"
+    },
+    "service_area": {
+      "complete": true,
+      "published_counties": [
+        "SYN County"
+      ]
+    }
+  }
+}
