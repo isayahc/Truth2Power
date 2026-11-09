@@ -56,7 +56,7 @@ def export(store, destination):
         for s in inp['sources']:
             digest = s['snapshot']['sha256'] if s.get('snapshot') else 'unavailable — no snapshot asserted'
             lines.append(f'| {s["role"]} | {s["language"]} | {s["status"]} | [{s["source_id"]}]({s["source_id"]}) · `{digest}` |')
-        lines += ['', 'Every finding in the package retains exact quoted text and locator, source ID, snapshot hash, expected values, observed numeric cells when supported, review date, source retrieval dates, and separate approval status. `producer_records` preserves the earlier draft labels and their evidence, even where the stricter integrated grader needs additional structured interpretation.', '']
+        lines += ['', 'Where source evidence is available, findings retain exact quoted text and locator, source ID and snapshot hash. All findings retain expected values, review context and separate approval status; supported numeric observations retain their cells. Unavailable evidence stays explicitly unresolved rather than receiving a fabricated quotation. `producer_records` preserves the earlier draft labels and their evidence, even where the stricter integrated grader needs additional structured interpretation.', '']
     destination.mkdir(parents=True, exist_ok=True)
     with zipfile.ZipFile(destination / 'pilot-wave-one-evidence.zip', 'w', compression=zipfile.ZIP_DEFLATED) as archive:
         for name, data in sorted(entries.items()):

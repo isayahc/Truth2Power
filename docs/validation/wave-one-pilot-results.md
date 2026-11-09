@@ -48,7 +48,7 @@ Replay package: [`pilot-wave-one-evidence.zip`](pilot-wave-one-evidence.zip). It
 | supplement | en | available | [https://erhny.org/wp-content/uploads/2021/08/ERH-Privacy-Practices-2021-v1.pdf](https://erhny.org/wp-content/uploads/2021/08/ERH-Privacy-Practices-2021-v1.pdf) · `0882c5057262801d96589a928af7ad2709df453fc5ca46d7243e58b2235fd06c` |
 | landing_page | en | available | [https://erhny.org/patient-guests/financial-assistance-program/](https://erhny.org/patient-guests/financial-assistance-program/) · `4f1e355608e5213a8b813c599ee9917824a9d6beb38a86dcf3394dbfda132214` |
 
-Every finding in the package retains exact quoted text and locator, source ID, snapshot hash, expected values, observed numeric cells when supported, review date, source retrieval dates, and separate approval status. `producer_records` preserves the earlier draft labels and their evidence, even where the stricter integrated grader needs additional structured interpretation.
+Where source evidence is available, findings retain exact quoted text and locator, source ID and snapshot hash. All findings retain expected values, review context and separate approval status; supported numeric observations retain their cells. Unavailable evidence stays explicitly unresolved rather than receiving a fabricated quotation. `producer_records` preserves the earlier draft labels and their evidence, even where the stricter integrated grader needs additional structured interpretation.
 
 ## Hospital 362
 
@@ -91,5 +91,5 @@ Every finding in the package retains exact quoted text and locator, source ID, s
 | landing_page | en | available | [https://www.bassett.org/patients-visitors/billing-insurance/financial-assistance](https://www.bassett.org/patients-visitors/billing-insurance/financial-assistance) · `226373789547027be6f33106a3360e0716ca85bf64faa1f3f780c17bfbcb710c` |
 | landing_page | en | available | [https://www.bassett.org/patients-visitors/billing-insurance/financial-assistance/financial-assistance-plain-language](https://www.bassett.org/patients-visitors/billing-insurance/financial-assistance/financial-assistance-plain-language) · `2d93d9880035f4deb81d104430f7bc588b383ce9d6cda560656c47e97659b87b` |
 
-Every finding in the package retains exact quoted text and locator, source ID, snapshot hash, expected values, observed numeric cells when supported, review date, source retrieval dates, and separate approval status. `producer_records` preserves the earlier draft labels and their evidence, even where the stricter integrated grader needs additional structured interpretation.
+Where source evidence is available, findings retain exact quoted text and locator, source ID and snapshot hash. All findings retain expected values, review context and separate approval status; supported numeric observations retain their cells. Unavailable evidence stays explicitly unresolved rather than receiving a fabricated quotation. `producer_records` preserves the earlier draft labels and their evidence, even where the stricter integrated grader needs additional structured interpretation.
 

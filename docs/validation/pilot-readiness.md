@@ -60,7 +60,11 @@ Executed on Windows, Node 22.14.0, existing Python virtual environment; no paid 
 | `npm audit` | Zero reported vulnerabilities (including development dependencies). |
 | `.venv/Scripts/python.exe -m pip_audit` | Not run successfully: module unavailable. Python dependency security audit remains a release check. |
 
-Schema validation occurs in the grader and its regression tests using the local Draft 2020-12 registry. Clean-checkout replay verification is recorded below after execution. Expected corruption-test `pipeline_failed` metadata is not an unexpected suite failure. Screenshots are reproducibly generated under `.audit/ui/pilot/`; no private health data or credentials are included.
+Schema validation occurs in the grader and its regression tests using the local Draft 2020-12 registry. A separate call to `backend/grading/validate.py`'s `validate` function validated all four `docs/grading/examples/SYN-*.json` input/report examples successfully. Expected corruption-test `pipeline_failed` metadata is not an unexpected suite failure. Screenshots are reproducibly generated under `.audit/ui/pilot/`; no private health data or credentials are included. The captured changes desktop and failed-refresh mobile layouts were also visually inspected.
+
+### Clean-checkout reproduction
+
+Cloned commit `d2a7c8f` into a separate directory using `git clone --no-hardlinks --branch feat/pilot-audit-orchestration`, with no copied audit database or private working artifacts. `npm ci --offline` installed 20 packages from the existing cache. Python dependencies were supplied through the existing virtual environment, not freshly installed. Extracted the checked-in ZIP and ran both `pipeline-cli.js replay` commands from the runbook: **both reports identical**, 17 findings each, pending grades. A new synthetic `run --mode synthetic --hospital 1002 --year 2026 --date 2026-11-09 --request SYN-clean` produced 17 findings, zero unresolved, calculated B and pending institutional grade. `npm run build` passed there; `git status --short` remained clean. This verifies portable code/evidence execution with preinstalled Python dependencies, not a fresh-machine dependency installation or independent human operation.
 
 ## Remaining engineering/operating limits
 
