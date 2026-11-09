@@ -1,5 +1,6 @@
 import GradingPanel from "./GradingPanel.jsx";
 import ReportingContext from "./ReportingContext.jsx";
+import HospitalAssessment from "./HospitalAssessment.jsx";
 import AuditPanel from "./AuditPanel.jsx";
 import React from "react";
 import { ratings, ratingByStars } from "./ratings.js";
@@ -100,6 +101,9 @@ export function HospitalDetail({ hospital, onClose, onReview, pendingReviews }) 
           <a href={p.coordinate_source_url}>{p.coordinate_source}</a>
         </dd>
       </dl>
+      {p.assistance_url && <p><a href={p.assistance_url} target="_blank" rel="noreferrer">Get hospital financial assistance (HFA) ↗</a></p>}
+      <a href={`?hospital=${encodeURIComponent(hospital.id)}`}>Permanent link to this hospital page</a>
+      <HospitalAssessment key={`assessment-${hospital.id}`} hospitalKey={hospital.id} />
       <ReportingContext key={`reporting-${hospital.id}`} hospitalKey={hospital.id} />
       <GradingPanel key={`grading-${hospital.id}`} hospitalKey={hospital.id} />
       {hospital.id === "362" && <AuditPanel />}

@@ -106,12 +106,35 @@ export default function App() {
     return () => controller.abort();
   }, [attempt]);
 
+  useEffect(() => {
+    if (!data) return;
+    const restore = () => {
+      const key = new URL(window.location.href).searchParams.get("hospital");
+      setSelected(data.hospitals.find((h) => String(h.id) === key) || null);
+      setFilter(null);
+      setReviewOpen(false);
+    };
+    restore();
+    window.addEventListener("popstate", restore);
+    return () => window.removeEventListener("popstate", restore);
+  }, [data]);
+
+  function hospitalUrl(hospital) {
+    const url = new URL(window.location.href);
+    if (hospital) url.searchParams.set("hospital", hospital.id);
+    else url.searchParams.delete("hospital");
+    url.hash = "";
+    window.history.pushState(null, "", url);
+  }
+
   function selectHospital(hospital) {
     if (filter !== null && filter !== hospital.properties.stars) setFilter(null);
     setSelected(hospital);
+    hospitalUrl(hospital);
   }
   function closeDetail() {
     setSelected(null);
+    hospitalUrl(null);
     setSearchKey((value) => value + 1);
   }
   const visible = data?.hospitals.filter((h) => filter === null || h.properties.stars === filter);
@@ -143,7 +166,7 @@ export default function App() {
           )}
         </div>
         {data ? (
-          <div className="content">
+          <div className={`content${selected ? " hospital-selected" : ""}`}>
             <section className="map-block" aria-label="Hospital locations">
               <div className="toolbar">
                 <div className="geo-label">

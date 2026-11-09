@@ -1,0 +1,1122 @@
+{
+  "version": 1,
+  "hospital_key": "1002",
+  "guideline_year": 2026,
+  "records": [
+    {
+      "hospital_key": "1002",
+      "record_id": "3b75584e24d5faa6d51e2cff417cfacebb782662fefac394c409b925761abdb1",
+      "artifact_path": "application-reviews/b5f0c57e2a374b6284415ccee5e467b0/results/82ea3df7ac534102b25f70b2f5c7d42c.json",
+      "kind": "application-reviews",
+      "scope": "4523dc86a4affc4e3b2774a3682d42b61509d5d348d70ee62c988c683bd820a4",
+      "scope_label": "Selected application only; English profile · English",
+      "guideline_year": 2026,
+      "checked_at": "2026-11-08T22:15:00.223789+00:00",
+      "review_date": "2026-11-08",
+      "status": "completed",
+      "error": null,
+      "findings": [
+        {
+          "measure_id": "application.uniform_application",
+          "result": "unclear",
+          "explanation": "Content and visual completeness are supported across all five original PDF pages, but the FPL table is explicitly from 2024. That already fails the separate current-FPL measure. Whole-form scoring remains unclear because no approved rule says whether this same defect also fails entire-form completeness and triggers its automatic-F consequence.",
+          "evidence": [
+            {
+              "snapshot_id": "eebf29d4d7ae77615ba3841de0d93f7029230c0406711ea3d1aa373605f242c1",
+              "sha256": "eebf29d4d7ae77615ba3841de0d93f7029230c0406711ea3d1aa373605f242c1",
+              "url": "https://erhny.org/wp-content/uploads/2024/12/ERH-FA-APP-English.pdf",
+              "retrieved_at": "2026-11-08T16:58:37.206270+00:00",
+              "publisher_updated_at": null,
+              "locator": "page 1",
+              "quote": "Page 1 of 5\nNYS Uniform Hospital Financial Assistance Application\nYou may be eligible for hospital financial assistance to pay your bills if you are uninsured, if your\ninsurance is exhausted, or if you have health insurance but have proof of paid medical\nexpenses totaling more than 10% of your income. Completing this form will start your request\nfor hospital financial assistance. This form is used by all hospitals in New York State.\nThis applicatio n must be printed in the primary 1 languages spoken by patients served by the\nhospital.\nPatient Name (complete information that is applicable)\nPatient Name (First, Middle, Last)\nDate of Birth (mm/dd/yyyy)\nAddress Apartment/Unit #\nCity State Zip\nContact Phone #\nParent/Guardian or Lawful Representative Name (if patient is a minor child or an incapacitated adult)\nEmail Address (if any)\nFamily Information:\nPlease list below all family members in your household. Your household includes yourself, your\nspouse or domestic partner, and any children or other dependents. For example, this would\ninclude everyone listed on the same tax return.\nGross income means your income before taxes are deducted.\nGross income can consist of work earnings (wages, salaries, tips, earnings from self-\nemployment), unearned income (social security, disability, and unemployment benefits),\ncontributions (funds from family or friends), and other sources of income (temporary assistance\nand supplemental security income).\nFull Name Relationship Total Gross Income (Current)\nSelf\n1 “Primary languages” includes any language that is used to communicate in at least 5% of patient visits per year,\nor any language spoken by more than 1% of the primary hospital service area population, as calculated using\ndemographic information available from the United States Bureau of the Census, supplemented by data from\nschool systems.",
+              "export_verification": "snapshot_hash_verified"
+            },
+            {
+              "snapshot_id": "558cb8933ccabf12a6b86acea145f1077cebd4c9e71fc108bacf2d07f333811a",
+              "sha256": "558cb8933ccabf12a6b86acea145f1077cebd4c9e71fc108bacf2d07f333811a",
+              "url": "https://www.health.ny.gov/facilities/hospital/financial_assist/hosp_info/docs/2026_uniform_financial_assistance_application.docx",
+              "retrieved_at": "2026-11-08T21:07:06Z",
+              "publisher_updated_at": null,
+              "locator": "DOCX body (paragraphs and tables; pagination unverified)",
+              "quote": "NYS Uniform Hospital Financial Assistance ApplicationYou may be eligible for hospital financial assistance to pay your bills if you are uninsured, if your insurance is exhausted, or if you have health insurance but have proof of paid medical expenses totaling more than 10% of your income. Completing this form will start your request for hospital financial assistance. This form is used by all hospitals in New York State.\nThis application must be printed in the primary languages spoken by patients served by the hospital.\nPatient Name (complete information that is applicable)\nPatient Name (First, Middle, Last)\nDate of Birth (mm/dd/yyyy)\nAddress Apartment/Unit #\nCity State Zip\nContact Phone #\nParent/Guardian or Lawful Representative Name (if patient is a minor child or an incapacitated adult)\nEmail Address (if any)\nFamily Information:\nPlease list below all family members in your household. Your household includes yourself, your spouse or domestic partner, and any children or other dependents. For example, this would include everyone listed on the same tax return.\nGross income means your income before taxes are deducted.\nGross income can consist of work earnings (wages, salaries, tips, earnings from self-employment), unearned income (social security, disability, and unemployment benefits), contributions (funds from family or friends), and other sources of income (temporary assistance and supplemental security income).\nFull Name Relationship Total Gross Income (Current)\nSelf\nThe hospital may request you submit documentation as proof of income; examples of documentation might include a pay stub, a letter from your employer if applicable, or Form 1040.\nHealth Insurance Status\nDo you have any form of health insurance, including Medicaid, Medicare, or private insurance through your employer or purchased on your own? ☐ Yes ☐ No\nIf you answered “No,” would you like assistance in applying for any of these programs?\n☐ Yes ☐ No\nUnderinsured patients: people with insurance and high medical expenses. If you have insurance, please provide an estimate of the medical bills you paid in the past 12 months.\n$\nThe hospital may request you submit documentation as proof of paid medical expenses.\nPatient/Responsible Party: If not the patient, list the name of the person signing the form and their authority to sign on behalf of the patient (e.g., spouse, parent, legal representative).\nI understand that the information I submit may be subject to verification from external sources. I certify that the information is true and complete to the best of my knowledge.\nPrint NameRelationship to Patient Date\nSignature\nMinimum Eligibility and Guidelines\nApplication Timeline, Patient Rights, and Confidentiality\nYou can apply for financial assistance at any point during the collection process.\nYou do not have to make any payment to this hospital until you receive a decision on your application for financial assistance. Hospitals may not forward accounts to collection while your application is pending.\nIf you are denied financial assistance, you have the right to appeal. Information on how to do so will be included in the hospital’s notice you receive. You may have the right to appeal the amount of your financial assistance. The hospital will include information about how to appeal in their decision letter.\nHospitals cannot send unpaid bills to a collection agency for at least 180 days after your first bill.\nHospitals are prohibited from taking legal action, including filing lawsuits, to recover unpaid medical bills for patients below 400% of the federal poverty level. Poverty guidelines can be found here: https://aspe.hhs.gov/topics/poverty-economic-mobility/poverty-guidelines\nAny information provided in this application will only be used by the hospital to determine your eligibility for financial assistance and will remain confidential to the extent permitted by law.\nA hospital cannot deny you medically necessary services because you have an outstanding medical bill.\nIf you need assistance with this application, please contact (HOSPITAL NAME)’s financial assistance office at (PHONE NUMBER).\nIf you need additional assistance with this application or help appealing a decision, you can reach out to Community Health Advocates: 888-614-5400.\nEligibility\nNothing limits a hospital's ability to establish patient eligibility for payment discounts at income levels higher than those specified below and/or to provide greater payment discounts for eligible patients than those required by Public Health Law. Additionally, immigration status shall not be an eligibility criterion for the purpose of determining financial assistance.\nThe following individuals are eligible:\nLow-income individuals without health insurance; or\nunderinsured individuals (out-of-pocket medical costs accumulated in the past twelve months that amount to more than ten percent of such individual's gross annual income); or\nthose who have exhausted their health insurance benefits, and who can demonstrate an inability to pay full charges; or\nat the hospital's discretion, individuals who can demonstrate an inability to pay their co-pay and/or deductible can request a reduced or discounted payment.\nIndividuals up to 400% of the federal poverty level are eligible for financial assistance. Federal Poverty Levels (2026)\nHousehold Size 200% 300% 400%\n1 Person $31,920 $47,880 $63,840\n2 Persons $43,280 $64,920 $86,560\n3 Persons $54,640 $81,960 $109,280\n4 Persons $66,000 $99,000 $132,000\n5 Persons $77,360 $116,040 $154,720\n6 Persons $88,720 $133,880 $177,440\n7 Persons $100,080 $150,120 $200,160\nUpdated annually: https://aspe.hhs.gov/topics/poverty-economic-mobility/poverty-guidelines\nMinimum Discount Rates\nIf you qualify for financial assistance, your charges will be reduced according to your income on a sliding fee scale as follows:\nIncome Level Payment\nBelow 200% FPL Waive all charges\n200% - 300% FPL Uninsured patients: Sliding scale up to 10% of the amount that would have been paid for the service(s) by Medicaid.Underinsured patients: Up to a maximum of 10% of the amount that would have been paid pursuant to such patient's insurance cost sharing.\n301% - 400% FPL Uninsured patients: Sliding scale up to 20% of the amount that would have been paid for the service(s) by Medicaid.Underinsured patients: Up to a maximum of 20% of the amount that would have been paid pursuant to such patient's insurance cost sharing.\nHospitals may choose to provide greater discounts for eligible patients and/or offer payment discounts for patients at higher income levels.\nInstallment Plans\nInstallment plans are available to patients who are unable to pay the reduced rate all at one time. Monthly payments cannot exceed 5% of your gross monthly income and the rate of interest charged to the patient on the unpaid balance, if any, shall not exceed 2%.\nRequest for Proof of Household Income\nPlease include the income information for the patient, their spouse, and any dependents (such as children). For example, this would include everyone on the same tax return (tax filer, spouse, and tax dependents) in the calculation of household income.\nThe following is a list of documents you can use to prove your income. You do not have to provide all these documents. You can also provide a statement of no household income if you have no income.\nYou may also provide the Eligibility determination page from the NY State of Health Marketplace. If you have this document, you do not have to provide any other income information listed below to the hospital.\nIf Household Receives: Amount per Month: Applicant May Provide:\nWages $ Please provide one Paycheck Stub, or Letter from Employer on company letterhead, signed and dated, or most recently filed income tax return.\nSocial Security Payment $ Copy of award letter/certificate, or correspondence from the U.S. Social Security Administration, or annual benefit letter. To request a copy of your Social Security benefit letter, call 1-800-772-1213 or visit www.ssa.gov.\nUnemployment Compensation $ Copy of award letter/certificate, or monthly benefit statement from NYS Department of Labor, or Copy of Direct Payment Card with printout, or Correspondence from the NYS Department of Labor, or Printout of recipient’s account information from the NYS Department of Labor’s website (www.labor.state.ny.us).\nDisability Payment $ Copy of award letter/certificate, or correspondence from Social Security Administration, or copy of annual benefit letter. To request a copy of your benefit letter, call 1-800-772-1213 or visit www.ssa.gov.\nWorkers Compensation $ Copy of Award Letter or Check stub.\nAlimony/Child Support $ Copy of court order, or 3 months of cashed checks/receipts.\nDividends/Interest $ Quarterly dividend statements or 1 month statements.\nOther $ Letter stating the amount of non-wage earnings (if any), such as rental income, cash for odd jobs, etc.\nNo Income $0 Signed statement of no income.",
+              "export_verification": "snapshot_hash_verified"
+            },
+            {
+              "snapshot_id": "558cb8933ccabf12a6b86acea145f1077cebd4c9e71fc108bacf2d07f333811a",
+              "sha256": "558cb8933ccabf12a6b86acea145f1077cebd4c9e71fc108bacf2d07f333811a",
+              "url": "https://www.health.ny.gov/facilities/hospital/financial_assist/hosp_info/docs/2026_uniform_financial_assistance_application.docx",
+              "retrieved_at": "2026-11-08T21:07:06Z",
+              "publisher_updated_at": null,
+              "locator": "DOCX word/footnotes.xml (auxiliary part; pagination unverified)",
+              "quote": "“Primary languages” includes any language that is used to communicate in at least 5% of patient visits per year, or any language spoken by more than 1% of the primary hospital service area population, as calculated using demographic information available from the United States Bureau of the Census, supplemented by data from school systems.",
+              "export_verification": "snapshot_hash_verified"
+            },
+            {
+              "snapshot_id": "4da163d0c2a4775668da0e3c4c682cc787ee218e049a23dc6d6afab0575cee71",
+              "sha256": "4da163d0c2a4775668da0e3c4c682cc787ee218e049a23dc6d6afab0575cee71",
+              "url": "https://www.health.ny.gov/facilities/hospital/financial_assist/hosp_info/docs/2026_uniform_financial_assistance_application.docx",
+              "retrieved_at": "2026-11-08T21:07:06Z",
+              "publisher_updated_at": null,
+              "locator": "page 1",
+              "quote": "NYS Uniform Hospital Financial Assistance Application",
+              "export_verification": "snapshot_hash_verified"
+            },
+            {
+              "snapshot_id": "4da163d0c2a4775668da0e3c4c682cc787ee218e049a23dc6d6afab0575cee71",
+              "sha256": "4da163d0c2a4775668da0e3c4c682cc787ee218e049a23dc6d6afab0575cee71",
+              "url": "https://www.health.ny.gov/facilities/hospital/financial_assist/hosp_info/docs/2026_uniform_financial_assistance_application.docx",
+              "retrieved_at": "2026-11-08T21:07:06Z",
+              "publisher_updated_at": null,
+              "locator": "page 2",
+              "quote": "The hospital may request you submit documentation as proof of income; examples of",
+              "export_verification": "snapshot_hash_verified"
+            },
+            {
+              "snapshot_id": "4da163d0c2a4775668da0e3c4c682cc787ee218e049a23dc6d6afab0575cee71",
+              "sha256": "4da163d0c2a4775668da0e3c4c682cc787ee218e049a23dc6d6afab0575cee71",
+              "url": "https://www.health.ny.gov/facilities/hospital/financial_assist/hosp_info/docs/2026_uniform_financial_assistance_application.docx",
+              "retrieved_at": "2026-11-08T21:07:06Z",
+              "publisher_updated_at": null,
+              "locator": "page 3",
+              "quote": "Minimum Eligibility and Guidelines",
+              "export_verification": "snapshot_hash_verified"
+            },
+            {
+              "snapshot_id": "4da163d0c2a4775668da0e3c4c682cc787ee218e049a23dc6d6afab0575cee71",
+              "sha256": "4da163d0c2a4775668da0e3c4c682cc787ee218e049a23dc6d6afab0575cee71",
+              "url": "https://www.health.ny.gov/facilities/hospital/financial_assist/hosp_info/docs/2026_uniform_financial_assistance_application.docx",
+              "retrieved_at": "2026-11-08T21:07:06Z",
+              "publisher_updated_at": null,
+              "locator": "page 4",
+              "quote": "Individuals up to 400% of the federal poverty level are eligible for financial",
+              "export_verification": "snapshot_hash_verified"
+            },
+            {
+              "snapshot_id": "4da163d0c2a4775668da0e3c4c682cc787ee218e049a23dc6d6afab0575cee71",
+              "sha256": "4da163d0c2a4775668da0e3c4c682cc787ee218e049a23dc6d6afab0575cee71",
+              "url": "https://www.health.ny.gov/facilities/hospital/financial_assist/hosp_info/docs/2026_uniform_financial_assistance_application.docx",
+              "retrieved_at": "2026-11-08T21:07:06Z",
+              "publisher_updated_at": null,
+              "locator": "page 5",
+              "quote": "Request for Proof of Household Income",
+              "export_verification": "snapshot_hash_verified"
+            },
+            {
+              "snapshot_id": "4da163d0c2a4775668da0e3c4c682cc787ee218e049a23dc6d6afab0575cee71",
+              "sha256": "4da163d0c2a4775668da0e3c4c682cc787ee218e049a23dc6d6afab0575cee71",
+              "url": "https://www.health.ny.gov/facilities/hospital/financial_assist/hosp_info/docs/2026_uniform_financial_assistance_application.docx",
+              "retrieved_at": "2026-11-08T21:07:06Z",
+              "publisher_updated_at": null,
+              "locator": "page 6",
+              "quote": "Dividends/Interest $ Quarterly dividend statements or 1 month",
+              "export_verification": "snapshot_hash_verified"
+            },
+            {
+              "snapshot_id": "eebf29d4d7ae77615ba3841de0d93f7029230c0406711ea3d1aa373605f242c1",
+              "sha256": "eebf29d4d7ae77615ba3841de0d93f7029230c0406711ea3d1aa373605f242c1",
+              "url": "https://erhny.org/wp-content/uploads/2024/12/ERH-FA-APP-English.pdf",
+              "retrieved_at": "2026-11-08T16:58:37.206270+00:00",
+              "publisher_updated_at": null,
+              "locator": "page 1",
+              "quote": "Page 1 of 5",
+              "export_verification": "snapshot_hash_verified"
+            },
+            {
+              "snapshot_id": "eebf29d4d7ae77615ba3841de0d93f7029230c0406711ea3d1aa373605f242c1",
+              "sha256": "eebf29d4d7ae77615ba3841de0d93f7029230c0406711ea3d1aa373605f242c1",
+              "url": "https://erhny.org/wp-content/uploads/2024/12/ERH-FA-APP-English.pdf",
+              "retrieved_at": "2026-11-08T16:58:37.206270+00:00",
+              "publisher_updated_at": null,
+              "locator": "page 2",
+              "quote": "Page 2 of 5",
+              "export_verification": "snapshot_hash_verified"
+            },
+            {
+              "snapshot_id": "eebf29d4d7ae77615ba3841de0d93f7029230c0406711ea3d1aa373605f242c1",
+              "sha256": "eebf29d4d7ae77615ba3841de0d93f7029230c0406711ea3d1aa373605f242c1",
+              "url": "https://erhny.org/wp-content/uploads/2024/12/ERH-FA-APP-English.pdf",
+              "retrieved_at": "2026-11-08T16:58:37.206270+00:00",
+              "publisher_updated_at": null,
+              "locator": "page 3",
+              "quote": "Page 3 of 5",
+              "export_verification": "snapshot_hash_verified"
+            },
+            {
+              "snapshot_id": "eebf29d4d7ae77615ba3841de0d93f7029230c0406711ea3d1aa373605f242c1",
+              "sha256": "eebf29d4d7ae77615ba3841de0d93f7029230c0406711ea3d1aa373605f242c1",
+              "url": "https://erhny.org/wp-content/uploads/2024/12/ERH-FA-APP-English.pdf",
+              "retrieved_at": "2026-11-08T16:58:37.206270+00:00",
+              "publisher_updated_at": null,
+              "locator": "page 4",
+              "quote": "Page 4 of 5",
+              "export_verification": "snapshot_hash_verified"
+            },
+            {
+              "snapshot_id": "eebf29d4d7ae77615ba3841de0d93f7029230c0406711ea3d1aa373605f242c1",
+              "sha256": "eebf29d4d7ae77615ba3841de0d93f7029230c0406711ea3d1aa373605f242c1",
+              "url": "https://erhny.org/wp-content/uploads/2024/12/ERH-FA-APP-English.pdf",
+              "retrieved_at": "2026-11-08T16:58:37.206270+00:00",
+              "publisher_updated_at": null,
+              "locator": "page 5",
+              "quote": "Page 5 of 5",
+              "export_verification": "snapshot_hash_verified"
+            }
+          ]
+        },
+        {
+          "measure_id": "application.contact_information",
+          "result": "yes",
+          "explanation": "Hospital application-assistance contact and telephone number are stated.",
+          "evidence": [
+            {
+              "snapshot_id": "eebf29d4d7ae77615ba3841de0d93f7029230c0406711ea3d1aa373605f242c1",
+              "sha256": "eebf29d4d7ae77615ba3841de0d93f7029230c0406711ea3d1aa373605f242c1",
+              "url": "https://erhny.org/wp-content/uploads/2024/12/ERH-FA-APP-English.pdf",
+              "retrieved_at": "2026-11-08T16:58:37.206270+00:00",
+              "publisher_updated_at": null,
+              "locator": "page 3",
+              "quote": "Page 3 of 5\nMinimum Eligibility and Guidelines\nApplication Timeline, Patient Rights, and Confidentiality\n You can apply for financial assistance at any point during the collection process.\n You do not have to make any payment to this hospital until you receive a decision on\nyour application for financial assistance. Hospitals may not forward accounts to\ncollection while your application is pending.\n If you are denied financial assistance, you have the right to appeal. Information on how\nto do so will be included in the hospital’s notice you receive. You may have the right to\nappeal the amount of your financial assistance. The hospital will include information\nabout how to appeal in their decision letter.\n Hospitals cannot send unpaid bills to a collection agency for at least 180 days after your\nfirst bill.\n Hospitals are prohibited from taking legal action, including filing lawsuits, to recover\nunpaid medical bills for patients below 400% of the federal poverty level. Poverty\nguidelines can be found here: https://aspe.hhs.gov/topics/poverty-economic-\nmobility/poverty-guidelines\n Any information provided in this application will only be used by the hospital to\ndetermine your eligibility for financial assistance and will remain confidential to the\nextent permitted by law.\n A hospital cannot deny you medically necessary services because you have an\noutstanding medical bill.\n If you need assistance with this application, please contact Ellenville Regional Hospital’s\nfinancial assistance office at (845) 210-4930.\n If you need additional assistance with this application or help appealing a decision, you\ncan reach out to Community Health Advocates: 888-614-5400.\nEligibility\nNothing limits a hospital’s ability to establish patient eligibility for payment discounts at income\nlevels higher than those specified below and/or to provide greater payment discounts for\neligible patients than those required by Public Health Law. Additionally, immigration status\nshall not be an eligibility criterion for the purpose of determining financial assistance.\nThe following individuals are eligible:\n Low-income individuals without health insurance; or\n Underinsured individuals (out-of-pocket medical costs accumulated in the past twelve\nmonths that amount to more than ten percent (10%) of such individual’s gross annual\nincome) or;\n Those who have exhausted their health insurance benefits, and who can demonstrate\nan inability to pay full charges; or\n At the hospital’s discretion, individuals who can demonstrate an inability to pay their\ncopay and/or deductible can request a reduced or discounted payment.",
+              "export_verification": "snapshot_hash_verified"
+            }
+          ]
+        },
+        {
+          "measure_id": "application.income_discount_tables",
+          "result": "yes",
+          "explanation": "Income table with 200/300/400% columns and discount bands is present. This checks presence, not correctness of the dollar values.",
+          "evidence": [
+            {
+              "snapshot_id": "eebf29d4d7ae77615ba3841de0d93f7029230c0406711ea3d1aa373605f242c1",
+              "sha256": "eebf29d4d7ae77615ba3841de0d93f7029230c0406711ea3d1aa373605f242c1",
+              "url": "https://erhny.org/wp-content/uploads/2024/12/ERH-FA-APP-English.pdf",
+              "retrieved_at": "2026-11-08T16:58:37.206270+00:00",
+              "publisher_updated_at": null,
+              "locator": "page 4",
+              "quote": "Page 4 of 5\nIndividuals up to 400% of the federal poverty level are eligible for financial assistance.\nFederal Poverty Levels (2024)\nHousehold Size 200% 300% 400%\n1 Person $30,120 $45,180 $60,240\n2 Persons $40,880 $61,320 $81,760\n3 Persons $51,640 $77,460 $103,280\n4 Persons $62,400 $93,600 $124,800\n5 Persons $73,160 $109,740 $146,320\n6 Persons $83,920 $125,880 $167,840\n7 Persons $94,680 $142,020 $189,360\nUpdated annually: https://aspe.hhs.gov/topics/poverty-economic-mobility/poverty-guidelines\nMinimum Discount Rates\nIf you qualify for financial assistance, your charges will be reduced according to your income on\na sliding fee scale as follows:\nIncome Level Payment\nBelow 200% FPL Waive all charges\n200% - 300% FPL Uninsured patients: Sliding scale up to 10% of the amount that would\nhave been paid for the service(s) by Medicaid.\nUnderinsured patients: Up to a maximum of 10% of the amount that\nwould have been paid pursuant to such patient’s insurance cost\nsharing.\n301% - 400% FPL Uninsured patients: Sliding scale up to 20% of the amount that would\nhave been paid for the service(s) by Medicaid.\nUnderinsured patients: Up to a maximum of 20% of the amount that\nwould have been paid pursuant to such patient’s insurance cost\nsharing.\nHospitals may choose to provide greater discounts for eligible patients and/or offer payment\ndiscounts for patients at higher income levels.\nInstallment Plans\nInstallment plans are available to patients who are unable to pay the reduced rate all at one\ntime. Monthly payments cannot exceed 5% of your gross monthly income and the rate of\ninterest charged to the patient on the unpaid balance, if any, shall not exceed 2%.",
+              "export_verification": "snapshot_hash_verified"
+            }
+          ]
+        },
+        {
+          "measure_id": "application.fpl_guidelines",
+          "result": "no",
+          "explanation": "Published FPL table is labelled 2024; compared 21 printed cells with the 2026 annual HHS reference. Published year and/or amounts do not match; the document is not current for this review year.",
+          "evidence": [
+            {
+              "snapshot_id": "eebf29d4d7ae77615ba3841de0d93f7029230c0406711ea3d1aa373605f242c1",
+              "sha256": "eebf29d4d7ae77615ba3841de0d93f7029230c0406711ea3d1aa373605f242c1",
+              "url": "https://erhny.org/wp-content/uploads/2024/12/ERH-FA-APP-English.pdf",
+              "retrieved_at": "2026-11-08T16:58:37.206270+00:00",
+              "publisher_updated_at": null,
+              "locator": "page 4",
+              "quote": "Page 4 of 5\nIndividuals up to 400% of the federal poverty level are eligible for financial assistance.\nFederal Poverty Levels (2024)\nHousehold Size 200% 300% 400%\n1 Person $30,120 $45,180 $60,240\n2 Persons $40,880 $61,320 $81,760\n3 Persons $51,640 $77,460 $103,280\n4 Persons $62,400 $93,600 $124,800\n5 Persons $73,160 $109,740 $146,320\n6 Persons $83,920 $125,880 $167,840\n7 Persons $94,680 $142,020 $189,360\nUpdated annually: https://aspe.hhs.gov/topics/poverty-economic-mobility/poverty-guidelines\nMinimum Discount Rates\nIf you qualify for financial assistance, your charges will be reduced according to your income on\na sliding fee scale as follows:\nIncome Level Payment\nBelow 200% FPL Waive all charges\n200% - 300% FPL Uninsured patients: Sliding scale up to 10% of the amount that would\nhave been paid for the service(s) by Medicaid.\nUnderinsured patients: Up to a maximum of 10% of the amount that\nwould have been paid pursuant to such patient’s insurance cost\nsharing.\n301% - 400% FPL Uninsured patients: Sliding scale up to 20% of the amount that would\nhave been paid for the service(s) by Medicaid.\nUnderinsured patients: Up to a maximum of 20% of the amount that\nwould have been paid pursuant to such patient’s insurance cost\nsharing.\nHospitals may choose to provide greater discounts for eligible patients and/or offer payment\ndiscounts for patients at higher income levels.\nInstallment Plans\nInstallment plans are available to patients who are unable to pay the reduced rate all at one\ntime. Monthly payments cannot exceed 5% of your gross monthly income and the rate of\ninterest charged to the patient on the unpaid balance, if any, shall not exceed 2%.",
+              "export_verification": "snapshot_hash_verified"
+            }
+          ]
+        },
+        {
+          "measure_id": "application.maximum_fpl",
+          "result": "yes",
+          "explanation": "Application explicitly states eligibility through at least 400% FPL; this is independent of the table's year/dollars.",
+          "evidence": [
+            {
+              "snapshot_id": "eebf29d4d7ae77615ba3841de0d93f7029230c0406711ea3d1aa373605f242c1",
+              "sha256": "eebf29d4d7ae77615ba3841de0d93f7029230c0406711ea3d1aa373605f242c1",
+              "url": "https://erhny.org/wp-content/uploads/2024/12/ERH-FA-APP-English.pdf",
+              "retrieved_at": "2026-11-08T16:58:37.206270+00:00",
+              "publisher_updated_at": null,
+              "locator": "page 4",
+              "quote": "Page 4 of 5\nIndividuals up to 400% of the federal poverty level are eligible for financial assistance.\nFederal Poverty Levels (2024)\nHousehold Size 200% 300% 400%\n1 Person $30,120 $45,180 $60,240\n2 Persons $40,880 $61,320 $81,760\n3 Persons $51,640 $77,460 $103,280\n4 Persons $62,400 $93,600 $124,800\n5 Persons $73,160 $109,740 $146,320\n6 Persons $83,920 $125,880 $167,840\n7 Persons $94,680 $142,020 $189,360\nUpdated annually: https://aspe.hhs.gov/topics/poverty-economic-mobility/poverty-guidelines\nMinimum Discount Rates\nIf you qualify for financial assistance, your charges will be reduced according to your income on\na sliding fee scale as follows:\nIncome Level Payment\nBelow 200% FPL Waive all charges\n200% - 300% FPL Uninsured patients: Sliding scale up to 10% of the amount that would\nhave been paid for the service(s) by Medicaid.\nUnderinsured patients: Up to a maximum of 10% of the amount that\nwould have been paid pursuant to such patient’s insurance cost\nsharing.\n301% - 400% FPL Uninsured patients: Sliding scale up to 20% of the amount that would\nhave been paid for the service(s) by Medicaid.\nUnderinsured patients: Up to a maximum of 20% of the amount that\nwould have been paid pursuant to such patient’s insurance cost\nsharing.\nHospitals may choose to provide greater discounts for eligible patients and/or offer payment\ndiscounts for patients at higher income levels.\nInstallment Plans\nInstallment plans are available to patients who are unable to pay the reduced rate all at one\ntime. Monthly payments cannot exceed 5% of your gross monthly income and the rate of\ninterest charged to the patient on the unpaid balance, if any, shall not exceed 2%.",
+              "export_verification": "snapshot_hash_verified"
+            }
+          ]
+        },
+        {
+          "measure_id": "application.installments_cap",
+          "result": "yes",
+          "explanation": "Explicit monthly payment cap is compared with 5% of gross monthly income. A separate interest-rate cap is not used.",
+          "evidence": [
+            {
+              "snapshot_id": "eebf29d4d7ae77615ba3841de0d93f7029230c0406711ea3d1aa373605f242c1",
+              "sha256": "eebf29d4d7ae77615ba3841de0d93f7029230c0406711ea3d1aa373605f242c1",
+              "url": "https://erhny.org/wp-content/uploads/2024/12/ERH-FA-APP-English.pdf",
+              "retrieved_at": "2026-11-08T16:58:37.206270+00:00",
+              "publisher_updated_at": null,
+              "locator": "page 4",
+              "quote": "Page 4 of 5\nIndividuals up to 400% of the federal poverty level are eligible for financial assistance.\nFederal Poverty Levels (2024)\nHousehold Size 200% 300% 400%\n1 Person $30,120 $45,180 $60,240\n2 Persons $40,880 $61,320 $81,760\n3 Persons $51,640 $77,460 $103,280\n4 Persons $62,400 $93,600 $124,800\n5 Persons $73,160 $109,740 $146,320\n6 Persons $83,920 $125,880 $167,840\n7 Persons $94,680 $142,020 $189,360\nUpdated annually: https://aspe.hhs.gov/topics/poverty-economic-mobility/poverty-guidelines\nMinimum Discount Rates\nIf you qualify for financial assistance, your charges will be reduced according to your income on\na sliding fee scale as follows:\nIncome Level Payment\nBelow 200% FPL Waive all charges\n200% - 300% FPL Uninsured patients: Sliding scale up to 10% of the amount that would\nhave been paid for the service(s) by Medicaid.\nUnderinsured patients: Up to a maximum of 10% of the amount that\nwould have been paid pursuant to such patient’s insurance cost\nsharing.\n301% - 400% FPL Uninsured patients: Sliding scale up to 20% of the amount that would\nhave been paid for the service(s) by Medicaid.\nUnderinsured patients: Up to a maximum of 20% of the amount that\nwould have been paid pursuant to such patient’s insurance cost\nsharing.\nHospitals may choose to provide greater discounts for eligible patients and/or offer payment\ndiscounts for patients at higher income levels.\nInstallment Plans\nInstallment plans are available to patients who are unable to pay the reduced rate all at one\ntime. Monthly payments cannot exceed 5% of your gross monthly income and the rate of\ninterest charged to the patient on the unpaid balance, if any, shall not exceed 2%.",
+              "export_verification": "snapshot_hash_verified"
+            }
+          ]
+        }
+      ],
+      "affected_measures": [
+        "application.uniform_application",
+        "application.contact_information",
+        "application.income_discount_tables",
+        "application.fpl_guidelines",
+        "application.maximum_fpl",
+        "application.installments_cap"
+      ],
+      "landing_page": []
+    },
+    {
+      "hospital_key": "1002",
+      "record_id": "418f8ca6ceb416c42d9e7b205f07e4b0222afaa45c70f1aee7794460ff6921ad",
+      "artifact_path": "full-reviews/f3855e2408eb437e84e45e0c1319c02e/results/0a59d1543b5844ed8a0268f5e9425748.json",
+      "kind": "full-reviews",
+      "scope": "full-reviews",
+      "scope_label": "Full posted-material review",
+      "guideline_year": 2026,
+      "checked_at": "2026-11-08T19:01:34.630348+00:00",
+      "review_date": null,
+      "status": "completed",
+      "error": null,
+      "findings": [
+        {
+          "measure_id": "posted_materials.no_submission_time_limit",
+          "result": "unclear",
+          "explanation": "Found 6 supportive observations; 3 ambiguous observations. Remaining coverage gaps: [{\"url\": \"https://erhny.org/wp-content/uploads/2021/12/2021-ERH-Financial-Assistance-Policy-Procedure-English.pdf\", \"reason\": \"source_not_downloaded\"}] Interpretation questions: After a Medicaid denial, the application must be completed in a timely manner. No interval is specified; clarify how this is reconciled with applying anytime. The application must be completed oportunamente after a denial letter, with no defined interval; reconcile with the anytime provision. Allows applying at any time during data collection (period sbora dannykh). This differs from debt collection in the English form; clarify intended temporal scope rather than infer a definite deadline or unlimited collections access.",
+          "evidence": [
+            {
+              "snapshot_id": "29cc78ee470555f1c1aaa3626ec55c460395c6361998981dd55f9c28259bc15c",
+              "sha256": "29cc78ee470555f1c1aaa3626ec55c460395c6361998981dd55f9c28259bc15c",
+              "url": "https://erhny.org/wp-content/uploads/2024/12/Hospital-Financial-Assistance-FINAL-11.24.pdf",
+              "retrieved_at": "2026-11-08T16:58:34.248881+00:00",
+              "publisher_updated_at": null,
+              "locator": "page 2",
+              "quote": "ELLENVILLE REGIONAL HOSPITAL\nTITLE: HOSPITAL FINANCIAL ASSISTANCE Page 2 of 6\nDEPARTMENT: PATIENT FINANCIAL SERVICES\nOTHER AFFECTED DEPTS: REGISTRATION\nAPPROVED BY: BOB RUE, CFO\nEFFECTIVE: 6/04\nREVIEWED: 9/12, 7/14, 9/15, 7/17, 7/24 REVISED:1/07, 7/11,\n06/13, 1/14, 9/16,\n2/17, 7/18, 5/19,\n6/19, 7/20, 11/21,\n7/22, 11/24\nAvailability of financial assistance is contingent upon the patient first applying for coverage under\nMedicaid or another publicly subsidized insurance program. Patients may contact and schedule an\nappointment with a Financial Counselor if needed.\nThe patient may apply for financial assistance at anytime during the hospital collection process,\nstarting from the date of service. The patient may apply for financial assistance even if they have\npreviously had a balance referred to a collection agency.\nPROCEDURE:\n1. All patients are provided financial assistance information at",
+              "export_verification": "snapshot_hash_verified"
+            },
+            {
+              "snapshot_id": "92c273c3345e59f5a450d0ea776304d1d12ee9625d7b0cdb82ca5499bc68f115",
+              "sha256": "92c273c3345e59f5a450d0ea776304d1d12ee9625d7b0cdb82ca5499bc68f115",
+              "url": "https://erhny.org/wp-content/uploads/2024/12/Hospital-Financial-Assistance-Spanish.pdf",
+              "retrieved_at": "2026-11-08T16:58:36.477443+00:00",
+              "publisher_updated_at": null,
+              "locator": "page 2",
+              "quote": "ELLENVILLE REGIONAL HOSPITAL\nTÍTULO: ASISTENCIA ECONÓMICA DEL HOSPITAL Página 2 de 6\nDEPARTAMENTO: SERVICIOS FINANCIEROS PARA\nEL PACIENTE\nOTROS DEPARTAMENTOS AFECTADOS: REGISTRO\nAPROBADO POR: BOB RUE, CFO\nVIGENCIA: 6/04\nREVISADO: 9/12, 7/14, 9/15, 7/17, 7/24 REVISADO: 1/07,\n7/11, 06/13, 1/14,\n9/16, 2/17, 7/18,\n5/19, 6/19, 7/20,\n11/21, 7/22, 11/24\ndel paciente y si el costo médico compartido del paciente excede el 10% de su ingreso bruto en los\núltimos 12 meses. Si se cumple este criterio, hay descuentos disponibles de hasta el 400% del FPL.\nLa disponibilidad de asistencia financiera depende de que el paciente solicite primero cobertura\nbajo Medicaid u otro programa de seguro subsidiado públicamente. Los pacientes pueden contactar\ny programar una cita con un asesor financiero si es necesario.\nEl paciente podrá solicitar asistencia financiera en cualquier momento durante el proceso de cobr",
+              "export_verification": "snapshot_hash_verified"
+            },
+            {
+              "snapshot_id": "92c273c3345e59f5a450d0ea776304d1d12ee9625d7b0cdb82ca5499bc68f115",
+              "sha256": "92c273c3345e59f5a450d0ea776304d1d12ee9625d7b0cdb82ca5499bc68f115",
+              "url": "https://erhny.org/wp-content/uploads/2024/12/Hospital-Financial-Assistance-Spanish.pdf",
+              "retrieved_at": "2026-11-08T16:58:36.477443+00:00",
+              "publisher_updated_at": null,
+              "locator": "page 2",
+              "quote": "o\nhospitalario, a partir de la fecha del servicio. El paciente puede solicitar asistencia financiera incluso\nsi previamente ha tenido un saldo remitido a una agencia de cobranzas.\nPROCEDIMIENTO:\n1. A todos los pacientes se les proporciona información sobre asistencia financ iera en el momento\ndel registro, así como en el momento del alta. La información sobre asistencia financiera también\nse publica en el Hospital, en los estados de cuenta de los pacientes y en nuestro sitio web. ERH\nutiliza la Solicitud de asistencia financi era uniforme del estado de Nueva York ( “Solicitud de\nasistencia financiera”), que se puede solicitar en ERH o por teléfono.\n2. Contabilidad del Paciente revisará la información del paciente para saber si tiene cobertura de\nseguros y otras opciones de pago por cuenta propia, como tarjetas de crédito y planes de pago.\nUna vez agotados todos los recursos personales y ",
+              "export_verification": "snapshot_hash_verified"
+            },
+            {
+              "snapshot_id": "eebf29d4d7ae77615ba3841de0d93f7029230c0406711ea3d1aa373605f242c1",
+              "sha256": "eebf29d4d7ae77615ba3841de0d93f7029230c0406711ea3d1aa373605f242c1",
+              "url": "https://erhny.org/wp-content/uploads/2024/12/ERH-FA-APP-English.pdf",
+              "retrieved_at": "2026-11-08T16:58:37.206270+00:00",
+              "publisher_updated_at": null,
+              "locator": "page 3",
+              "quote": "Page 3 of 5\nMinimum Eligibility and Guidelines\nApplication Timeline, Patient Rights, and Confidentiality\n You can apply for financial assistance at any point during the collection process.\n You do not have to make any payment to this hospital until you receive a decision on\nyour application for financial assistance. Hospitals may not forward accounts to\ncollection while your application is pending.\n If you are denied financial assistance, you have the right to appeal. Information on how\nto do so will be included in the hospital’s notice you receive. You may have the right to\nappeal the amount of your financial assistance. The hospital will include information\nabout how to appeal in their decision letter.\n Hospitals cannot send unpaid bills to a collection agency for at least 180 days after your\nfirst bill.\n Hospitals are prohibited from taking legal action, including filing lawsuits",
+              "export_verification": "snapshot_hash_verified"
+            },
+            {
+              "snapshot_id": "771f2f39d5fbb2f1044eefa5d7254c5c8052d1a3680224410f9ea10640536555",
+              "sha256": "771f2f39d5fbb2f1044eefa5d7254c5c8052d1a3680224410f9ea10640536555",
+              "url": "https://erhny.org/wp-content/uploads/2024/12/ERH-FA-APP-Spanish.pdf",
+              "retrieved_at": "2026-11-08T16:58:37.879417+00:00",
+              "publisher_updated_at": null,
+              "locator": "page 3",
+              "quote": "Página 3 de 6\nElegibilidad mínima y directrices\nLínea de tiempo de la solicitud, derechos del paciente y confidencialidad\n• Puede pedir ayuda económica en cualquier momento durante el proceso de cobro\n• No tiene que hacer ningún pago a este hospital hasta que reciba una decisión sobre su\nsolicitud de ayuda económica. Los hospitales no pueden enviar cuentas a cobros\nmientras su solicitud esté pendiente.\n• Si se le niega la ayuda económica, tiene derecho a apelar. La información sobre cómo\nhacerlo se incluirá en el aviso que reciba del hospital. Tiene derecho a apelar por la\ncantidad de ayuda económica. El hospital incluirá información sobre cómo apelar en s u\ncarta de decisión.\n• Los hospitales no pueden enviar facturas no pagadas a una agencia de cobros durante al\nmenos 180 días después de su primera factura.\n• Los hospitales tienen prohibido emprender acciones legales, incluyendo presen",
+              "export_verification": "snapshot_hash_verified"
+            },
+            {
+              "snapshot_id": "0938950766a70636fc92c35154deab6fc9438ffe2c2ee50a948db98e886f1d8e",
+              "sha256": "0938950766a70636fc92c35154deab6fc9438ffe2c2ee50a948db98e886f1d8e",
+              "url": "https://erhny.org/wp-content/uploads/2024/12/ERH-FA-APP-Polish.pdf",
+              "retrieved_at": "2026-11-08T16:58:38.504894+00:00",
+              "publisher_updated_at": null,
+              "locator": "page 3",
+              "quote": "Strona 3 z 6\nMinimalne wymagania kwalifikacyjne i wytyczne\nRamy czasowe wniosku, prawa pacjenta i poufność\n• O pomoc finansową można ubiegać się w dowolnym momencie w okresie\nwindykacji.\n• Do momentu otrzymania decyzji w sprawie wniosku nie trzeba dokonywać żadnych\npłatności na rzecz szpitala. Szpitale nie mogą przekazać należności do windykacji\nw okresie przetwarzania wniosku.\n• W przypadku odmowy udzielenia pomocy finansowej można odwołać się od decyzji.\nInformacje na temat sposobu odwołania można znaleźć w otrzymanym od szpitala\nzawiadomieniu. Może przysługiwać Ci prawo do odwołania w sprawie kwoty pomocy\nfinansowej. Szpital zawrze informacje na temat sposobu odwołania w piśmie z decyzją.\n• Szpitale nie mogą przekazywać niezapłaconych rachunków do agencji windykacyjnej\nprzez co najmniej 180 dni od otrzymania pierwszego rachunku.\n• Szpitale nie mogą podejmować działań prawnych, w tym w",
+              "export_verification": "snapshot_hash_verified"
+            },
+            {
+              "snapshot_id": "9d77607cd5b4448934e26bbfdd603dc0df75c80baee4e6762878ced7ab494fb1",
+              "sha256": "9d77607cd5b4448934e26bbfdd603dc0df75c80baee4e6762878ced7ab494fb1",
+              "url": "https://erhny.org/wp-content/uploads/2024/12/ERH-FA-APP-Ukrainian.pdf",
+              "retrieved_at": "2026-11-08T16:58:39.144499+00:00",
+              "publisher_updated_at": null,
+              "locator": "page 3",
+              "quote": "Сторінка 3 з 6\nМінімальні вимоги прийнятності й рекомендації\nТерміни подання заявки, права пацієнта й питання конфіденційності\n• Подати заявку на отримання фінансової допомоги можна на будь -якому етапі\nстягнення плати за послугу(-и).\n• Ви не зобов’язані вносити передоплату до прийняття рішення щодо фінансової\nмедичної допомоги. Під час розгляду вашої заявки адміністрація лікарні не має\nправо передавати рахунки на інкасо.\n• Якщо вам відмовлять у фінансовій допомозі, ви можете подати апеляцію. Відомості\nщодо цього розміщено в повідомленні від адміністрації лікарні. Ви також маєте\nправо оскаржити суму фінансової допомоги. Інформацію про те, як подати\nапеляцію, можна знайти в листі про рішення.\n• Адміністрація лікарні не може надсилати неоплачені рахунки до колекторського\nагентства впродовж щонайменше 180 днів після виставлення першого рахунка на\nсплату.\n• Представникам медичного закладу за",
+              "export_verification": "snapshot_hash_verified"
+            },
+            {
+              "snapshot_id": "29cc78ee470555f1c1aaa3626ec55c460395c6361998981dd55f9c28259bc15c",
+              "sha256": "29cc78ee470555f1c1aaa3626ec55c460395c6361998981dd55f9c28259bc15c",
+              "url": "https://erhny.org/wp-content/uploads/2024/12/Hospital-Financial-Assistance-FINAL-11.24.pdf",
+              "retrieved_at": "2026-11-08T16:58:34.248881+00:00",
+              "publisher_updated_at": null,
+              "locator": "page 2",
+              "quote": "ible for supplying the Financial\nCounselor with a copy of the Medicaid denial letter.\nb. Upon receipt of the denial letter, the Financial Assistance application must be\ncompleted in a timely manner by the patient/guarantor.\nc. The patient/guarantor must provide proof of identification, address and income with\ntheir application.\n Acceptable proof of identification includes: Driver license, passport,\npermanent resident alien card (Green Card), birth certificate, photo ID. At\nleast ONE from this list must be supplied.\n Acceptable proof of address/residency includes: utility bills, cell phone bills,\ncable television bill, rent receipt, copy of lease or mortgage papers, notarized",
+              "export_verification": "snapshot_hash_verified"
+            },
+            {
+              "snapshot_id": "92c273c3345e59f5a450d0ea776304d1d12ee9625d7b0cdb82ca5499bc68f115",
+              "sha256": "92c273c3345e59f5a450d0ea776304d1d12ee9625d7b0cdb82ca5499bc68f115",
+              "url": "https://erhny.org/wp-content/uploads/2024/12/Hospital-Financial-Assistance-Spanish.pdf",
+              "retrieved_at": "2026-11-08T16:58:36.477443+00:00",
+              "publisher_updated_at": null,
+              "locator": "page 2",
+              "quote": "de terceros, se evaluará si el paciente puede\noptar a Medicaid u otro programa de seguro subsidiado públicamente. El paciente debe cooperar\nen la solicitud de cobertura como condición para solicitar asistencia financiera.\na. Si Medicaid u otro plan de seguro subsidiado públicamente rechaza la solicitud debido\na que no califica, el paciente/garante es responsable de proporcionarle al asesor financiero\nuna copia de la carta de denegación de Medicaid.\nb. Al recibir la carta de negación, el paciente/garante deberá completar oportunamente\nla solicitud de Asistencia Financiera.\nc. El paciente/garante debe entregar prueba de identificación, dirección e ingresos con\nla solicitud.\n• La prueba de identificación aceptable incluye: licencia de conducir,\npasaporte, tarjeta de residente extranjero permanente (Green Card),",
+              "export_verification": "snapshot_hash_verified"
+            },
+            {
+              "snapshot_id": "ae4fffcbb353785edf46ad99e1b73ff3ed2e6d54539fe995fa0ca1300aa63058",
+              "sha256": "ae4fffcbb353785edf46ad99e1b73ff3ed2e6d54539fe995fa0ca1300aa63058",
+              "url": "https://erhny.org/wp-content/uploads/2024/12/ERH-FA-APP-Russian.pdf",
+              "retrieved_at": "2026-11-08T16:58:39.790777+00:00",
+              "publisher_updated_at": null,
+              "locator": "page 3",
+              "quote": "Стр. 3 из 7\nМинимальные требования и рекомендации\nСроки подачи заявления, права пациента и конфиденциальность\n• Вы можете подать заявку на получение финансовой помощи в любой момент в\nпериод сбора данных.\n• Вы не должны производить какие-либо выплаты этому медицинскому\nучреждению до тех пор, пока не получите решение по вашему заявлению на\nполучение финансовой помощи. Медицинские учреждения не могут передавать\nсчета на взыскание, пока ваше заявление находится на рассмотрении.\n• Если вам отказали в финансовой помощи, вы можете обжаловать это решение.\nИнформация о том, как это сделать, будет включена в уведомление от\nмедицинского учреждения, которое вы получите. У вас есть право обжаловать\nразмер финансовой помощи. В письме с решением от медицинского учреждения\nбудет указана информация о том, как подать апелляцию.\n• Медицинские учреждения не имеют права передавать неоплаченные счета в\nколле",
+              "export_verification": "snapshot_hash_verified"
+            }
+          ]
+        },
+        {
+          "measure_id": "posted_materials.no_evidence_of_asset_checks",
+          "result": "unclear",
+          "explanation": "Found 5 supportive observations; 2 ambiguous observations. Remaining coverage gaps: [{\"url\": \"https://erhny.org/wp-content/uploads/2021/12/2021-ERH-Financial-Assistance-Policy-Procedure-English.pdf\", \"reason\": \"source_not_downloaded\"}] Interpretation questions: The earlier procedure refers to exhausting personal resources before evaluation. Scope is unspecified; reconcile with the express asset prohibition rather than assume an asset test. Es posible que no se tengan en cuenta los bienes is weaker than an unequivocal asset prohibition; earlier personal-resource exhaustion language also needs reconciliation. No explicit asset test is established.",
+          "evidence": [
+            {
+              "snapshot_id": "4f1e355608e5213a8b813c599ee9917824a9d6beb38a86dcf3394dbfda132214",
+              "sha256": "4f1e355608e5213a8b813c599ee9917824a9d6beb38a86dcf3394dbfda132214",
+              "url": "https://erhny.org/patient-guests/financial-assistance-program/",
+              "retrieved_at": "2026-11-08T16:58:33.572258+00:00",
+              "publisher_updated_at": null,
+              "locator": "HTML text (saved landing page)",
+              "quote": "community. Our Financial Assistance program, which is available to patients who are uninsured/underinsured with limited income, allows us to provide our award-winning care at reduced rates, up to 100% free of charge. This reduction is determined by income and the size of your family.\nEveryone in New York State who receives medically necessary services may be covered under this program. Please note that some physicians may bill separately from the hospital and may not be covered under the program.\nWhile we provide all of our Financial Assistance documentation on our website, including our policy & procedure, application and an easy to understand plan language summary of the program, you may also reach out to us at (845) 210-4930 to request the information be mailed to you free of charge. You can also ask to speak with our Financial Assistance Counselor if you have any additional questions",
+              "export_verification": "snapshot_hash_verified"
+            },
+            {
+              "snapshot_id": "4f1e355608e5213a8b813c599ee9917824a9d6beb38a86dcf3394dbfda132214",
+              "sha256": "4f1e355608e5213a8b813c599ee9917824a9d6beb38a86dcf3394dbfda132214",
+              "url": "https://erhny.org/patient-guests/financial-assistance-program/",
+              "retrieved_at": "2026-11-08T16:58:33.572258+00:00",
+              "publisher_updated_at": null,
+              "locator": "HTML text (saved landing page)",
+              "quote": ".\nWe would much rather you apply for the help you need, rather than turn your bills over to a collection agency. Even if you work or own a home or car, you may still qualify for financial assistance.\nDocuments\nEllenville Regional Hospital F/A Policy- Click Here (Englis h / Spanish )\nFinancial Assistance Application- Click Here (English / Spanish / Polish / Ukrainian / Russian )\nFinancial Assistance Document List- Click Here for (English / Spanish )\nFinancial Assistance Plain Language Summary- Click Here (English / Spanish )\nAdditional Resources:\nParticipating Insurances\nStandard Charges\nPhysician Services\nGet in touch\nAnd Let’s Talk\nHow may we assist you? Find a doctor. Request an appointment. Obtain medical information. Make a donation. Contact Ellenville Regional Hospital for all your health care needs, to schedule a tour.\nName\nEmail\nPhone\nInterest\nSUBMIT\nNewsletter Sign Up\nJoin us int",
+              "export_verification": "snapshot_hash_verified"
+            },
+            {
+              "snapshot_id": "29cc78ee470555f1c1aaa3626ec55c460395c6361998981dd55f9c28259bc15c",
+              "sha256": "29cc78ee470555f1c1aaa3626ec55c460395c6361998981dd55f9c28259bc15c",
+              "url": "https://erhny.org/wp-content/uploads/2024/12/Hospital-Financial-Assistance-FINAL-11.24.pdf",
+              "retrieved_at": "2026-11-08T16:58:34.248881+00:00",
+              "publisher_updated_at": null,
+              "locator": "page 3",
+              "quote": "n provided in the application in conjunction\nwith the Poverty Guidelines that are issued each year by the Department of Health and Human\nServices (HHS) to determine appropriate discount. Eligibility for financial assistance is determine\nsolely on household income. A patient’s assets, such as their house or car, may not be considered.\nAdditionally, a patient’s immigration status will not be considered when determining the patient’s\neligibility for financial assistance. The most current U.S. Federal Poverty Guidelines used to\ndetermine financial assistance eligibility can be found at:\nLink: https://aspe.hhs.gov/poverty-guidelines.\nThe guidelines will be used in the sliding scale for uninsured and underinsured patients.\nUninsured Guidelines:\nIf applicant:\n Is at 200% or below the FPL, they are entitled to a 100% discount.\n Is between 201-300% of the FPL, responsibility will be 10% of Medi",
+              "export_verification": "snapshot_hash_verified"
+            },
+            {
+              "snapshot_id": "92c273c3345e59f5a450d0ea776304d1d12ee9625d7b0cdb82ca5499bc68f115",
+              "sha256": "92c273c3345e59f5a450d0ea776304d1d12ee9625d7b0cdb82ca5499bc68f115",
+              "url": "https://erhny.org/wp-content/uploads/2024/12/Hospital-Financial-Assistance-Spanish.pdf",
+              "retrieved_at": "2026-11-08T16:58:36.477443+00:00",
+              "publisher_updated_at": null,
+              "locator": "page 3",
+              "quote": "comprobantes\nde pago recientes (4 si son pagos semanales, 2 si son pagos bisemanales),\nbeneficios por desempleo, carta de aprobación de la Administración del\nSeguro Social/pensión/anualidades.\n3. El asesor económico recibirá la información necesaria junto con la solicitud de asistencia\neconómica. Si se descubre que la información no es verdadera, la solicitud se denegará\nde inmediato.\n4. El asesor económico evaluará la información que se incluya en la solicitud junto con las\nDirectrices de pobreza que publica cada año el Departamento de Salud y Servicios Humanos\n(HHS) para determinar el descuento apropiado. La elegibilidad para recibir asistencia financiera\nse determina únicamente en función del ingreso del grupo familiar. Es posible que no se tengan\nen cuenta los bienes de un paciente, como su casa o su coche. Además, el estatus migratorio\nde un paciente no se considerará al determinar ",
+              "export_verification": "snapshot_hash_verified"
+            },
+            {
+              "snapshot_id": "43520848e6f87fae9b2c60b93e3c69138f1a425eba7fadc8ac5e57513bb9a883",
+              "sha256": "43520848e6f87fae9b2c60b93e3c69138f1a425eba7fadc8ac5e57513bb9a883",
+              "url": "https://erhny.org/wp-content/uploads/2024/01/2024-ERH-FA-Summary-English.pdf",
+              "retrieved_at": "2026-11-08T16:58:40.505993+00:00",
+              "publisher_updated_at": null,
+              "locator": "page 1",
+              "quote": ", Greene and Columbia counties. Anyone can apply, regardless of age, race,\ngender, creed, disability, national origin, or immigrant status.\nHow do I qualify for a discount?\nDiscounts are determined by income and family size. Below are the annual income limits:\nFamily Size HHS Poverty Income $ 150% 200% 300%\n1 $15,060 $22,590 $30,120 $45,180\n2 $20,440 $30,660 $40,880 $61,320\n3 $25,820 $38,730 $51,640 $77,460\n4 $31,200 $46,800 $62,400 $93,600\n5 $36,580 $54,870 $73,160 $109,740\n6 $41,960 $62,940 $83,920 $125,880\n7 $47,340 $71,010 $94,680 $142,020\n8 $52,720 $79,080 $105,440 $158,160\n* For more than 8 persons, add $5,140 for each additional person\nWhat happens if I exceed these limits?\nEllenville Regional Hospital offers flexible payment schedules in the event that you do not qualify for\nfinancial assistance or are unable to pay your bill, regardless of your income.\nCan someone explain the di",
+              "export_verification": "snapshot_hash_verified"
+            },
+            {
+              "snapshot_id": "e0c54eef21e7db1cdb65f37f777251556e63d77ddd381c5a4ae97fb34fc5bd13",
+              "sha256": "e0c54eef21e7db1cdb65f37f777251556e63d77ddd381c5a4ae97fb34fc5bd13",
+              "url": "https://erhny.org/wp-content/uploads/2024/01/2024-ERH-FA-Summary-Spanish.pdf",
+              "retrieved_at": "2026-11-08T16:58:41.232683+00:00",
+              "publisher_updated_at": null,
+              "locator": "page 1",
+              "quote": "vicios médicos necesarios, se da asistencia dentro de nuestra área\nprincipal de servicio de los condados de Ulster, Dutchess, Orange, Sullivan, Delaware, Greene y Columbia.\nCualquiera puede enviar una solicitud, independientemente de su edad, raza, sexo, credo, discapacidad,\npaís de origen o estatus migratorio.\n¿Cómo califico para un descuento?\nLos descuentos se determinan por los ingresos y el tamaño de la familia. Abajo se muestran los límites de\nlos ingresos anuales:\nTamaño de\nla familia\nIngresos en $ nivel\nde pobreza HHS 150 % 200 % 300 %\n1 $15,060 $22,590 $30,120 $45,180\n2 $20,440 $30,660 $40,880 $61,320\n3 $25,820 $38,730 $51,640 $77,460\n4 $31,200 $46,800 $62,400 $93,600\n5 $36,580 $54,870 $73,160 $109,740\n6 $41,960 $62,940 $83,920 $125,880\n7 $47,340 $71,010 $94,680 $142,020\n8 $52,720 $79,080 $105,440 $158,160\n* Para más de 8 personas, agregue $5,140 más por cada una\n¿Qué pasa si exc",
+              "export_verification": "snapshot_hash_verified"
+            },
+            {
+              "snapshot_id": "29cc78ee470555f1c1aaa3626ec55c460395c6361998981dd55f9c28259bc15c",
+              "sha256": "29cc78ee470555f1c1aaa3626ec55c460395c6361998981dd55f9c28259bc15c",
+              "url": "https://erhny.org/wp-content/uploads/2024/12/Hospital-Financial-Assistance-FINAL-11.24.pdf",
+              "retrieved_at": "2026-11-08T16:58:34.248881+00:00",
+              "publisher_updated_at": null,
+              "locator": "page 2",
+              "quote": " the time of registration as well as at\nthe point of discharge. Financial assistance information is also posted in the Hospital, on patient\nstatements, as well as our Hospital website. ERH uses the New York State Uniform Financial\nAssistance Application (“Financial Assistance application”) which can be requested while at ERH\nor by phone.\n2. Patient Accounting will review the patient’s information for possible insurance coverage and other\nself-pay options, such as credit cards and payment plans. After all third party and personal\nresources have been exhausted, the patient will be evaluated for Medicaid or another publicly\nsubsidized insurance program. Patient must cooperate in applying for coverage as a condition for\napplying for financial assistance.\na. If Medicaid or another publicly subsidized insurance plan denies the application due to\nnot qualifying, the patient/guarantor is respons",
+              "export_verification": "snapshot_hash_verified"
+            },
+            {
+              "snapshot_id": "92c273c3345e59f5a450d0ea776304d1d12ee9625d7b0cdb82ca5499bc68f115",
+              "sha256": "92c273c3345e59f5a450d0ea776304d1d12ee9625d7b0cdb82ca5499bc68f115",
+              "url": "https://erhny.org/wp-content/uploads/2024/12/Hospital-Financial-Assistance-Spanish.pdf",
+              "retrieved_at": "2026-11-08T16:58:36.477443+00:00",
+              "publisher_updated_at": null,
+              "locator": "page 2",
+              "quote": "o\nhospitalario, a partir de la fecha del servicio. El paciente puede solicitar asistencia financiera incluso\nsi previamente ha tenido un saldo remitido a una agencia de cobranzas.\nPROCEDIMIENTO:\n1. A todos los pacientes se les proporciona información sobre asistencia financ iera en el momento\ndel registro, así como en el momento del alta. La información sobre asistencia financiera también\nse publica en el Hospital, en los estados de cuenta de los pacientes y en nuestro sitio web. ERH\nutiliza la Solicitud de asistencia financi era uniforme del estado de Nueva York ( “Solicitud de\nasistencia financiera”), que se puede solicitar en ERH o por teléfono.\n2. Contabilidad del Paciente revisará la información del paciente para saber si tiene cobertura de\nseguros y otras opciones de pago por cuenta propia, como tarjetas de crédito y planes de pago.\nUna vez agotados todos los recursos personales y ",
+              "export_verification": "snapshot_hash_verified"
+            },
+            {
+              "snapshot_id": "92c273c3345e59f5a450d0ea776304d1d12ee9625d7b0cdb82ca5499bc68f115",
+              "sha256": "92c273c3345e59f5a450d0ea776304d1d12ee9625d7b0cdb82ca5499bc68f115",
+              "url": "https://erhny.org/wp-content/uploads/2024/12/Hospital-Financial-Assistance-Spanish.pdf",
+              "retrieved_at": "2026-11-08T16:58:36.477443+00:00",
+              "publisher_updated_at": null,
+              "locator": "page 2",
+              "quote": "de terceros, se evaluará si el paciente puede\noptar a Medicaid u otro programa de seguro subsidiado públicamente. El paciente debe cooperar\nen la solicitud de cobertura como condición para solicitar asistencia financiera.\na. Si Medicaid u otro plan de seguro subsidiado públicamente rechaza la solicitud debido\na que no califica, el paciente/garante es responsable de proporcionarle al asesor financiero\nuna copia de la carta de denegación de Medicaid.\nb. Al recibir la carta de negación, el paciente/garante deberá completar oportunamente\nla solicitud de Asistencia Financiera.\nc. El paciente/garante debe entregar prueba de identificación, dirección e ingresos con\nla solicitud.\n• La prueba de identificación aceptable incluye: licencia de conducir,\npasaporte, tarjeta de residente extranjero permanente (Green Card),",
+              "export_verification": "snapshot_hash_verified"
+            }
+          ]
+        },
+        {
+          "measure_id": "posted_materials.no_immigration_status_barrier",
+          "result": "unclear",
+          "explanation": "Found 8 supportive observations; 1 ambiguous observations. Remaining coverage gaps: [{\"url\": \"https://erhny.org/wp-content/uploads/2021/12/2021-ERH-Financial-Assistance-Policy-Procedure-English.pdf\", \"reason\": \"source_not_downloaded\"}] Interpretation questions: Text says immigrant status is not a basis for awarding aid. This is not an explicit immigration exclusion, but its equivalence to the English prohibition on using immigration as an eligibility criterion needs qualified translation review.",
+          "evidence": [
+            {
+              "snapshot_id": "29cc78ee470555f1c1aaa3626ec55c460395c6361998981dd55f9c28259bc15c",
+              "sha256": "29cc78ee470555f1c1aaa3626ec55c460395c6361998981dd55f9c28259bc15c",
+              "url": "https://erhny.org/wp-content/uploads/2024/12/Hospital-Financial-Assistance-FINAL-11.24.pdf",
+              "retrieved_at": "2026-11-08T16:58:34.248881+00:00",
+              "publisher_updated_at": null,
+              "locator": "page 1",
+              "quote": "d solely on eligibility and will not be abridged\non the basis of age, sex, race, creed, disability, national origin, or immigration status. ERH will\nprovide care for emergency conditions regardless of financial status, without discrimination, in\naccordance with EMTALA regulations.\nDEFINITIONS:\nUninsured: A patient who does not have any type of health insurance coverage. Eligibility is based on\nthe patient’s income scale, with discounts available up through 400% of the Federal Poverty Level\n(FPL).\nUnderinsured: A patient who does have health insurance coverage with cost share, such as co-pays,\ncoinsurance and deductibles. Eligibility is based on the patient’s income scale and whether the\npatient’s medical cost share exceeds 10% of their gross income in the past 12 months. If this criteria\nis met, discounts are available up through 400% of the FPL.",
+              "export_verification": "snapshot_hash_verified"
+            },
+            {
+              "snapshot_id": "29cc78ee470555f1c1aaa3626ec55c460395c6361998981dd55f9c28259bc15c",
+              "sha256": "29cc78ee470555f1c1aaa3626ec55c460395c6361998981dd55f9c28259bc15c",
+              "url": "https://erhny.org/wp-content/uploads/2024/12/Hospital-Financial-Assistance-FINAL-11.24.pdf",
+              "retrieved_at": "2026-11-08T16:58:34.248881+00:00",
+              "publisher_updated_at": null,
+              "locator": "page 3",
+              "quote": "n provided in the application in conjunction\nwith the Poverty Guidelines that are issued each year by the Department of Health and Human\nServices (HHS) to determine appropriate discount. Eligibility for financial assistance is determine\nsolely on household income. A patient’s assets, such as their house or car, may not be considered.\nAdditionally, a patient’s immigration status will not be considered when determining the patient’s\neligibility for financial assistance. The most current U.S. Federal Poverty Guidelines used to\ndetermine financial assistance eligibility can be found at:\nLink: https://aspe.hhs.gov/poverty-guidelines.\nThe guidelines will be used in the sliding scale for uninsured and underinsured patients.\nUninsured Guidelines:\nIf applicant:\n Is at 200% or below the FPL, they are entitled to a 100% discount.\n Is between 201-300% of the FPL, responsibility will be 10% of Medi",
+              "export_verification": "snapshot_hash_verified"
+            },
+            {
+              "snapshot_id": "29cc78ee470555f1c1aaa3626ec55c460395c6361998981dd55f9c28259bc15c",
+              "sha256": "29cc78ee470555f1c1aaa3626ec55c460395c6361998981dd55f9c28259bc15c",
+              "url": "https://erhny.org/wp-content/uploads/2024/12/Hospital-Financial-Assistance-FINAL-11.24.pdf",
+              "retrieved_at": "2026-11-08T16:58:34.248881+00:00",
+              "publisher_updated_at": null,
+              "locator": "page 2",
+              "quote": "ible for supplying the Financial\nCounselor with a copy of the Medicaid denial letter.\nb. Upon receipt of the denial letter, the Financial Assistance application must be\ncompleted in a timely manner by the patient/guarantor.\nc. The patient/guarantor must provide proof of identification, address and income with\ntheir application.\n Acceptable proof of identification includes: Driver license, passport,\npermanent resident alien card (Green Card), birth certificate, photo ID. At\nleast ONE from this list must be supplied.\n Acceptable proof of address/residency includes: utility bills, cell phone bills,\ncable television bill, rent receipt, copy of lease or mortgage papers, notarized",
+              "export_verification": "snapshot_hash_verified"
+            },
+            {
+              "snapshot_id": "92c273c3345e59f5a450d0ea776304d1d12ee9625d7b0cdb82ca5499bc68f115",
+              "sha256": "92c273c3345e59f5a450d0ea776304d1d12ee9625d7b0cdb82ca5499bc68f115",
+              "url": "https://erhny.org/wp-content/uploads/2024/12/Hospital-Financial-Assistance-Spanish.pdf",
+              "retrieved_at": "2026-11-08T16:58:36.477443+00:00",
+              "publisher_updated_at": null,
+              "locator": "page 1",
+              "quote": "a prestados sin cobro o con\ncobro reducido a los pacientes que no tienen o no pueden obtener los recursos económicos adecuados\nni otros medios para pagar su atención. La asistencia económica parcial o total se basará únicamente\nen la elegibilidad y no se reducirá por edad, sexo, raza, credo, discapacidad, país de origen ni estado\nmigratorio. ERH dará atención para las condiciones médicas de emergencia sin importar el estado\neconómico del paciente, sin discriminación, de acuerdo con las reglamentaciones de EMTALA.\nDEFINICIONES:\nNo tengo seguro: Un paciente que no tiene ningún tipo de cobertura de seguro médico. La elegibilidad\nse basa en la escala de ingresos del paciente, con descuentos disponibles hasta el 400% del Nivel\nFederal de Pobreza (FPL).\nPacientes con seguro insuficiente: Un paciente que tiene cobertura de seguro médico con costos\ncompartidos, como copagos, coaseguros y deducib",
+              "export_verification": "snapshot_hash_verified"
+            },
+            {
+              "snapshot_id": "92c273c3345e59f5a450d0ea776304d1d12ee9625d7b0cdb82ca5499bc68f115",
+              "sha256": "92c273c3345e59f5a450d0ea776304d1d12ee9625d7b0cdb82ca5499bc68f115",
+              "url": "https://erhny.org/wp-content/uploads/2024/12/Hospital-Financial-Assistance-Spanish.pdf",
+              "retrieved_at": "2026-11-08T16:58:36.477443+00:00",
+              "publisher_updated_at": null,
+              "locator": "page 3",
+              "quote": "comprobantes\nde pago recientes (4 si son pagos semanales, 2 si son pagos bisemanales),\nbeneficios por desempleo, carta de aprobación de la Administración del\nSeguro Social/pensión/anualidades.\n3. El asesor económico recibirá la información necesaria junto con la solicitud de asistencia\neconómica. Si se descubre que la información no es verdadera, la solicitud se denegará\nde inmediato.\n4. El asesor económico evaluará la información que se incluya en la solicitud junto con las\nDirectrices de pobreza que publica cada año el Departamento de Salud y Servicios Humanos\n(HHS) para determinar el descuento apropiado. La elegibilidad para recibir asistencia financiera\nse determina únicamente en función del ingreso del grupo familiar. Es posible que no se tengan\nen cuenta los bienes de un paciente, como su casa o su coche. Además, el estatus migratorio\nde un paciente no se considerará al determinar ",
+              "export_verification": "snapshot_hash_verified"
+            },
+            {
+              "snapshot_id": "92c273c3345e59f5a450d0ea776304d1d12ee9625d7b0cdb82ca5499bc68f115",
+              "sha256": "92c273c3345e59f5a450d0ea776304d1d12ee9625d7b0cdb82ca5499bc68f115",
+              "url": "https://erhny.org/wp-content/uploads/2024/12/Hospital-Financial-Assistance-Spanish.pdf",
+              "retrieved_at": "2026-11-08T16:58:36.477443+00:00",
+              "publisher_updated_at": null,
+              "locator": "page 3",
+              "quote": "su elegibilidad para recibir asistencia financiera.\nLas Directrices federales de pobreza más recientes en EE. UU., que se usaron determinar para\nla elegibilidad para asistencia económica, se pueden encontrar en:\nVínculo: https://aspe.hhs.gov/poverty-guidelines.\nLas directrices se usarán en la escala variable para los pacientes sin seguro y seguro insuficiente.\nDirectrices para personas sin seguro:\nSi el solicitante:\n• Está en el 200% o por debajo del FPL, tiene derecho a un descuento del 100%.\n• Está entre 201-300% del FPL, la responsabilidad será del 10% de la tarifa de Medicaid.",
+              "export_verification": "snapshot_hash_verified"
+            },
+            {
+              "snapshot_id": "eebf29d4d7ae77615ba3841de0d93f7029230c0406711ea3d1aa373605f242c1",
+              "sha256": "eebf29d4d7ae77615ba3841de0d93f7029230c0406711ea3d1aa373605f242c1",
+              "url": "https://erhny.org/wp-content/uploads/2024/12/ERH-FA-APP-English.pdf",
+              "retrieved_at": "2026-11-08T16:58:37.206270+00:00",
+              "publisher_updated_at": null,
+              "locator": "page 3",
+              "quote": "ncome\nlevels higher than those specified below and/or to provide greater payment discounts for\neligible patients than those required by Public Health Law. Additionally, immigration status\nshall not be an eligibility criterion for the purpose of determining financial assistance.\nThe following individuals are eligible:\n Low-income individuals without health insurance; or\n Underinsured individuals (out-of-pocket medical costs accumulated in the past twelve\nmonths that amount to more than ten percent (10%) of such individual’s gross annual\nincome) or;\n Those who have exhausted their health insurance benefits, and who can demonstrate\nan inability to pay full charges; or\n At the hospital’s discretion, individuals who can demonstrate an inability to pay their\ncopay and/or deductible can request a reduced or discounted payment.",
+              "export_verification": "snapshot_hash_verified"
+            },
+            {
+              "snapshot_id": "771f2f39d5fbb2f1044eefa5d7254c5c8052d1a3680224410f9ea10640536555",
+              "sha256": "771f2f39d5fbb2f1044eefa5d7254c5c8052d1a3680224410f9ea10640536555",
+              "url": "https://erhny.org/wp-content/uploads/2024/12/ERH-FA-APP-Spanish.pdf",
+              "retrieved_at": "2026-11-08T16:58:37.879417+00:00",
+              "publisher_updated_at": null,
+              "locator": "page 3",
+              "quote": "egibilidad de los pacientes para\ndescuentos de pago en niveles de ingresos más altos que los especificados abajo o para dar más\ndescuentos a pacientes elegibles que los establecidos por la Ley de Salud Pública. Además, el\nestatus migratorio no será un criterio de elegibilidad para determinar la ayuda económica.\nLas siguientes personas son elegibles:\n• Personas de bajos ingresos sin seguro médico; o\n• Personas con seguro insuficiente (gastos médicos de bolsillo acumulados en los últimos\ndoce meses que ascienden a más del diez por ciento (10 %) del ingreso bruto anual de\nesa persona); o\n• Los que han agotado sus beneficios de seguro médico y que pueden demostrar que no\npueden pagar todos los cargos; o",
+              "export_verification": "snapshot_hash_verified"
+            },
+            {
+              "snapshot_id": "0938950766a70636fc92c35154deab6fc9438ffe2c2ee50a948db98e886f1d8e",
+              "sha256": "0938950766a70636fc92c35154deab6fc9438ffe2c2ee50a948db98e886f1d8e",
+              "url": "https://erhny.org/wp-content/uploads/2024/12/ERH-FA-APP-Polish.pdf",
+              "retrieved_at": "2026-11-08T16:58:38.504894+00:00",
+              "publisher_updated_at": null,
+              "locator": "page 3",
+              "quote": "s: 888 -614-5400.\nKto się kwalifikuje\nSzpitala nie obowiązują ograniczenia w zakresie ustalania kwalifikowalności pacjentów do\nobniżenia kwoty płatności w przypadku wyższych poziomów dochodów niż określone poniżej\ni/lub dodatkowego obniżenia płatności należnych od kwalifikujących się pacjentów niż te\nwymagane przez ustawę o ochronie zdrowia publicznego. Dodatkowo status imigranta nie\nstanowi kryterium kwalifikowalności do celów uzyskania pomocy finansowej.\nKwalifikują się następujące osoby:\n• osoby o niskim poziomie dochodów bez ubezpieczenia zdrowotnego;\n• osoby nieubezpieczone (dodatkowe koszty własne leczenia nagromadzone w ciągu\nostatnich 12 miesięcy w kwocie przewyższającej dziesięć procent (10%) wysokości\nrocznego dochodu takiej osoby);\n• osoby, które wyczerpały świadczenia z tytułu ubezpieczenia zdrowotnego i które są\nw stanie wykazać niezdolność do opłacenia kosztów w pełnej kwoc",
+              "export_verification": "snapshot_hash_verified"
+            },
+            {
+              "snapshot_id": "ae4fffcbb353785edf46ad99e1b73ff3ed2e6d54539fe995fa0ca1300aa63058",
+              "sha256": "ae4fffcbb353785edf46ad99e1b73ff3ed2e6d54539fe995fa0ca1300aa63058",
+              "url": "https://erhny.org/wp-content/uploads/2024/12/ERH-FA-APP-Russian.pdf",
+              "retrieved_at": "2026-11-08T16:58:39.790777+00:00",
+              "publisher_updated_at": null,
+              "locator": "page 3",
+              "quote": "итесь с офисом по вопросам\nфинансовой помощи Ellenville Regional Hospital по номеру (845) 210-4930.\n• Если вам нужна дополнительная помощь с этим заявлением или помощь в\nобжаловании решения, можете связаться с нашей Программой защиты интересов\nнаселения в области здравоохранения (Community Health Advocates ) по номеру\n888-614-5400.\nПраво на участие\nНичто не ограничивает возможности медицинского учреждения устанавливать право\nпациента на получение скидок на оплату в зависимости от уровня дохода, который\nпревышает указанный ниже, и (или) предоставлять пациентам, которые имеют на это\nправо, скидки на оплату больше, чем это требуется в соответствии с Законом об\nобщественном здравоохранении (Public Health Law). Кроме того, иммиграционный статус\nне является критерием соответствия требованиям для определения финансовой помощи.",
+              "export_verification": "snapshot_hash_verified"
+            },
+            {
+              "snapshot_id": "43520848e6f87fae9b2c60b93e3c69138f1a425eba7fadc8ac5e57513bb9a883",
+              "sha256": "43520848e6f87fae9b2c60b93e3c69138f1a425eba7fadc8ac5e57513bb9a883",
+              "url": "https://erhny.org/wp-content/uploads/2024/01/2024-ERH-FA-Summary-English.pdf",
+              "retrieved_at": "2026-11-08T16:58:40.505993+00:00",
+              "publisher_updated_at": null,
+              "locator": "page 1",
+              "quote": ", Greene and Columbia counties. Anyone can apply, regardless of age, race,\ngender, creed, disability, national origin, or immigrant status.\nHow do I qualify for a discount?\nDiscounts are determined by income and family size. Below are the annual income limits:\nFamily Size HHS Poverty Income $ 150% 200% 300%\n1 $15,060 $22,590 $30,120 $45,180\n2 $20,440 $30,660 $40,880 $61,320\n3 $25,820 $38,730 $51,640 $77,460\n4 $31,200 $46,800 $62,400 $93,600\n5 $36,580 $54,870 $73,160 $109,740\n6 $41,960 $62,940 $83,920 $125,880\n7 $47,340 $71,010 $94,680 $142,020\n8 $52,720 $79,080 $105,440 $158,160\n* For more than 8 persons, add $5,140 for each additional person\nWhat happens if I exceed these limits?\nEllenville Regional Hospital offers flexible payment schedules in the event that you do not qualify for\nfinancial assistance or are unable to pay your bill, regardless of your income.\nCan someone explain the di",
+              "export_verification": "snapshot_hash_verified"
+            },
+            {
+              "snapshot_id": "e0c54eef21e7db1cdb65f37f777251556e63d77ddd381c5a4ae97fb34fc5bd13",
+              "sha256": "e0c54eef21e7db1cdb65f37f777251556e63d77ddd381c5a4ae97fb34fc5bd13",
+              "url": "https://erhny.org/wp-content/uploads/2024/01/2024-ERH-FA-Summary-Spanish.pdf",
+              "retrieved_at": "2026-11-08T16:58:41.232683+00:00",
+              "publisher_updated_at": null,
+              "locator": "page 1",
+              "quote": "vicios médicos necesarios, se da asistencia dentro de nuestra área\nprincipal de servicio de los condados de Ulster, Dutchess, Orange, Sullivan, Delaware, Greene y Columbia.\nCualquiera puede enviar una solicitud, independientemente de su edad, raza, sexo, credo, discapacidad,\npaís de origen o estatus migratorio.\n¿Cómo califico para un descuento?\nLos descuentos se determinan por los ingresos y el tamaño de la familia. Abajo se muestran los límites de\nlos ingresos anuales:\nTamaño de\nla familia\nIngresos en $ nivel\nde pobreza HHS 150 % 200 % 300 %\n1 $15,060 $22,590 $30,120 $45,180\n2 $20,440 $30,660 $40,880 $61,320\n3 $25,820 $38,730 $51,640 $77,460\n4 $31,200 $46,800 $62,400 $93,600\n5 $36,580 $54,870 $73,160 $109,740\n6 $41,960 $62,940 $83,920 $125,880\n7 $47,340 $71,010 $94,680 $142,020\n8 $52,720 $79,080 $105,440 $158,160\n* Para más de 8 personas, agregue $5,140 más por cada una\n¿Qué pasa si exc",
+              "export_verification": "snapshot_hash_verified"
+            },
+            {
+              "snapshot_id": "9d77607cd5b4448934e26bbfdd603dc0df75c80baee4e6762878ced7ab494fb1",
+              "sha256": "9d77607cd5b4448934e26bbfdd603dc0df75c80baee4e6762878ced7ab494fb1",
+              "url": "https://erhny.org/wp-content/uploads/2024/12/ERH-FA-APP-Ukrainian.pdf",
+              "retrieved_at": "2026-11-08T16:58:39.144499+00:00",
+              "publisher_updated_at": null,
+              "locator": "page 3",
+              "quote": "ога, щоб заповнити заявку або оскаржити\nрішення, телефонуйте адвокатам із питань громадського здоров’я (Community\nHealth Advocates) за номером 888-614-5400.\nВимоги прийнятності\nАдміністрація лікарні може встановити, що пацієнт відповідає критеріям для отримання\nзнижки на певні послуги в розмірі, що перевищує зазначений нижче, і/або може також\nнадавати пільги в більшому розмірі (порівняно з допомогою, яку передбачено Законом\nпро охорону здоров’я [Public Health Law]) тим пацієнтам, які мають на це право. Крім того,\nстатус іммігранта не є підставою для призначення фінансової допомоги.\nПодати заявку можуть такі особи:\n• Пацієнти з низьким рівнем доходу, які не мають медичного страхування;\n• Недостатньо застраховані особи, які за останні 12 місяців оплачували медичні\nпослуги за свій кошт (сума становить більше 10% (десяти відсотків) від валового\nрічного доходу);",
+              "export_verification": "snapshot_hash_verified"
+            }
+          ]
+        },
+        {
+          "measure_id": "posted_materials.primary_service_area_boundaries_compliant",
+          "result": "unclear",
+          "explanation": "Statute references commissioner criteria; a county list alone does not establish compliance.",
+          "evidence": []
+        }
+      ],
+      "affected_measures": [
+        "posted_materials.no_submission_time_limit",
+        "posted_materials.no_evidence_of_asset_checks",
+        "posted_materials.no_immigration_status_barrier",
+        "posted_materials.primary_service_area_boundaries_compliant"
+      ],
+      "landing_page": [
+        {
+          "url": "https://erhny.org/patient-guests/financial-assistance-program/",
+          "retrieved_at": "2026-11-08T16:58:33.572258+00:00",
+          "publisher_updated_at": null
+        }
+      ]
+    },
+    {
+      "hospital_key": "1002",
+      "record_id": "a874de11b1371dd6d7266ba329adca89ae9e1b9bb96c04d2ced88933aeb4b0e3",
+      "artifact_path": "cross-document-reviews/1002/7b714f38219d4565bd479fa8f66c2e05.json",
+      "kind": "cross-document-reviews",
+      "scope": "cross-document-reviews",
+      "scope_label": "Cross-document review (excerpt coverage)",
+      "guideline_year": 2026,
+      "checked_at": "2026-11-08T18:41:15.207600+00:00",
+      "review_date": null,
+      "status": "completed",
+      "error": null,
+      "findings": [
+        {
+          "measure_id": "posted_materials.consistent_across_documents",
+          "result": "no",
+          "explanation": "Displayed-table mismatch, not proof all assistance above 300% is denied.",
+          "evidence": [
+            {
+              "snapshot_id": "29cc78ee470555f1c1aaa3626ec55c460395c6361998981dd55f9c28259bc15c",
+              "sha256": "29cc78ee470555f1c1aaa3626ec55c460395c6361998981dd55f9c28259bc15c",
+              "url": "https://erhny.org/wp-content/uploads/2024/12/Hospital-Financial-Assistance-FINAL-11.24.pdf",
+              "retrieved_at": "2026-11-08T16:58:34.248881+00:00",
+              "publisher_updated_at": null,
+              "locator": "page 3",
+              "quote": "he sliding scale for uninsured and underinsured patients.\nUninsured Guidelines:\nIf applicant:\n Is at 200% or below the FPL, they are entitled to a 100% discount.\n Is between 201-300% of the FPL, responsibility will be 10% of Medicaid rate.\n Is between 301-400% of the FPL, responsibility will be 20% of Medicaid rate.\n Exceeds 400% of the FPL, no discount will be applied.\nUnderinsured Guidelines:\nIf applicant:\n Is at 200% or below the FPL, they are entitled to a 100% discount.\n Is between 201-300% of the FPL, responsibility will be 10% of all cost share.\n Is between 301-400% of the FPL, responsibility will be 20% of all cost share.",
+              "export_verification": "snapshot_hash_verified"
+            },
+            {
+              "snapshot_id": "eebf29d4d7ae77615ba3841de0d93f7029230c0406711ea3d1aa373605f242c1",
+              "sha256": "eebf29d4d7ae77615ba3841de0d93f7029230c0406711ea3d1aa373605f242c1",
+              "url": "https://erhny.org/wp-content/uploads/2024/12/ERH-FA-APP-English.pdf",
+              "retrieved_at": "2026-11-08T16:58:37.206270+00:00",
+              "publisher_updated_at": null,
+              "locator": "page 4",
+              "quote": "Page 4 of 5\nIndividuals up to 400% of the federal poverty level are eligible for financial assistance.\nFederal Poverty Levels (2024)\nHousehold Size 200% 300% 400%\n1 Person $30,120 $45,180 $60,240\n2 Persons $40,880 $61,320 $81,760\n3 Persons $51,640 $77,460 $103,280\n4 Persons $62,400 $93,600 $124,800\n5 Persons $73,160 $109,740 $146,320\n6 Persons $83,920 $125,880 $167,840\n7 Persons $94,680 $142,020 $189,360\nUpdated annually: https://aspe.hhs.gov/topics/poverty-economic-mobility/poverty-guidelines\nMinimum Discount Rates\nIf you qualify for financial assistance, your charges will be reduced according to your income on\na sliding fee scale as follows:\nIncome Level Payment\nBelow 200% ",
+              "export_verification": "snapshot_hash_verified"
+            },
+            {
+              "snapshot_id": "43520848e6f87fae9b2c60b93e3c69138f1a425eba7fadc8ac5e57513bb9a883",
+              "sha256": "43520848e6f87fae9b2c60b93e3c69138f1a425eba7fadc8ac5e57513bb9a883",
+              "url": "https://erhny.org/wp-content/uploads/2024/01/2024-ERH-FA-Summary-English.pdf",
+              "retrieved_at": "2026-11-08T16:58:40.505993+00:00",
+              "publisher_updated_at": null,
+              "locator": "page 1",
+              "quote": "migrant status.\nHow do I qualify for a discount?\nDiscounts are determined by income and family size. Below are the annual income limits:\nFamily Size HHS Poverty Income $ 150% 200% 300%\n1 $15,060 $22,590 $30,120 $45,180\n2 $20,440 $30,660 $40,880 $61,320\n3 $25,820 $38,730 $51,640 $77,460\n4 $31,200 $46,800 $62,400 $93,600\n5 $36,580 $54,870 $73,160 $109,740\n6 $41,960 $62,940 $83,920 $125,880\n7 $47,340 $71,010 $94,680 $142,020\n8 $52,720 $79,080 $105,440 $158,160\n* For more than 8 persons, add $5,140 for each additional person\nWhat happens if I exceed these limits?\nEllenville Regional Hospital offers flexible payment schedules in the event that you do not qualify for\nfinancial assistance or are unable to pay your bill, regardless of your income.\nCan someone explain the discount or help me apply?\nYes, free confidential help is av",
+              "export_verification": "snapshot_hash_verified"
+            }
+          ]
+        },
+        {
+          "measure_id": "posted_materials.primary_service_area_boundaries_compliant",
+          "result": "unclear",
+          "explanation": "Assessment against an approved boundary rule is lacking in this pilot.",
+          "evidence": [
+            {
+              "snapshot_id": "43520848e6f87fae9b2c60b93e3c69138f1a425eba7fadc8ac5e57513bb9a883",
+              "sha256": "43520848e6f87fae9b2c60b93e3c69138f1a425eba7fadc8ac5e57513bb9a883",
+              "url": "https://erhny.org/wp-content/uploads/2024/01/2024-ERH-FA-Summary-English.pdf",
+              "retrieved_at": "2026-11-08T16:58:40.505993+00:00",
+              "publisher_updated_at": null,
+              "locator": "page 1",
+              "quote": "more, should you have any additional\nquestions not addressed in this summary.\nWho can apply for financial assistance?\nFinancial assistance is offered to all patients who reside in New York State for emergency services. For all\nother necessary medical services, assistance is offered within our primary service area of Ulster, Dutchess,\nOrange, Sullivan, Delaware, Greene and Columbia counties. Anyone can apply, regardless of age, race,\ngender, creed, disability, national origin, or immigrant status.\nHow do I qualify for a discount?\nDiscounts are determined by income and family size. Below are the annual income limits:\nFamily Size HHS Poverty Income $ 150% 200% 300%\n1 $15,060 $22,590 $30,120 $45,180\n2 $20,440 $30,660 $40,880 $61,320\n3 $25,820 $38,730 $51,640 $77,460\n4 $31,200 $46,800 $62,400 $93,600\n5 $36,580 $54,870 $73,160 $109,",
+              "export_verification": "snapshot_hash_verified"
+            }
+          ]
+        },
+        {
+          "measure_id": "posted_materials.no_submission_time_limit",
+          "result": "unclear",
+          "explanation": "A 180-day delay before collections is NOT an application deadline.",
+          "evidence": [
+            {
+              "snapshot_id": "eebf29d4d7ae77615ba3841de0d93f7029230c0406711ea3d1aa373605f242c1",
+              "sha256": "eebf29d4d7ae77615ba3841de0d93f7029230c0406711ea3d1aa373605f242c1",
+              "url": "https://erhny.org/wp-content/uploads/2024/12/ERH-FA-APP-English.pdf",
+              "retrieved_at": "2026-11-08T16:58:37.206270+00:00",
+              "publisher_updated_at": null,
+              "locator": "page 3",
+              "quote": "Page 3 of 5\nMinimum Eligibility and Guidelines\nApplication Timeline, Patient Rights, and Confidentiality\n You can apply for financial assistance at any point during the collection process.\n You do not have to make any payment to this hospital until you receive a decision on\nyour application for financial assistance. Hospitals may not forward accounts to\ncollection while your application is pending.\n If you are denied financial assistance, you have the right to appeal. Information on how\nto do so will be included in the hospital’s notice you receive. You may have the right to\nappeal the amount of your financial assistance. The hospital will include information\nabout how to appeal in their decision letter.\n Hospitals cannot send unpaid bills to a collection agency for at least 180 days after your\nfirst bill.\n Hospitals are ",
+              "export_verification": "snapshot_hash_verified"
+            },
+            {
+              "snapshot_id": "29cc78ee470555f1c1aaa3626ec55c460395c6361998981dd55f9c28259bc15c",
+              "sha256": "29cc78ee470555f1c1aaa3626ec55c460395c6361998981dd55f9c28259bc15c",
+              "url": "https://erhny.org/wp-content/uploads/2024/12/Hospital-Financial-Assistance-FINAL-11.24.pdf",
+              "retrieved_at": "2026-11-08T16:58:34.248881+00:00",
+              "publisher_updated_at": null,
+              "locator": "page 2",
+              "quote": "her publicly subsidized insurance program. Patients may contact and schedule an\nappointment with a Financial Counselor if needed.\nThe patient may apply for financial assistance at anytime during the hospital collection process,\nstarting from the date of service. The patient may apply for financial assistance even if they have\npreviously had a balance referred to a collection agency.\nPROCEDURE:\n1. All patients are provided financial assistance information at the time of registration as well as at\nthe point of discharge. Financial assistance information is also posted in the Hospital, on patient\nstatements, as well as our Hospital website. ERH uses the New York State Uniform Financial\nAssistance Application (“Financial Assistance application”) which can be requested while at ERH\nor by phone.\n2. Patient Accounting will review th",
+              "export_verification": "snapshot_hash_verified"
+            }
+          ]
+        },
+        {
+          "measure_id": "posted_materials.no_evidence_of_asset_checks",
+          "result": "unclear",
+          "explanation": "Favorable evidence but full review coverage remains incomplete.",
+          "evidence": [
+            {
+              "snapshot_id": "29cc78ee470555f1c1aaa3626ec55c460395c6361998981dd55f9c28259bc15c",
+              "sha256": "29cc78ee470555f1c1aaa3626ec55c460395c6361998981dd55f9c28259bc15c",
+              "url": "https://erhny.org/wp-content/uploads/2024/12/Hospital-Financial-Assistance-FINAL-11.24.pdf",
+              "retrieved_at": "2026-11-08T16:58:34.248881+00:00",
+              "publisher_updated_at": null,
+              "locator": "page 3",
+              "quote": "r by the Department of Health and Human\nServices (HHS) to determine appropriate discount. Eligibility for financial assistance is determine\nsolely on household income. A patient’s assets, such as their house or car, may not be considered.\nAdditionally, a patient’s immigration status will not be considered when determining the patient’s\neligibility for financial assistance. The most current U.S. Federal Poverty Guidelines used to\ndetermine financial assistance eligibility can be found at:\nLink: https://aspe.hhs.gov/poverty-guidelines.\nThe guidelines will be used in the sliding scale for uninsured and underinsured patients.\nUninsured Guidelines:\nIf applicant:\n Is at 200% or below the FPL, they are entitled to a 100% discount.\n Is between 201-300% of the FPL, responsibility will be 10% of Medicaid rate.\n Is between 301-400%",
+              "export_verification": "snapshot_hash_verified"
+            }
+          ]
+        },
+        {
+          "measure_id": "posted_materials.no_immigration_status_barrier",
+          "result": "unclear",
+          "explanation": "Favorable evidence but full review coverage remains incomplete.",
+          "evidence": [
+            {
+              "snapshot_id": "29cc78ee470555f1c1aaa3626ec55c460395c6361998981dd55f9c28259bc15c",
+              "sha256": "29cc78ee470555f1c1aaa3626ec55c460395c6361998981dd55f9c28259bc15c",
+              "url": "https://erhny.org/wp-content/uploads/2024/12/Hospital-Financial-Assistance-FINAL-11.24.pdf",
+              "retrieved_at": "2026-11-08T16:58:34.248881+00:00",
+              "publisher_updated_at": null,
+              "locator": "page 1",
+              "quote": "heir\ncare. Partial or full Financial Assistance will be based solely on eligibility and will not be abridged\non the basis of age, sex, race, creed, disability, national origin, or immigration status. ERH will\nprovide care for emergency conditions regardless of financial status, without discrimination, in\naccordance with EMTALA regulations.\nDEFINITIONS:\nUninsured: A patient who does not have any type of health insurance coverage. Eligibility is based on\nthe patient’s income scale, with discounts available up through 400% of the Federal Poverty Level\n(FPL).\nUnderinsured: A patient who does have health insurance coverage with cost share, such as co-pays,\ncoinsurance and deductibles. Eligibility is based on the patient’s income scale and whether the\npatient’s medical cost share exceeds 10% of their gross income in the past 12 mon",
+              "export_verification": "snapshot_hash_verified"
+            },
+            {
+              "snapshot_id": "43520848e6f87fae9b2c60b93e3c69138f1a425eba7fadc8ac5e57513bb9a883",
+              "sha256": "43520848e6f87fae9b2c60b93e3c69138f1a425eba7fadc8ac5e57513bb9a883",
+              "url": "https://erhny.org/wp-content/uploads/2024/01/2024-ERH-FA-Summary-English.pdf",
+              "retrieved_at": "2026-11-08T16:58:40.505993+00:00",
+              "publisher_updated_at": null,
+              "locator": "page 1",
+              "quote": " necessary medical services, assistance is offered within our primary service area of Ulster, Dutchess,\nOrange, Sullivan, Delaware, Greene and Columbia counties. Anyone can apply, regardless of age, race,\ngender, creed, disability, national origin, or immigrant status.\nHow do I qualify for a discount?\nDiscounts are determined by income and family size. Below are the annual income limits:\nFamily Size HHS Poverty Income $ 150% 200% 300%\n1 $15,060 $22,590 $30,120 $45,180\n2 $20,440 $30,660 $40,880 $61,320\n3 $25,820 $38,730 $51,640 $77,460\n4 $31,200 $46,800 $62,400 $93,600\n5 $36,580 $54,870 $73,160 $109,740\n6 $41,960 $62,940 $83,920 $125,880\n7 $47,340 $71,010 $94,680 $142,020\n8 $52,720 $79,080 $105,440 $158,160\n* For more than 8 persons, add $5,140 for each additional person\nWhat happens if I exceed these limits?\nEllenville Regional ",
+              "export_verification": "snapshot_hash_verified"
+            }
+          ]
+        }
+      ],
+      "affected_measures": [
+        "posted_materials.consistent_across_documents",
+        "posted_materials.primary_service_area_boundaries_compliant",
+        "posted_materials.no_submission_time_limit",
+        "posted_materials.no_evidence_of_asset_checks",
+        "posted_materials.no_immigration_status_barrier"
+      ],
+      "landing_page": [
+        {
+          "url": "https://erhny.org/patient-guests/financial-assistance-program/",
+          "retrieved_at": "2026-11-08T16:58:33.572258+00:00",
+          "publisher_updated_at": null
+        }
+      ]
+    },
+    {
+      "hospital_key": "1002",
+      "record_id": "b32d42a166e4ccc13c20814de378a13dde86a5927898ed944b90a787665549cf",
+      "artifact_path": "docs/audit-format/posting/1002.json",
+      "kind": "posting",
+      "scope": "posting",
+      "scope_label": "Posted document links",
+      "guideline_year": 2026,
+      "checked_at": "2026-11-09T00:40:28.762240+00:00",
+      "review_date": "2026-11-09",
+      "status": "completed",
+      "error": null,
+      "findings": [
+        {
+          "measure_id": "posted_materials.application_posted",
+          "result": "yes",
+          "explanation": "Saved landing links resolve to content-confirmed application documents.",
+          "evidence": [
+            {
+              "snapshot_id": "1a6a6f351a48cad4781f0116af7c6337fe3c818f55f89e73aeb6891b557b18af",
+              "sha256": "85e3cb672aa4ffce870031aa7fcaf17fe0da115318f08bfb87b9431c995b1502",
+              "url": "https://erhny.org/patient-guests/financial-assistance-program/",
+              "retrieved_at": "2026-11-09T00:38:56.770680+00:00",
+              "publisher_updated_at": null,
+              "locator": "link https://erhny.org/wp-content/uploads/2024/12/ERH-FA-APP-English.pdf",
+              "quote": "English",
+              "export_verification": "original_snapshot_unavailable"
+            },
+            {
+              "snapshot_id": "6774ed596b247acbe07d0ee2766abe2efcc81ac3029b712b62966b14f0c9a277",
+              "sha256": "eebf29d4d7ae77615ba3841de0d93f7029230c0406711ea3d1aa373605f242c1",
+              "url": "https://erhny.org/wp-content/uploads/2024/12/ERH-FA-APP-English.pdf",
+              "retrieved_at": "2026-11-09T00:39:13.106234+00:00",
+              "publisher_updated_at": null,
+              "locator": "page 1",
+              "quote": "NYS Uniform Hospital Financial Assistance Application",
+              "export_verification": "snapshot_hash_verified"
+            },
+            {
+              "snapshot_id": "1a6a6f351a48cad4781f0116af7c6337fe3c818f55f89e73aeb6891b557b18af",
+              "sha256": "85e3cb672aa4ffce870031aa7fcaf17fe0da115318f08bfb87b9431c995b1502",
+              "url": "https://erhny.org/patient-guests/financial-assistance-program/",
+              "retrieved_at": "2026-11-09T00:38:56.770680+00:00",
+              "publisher_updated_at": null,
+              "locator": "link https://erhny.org/wp-content/uploads/2024/12/ERH-FA-APP-Spanish.pdf",
+              "quote": "Spanish",
+              "export_verification": "original_snapshot_unavailable"
+            },
+            {
+              "snapshot_id": "c87b71b42253256771ba313b85a3c5570fd641d4da3dd198a7bb9466369b78fd",
+              "sha256": "771f2f39d5fbb2f1044eefa5d7254c5c8052d1a3680224410f9ea10640536555",
+              "url": "https://erhny.org/wp-content/uploads/2024/12/ERH-FA-APP-Spanish.pdf",
+              "retrieved_at": "2026-11-09T00:39:19.765357+00:00",
+              "publisher_updated_at": null,
+              "locator": "page 1",
+              "quote": "Solicitud de ayuda económica de NYS Uniform Hospital",
+              "export_verification": "snapshot_hash_verified"
+            },
+            {
+              "snapshot_id": "1a6a6f351a48cad4781f0116af7c6337fe3c818f55f89e73aeb6891b557b18af",
+              "sha256": "85e3cb672aa4ffce870031aa7fcaf17fe0da115318f08bfb87b9431c995b1502",
+              "url": "https://erhny.org/patient-guests/financial-assistance-program/",
+              "retrieved_at": "2026-11-09T00:38:56.770680+00:00",
+              "publisher_updated_at": null,
+              "locator": "link https://erhny.org/wp-content/uploads/2024/12/ERH-FA-APP-Polish.pdf",
+              "quote": "Polish",
+              "export_verification": "original_snapshot_unavailable"
+            },
+            {
+              "snapshot_id": "81de3d30e1a99859eb99a2df2c4a4b8d11371969d0ee681467fefb66760d4961",
+              "sha256": "0938950766a70636fc92c35154deab6fc9438ffe2c2ee50a948db98e886f1d8e",
+              "url": "https://erhny.org/wp-content/uploads/2024/12/ERH-FA-APP-Polish.pdf",
+              "retrieved_at": "2026-11-09T00:39:24.570384+00:00",
+              "publisher_updated_at": null,
+              "locator": "page 1",
+              "quote": "Jednolity wniosek NYS o pomoc finansową szpitala",
+              "export_verification": "snapshot_hash_verified"
+            },
+            {
+              "snapshot_id": "1a6a6f351a48cad4781f0116af7c6337fe3c818f55f89e73aeb6891b557b18af",
+              "sha256": "85e3cb672aa4ffce870031aa7fcaf17fe0da115318f08bfb87b9431c995b1502",
+              "url": "https://erhny.org/patient-guests/financial-assistance-program/",
+              "retrieved_at": "2026-11-09T00:38:56.770680+00:00",
+              "publisher_updated_at": null,
+              "locator": "link https://erhny.org/wp-content/uploads/2024/12/ERH-FA-APP-Ukrainian.pdf",
+              "quote": "Ukrainian",
+              "export_verification": "original_snapshot_unavailable"
+            },
+            {
+              "snapshot_id": "a8f8485967469748ce9ce6fc6d3fa2755b650d1c90f8767fa4d085f445adccaf",
+              "sha256": "9d77607cd5b4448934e26bbfdd603dc0df75c80baee4e6762878ced7ab494fb1",
+              "url": "https://erhny.org/wp-content/uploads/2024/12/ERH-FA-APP-Ukrainian.pdf",
+              "retrieved_at": "2026-11-09T00:39:27.890691+00:00",
+              "publisher_updated_at": null,
+              "locator": "page 1",
+              "quote": "Заявка на отримання фінансової медичної допомоги від лікарень",
+              "export_verification": "snapshot_hash_verified"
+            },
+            {
+              "snapshot_id": "1a6a6f351a48cad4781f0116af7c6337fe3c818f55f89e73aeb6891b557b18af",
+              "sha256": "85e3cb672aa4ffce870031aa7fcaf17fe0da115318f08bfb87b9431c995b1502",
+              "url": "https://erhny.org/patient-guests/financial-assistance-program/",
+              "retrieved_at": "2026-11-09T00:38:56.770680+00:00",
+              "publisher_updated_at": null,
+              "locator": "link https://erhny.org/wp-content/uploads/2024/12/ERH-FA-APP-Russian.pdf",
+              "quote": "Russian",
+              "export_verification": "original_snapshot_unavailable"
+            },
+            {
+              "snapshot_id": "a839e64bc2589874ede67ace8f72bd3558745779e167156bebf99fb54f594c55",
+              "sha256": "ae4fffcbb353785edf46ad99e1b73ff3ed2e6d54539fe995fa0ca1300aa63058",
+              "url": "https://erhny.org/wp-content/uploads/2024/12/ERH-FA-APP-Russian.pdf",
+              "retrieved_at": "2026-11-09T00:39:31.775089+00:00",
+              "publisher_updated_at": null,
+              "locator": "page 1",
+              "quote": "Заявление на получение финансовой помощи в",
+              "export_verification": "snapshot_hash_verified"
+            }
+          ]
+        },
+        {
+          "measure_id": "posted_materials.policy_summary_posted",
+          "result": "yes",
+          "explanation": "Saved landing links resolve to content-confirmed policy_summary documents.",
+          "evidence": [
+            {
+              "snapshot_id": "1a6a6f351a48cad4781f0116af7c6337fe3c818f55f89e73aeb6891b557b18af",
+              "sha256": "85e3cb672aa4ffce870031aa7fcaf17fe0da115318f08bfb87b9431c995b1502",
+              "url": "https://erhny.org/patient-guests/financial-assistance-program/",
+              "retrieved_at": "2026-11-09T00:38:56.770680+00:00",
+              "publisher_updated_at": null,
+              "locator": "link https://erhny.org/wp-content/uploads/2024/01/2024-ERH-FA-Summary-English.pdf",
+              "quote": "English",
+              "export_verification": "original_snapshot_unavailable"
+            },
+            {
+              "snapshot_id": "3fda5c56ba6e0c3b412b844a31589141458aac589161302fdfca40e16ae3d641",
+              "sha256": "43520848e6f87fae9b2c60b93e3c69138f1a425eba7fadc8ac5e57513bb9a883",
+              "url": "https://erhny.org/wp-content/uploads/2024/01/2024-ERH-FA-Summary-English.pdf",
+              "retrieved_at": "2026-11-09T00:39:36.156029+00:00",
+              "publisher_updated_at": null,
+              "locator": "page 1",
+              "quote": "Financial Assistance Summary",
+              "export_verification": "snapshot_hash_verified"
+            },
+            {
+              "snapshot_id": "1a6a6f351a48cad4781f0116af7c6337fe3c818f55f89e73aeb6891b557b18af",
+              "sha256": "85e3cb672aa4ffce870031aa7fcaf17fe0da115318f08bfb87b9431c995b1502",
+              "url": "https://erhny.org/patient-guests/financial-assistance-program/",
+              "retrieved_at": "2026-11-09T00:38:56.770680+00:00",
+              "publisher_updated_at": null,
+              "locator": "link https://erhny.org/wp-content/uploads/2024/01/2024-ERH-FA-Summary-Spanish.pdf",
+              "quote": "Spanish",
+              "export_verification": "original_snapshot_unavailable"
+            },
+            {
+              "snapshot_id": "e0ded1c16ef9414047b6fd4e0bf4787d2a3c14949b974c77e7b84a3008e613a5",
+              "sha256": "e0c54eef21e7db1cdb65f37f777251556e63d77ddd381c5a4ae97fb34fc5bd13",
+              "url": "https://erhny.org/wp-content/uploads/2024/01/2024-ERH-FA-Summary-Spanish.pdf",
+              "retrieved_at": "2026-11-09T00:39:39.744462+00:00",
+              "publisher_updated_at": null,
+              "locator": "page 1",
+              "quote": "Resumen de asistencia económica",
+              "export_verification": "snapshot_hash_verified"
+            }
+          ]
+        },
+        {
+          "measure_id": "posted_materials.policy_statement_posted",
+          "result": "yes",
+          "explanation": "Saved landing links resolve to content-confirmed policy_statement documents.",
+          "evidence": [
+            {
+              "snapshot_id": "1a6a6f351a48cad4781f0116af7c6337fe3c818f55f89e73aeb6891b557b18af",
+              "sha256": "85e3cb672aa4ffce870031aa7fcaf17fe0da115318f08bfb87b9431c995b1502",
+              "url": "https://erhny.org/patient-guests/financial-assistance-program/",
+              "retrieved_at": "2026-11-09T00:38:56.770680+00:00",
+              "publisher_updated_at": null,
+              "locator": "link https://erhny.org/wp-content/uploads/2024/12/Hospital-Financial-Assistance-FINAL-11.24.pdf",
+              "quote": "Englis",
+              "export_verification": "original_snapshot_unavailable"
+            },
+            {
+              "snapshot_id": "c970bd9ed156f6a5efd42e99fc7fe036466c9ad7ddc55374dc2a9804a91d24b2",
+              "sha256": "29cc78ee470555f1c1aaa3626ec55c460395c6361998981dd55f9c28259bc15c",
+              "url": "https://erhny.org/wp-content/uploads/2024/12/Hospital-Financial-Assistance-FINAL-11.24.pdf",
+              "retrieved_at": "2026-11-09T00:39:00.638458+00:00",
+              "publisher_updated_at": null,
+              "locator": "page 1",
+              "quote": "TITLE: HOSPITAL FINANCIAL ASSISTANCE Page 1 of 6",
+              "export_verification": "snapshot_hash_verified"
+            },
+            {
+              "snapshot_id": "1a6a6f351a48cad4781f0116af7c6337fe3c818f55f89e73aeb6891b557b18af",
+              "sha256": "85e3cb672aa4ffce870031aa7fcaf17fe0da115318f08bfb87b9431c995b1502",
+              "url": "https://erhny.org/patient-guests/financial-assistance-program/",
+              "retrieved_at": "2026-11-09T00:38:56.770680+00:00",
+              "publisher_updated_at": null,
+              "locator": "link https://erhny.org/wp-content/uploads/2024/12/Hospital-Financial-Assistance-Spanish.pdf",
+              "quote": "Spanish",
+              "export_verification": "original_snapshot_unavailable"
+            },
+            {
+              "snapshot_id": "33fe858aeca9db88ce253b580e6941299251a41357594d748fa50c478b0c8045",
+              "sha256": "92c273c3345e59f5a450d0ea776304d1d12ee9625d7b0cdb82ca5499bc68f115",
+              "url": "https://erhny.org/wp-content/uploads/2024/12/Hospital-Financial-Assistance-Spanish.pdf",
+              "retrieved_at": "2026-11-09T00:39:09.479632+00:00",
+              "publisher_updated_at": null,
+              "locator": "page 1",
+              "quote": "TÍTULO: ASISTENCIA ECONÓMICA DEL HOSPITAL Página 1 de 6",
+              "export_verification": "snapshot_hash_verified"
+            }
+          ]
+        }
+      ],
+      "affected_measures": [
+        "posted_materials.application_posted",
+        "posted_materials.policy_summary_posted",
+        "posted_materials.policy_statement_posted"
+      ],
+      "landing_page": [
+        {
+          "url": "https://erhny.org/patient-guests/financial-assistance-program/",
+          "retrieved_at": "2026-11-09T00:38:56.770680+00:00",
+          "publisher_updated_at": null
+        }
+      ]
+    },
+    {
+      "hospital_key": "1002",
+      "record_id": "df33e911ed0dd8c962c4f4e7f8fa10161ba9bc4f1bec1abf14dc907f171d0192",
+      "artifact_path": "docs/audit-format/summaries/1002.json",
+      "kind": "summaries",
+      "scope": "summaries",
+      "scope_label": "English and Spanish summaries",
+      "guideline_year": 2026,
+      "checked_at": "2026-11-09T01:54:24.970266+00:00",
+      "review_date": "2026-11-08",
+      "status": "completed",
+      "error": null,
+      "findings": [
+        {
+          "measure_id": "policy_summary.primary_service_area_described",
+          "result": "yes",
+          "explanation": "Both English and Spanish summaries describe New York State emergency coverage and name seven counties for other medically necessary services. Presence only; no boundary-compliance determination.",
+          "evidence": [
+            {
+              "snapshot_id": "43520848e6f87fae9b2c60b93e3c69138f1a425eba7fadc8ac5e57513bb9a883",
+              "sha256": "43520848e6f87fae9b2c60b93e3c69138f1a425eba7fadc8ac5e57513bb9a883",
+              "url": "https://erhny.org/wp-content/uploads/2024/01/2024-ERH-FA-Summary-English.pdf",
+              "retrieved_at": "2026-11-09T00:39:36.156029+00:00",
+              "publisher_updated_at": "2024-01-17",
+              "locator": "page 1",
+              "quote": "Financial assistance is offered to all patients who reside in New York State for emergency services. For all\nother necessary medical services, assistance is offered within our primary service area of Ulster, Dutchess,\nOrange, Sullivan, Delaware, Greene and Columbia counties. Anyone can apply, regardless of age, race,\ngender, creed, disability, national origin, or immigrant status.",
+              "export_verification": "snapshot_hash_verified"
+            },
+            {
+              "snapshot_id": "e0c54eef21e7db1cdb65f37f777251556e63d77ddd381c5a4ae97fb34fc5bd13",
+              "sha256": "e0c54eef21e7db1cdb65f37f777251556e63d77ddd381c5a4ae97fb34fc5bd13",
+              "url": "https://erhny.org/wp-content/uploads/2024/01/2024-ERH-FA-Summary-Spanish.pdf",
+              "retrieved_at": "2026-11-09T00:39:39.744462+00:00",
+              "publisher_updated_at": "2024-01-17",
+              "locator": "page 1",
+              "quote": "Todos los pacientes que viven en el Estado de New York pueden recibir asistencia económica para servicios\nde emergencia. Para todos los demás servicios médicos necesarios, se da asistencia dentro de nuestra área\nprincipal de servicio de los condados de Ulster, Dutchess, Orange, Sullivan, Delaware, Greene y Columbia.\nCualquiera puede enviar una solicitud, independientemente de su edad, raza, sexo, credo, discapacidad,\npaís de origen o estatus migratorio.",
+              "export_verification": "snapshot_hash_verified"
+            }
+          ]
+        },
+        {
+          "measure_id": "policy_summary.means_of_applying_explained",
+          "result": "yes",
+          "explanation": "Both source-language summaries explain how to obtain an application and where to send the completed application.",
+          "evidence": [
+            {
+              "snapshot_id": "43520848e6f87fae9b2c60b93e3c69138f1a425eba7fadc8ac5e57513bb9a883",
+              "sha256": "43520848e6f87fae9b2c60b93e3c69138f1a425eba7fadc8ac5e57513bb9a883",
+              "url": "https://erhny.org/wp-content/uploads/2024/01/2024-ERH-FA-Summary-English.pdf",
+              "retrieved_at": "2026-11-09T00:39:36.156029+00:00",
+              "publisher_updated_at": "2024-01-17",
+              "locator": "page 2",
+              "quote": "You will need to fill out a financial assistance application. One can be requested/received from the\nhospital or downloaded from our website: www.erhny.org. You will need to provide proof of identify,\naddress and income. Completed applications and documentation can be sent to:\nEllenville Regional Hospital\nAttn: Business Office\n10 Healthy Way\nEllenville, NY 12428",
+              "export_verification": "snapshot_hash_verified"
+            },
+            {
+              "snapshot_id": "e0c54eef21e7db1cdb65f37f777251556e63d77ddd381c5a4ae97fb34fc5bd13",
+              "sha256": "e0c54eef21e7db1cdb65f37f777251556e63d77ddd381c5a4ae97fb34fc5bd13",
+              "url": "https://erhny.org/wp-content/uploads/2024/01/2024-ERH-FA-Summary-Spanish.pdf",
+              "retrieved_at": "2026-11-09T00:39:39.744462+00:00",
+              "publisher_updated_at": "2024-01-17",
+              "locator": "page 2",
+              "quote": "Deberá completar una solicitud de asistencia económica. Puede pedir/recibir una del hospital o\ndescargarla de nuestro sitio web: www.erhny.org. Deberá presentar prueba de identidad, dirección\ne ingresos. Las solicitudes y la documentación completas se pueden enviar a:\nEllenville Regional Hospital\nAttn: Business Office\n10 Healthy Way\nEllenville, NY 12428",
+              "export_verification": "snapshot_hash_verified"
+            }
+          ]
+        },
+        {
+          "measure_id": "policy_summary.income_levels_included",
+          "result": "yes",
+          "explanation": "Both summaries include explicit income levels. This presence check does not validate current-year amounts, discount correctness or maximum eligibility. Ellenville prints a January 17, 2024 revision and 150/200/300% columns.",
+          "evidence": [
+            {
+              "snapshot_id": "43520848e6f87fae9b2c60b93e3c69138f1a425eba7fadc8ac5e57513bb9a883",
+              "sha256": "43520848e6f87fae9b2c60b93e3c69138f1a425eba7fadc8ac5e57513bb9a883",
+              "url": "https://erhny.org/wp-content/uploads/2024/01/2024-ERH-FA-Summary-English.pdf",
+              "retrieved_at": "2026-11-09T00:39:36.156029+00:00",
+              "publisher_updated_at": "2024-01-17",
+              "locator": "page 1",
+              "quote": "Discounts are determined by income and family size. Below are the annual income limits:\nFamily Size HHS Poverty Income $ 150% 200% 300%\n1 $15,060 $22,590 $30,120 $45,180\n2 $20,440 $30,660 $40,880 $61,320\n3 $25,820 $38,730 $51,640 $77,460\n4 $31,200 $46,800 $62,400 $93,600\n5 $36,580 $54,870 $73,160 $109,740\n6 $41,960 $62,940 $83,920 $125,880\n7 $47,340 $71,010 $94,680 $142,020\n8 $52,720 $79,080 $105,440 $158,160\n* For more than 8 persons, add $5,140 for each additional person",
+              "export_verification": "snapshot_hash_verified"
+            },
+            {
+              "snapshot_id": "e0c54eef21e7db1cdb65f37f777251556e63d77ddd381c5a4ae97fb34fc5bd13",
+              "sha256": "e0c54eef21e7db1cdb65f37f777251556e63d77ddd381c5a4ae97fb34fc5bd13",
+              "url": "https://erhny.org/wp-content/uploads/2024/01/2024-ERH-FA-Summary-Spanish.pdf",
+              "retrieved_at": "2026-11-09T00:39:39.744462+00:00",
+              "publisher_updated_at": "2024-01-17",
+              "locator": "page 1",
+              "quote": "Los descuentos se determinan por los ingresos y el tamaño de la familia. Abajo se muestran los límites de\nlos ingresos anuales:\nTamaño de\nla familia\nIngresos en $ nivel\nde pobreza HHS 150 % 200 % 300 %\n1 $15,060 $22,590 $30,120 $45,180\n2 $20,440 $30,660 $40,880 $61,320\n3 $25,820 $38,730 $51,640 $77,460\n4 $31,200 $46,800 $62,400 $93,600\n5 $36,580 $54,870 $73,160 $109,740\n6 $41,960 $62,940 $83,920 $125,880\n7 $47,340 $71,010 $94,680 $142,020\n8 $52,720 $79,080 $105,440 $158,160\n* Para más de 8 personas, agregue $5,140 más por cada una",
+              "export_verification": "snapshot_hash_verified"
+            }
+          ]
+        }
+      ],
+      "affected_measures": [
+        "policy_summary.primary_service_area_described",
+        "policy_summary.means_of_applying_explained",
+        "policy_summary.income_levels_included"
+      ],
+      "landing_page": []
+    }
+  ]
+}

@@ -625,6 +625,20 @@ h2 {
   font-size: 13px;
   line-height: 1.4;
 }
+.content.hospital-selected { grid-template-columns: minmax(0, 1fr); }
+.hospital-selected aside { width: 100%; }
+.hospital-assessment { overflow-wrap: anywhere; }
+.hospital-assessment p, .hospital-assessment li { font-size: 14px; line-height: 1.6; }
+.hospital-assessment summary { cursor: pointer; font-size: 14px; font-weight: 600; }
+.measure-card { padding: 16px; margin: 16px 0; border: 1px solid #c7d8cf; border-radius: 8px; background: #fff; scroll-margin-top: 20px; }
+.measure-card h4 { margin: 0 0 10px; }
+.measure-scope { margin: 16px 0; padding-top: 8px; border-top: 1px solid #c7d8cf; }
+.measure-scope h5 { font-size: 14px; margin: 8px 0; }
+.measure-evidence { margin: 12px 0; }
+.measure-evidence blockquote { margin: 8px 0; padding-left: 12px; border-left: 3px solid #638b76; white-space: pre-line; }
+.measure-result { display: inline-block; padding: 3px 8px; border-radius: 4px; background: #edf1ef; }
+.result-no, .recheck-failed { color: #842b25; background: #fff0ee; }
+.result-yes { color: #205332; background: #edf8ef; }
 .reporting-context {
   margin: 20px 0;
   padding: 16px;
