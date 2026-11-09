@@ -1,0 +1,156 @@
+{
+  "review_id": "wave-one-summary-v1",
+  "reviewer": "GPT-6 Astra model review; human review pending",
+  "review_date": "2026-11-08",
+  "checked_at": "2026-11-09T01:54:24.970266+00:00",
+  "parser_version": "document-text-v5",
+  "scope": "Three summary-content presence measures only; both posted English and Spanish summaries per Wave 1 hospital.",
+  "discovery": {
+    "hospital_key": "362",
+    "discovery_parent_sha256": "226373789547027be6f33106a3360e0716ca85bf64faa1f3f780c17bfbcb710c",
+    "records": [
+      {
+        "url": "https://www.bassett.org/patients-visitors/billing-insurance/financial-assistance/financial-assistance-plain-language",
+        "sha256": "2d93d9880035f4deb81d104430f7bc588b383ce9d6cda560656c47e97659b87b",
+        "artifact_path": "snapshots/2d93d9880035f4deb81d104430f7bc588b383ce9d6cda560656c47e97659b87b.html",
+        "retrieved_at": "2026-11-09T01:52:18.686504+00:00",
+        "publisher_updated_at": null,
+        "content_type": "text/html",
+        "size_bytes": 62991
+      },
+      {
+        "url": "https://www.bassett.org/sites/default/files/2025-03/FAP-Plain-Language-Summary.pdf",
+        "sha256": "b3aef8b3347234aec466321191ad6a7eca495ba6d95bbfb7d19f1d3290ef1733",
+        "artifact_path": "snapshots/b3aef8b3347234aec466321191ad6a7eca495ba6d95bbfb7d19f1d3290ef1733.pdf",
+        "retrieved_at": "2026-11-09T01:52:18.979610+00:00",
+        "publisher_updated_at": null,
+        "content_type": "application/pdf",
+        "size_bytes": 145884
+      },
+      {
+        "url": "https://www.bassett.org/sites/default/files/2025-03/FAP-Plain-Language-Summary-Spanish.pdf",
+        "sha256": "58310a62ee2674f5926f8116c3ea718bf79ebda1cb773f78bbe941bb18f68523",
+        "artifact_path": "snapshots/58310a62ee2674f5926f8116c3ea718bf79ebda1cb773f78bbe941bb18f68523.pdf",
+        "retrieved_at": "2026-11-09T01:52:19.274857+00:00",
+        "publisher_updated_at": null,
+        "content_type": "application/pdf",
+        "size_bytes": 138544
+      }
+    ]
+  },
+  "hospitals": {
+    "1002": {
+      "documents": [
+        {
+          "snapshot_id": "43520848e6f87fae9b2c60b93e3c69138f1a425eba7fadc8ac5e57513bb9a883",
+          "language": "English",
+          "role": "policy_summary",
+          "reviewed_pages": [
+            "page 1",
+            "page 2"
+          ],
+          "visual_review_complete": true,
+          "title_evidence": {
+            "snapshot_id": "43520848e6f87fae9b2c60b93e3c69138f1a425eba7fadc8ac5e57513bb9a883",
+            "locator": "page 1",
+            "quote": "Financial Assistance Summary"
+          },
+          "campus_evidence": {
+            "snapshot_id": "43520848e6f87fae9b2c60b93e3c69138f1a425eba7fadc8ac5e57513bb9a883",
+            "locator": "page 1",
+            "quote": "Financial Assistance Summary\n(Last revised on January 17th,2024)\nEllenville Regional Hospital understands that there are times when patients require care, but lack health\ninsurance or have difficulty paying their bills. Our financial assistance program provides relief up to 100%\nfor qualifying patients based on their income. We can also assist you in applying for Medicaid. Please\ncontact us at (845) 210-4930 and ask for the billing office to find out more, should you have any additional\nquestions not addressed in this summary."
+          },
+          "limitations": "Model source-language review, not certified translation.",
+          "measure_results": {
+            "policy_summary.primary_service_area_described": "yes",
+            "policy_summary.means_of_applying_explained": "yes",
+            "policy_summary.income_levels_included": "yes"
+          }
+        },
+        {
+          "snapshot_id": "e0c54eef21e7db1cdb65f37f777251556e63d77ddd381c5a4ae97fb34fc5bd13",
+          "language": "Spanish",
+          "role": "policy_summary",
+          "reviewed_pages": [
+            "page 1",
+            "page 2"
+          ],
+          "visual_review_complete": true,
+          "title_evidence": {
+            "snapshot_id": "e0c54eef21e7db1cdb65f37f777251556e63d77ddd381c5a4ae97fb34fc5bd13",
+            "locator": "page 1",
+            "quote": "Resumen de asistencia económica"
+          },
+          "campus_evidence": {
+            "snapshot_id": "e0c54eef21e7db1cdb65f37f777251556e63d77ddd381c5a4ae97fb34fc5bd13",
+            "locator": "page 1",
+            "quote": "Resumen de asistencia económica\n(Última revisión: 17 de enero de 2024)\nEllenville Regional Hospital entiende que hay momentos en que los pacientes necesitan atención médica,\npero carecen de seguro médico o tienen dificultades para pagar sus facturas. Nuestro programa da\nasistencia económica hasta del 100 % a los pacientes que califiquen según sus ingresos. También podemos\nayudarlo a presentar una solicitud a Medicaid. Comuníquese con nosotros llamando al (845) 210-4930 y\npregunte por la oficina de facturación para obtener más información si tiene más preguntas que no se\nhayan tratado en este resumen."
+          },
+          "limitations": "Model source-language review, not certified translation.",
+          "measure_results": {
+            "policy_summary.primary_service_area_described": "yes",
+            "policy_summary.means_of_applying_explained": "yes",
+            "policy_summary.income_levels_included": "yes"
+          }
+        }
+      ],
+      "result_file": "1002.json"
+    },
+    "362": {
+      "documents": [
+        {
+          "snapshot_id": "b3aef8b3347234aec466321191ad6a7eca495ba6d95bbfb7d19f1d3290ef1733",
+          "language": "English",
+          "role": "policy_summary",
+          "reviewed_pages": [
+            "page 1"
+          ],
+          "visual_review_complete": true,
+          "title_evidence": {
+            "snapshot_id": "b3aef8b3347234aec466321191ad6a7eca495ba6d95bbfb7d19f1d3290ef1733",
+            "locator": "page 1",
+            "quote": "Bassett Healthcare Network Financial Assistance Policy – Plain Language Summary"
+          },
+          "campus_evidence": {
+            "snapshot_id": "b3aef8b3347234aec466321191ad6a7eca495ba6d95bbfb7d19f1d3290ef1733",
+            "locator": "page 1",
+            "quote": "The Financial Assistance Policy (“FAP”) of Bassett Healthcare Network, which includes The Mary\nImogene Bassett Hospital, d/b/a/ Bassett Medical Center (Bassett), A.O. Fox Memorial Hospital (FOX),\nO’Connor Hospital, Cobleskill Regional Hospital and Little Falls Hospital (collectively \"Bassett Healthcare\nNetwork\") is available to patients who are uninsured or underinsured with a demonstrated inability to\npay. Financial assistance applies to medical necessary services that are provided and billed by the\nentities above including emergency room care."
+          },
+          "limitations": "English income tables are images omitted by text extraction; visually inspected both tables. Income finding cites the explicit extracted eligibility paragraph.",
+          "measure_results": {
+            "policy_summary.primary_service_area_described": "no",
+            "policy_summary.means_of_applying_explained": "yes",
+            "policy_summary.income_levels_included": "yes"
+          }
+        },
+        {
+          "snapshot_id": "58310a62ee2674f5926f8116c3ea718bf79ebda1cb773f78bbe941bb18f68523",
+          "language": "Spanish",
+          "role": "policy_summary",
+          "reviewed_pages": [
+            "page 1",
+            "page 2"
+          ],
+          "visual_review_complete": true,
+          "title_evidence": {
+            "snapshot_id": "58310a62ee2674f5926f8116c3ea718bf79ebda1cb773f78bbe941bb18f68523",
+            "locator": "page 1",
+            "quote": "Política de asistencia financiera de Bassett Healthcare Network – Resumen en lenguaje sencillo"
+          },
+          "campus_evidence": {
+            "snapshot_id": "58310a62ee2674f5926f8116c3ea718bf79ebda1cb773f78bbe941bb18f68523",
+            "locator": "page 1",
+            "quote": "La Política de Asistencia Financiera (Financial Assistance Policy, “FAP”) de Bassett Healthcare Network,\nque incluye The Mary Imogene Bassett Hospital, que opera bajo el nombre comercial de Bassett Medical\nCenter (Bassett), A.O. Fox Memorial Hospital (FOX), O’Connor Hospital, Cobleskill Regional Hospital y\nLittle Falls Hospital (en conjunto, “Bassett Healthcare Network”) está disponible para pacientes que no\ntienen seguro o tienen un seguro insuficiente con una incapacidad de pago demostrada. La asistencia\nfinanciera se aplica a los servicios médicos necesarios que son prestados y facturados por las entidades\nmencionadas anteriormente, incluida la atención en la sala de emergencias."
+          },
+          "limitations": "Model source-language review, not certified translation.",
+          "measure_results": {
+            "policy_summary.primary_service_area_described": "no",
+            "policy_summary.means_of_applying_explained": "yes",
+            "policy_summary.income_levels_included": "yes"
+          }
+        }
+      ],
+      "result_file": "362.json"
+    }
+  }
+}
