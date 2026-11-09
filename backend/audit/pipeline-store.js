@@ -1,3 +1,4 @@
+import { event, recordPublication } from "./run-history.js";
 import { DatabaseSync } from "node:sqlite";
 import { existsSync, readFileSync, mkdirSync, writeFileSync, linkSync, unlinkSync } from "node:fs";
 import { randomUUID } from "node:crypto";
@@ -54,17 +55,19 @@ export function enqueuePipeline(db, { hospital_key, year = 2026, review_date, mo
     const id = Number(db.prepare("INSERT INTO jobs(hospital,year,rule,review_date,context) VALUES(?,?,?,?,?)")
       .run(hospital_key, year, "css-17-v1", review_date, JSON.stringify(context)).lastInsertRowid);
     db.prepare("INSERT INTO pipeline_requests VALUES(?,?,?)").run(request_key, id, hash);
+    event(db, id, null, "queued");
     return id;
   });
 }
 
 /** Fence scan publication with its attempt without writing an assessment or a change event. */
-export function publishScan(db, job, id) {
+export function publishScan(db, job, scan) {
   return transaction(db, () => {
     const result = db.prepare("UPDATE jobs SET status='completed',lease=NULL,error=NULL,checkpoint=? WHERE id=? AND token=? AND status='running'")
-      .run(JSON.stringify({ scan_id: id }), job.id, job.token);
+      .run(JSON.stringify({ scan_id: scan.id }), job.id, job.token);
     if (!result.changes) return false;
     db.prepare("UPDATE attempts SET status='completed',error=NULL WHERE token=?").run(job.token);
+    recordPublication(db, job, scan);
     return true;
   });
 }
@@ -95,6 +98,7 @@ export function publishPipeline(db, job, bundle) {
       }
     }
     db.prepare("UPDATE attempts SET status='completed',error=NULL WHERE token=?").run(job.token);
+    recordPublication(db, job, bundle);
     return true;
   });
 }
@@ -106,6 +110,8 @@ export function failPipeline(db, job) {
     db.prepare("UPDATE jobs SET status=?,lease=NULL,error=?,available_at=? WHERE id=? AND token=?")
       .run(retry.attempts < 3 ? "queued" : "failed", message, Date.now() + 1000 * 2 ** retry.attempts, job.id, job.token);
     db.prepare("UPDATE attempts SET status='failed',error=? WHERE token=?").run(message, job.token);
+    event(db, job.id, job.token, "failed", { reason: message });
+    if (retry.attempts < 3) event(db, job.id, job.token, "retrying", { reason: message });
     return true;
   });
 }
@@ -128,4 +134,17 @@ export function publications(root = pipelineRoot(), { includeSynthetic = process
     const events = db.prepare("SELECT job,output FROM pipeline_events ORDER BY job DESC").all().filter((r) => ids.has(r.job)).map((r) => JSON.parse(r.output));
     return { bundles, failures, events, jobs };
   } finally { db.close(); }
+}
+
+/** Cancel one explicitly selected local run and fence any in-flight publication. */
+export function cancelRun(db, id, root = pipelineRoot()) {
+  return transaction(db, () => {
+    const reason = "Cancelled by local operator";
+    const job = db.prepare(`UPDATE jobs SET status='cancelled',lease=NULL,error=NULL WHERE id=? AND rule='css-17-v1'
+      AND json_extract(context,'$.root')=? AND status IN ('queued','running') RETURNING token`).get(id, resolve(root));
+    if (!job) return false;
+    db.prepare("UPDATE attempts SET status='cancelled',error=? WHERE token=? AND status='running'").run(reason, job.token);
+    event(db, id, job.token, "cancelled", { reason });
+    return true;
+  });
 }

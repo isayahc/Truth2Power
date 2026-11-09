@@ -1,3 +1,4 @@
+import { stage } from "./run-history.js";
 import { readFileSync, existsSync } from "node:fs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -65,7 +66,7 @@ function synthetic(job) {
   return { input, content, producer_records: [], extraction: { mode: "published-fields-v1", note: "Synthetic original structured publications; not a PDF transcription." } };
 }
 
-async function real(job, collect) {
+async function real(db, job, collect) {
   const root = job.context.root, originalRoot = job.context.evidence_root;
   const display = reportingContext(job.hospital), gaps = ["Complete website/online-application discovery and governing interpretations require review; direct links do not prove absence."];
   const facility = facilityFor(job.hospital);
@@ -87,10 +88,14 @@ async function real(job, collect) {
     if (e && !seeds.some((d) => d.source_id === s.url)) seeds.push({ source_id: s.url, role: "landing_page", language: "en", digest: e.sha256, retrieved_at: e.retrieved_at });
   }
   const replay = job.context.mode === "replay", scan = job.context.mode === "discovery_only";
+  stage(db, job, replay ? "load_saved_evidence" : "collect_sources");
   const collection = replay ? savedCollection(originalRoot, job.hospital) : (await collect(root, {
     mode: "live", hospital_key: job.hospital, bounds: job.context.discovery_bounds, discovery_only: scan,
   })).collection;
   const inventory = sourceInventory(facility, collection, seeds);
+  if (collection && !replay) stage(db, job, "collection_saved", { collection_sha256: inventory.collection_sha256,
+    captures: inventory.sources.filter((s) => s.capture_status === "saved").map((s) => ({
+      source_id: s.source_id, sha256: s.digest, retrieved_at: s.retrieved_at })) });
   const documents = inventory.sources;
   gaps.push(...inventory.gaps);
   const classifications = readClassifications(root, job.context.classification_sha256, job.hospital);
@@ -132,6 +137,7 @@ async function real(job, collect) {
   inventory.gaps = [...new Set(gaps)];
   if (scan) return { inventory, discovery: collection };
   input.scope.required_sources = input.sources.map((s) => s.source_id);
+  stage(db, job, "extract_documents");
   const analysis = await bridge(root, { mode: "extract", sources: input.sources, application_review_date: job.review_date });
   const extracted = analysis.sources;
   const content = {};
@@ -239,6 +245,7 @@ export async function runPipeline(db, job, collect = bridge) {
     if (job.checkpoint) {
       const checkpoint = JSON.parse(job.checkpoint);
       if (checkpoint.pipeline) {
+        stage(db, job, "restore_checkpoint");
         const raw = readArtifact(job.context.root, checkpoint.path);
         if (sha256(raw) !== checkpoint.sha256) throw Error("Checkpoint changed");
         prepared = JSON.parse(raw);
@@ -246,7 +253,7 @@ export async function runPipeline(db, job, collect = bridge) {
       }
     }
     if (!prepared) {
-      prepared = job.context.mode === "synthetic" ? synthetic(job) : await real(job, collect);
+      prepared = job.context.mode === "synthetic" ? synthetic(job) : await real(db, job, collect);
       prepared.job_context_sha256 = fingerprint(job.context);
       const raw = Buffer.from(JSON.stringify(prepared)), digest = sha256(raw), path = `pipeline-checkpoints/${digest}.json`;
       immutable(job.context.root, path, raw);
@@ -257,10 +264,11 @@ export async function runPipeline(db, job, collect = bridge) {
       scan.id = fingerprint(scan);
       const path = `pipeline-scans/${scan.id}.json`;
       immutable(job.context.root, path, Buffer.from(JSON.stringify(scan)));
-      return publishScan(db, job, scan.id) ? scan : null;
+      return publishScan(db, job, scan) ? scan : null;
     }
     prepared.input = { ...prepared.input, ...context(job) };
     prepared.input.findings = prepared.input.findings.map((f) => ({ ...f, ...contextOf(prepared.input) }));
+    stage(db, job, "grade");
     const report = grade(prepared.input, { root: job.context.root });
     validateSchema(report, "grading-report-v1.schema.json");
     const bundle = { pipeline: 1, mode: job.context.mode, root: job.context.root, rubric_sha256: fingerprint(rubric), ...prepared, report, content_fingerprint: fingerprint(prepared.content) };

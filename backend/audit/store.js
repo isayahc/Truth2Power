@@ -1,3 +1,4 @@
+import { event } from "./run-history.js";
 import { DatabaseSync } from "node:sqlite";
 import { randomUUID } from "node:crypto";
 import { mkdirSync } from "node:fs";
@@ -19,6 +20,15 @@ export function openStore(root = directory) {
     CREATE TABLE IF NOT EXISTS corrections (id INTEGER PRIMARY KEY, hospital TEXT, rule TEXT, note TEXT, recorded TEXT);
     CREATE TABLE IF NOT EXISTS attempts (token TEXT PRIMARY KEY, job INTEGER, started TEXT, status TEXT, error TEXT);
     CREATE TABLE IF NOT EXISTS pipeline_requests (request_key TEXT PRIMARY KEY, job INTEGER NOT NULL, context_hash TEXT NOT NULL);
+    CREATE TABLE IF NOT EXISTS audit_run_events (
+      seq INTEGER PRIMARY KEY, job INTEGER NOT NULL, attempt TEXT, state TEXT NOT NULL, at TEXT NOT NULL, detail TEXT NOT NULL);
+    CREATE TRIGGER IF NOT EXISTS audit_events_no_update BEFORE UPDATE ON audit_run_events
+      BEGIN SELECT RAISE(ABORT,'immutable audit event'); END;
+    CREATE TRIGGER IF NOT EXISTS audit_events_no_delete BEFORE DELETE ON audit_run_events
+      BEGIN SELECT RAISE(ABORT,'immutable audit event'); END;
+    CREATE INDEX IF NOT EXISTS audit_events_by_job ON audit_run_events(job,seq);
+    CREATE INDEX IF NOT EXISTS attempts_by_job ON attempts(job);
+    CREATE INDEX IF NOT EXISTS audit_jobs_by_hospital ON jobs(hospital,rule,id);
     CREATE TABLE IF NOT EXISTS pipeline_events (id TEXT PRIMARY KEY, job INTEGER NOT NULL, output TEXT NOT NULL);`);
   if (!db.prepare("PRAGMA table_info(jobs)").all().some((c) => c.name === "available_at")) db.exec("ALTER TABLE jobs ADD COLUMN available_at INTEGER NOT NULL DEFAULT 0");
   return db;
@@ -90,10 +100,18 @@ export function claim(db, leaseMs = 90000, { id = null, rule = null } = {}) {
       )
       .get(time, time, id, id, rule, rule);
     if (!job) return null;
-    if (job.token)
+    if (job.token && job.status === "running") {
+      if (job.rule === "css-17-v1") event(db, job.id, job.token, "interrupted", { reason: "Worker lease expired" });
       db.prepare("UPDATE attempts SET status='interrupted' WHERE token=?").run(
         job.token,
       );
+      if (job.rule === "css-17-v1" && job.attempts >= 3) {
+        const reason = "Retry limit reached after worker lease expired";
+        db.prepare("UPDATE jobs SET status='failed',lease=NULL,error=? WHERE id=?").run(reason, job.id);
+        event(db, job.id, job.token, "failed", { reason });
+        return null;
+      }
+    }
     const token = randomUUID(),
       attempted = now();
     db.prepare(
@@ -104,6 +122,7 @@ export function claim(db, leaseMs = 90000, { id = null, rule = null } = {}) {
       job.id,
       attempted,
     );
+    if (job.rule === "css-17-v1") event(db, job.id, token, "started");
     return { ...job, context: JSON.parse(job.context), token, attempted };
   });
 }
