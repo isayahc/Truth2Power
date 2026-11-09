@@ -10,6 +10,9 @@ import { sha256, languageTag } from "../review/identity.js";
 import { reportingContext } from "../reporting/context.js";
 import { localRecords, latestByScope, projectRecord } from "../hospital-page/records.js";
 import { immutable, publishPipeline, failPipeline } from "./pipeline-store.js";
+import { postingPaths } from "../grading/posting-paths.js";
+import { adaptArtifact } from "../grading/adapter.js";
+import { normalizeObservations } from "./normalize-observations.js";
 
 const examples = fileURLToPath(new URL("../../docs/grading/examples/", import.meta.url));
 async function bridge(root, request) {
@@ -79,28 +82,38 @@ async function real(job) {
     if (e && !documents.some((d) => d.source_id === s.url)) documents.push({ source_id: s.url, role: "landing_page", language: "en", digest: e.sha256, retrieved_at: e.retrieved_at });
   }
   const collectionDir = join(originalRoot, "collections", job.hospital);
+  let savedDiscovery = null;
   if (job.context.mode === "replay" && existsSync(collectionDir)) {
     const saved = readdirSync(collectionDir).filter((f) => /^[a-f0-9]{32}\.json$/.test(f)).map((f) => JSON.parse(readArtifact(originalRoot, `collections/${job.hospital}/${f}`)))
       .filter((c) => c.hospital_key === job.hospital && c.landing_page).sort((a, b) => Date.parse(b.attempted_at) - Date.parse(a.attempted_at))[0];
     if (saved) {
+      savedDiscovery = saved;
       const landing = saved.landing_page;
       const d = documents.find((d) => d.source_id === landing.url);
       const captured = { source_id: landing.url, role: "landing_page", language: "en", digest: landing.sha256, retrieved_at: landing.retrieved_at };
       if (d) Object.assign(d, captured); else documents.push(captured);
+      for (const s of [...(saved.pages || []), ...saved.documents].filter((s) => s.sha256 && s.status === "saved")) {
+        const id = s.source_url || s.url;
+        if (documents.some((d) => d.source_id === id)) continue;
+        const known = confirmedDocuments.find((d) => d.hospital_key === job.hospital && d.sha256 === s.sha256);
+        documents.push({ source_id: id, final_url: s.final_url || s.url, role: s.artifact_path.endsWith(".html") ? "landing_page" : known?.role || "supplement",
+          language: known ? languageTag(known.language) : "und", digest: s.sha256, retrieved_at: s.retrieved_at });
+      }
     }
   }
   let collection;
   if (job.context.mode === "live") {
-    const collected = await bridge(root, { mode: "live", hospital_key: job.hospital });
+    const collected = await bridge(root, { mode: "live", hospital_key: job.hospital, bounds: job.context.discovery_bounds });
     collection = collected.collection;
-    const fetched = [collection.landing_page, ...collection.documents];
+    const fetched = [collection.landing_page, ...(collection.pages || []), ...collection.documents];
     for (const d of documents) {
       const s = fetched.find((s) => s && (s.url === d.source_id || s.source_url === d.source_id));
       if (!s?.sha256) { d.digest = null; gaps.push(`Not captured in this collection: ${d.source_id}`); }
-      else { d.digest = s.sha256; d.retrieved_at = s.retrieved_at; }
+      else { d.digest = s.sha256; d.retrieved_at = s.retrieved_at; d.final_url = s.final_url || s.url; }
     }
-    for (const s of fetched.filter((s) => s?.sha256 && !documents.some((d) => d.source_id === s.url))) {
-      documents.push({ source_id: s.url, role: "supplement", language: "und", digest: s.sha256, retrieved_at: s.retrieved_at });
+    for (const s of fetched.filter((s) => s?.sha256 && !documents.some((d) => d.source_id === (s.source_url || s.url)))) {
+      const known = confirmedDocuments.find((d) => d.hospital_key === job.hospital && d.sha256 === s.sha256);
+      documents.push({ source_id: s.source_url || s.url, final_url: s.final_url || s.url, role: s.artifact_path.endsWith(".html") ? "landing_page" : known?.role || "supplement", language: known ? languageTag(known.language) : s.artifact_path.endsWith(".html") ? "en" : "und", digest: s.sha256, retrieved_at: s.retrieved_at });
       gaps.push(`Classify campus, document role and language before evaluation: ${s.url}`);
     }
   }
@@ -114,6 +127,7 @@ async function real(job) {
       if (sha256(raw) !== d.digest) throw Error("Source snapshot checksum mismatch");
       immutable(root, path, raw);
       source.snapshot = { snapshot_id: d.digest, sha256: d.digest, artifact_path: path, url: d.source_id, retrieved_at: d.retrieved_at, publisher_updated_at: null };
+      if (d.final_url && d.final_url !== d.source_id) source.snapshot.final_url = d.final_url;
       source.status = "available";
     } else gaps.push(`Obtain original snapshot or recollect unavailable source: ${d.source_id}`);
     input.sources.push(source);
@@ -129,6 +143,20 @@ async function real(job) {
     else if (s.role === "application" && records.some((r) => r.kind === "application-reviews" && r.findings.some((f) => f.evidence.some((e) => e.url === s.source_id && e.sha256 === s.snapshot.sha256)))) s.status = "reviewed";
   }
   const scoped = latestByScope(records.filter((r) => r.guideline_year === job.year));
+  const normalization = [];
+  for (const record of [...new Map(scoped.filter((s) => s.success?.kind === "application-reviews").map((s) => [s.success.record_id, s.success])).values()]) {
+    try {
+      const raw = readArtifact(originalRoot, record.artifact_path);
+      if (sha256(raw) !== record.record_id) throw Error("Producer artifact identity changed");
+      const adapted = adaptArtifact(raw, { root: originalRoot, reviewDate: record.review_date || job.review_date });
+      const normalized = normalizeObservations(adapted.input, input, originalRoot);
+      const producer = JSON.parse(raw);
+      normalization.push({ producer_sha256: record.record_id, ...normalized,
+        reference_binding: { observed_version: producer.reference_version || null, observed_sha256: producer.reference_sha256 || null,
+          expected_version: hhs.reference_version, expected_sha256: referenceHash },
+        decisions: adapted.provenance.decisions || [], blockers: adapted.blockers });
+    } catch (error) { normalization.push({ producer_sha256: record.record_id, accepted: [], rejected: [error.message] }); }
+  }
   for (const m of rubric.measures) {
     const originals = scoped.filter((s) => s.success?.measure_id === m.measure_id).map((s) => s.success);
     const f = { ...contextOf(input), measure_id: m.measure_id, expected: expectedFor(m, job.year), result: "unclear", human_review: "pending", evidence: [], observed: [],
@@ -141,16 +169,9 @@ async function real(job) {
     }
     if (m.evaluator === "posting") {
       f.evidence = [];
-      const landing = input.sources.find((s) => s.role === "landing_page" && s.source_id === assistancePages.get(job.hospital) && s.snapshot);
-      const links = [];
-      if (landing) for (const anchor of extracted[landing.source_id].filter((p) => p.locator.startsWith("link "))) {
-        const target = input.sources.find((s) => s.source_id === anchor.locator.slice(5) && s.snapshot && m.expected.any_accessible_role.includes(s.role));
-        const known = target && confirmedDocuments.find((d) => d.hospital_key === job.hospital && d.sha256 === target.snapshot.sha256 && d.role === target.role);
-        if (!known || !extracted[target.source_id].some((p) => p.locator === known.locator && p.text.includes(known.quote))) continue;
-        links.push(target.source_id);
-        f.evidence.push({ source_id: landing.source_id, snapshot_id: landing.snapshot.sha256, sha256: landing.snapshot.sha256, locator: anchor.locator, quote: anchor.text },
-          { source_id: target.source_id, snapshot_id: target.snapshot.sha256, sha256: target.snapshot.sha256, locator: known.locator, quote: known.quote });
-      }
+      const paths = postingPaths(input.sources, extracted, assistancePages.get(job.hospital), m.expected.any_accessible_role, confirmedDocuments, job.hospital, job.context.discovery_bounds?.depth || 3);
+      const links = [...new Set(paths.map((p) => p.target))];
+      f.evidence = [...new Map(paths.flatMap((p) => p.evidence).map((e) => [JSON.stringify(e), e])).values()];
       if (links.length) {
         f.result = "yes"; f.unresolved_evidence = [];
         f.observed = [{ evidence_index: f.evidence.findIndex((e) => e.locator.startsWith("link ")), method: "posted_link", value: { links: [...new Set(links)], search_complete: false } }];
@@ -169,15 +190,32 @@ async function real(job) {
         f.result = numeric[0]; f.unresolved_evidence = [];
       }
     } else f.unresolved_evidence.push("The saved qualitative draft is not a verified structured observation or human approval. Review its exact evidence under the grading contract.");
+    for (const reused of normalization.flatMap((n) => n.accepted).filter((o) => o.measure_id === m.measure_id)) {
+      const same = f.observed.find((o) => f.evidence[o.evidence_index].source_id === reused.evidence.source_id);
+      if (same && fingerprint(same.value) !== fingerprint(reused.observation.value)) {
+        f.unresolved_evidence.push("Conflicting verified historical observation; reconcile the source-specific facts.");
+      } else if (!same) {
+        const index = f.evidence.push(reused.evidence) - 1;
+        f.observed.push({ ...reused.observation, evidence_index: index });
+      }
+    }
+    for (const n of normalization) {
+      const decision = n.decisions?.filter((d) => !d.measure_id || d.measure_id === m.measure_id) || [];
+      if (decision.some((d) => ["reject", "needs_changes"].includes(d.decision) || ["correct", "request_information"].includes(d.action))) {
+        f.unresolved_evidence.push("Reconcile the independent historical review before using these normalized observations.");
+      }
+    }
     f.unresolved_evidence = [...new Set(f.unresolved_evidence)];
     input.findings.push(f);
   }
-  return { input, content, producer_records: records, extraction: { parser: "document-text-v5", collection_status: collection?.status ?? "saved_evidence_replay" } };
+  return { input, content, producer_records: records, normalization, discovery: collection || savedDiscovery,
+    extraction: { parser: "document-text-v5", collection_status: collection?.status ?? "saved_evidence_replay" } };
 }
 
 export async function runPipeline(db, job) {
   try {
     if (!db.prepare("SELECT id FROM jobs WHERE id=? AND token=? AND status='running'").get(job.id, job.token)) return null;
+    if (job.context.engine_version !== "multihop-v1") throw Error("Pipeline engine changed; enqueue a new job");
     if (job.context.reference_sha256 !== referenceHash || job.context.rubric_version !== rubric.version || job.context.rubric_sha256 !== fingerprint(rubric)) throw Error("Pinned rules changed; enqueue a new job");
     let prepared;
     if (job.checkpoint) {

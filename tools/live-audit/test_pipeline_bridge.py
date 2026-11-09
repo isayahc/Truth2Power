@@ -2,11 +2,23 @@
 import hashlib
 import tempfile
 import unittest
+from unittest.mock import patch
 from pathlib import Path
 from pipeline_bridge import run, save
 
 
 class PipelineBridgeTest(unittest.TestCase):
+    def test_interrupted_publication_never_exposes_partial_final_bytes(self):
+        with tempfile.TemporaryDirectory() as directory:
+            target = Path(directory) / 'snapshots/SYN.html'
+            with patch('pipeline_bridge.os.link', side_effect=OSError('SYN interrupted publication')):
+                with self.assertRaises(OSError):
+                    save(target, b'SYN complete bytes')
+            self.assertFalse(target.exists())
+            self.assertEqual(list(target.parent.glob('*.tmp')), [])
+            save(target, b'SYN complete bytes')
+            self.assertEqual(target.read_bytes(), b'SYN complete bytes')
+
     def test_multilingual_original_bytes_and_links_are_preserved(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

@@ -35,7 +35,7 @@ export async function auditRoute(req, res, path, port) {
   if (path === "/api/audits/362" && req.method === "GET") {
     const job = db
       .prepare(
-        "SELECT id,status,attempted,attempts,error,review_date,year FROM jobs WHERE hospital='362' ORDER BY id DESC LIMIT 1",
+        "SELECT id,status,attempted,attempts,error,review_date,year FROM jobs WHERE hospital='362' AND rule='application.fpl_guidelines' ORDER BY id DESC LIMIT 1",
       )
       .get();
     res.end(JSON.stringify({ job: job ?? null, latest: history(db, "362") }));

@@ -17,7 +17,7 @@ if __name__ == "__main__":
     data = sys.stdin.buffer.read()
     result = segments(data, sys.argv[1])
     if sys.argv[1] == ".html" and len(sys.argv) == 3:
-        parser = Links(sys.argv[2])
+        parser = Links(sys.argv[2], all_links=True)
         parser.feed(data.decode("utf-8", errors="replace"))
         parser.close()
         result.update({"link " + url: next((label for label in labels if label), "") for url, labels in parser.links.items()})

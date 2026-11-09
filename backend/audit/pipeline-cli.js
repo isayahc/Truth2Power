@@ -27,7 +27,8 @@ try {
     db = openStore();
     if (command !== "work") {
       const id = enqueuePipeline(db, { hospital_key: option("--hospital", "1002"), year, review_date: date, mode: option("--mode", "replay"),
-        variant: option("--variant", "original"), request_key: option("--request", randomUUID()), evidence_root: resolve(option("--evidence-root", pipelineRoot())) });
+        variant: option("--variant", "original"), request_key: option("--request", randomUUID()), evidence_root: resolve(option("--evidence-root", pipelineRoot())),
+        discovery_bounds: JSON.parse(option("--discovery-bounds", "{}")) });
       console.log(JSON.stringify({ job_id: id, queued: true }));
       targetId = id;
       if (command === "queue") process.exitCode = 0;

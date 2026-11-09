@@ -13,7 +13,7 @@ export function pipelineRoute(event) {
     try {
       const options = JSON.parse(event.body || "{}");
       if (options.mode === "synthetic" && process.env.T2P_PILOT_DEMO !== "1") return json(403, { error: "Synthetic runs require the isolated demo mode." });
-      if (!Object.keys(options).every((key) => ["year", "review_date", "mode", "variant", "request_key"].includes(key))) return json(400, { error: "Unsupported audit option." });
+      if (!Object.keys(options).every((key) => ["year", "review_date", "mode", "variant", "request_key", "discovery_bounds"].includes(key))) return json(400, { error: "Unsupported audit option." });
       db = openStore();
       const id = enqueuePipeline(db, { ...options, hospital_key: match[1] });
       return json(202, { id });

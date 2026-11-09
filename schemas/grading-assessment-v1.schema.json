@@ -171,6 +171,12 @@
                     "format": "uri",
                     "pattern": "^https?://",
                     "maxLength": 4096
+                  },
+                  "final_url": {
+                    "type": "string",
+                    "format": "uri",
+                    "pattern": "^https://",
+                    "maxLength": 4096
                   }
                 },
                 "required": [

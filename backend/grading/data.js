@@ -15,6 +15,15 @@ const roster = JSON.parse(readFileSync(here("../../data/maps/hospitals.geojson")
 export const assistancePages = new Map(roster.features.map((f) => [String(f.id), f.properties.assistance_url]));
 export const confirmedDocuments = waveOne.flatMap((h) => h.documents.filter((d) => d.status === "content_confirmed")
   .map((d) => ({ hospital_key: h.hospital_key, role: d.type, sha256: d.sha256, quote: d.quote, locator: d.locator, language: d.language_label })));
+// The later source-verified summary inventory supplies classification, never a passing result.
+const summaryDiscovery = JSON.parse(readFileSync(here("../../docs/audit-format/changes/362-summary-posting.json")));
+const summaryLanguages = JSON.parse(readFileSync(here("../../docs/audit-format/summaries/362.json"))).assessment.findings[0].observed.documents;
+for (const s of summaryDiscovery.snapshots.filter((s) => s.document_type === "policy_summary")) {
+  const citations = summaryDiscovery.assessment.findings[0].evidence.filter((e) => e.snapshot_id === s.snapshot_id);
+  confirmedDocuments.push({ hospital_key: summaryDiscovery.hospital_key, role: s.document_type, sha256: s.sha256,
+    quote: citations[0].quote, locator: citations[0].locator, applicability: citations[1],
+    language: summaryLanguages.find((d) => d.snapshot_id === s.snapshot_id)?.language || "und" });
+}
 export const byId = new Map(rubric.measures.map((m) => [m.measure_id, m]));
 export const contextKeys = ["hospital_key", "assessment_id", "scope_id", "rubric_version", "reference_version", "guideline_year", "review_date"];
 export const contextOf = (input) => Object.fromEntries(contextKeys.map((key) => [key, input[key]]));
