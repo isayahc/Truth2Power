@@ -4,5 +4,7 @@ docs/grading/examples/sources/*.json text eol=lf
 docs/grading/examples/*.expected.json text eol=lf
 references/hhs-poverty-contiguous-v1.json text eol=lf
 references/application-language-profiles-v1.json text eol=lf
+references/application-visual-review-v1.json text eol=lf
 docs/validation/wave-one-application-reviews.json text eol=lf
+docs/validation/wave-one-application-coverage.md text eol=lf
 docs/audit-format/wave-one-document-inventory.json text eol=lf

@@ -4,6 +4,7 @@ import { readFileSync } from "node:fs";
 import { sha256 } from "../review/identity.js";
 const profileBytes = readFileSync(new URL("../../references/application-language-profiles-v1.json", import.meta.url));
 export const applicationProfileHash = sha256(profileBytes);
+export const applicationVisualHash = sha256(readFileSync(new URL('../../references/application-visual-review-v1.json', import.meta.url)));
 const languages = JSON.parse(profileBytes).languages;
 
 export function parseProfile(name, quote, language = "en") {

@@ -15,9 +15,9 @@ Source-specific coverage now includes all seven application languages and 42 dra
 
 ## Hospital 1002
 
-- Revision: `d152ed911bc89c27faa06b0bb9c691d8cba52b9c81db7c2758ea1ceb6f19caf8`
+- Revision: `3e647e2ddfdf36a14d19852300538adcce9083988a920ff3e6cc8aec523b54c2`
 - Review date / reference year: 2026-11-09 / 2026
-- Completed: 2026-11-09T17:53:34.424Z; mode: replay. This is saved-evidence verification, not a new website capture.
+- Completed: 2026-11-09T18:05:35.117Z; mode: replay. This is saved-evidence verification, not a new website capture.
 - 17 outcomes; 14 unresolved; human review **pending**; institutional grade **pending**.
 
 | Measure | Integrated outcome | Submitted bounded observation | Verified citations | Blocker categories | Coverage / next action |
@@ -77,9 +77,9 @@ Where source evidence is available, findings retain exact quoted text and locato
 
 ## Hospital 362
 
-- Revision: `e08f571968eb0b500a8f826521c396579a5c1d4dc0a1320429c11d138febec7c`
+- Revision: `f0931a78f0174b25d16baa9831b5c8f04821fd16d783305102940024a528c57b`
 - Review date / reference year: 2026-11-09 / 2026
-- Completed: 2026-11-09T17:53:00.685Z; mode: replay. This is saved-evidence verification, not a new website capture.
+- Completed: 2026-11-09T18:04:58.689Z; mode: replay. This is saved-evidence verification, not a new website capture.
 - 17 outcomes; 14 unresolved; human review **pending**; institutional grade **pending**.
 
 | Measure | Integrated outcome | Submitted bounded observation | Verified citations | Blocker categories | Coverage / next action |

@@ -4,7 +4,7 @@ import { fileURLToPath } from "node:url";
 import { execFile } from "node:child_process";
 import { rubric, hhs, referenceHash, contextOf, expectedFor, readArtifact, fingerprint, validateSchema, confirmedDocuments, assistancePages } from "../grading/data.js";
 import { grade } from "../grading/grade.js";
-import { parseProfile, applicationProfileHash } from "../grading/profiles.js";
+import { parseProfile, applicationProfileHash, applicationVisualHash } from "../grading/profiles.js";
 import { fplComparison } from "../grading/measures.js";
 import { sha256, languageTag } from "../review/identity.js";
 import { reportingContext } from "../reporting/context.js";
@@ -223,6 +223,7 @@ export async function runPipeline(db, job) {
     if (!db.prepare("SELECT id FROM jobs WHERE id=? AND token=? AND status='running'").get(job.id, job.token)) return null;
     if (job.context.engine_version !== "multilingual-v1") throw Error("Pipeline engine changed; enqueue a new job");
     if (job.context.application_profile_sha256 !== applicationProfileHash) throw Error("Application profile changed; enqueue a new job");
+    if (job.context.application_visual_sha256 !== applicationVisualHash) throw Error("Application visual review changed; enqueue a new job");
     if (job.context.reference_sha256 !== referenceHash || job.context.rubric_version !== rubric.version || job.context.rubric_sha256 !== fingerprint(rubric)) throw Error("Pinned rules changed; enqueue a new job");
     let prepared;
     if (job.checkpoint) {

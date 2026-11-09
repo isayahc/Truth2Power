@@ -83,6 +83,24 @@ def offline_template():
     return dict(snapshot=capture['snapshot'], segments=extract_bytes(original, '.docx')), spec
 
 
+def translated_visual_context(source, hospital, language):
+    """Bind model interpretation to exact originals, complete pages and verbatim quotes."""
+    record = json.loads((Path(__file__).resolve().parents[2] / 'references/application-visual-review-v1.json').read_bytes())
+    matches = [r for r in record['sources'] if r['hospital_key'] == hospital and r['language'] == language
+               and r['sha256'] == source['snapshot']['sha256']]
+    if not matches:
+        return None
+    review, = matches
+    pages = source['segments']
+    if review['reviewed_pages'] != [p['locator'] for p in pages] or any(p['status'] != 'extracted' for p in pages):
+        raise ValueError('Visual review requires complete readable page coverage')
+    for question in review['questions']:
+        if not question['quote'] or not any(p['locator'] == question['locator'] and question['quote'] in p['text'] for p in pages):
+            raise ValueError('Visual review quotation does not match original source')
+    return dict(review_id=record['review_id'], reviewer=record['reviewer'], method=record['method'],
+                result='unclear', human_review='pending', source=review, limitations=record['limitations'])
+
+
 def application_template_context(source, hospital, language):
     official, spec = offline_template()
     if language not in ['en', 'es', 'pl', 'uk', 'ru']:
@@ -91,6 +109,7 @@ def application_template_context(source, hospital, language):
     context['reference_snapshot'] = official['snapshot']
     prior = spec['hospitals'].get(hospital)
     context['preserved_english_visual_review'] = prior if prior and prior['source_sha256'] == source['snapshot']['sha256'] else None
+    context['translated_visual_review'] = translated_visual_context(source, hospital, language)
     context['result'] = 'unclear'
     context['drawings'] = [d for p in source['segments'] for d in p.get('drawings', [])]
     return context
@@ -100,9 +119,13 @@ def attach_application_context(findings, context):
     """Update only a newly computed draft; preserved producer records are never edited."""
     uniform = next(f for f in findings if f['measure_id'] == 'application.uniform_application')
     prior = context.get('preserved_english_visual_review')
+    visual = context.get('translated_visual_review')
     uniform.update(result='unclear', reason_code='insufficient_evidence',
         explanation=prior['conclusion'] if prior else 'Source-language structural components are cited; translated semantic equivalence, layout and customization rules remain unverified.',
         unresolved_questions=prior['questions'] if prior else context.get('limitations', ['Review unsupported language.']))
+    if visual:
+        uniform['explanation'] = 'All original PDF pages visually reviewed; fields and table continuations are visible. Semantic questions, translated-template applicability and customization rules remain unresolved.'
+        uniform['unresolved_questions'] = [q['question'] for q in visual['source']['questions']] + visual['limitations']
 
 
 def fetch_reference(url, host):

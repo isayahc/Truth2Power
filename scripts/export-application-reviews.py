@@ -10,7 +10,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / 'tools/live-audit'))
 from applications import evaluate, REFERENCE
 from extraction import extract_bytes, layout_inventory
-from template_comparison import component_review, align, attach_application_context
+from template_comparison import component_review, align, attach_application_context, translated_visual_context
 
 
 def package(root, destination):
@@ -60,6 +60,7 @@ def build(pilot, reference_package):
                 english = spec['hospitals'].get(hospital)
                 visual = english if english['source_sha256'] == snapshot['sha256'] else None
                 comparison['preserved_english_visual_review'] = visual
+                comparison['translated_visual_review'] = translated_visual_context(dict(snapshot=snapshot, segments=segments), hospital, source['language'])
                 attach_application_context(findings, comparison)
                 comparison['line_alignment'] = align(dict(snapshot=capture['snapshot'], segments=official), dict(snapshot=snapshot, segments=segments)) if source['language'] == 'en' else None
                 comparison['differences'] = [dict(category='substantive_numeric_change' if hospital == '1002' else 'reference_arithmetic_correction',
@@ -101,7 +102,7 @@ def markdown(report):
               '- English whole-form visual reviews from #78 remain hash-bound and preserved, including all 80 reference units and Little Falls drawings. English rendering is not a pending blocker.',
               '- Translated comparisons cover eleven sections and ten fields using original-language anchors. A missing anchor means not established, not absent. These checks do not establish every translated field or declaration as semantically equivalent to an authoritative translated template. DOCX table/cell/grid/section inventories and PDF page dimensions are preserved alongside extraction.',
               '- PDF extraction retains actual page locators (Ellenville en/es/pl/uk/ru: 5/6/6/6/7 pages). Little Falls DOCX body is one structural segment per language; rendered pagination remains unverified for Spanish. Drawing metadata is retained; English visual conclusions are not transferred to Spanish.',
-              '- Specific translation questions remain: Ukrainian immigration wording and Russian collection/data-collection wording already tracked under #64; an AD decision requires review of these provisions as well as numeric tables. No certified translation or institutional authorization is claimed.',
+              '- All 25 original translated Ellenville PDF pages have hash-bound model visual review: writable fields, checkbox pairs, signatures and table continuations are visible, with no observed clipping. Exact source quotations retain semantic questions about Spanish expired insurance, Polish eligibility/income wording, Ukrainian language-footnote/immigration wording, and Russian collection timing/proof wording. These are not certified translations or human approvals. Little Falls Spanish DOCX visual layout remains unverified.',
               '- Little Falls campus/MRN additions, eighth row and corrected official arithmetic require a cited customization rule. Formatting alone does not produce noncompliance.',
               '- AE/AG are qualitative source-specific presence drafts. Existing independent-review and complete-scope gates remain in force in the integrated grader. AD and all institutional grades remain pending.', '',
               '## Reference compatibility', '',

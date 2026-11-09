@@ -8,7 +8,7 @@ import zipfile
 from applications import evaluate, REFERENCE
 from extraction import extract_bytes, layout_inventory
 from language_profiles import parse_profile, discount_rows
-from template_comparison import application_template_context, offline_template
+from template_comparison import application_template_context, offline_template, translated_visual_context
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -98,6 +98,27 @@ class MultilingualApplications(unittest.TestCase):
         row = next(r for r in rows if any('6 personas' in ' '.join(c['text'].split()) for c in r))
         self.assertTrue(any('$133,080' in c['text'] for c in row))
         self.assertTrue(all('word/document.xml table' in c['locator'] for c in row))
+
+    def test_visual_binding_requires_hash_complete_pages_and_exact_quotes(self):
+        for language in ('es', 'pl', 'uk', 'ru'):
+            source = copy.deepcopy(self.sources[('1002', language)])
+            review = translated_visual_context(source, '1002', language)
+            self.assertEqual(review['human_review'], 'pending')
+            self.assertEqual(review['result'], 'unclear')
+            changed = copy.deepcopy(source)
+            changed['snapshot']['sha256'] = '0' * 64
+            self.assertIsNone(translated_visual_context(changed, '1002', language))
+            self.assertIsNone(translated_visual_context(source, '362', language))
+            changed = copy.deepcopy(source)
+            changed['segments'].pop()
+            with self.assertRaises(ValueError):
+                translated_visual_context(changed, '1002', language)
+            question = review['source']['questions'][0]
+            for page in source['segments']:
+                if page['locator'] == question['locator']:
+                    page['text'] = page['text'].replace(question['quote'], 'SYN removed quote')
+            with self.assertRaises(ValueError):
+                translated_visual_context(source, '1002', language)
 
 
 if __name__ == '__main__':

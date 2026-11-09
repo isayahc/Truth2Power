@@ -4,6 +4,8 @@ Updated for the #72 multilingual follow-up to merged PRs #87/#88. Issue #37 is c
 
 ## Multilingual application engineering (#72)
 
+Final visual follow-up: `references/application-visual-review-v1.json` records model inspection of all 25 translated Ellenville PDF pages. Attachment requires exact hospital/language/hash, complete readable page coverage and verbatim question quotations. Fields and continuations are visible with no observed clipping; specific semantic questions remain. This resolves the uninspected-PDF-layout gap, not semantic equivalence or approval. Little Falls Spanish DOCX rendering remains unresolved. Pipeline job identity pins this review file's hash.
+
 All **seven application versions / 42 source-specific drafts** are reproducible from original public bytes. See [coverage matrix](wave-one-application-coverage.md) and `wave-one-application-reviews.json`. Source-language profiles share a versioned specification between Python and the independent JavaScript verifier. Every hospital now has AH/AI/AJ numeric observations for every application language: **21 source/measure observations**, versus six English-only observations before this change. All five Ellenville tables fail 2026 currency; both Little Falls tables match HHS arithmetic. AE/AG presence drafts retain contacts and linked income/discount rows.
 
 Compared with #88, **no integrated outcome changes**: 6 resolved / 28 unclear across both hospitals, grades pending. The five translated sources retain `translation_needed` at the integrated scope boundary; bounded extraction does not certify whole-form translation or satisfy independent qualitative review. Full-source/complete-inventory gates are unchanged.
@@ -72,12 +74,16 @@ For Ellenville's W/Y/Z follow-up specifically, retain the favorable original cit
 
 ## Verification log
 
+### #72 clean-clone reproduction
+
+Cloned implementation commit `e322027` with `git clone --no-hardlinks --branch feat/72-multilingual-applications`, installed cached Node dependencies with `npm ci --offline`, and extracted both checked-in evidence ZIPs. Both grading replay commands returned **identical** 17-measure reports with pending grades. Regenerating all seven application reviews reproduced the tracked JSON exactly. Six targeted Node tests and six multilingual Python tests passed from the clone, including full new pipeline runs for both hospitals and historical normalization; the production build passed. Generated Markdown also has explicit LF attributes for Windows reproducibility. Python dependencies were reused via the existing virtual environment, not freshly installed. This is not independent operator or subject-matter sign-off.
+
 Executed on Windows, Node 22.14.0, existing Python virtual environment; no paid models:
 
 | Command | Observed result |
 |---|---|
 | `node --test --test-reporter=dot backend/test/*.test.js` | 69 tests passed, including seven-source profile parity, reference compatibility/mismatch tests and expanded real seven-language pipeline verification; existing recovery/history/review tests retained. |
-| `.venv/Scripts/python.exe -m unittest discover -s tools/live-audit -p 'test_*.py'` | 94 tests passed, including six multilingual test methods with subcases for all seven originals, mutated amounts/year, ambiguous statements, missing fields, original-language citations, linked DOCX cells and preserved drawing/reference evidence. Existing Pydantic warning remains. |
+| `.venv/Scripts/python.exe -m unittest discover -s tools/live-audit -p 'test_*.py'` | 95 tests passed, including seven multilingual methods covering originals, mutations, linked cells and visual-review hash/page/quotation binding. Existing Pydantic warning remains. |
 | `npm run build` | Passed. |
 | `node scripts/test-audit-e2e.js` | Passed; legacy fixture uses existing Python PDF reader if Poppler is absent. |
 | `node scripts/test-changes-e2e.js` | Passed. |

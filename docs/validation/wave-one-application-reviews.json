@@ -1028,6 +1028,7 @@
             }
           }
         },
+        "translated_visual_review": null,
         "line_alignment": {
           "reference_evidence": [
             {
@@ -3189,7 +3190,7 @@
           "measure_id": "application.uniform_application",
           "result": "unclear",
           "reason_code": "insufficient_evidence",
-          "explanation": "Source-language structural components are cited; translated semantic equivalence, layout and customization rules remain unverified.",
+          "explanation": "All original PDF pages visually reviewed; fields and table continuations are visible. Semantic questions, translated-template applicability and customization rules remain unresolved.",
           "observed": null,
           "expected": "The entire applicable NYS Uniform Hospital Financial Assistance Application is used.",
           "evidence": [
@@ -3225,9 +3226,11 @@
             }
           ],
           "unresolved_questions": [
-            "Anchors establish component presence only, not completeness of every field or disclosure.",
-            "No missing component is asserted solely from a pattern nonmatch.",
-            "Authoritative translated-template applicability, semantic equivalence and permitted customization remain human-review questions."
+            "Does the opening expired-insurance wording preserve the official exhausted-benefits eligibility meaning? Later eligibility categories must be considered; do not infer a hard exclusion from this phrase alone.",
+            "Does the outdated income table also fail AD, or only AH? An approved scoring-overlap rule is required.",
+            "Visible fields and tables do not establish authoritative translated-template applicability or legal equivalence.",
+            "No independent human approval, permitted-customization ruling, or institutional grade is recorded.",
+            "Little Falls Spanish DOCX is not covered by this PDF review; its Word rendering attempt timed out."
           ]
         },
         {
@@ -3950,6 +3953,50 @@
           "Authoritative translated-template applicability, semantic equivalence and permitted customization remain human-review questions."
         ],
         "preserved_english_visual_review": null,
+        "translated_visual_review": {
+          "review_id": "application-translated-pdf-visual-v1",
+          "reviewer": "GPT-6 Astra model review; not human approval or certified translation",
+          "method": "All original PDF pages read as page images and source-language text. No replacement render or translated evidence created.",
+          "result": "unclear",
+          "human_review": "pending",
+          "source": {
+            "hospital_key": "1002",
+            "language": "es",
+            "sha256": "771f2f39d5fbb2f1044eefa5d7254c5c8052d1a3680224410f9ea10640536555",
+            "reviewed_pages": [
+              "page 1",
+              "page 2",
+              "page 3",
+              "page 4",
+              "page 5",
+              "page 6"
+            ],
+            "visual_observations": [
+              "Page 1: identity/guardian/contact boxes, family-income instructions and primary-language footnote are visible with writable space.",
+              "Page 2: name/relationship/gross-income grid, both insurance checkbox pairs, expense amount box, declaration and printed-name/date/relationship/signature boxes are visible.",
+              "Pages 3–4: rights/contact bullets, eligibility categories, 2024 household rows 1–7 and all three discount bands are visible. The fourth eligibility bullet continues on page 4; it is not missing.",
+              "Page 4: 5% gross-monthly-income installment clause and separate 2% interest text are visible below the tables.",
+              "Pages 5–6: income-proof instructions and nine income categories including no income are visible; repeated table headings preserve the continuation. No clipping of the reviewed fields was observed."
+            ],
+            "questions": [
+              {
+                "locator": "page 1",
+                "quote": "su seguro está vencido",
+                "question": "Does the opening expired-insurance wording preserve the official exhausted-benefits eligibility meaning? Later eligibility categories must be considered; do not infer a hard exclusion from this phrase alone."
+              },
+              {
+                "locator": "page 4",
+                "quote": "(2024)",
+                "question": "Does the outdated income table also fail AD, or only AH? An approved scoring-overlap rule is required."
+              }
+            ]
+          },
+          "limitations": [
+            "Visible fields and tables do not establish authoritative translated-template applicability or legal equivalence.",
+            "No independent human approval, permitted-customization ruling, or institutional grade is recorded.",
+            "Little Falls Spanish DOCX is not covered by this PDF review; its Word rendering attempt timed out."
+          ]
+        },
         "line_alignment": null,
         "differences": [
           {
@@ -4081,7 +4128,7 @@
           "measure_id": "application.uniform_application",
           "result": "unclear",
           "reason_code": "insufficient_evidence",
-          "explanation": "Source-language structural components are cited; translated semantic equivalence, layout and customization rules remain unverified.",
+          "explanation": "All original PDF pages visually reviewed; fields and table continuations are visible. Semantic questions, translated-template applicability and customization rules remain unresolved.",
           "observed": null,
           "expected": "The entire applicable NYS Uniform Hospital Financial Assistance Application is used.",
           "evidence": [
@@ -4117,9 +4164,12 @@
             }
           ],
           "unresolved_questions": [
-            "Anchors establish component presence only, not completeness of every field or disclosure.",
-            "No missing component is asserted solely from a pattern nonmatch.",
-            "Authoritative translated-template applicability, semantic equivalence and permitted customization remain human-review questions."
+            "The high-medical-expense eligibility bullet uses an uninsured label where the English form distinguishes underinsured people. Review semantic equivalence and the surrounding definition before deciding AD.",
+            "Does the annual-income wording retain the official gross-annual-income denominator when read with the earlier gross-income definition?",
+            "Resolve AD/AH overlap for the outdated table; formatting alone is not a failure.",
+            "Visible fields and tables do not establish authoritative translated-template applicability or legal equivalence.",
+            "No independent human approval, permitted-customization ruling, or institutional grade is recorded.",
+            "Little Falls Spanish DOCX is not covered by this PDF review; its Word rendering attempt timed out."
           ]
         },
         {
@@ -4838,6 +4888,55 @@
           "Authoritative translated-template applicability, semantic equivalence and permitted customization remain human-review questions."
         ],
         "preserved_english_visual_review": null,
+        "translated_visual_review": {
+          "review_id": "application-translated-pdf-visual-v1",
+          "reviewer": "GPT-6 Astra model review; not human approval or certified translation",
+          "method": "All original PDF pages read as page images and source-language text. No replacement render or translated evidence created.",
+          "result": "unclear",
+          "human_review": "pending",
+          "source": {
+            "hospital_key": "1002",
+            "language": "pl",
+            "sha256": "0938950766a70636fc92c35154deab6fc9438ffe2c2ee50a948db98e886f1d8e",
+            "reviewed_pages": [
+              "page 1",
+              "page 2",
+              "page 3",
+              "page 4",
+              "page 5",
+              "page 6"
+            ],
+            "visual_observations": [
+              "Page 1: identity, guardian, address/contact fields, family-income instructions and language footnote are visible.",
+              "Page 2: household grid, two insurance checkbox pairs, expense box, certification and writable signature/date/relationship fields are visible.",
+              "Page 3: nine rights/contact bullets and the eligibility categories are visible; the hospital help number is printed separately from the advocate number.",
+              "Page 4: 2024 FPL rows 1–7, three percentage columns, all discount bands and installment/interest sentences are visible.",
+              "Pages 5–6: instructions and nine income-proof categories are visible with repeated continuation headings. No clipping of the reviewed fields was observed."
+            ],
+            "questions": [
+              {
+                "locator": "page 3",
+                "quote": "osoby nieubezpieczone",
+                "question": "The high-medical-expense eligibility bullet uses an uninsured label where the English form distinguishes underinsured people. Review semantic equivalence and the surrounding definition before deciding AD."
+              },
+              {
+                "locator": "page 3",
+                "quote": "rocznego dochodu takiej osoby",
+                "question": "Does the annual-income wording retain the official gross-annual-income denominator when read with the earlier gross-income definition?"
+              },
+              {
+                "locator": "page 4",
+                "quote": "w 2024 roku",
+                "question": "Resolve AD/AH overlap for the outdated table; formatting alone is not a failure."
+              }
+            ]
+          },
+          "limitations": [
+            "Visible fields and tables do not establish authoritative translated-template applicability or legal equivalence.",
+            "No independent human approval, permitted-customization ruling, or institutional grade is recorded.",
+            "Little Falls Spanish DOCX is not covered by this PDF review; its Word rendering attempt timed out."
+          ]
+        },
         "line_alignment": null,
         "differences": [
           {
@@ -4969,7 +5068,7 @@
           "measure_id": "application.uniform_application",
           "result": "unclear",
           "reason_code": "insufficient_evidence",
-          "explanation": "Source-language structural components are cited; translated semantic equivalence, layout and customization rules remain unverified.",
+          "explanation": "All original PDF pages visually reviewed; fields and table continuations are visible. Semantic questions, translated-template applicability and customization rules remain unresolved.",
           "observed": null,
           "expected": "The entire applicable NYS Uniform Hospital Financial Assistance Application is used.",
           "evidence": [
@@ -5005,9 +5104,12 @@
             }
           ],
           "unresolved_questions": [
-            "Anchors establish component presence only, not completeness of every field or disclosure.",
-            "No missing component is asserted solely from a pattern nonmatch.",
-            "Authoritative translated-template applicability, semantic equivalence and permitted customization remain human-review questions."
+            "The primary-language footnote appears to refer to a primary-care center rather than the hospital primary service area. Obtain qualified translation/reference interpretation.",
+            "Resolve the existing #64 immigration-wording ambiguity; do not substitute English eligibility conclusions.",
+            "Resolve AD/AH overlap for the outdated table.",
+            "Visible fields and tables do not establish authoritative translated-template applicability or legal equivalence.",
+            "No independent human approval, permitted-customization ruling, or institutional grade is recorded.",
+            "Little Falls Spanish DOCX is not covered by this PDF review; its Word rendering attempt timed out."
           ]
         },
         {
@@ -5730,6 +5832,55 @@
           "Authoritative translated-template applicability, semantic equivalence and permitted customization remain human-review questions."
         ],
         "preserved_english_visual_review": null,
+        "translated_visual_review": {
+          "review_id": "application-translated-pdf-visual-v1",
+          "reviewer": "GPT-6 Astra model review; not human approval or certified translation",
+          "method": "All original PDF pages read as page images and source-language text. No replacement render or translated evidence created.",
+          "result": "unclear",
+          "human_review": "pending",
+          "source": {
+            "hospital_key": "1002",
+            "language": "uk",
+            "sha256": "9d77607cd5b4448934e26bbfdd603dc0df75c80baee4e6762878ced7ab494fb1",
+            "reviewed_pages": [
+              "page 1",
+              "page 2",
+              "page 3",
+              "page 4",
+              "page 5",
+              "page 6"
+            ],
+            "visual_observations": [
+              "Page 1: all displayed identity/contact/guardian boxes, family-income instructions and primary-language footnote are visible.",
+              "Page 2: household rows, both checkbox pairs, expense amount box, declaration and signature/date/relationship fields are visible.",
+              "Pages 3–4: rights and contact bullets are visible; eligibility categories continue onto page 4 before the 400% statement.",
+              "Page 4: 2024 rows 1–7, three percentage columns, three discount bands, 5% gross-monthly-income installment statement and separate 2% text are visible.",
+              "Pages 5–6: all nine income categories are visible. Only other income and no income continue onto page 6 with repeated headings; this is pagination, not missing content. No clipping of reviewed fields was observed."
+            ],
+            "questions": [
+              {
+                "locator": "page 1",
+                "quote": "центрі первинної медико-санітарної допомоги",
+                "question": "The primary-language footnote appears to refer to a primary-care center rather than the hospital primary service area. Obtain qualified translation/reference interpretation."
+              },
+              {
+                "locator": "page 3",
+                "quote": "статус іммігранта не є підставою",
+                "question": "Resolve the existing #64 immigration-wording ambiguity; do not substitute English eligibility conclusions."
+              },
+              {
+                "locator": "page 4",
+                "quote": "(2024 р.)",
+                "question": "Resolve AD/AH overlap for the outdated table."
+              }
+            ]
+          },
+          "limitations": [
+            "Visible fields and tables do not establish authoritative translated-template applicability or legal equivalence.",
+            "No independent human approval, permitted-customization ruling, or institutional grade is recorded.",
+            "Little Falls Spanish DOCX is not covered by this PDF review; its Word rendering attempt timed out."
+          ]
+        },
         "line_alignment": null,
         "differences": [
           {
@@ -5873,7 +6024,7 @@
           "measure_id": "application.uniform_application",
           "result": "unclear",
           "reason_code": "insufficient_evidence",
-          "explanation": "Source-language structural components are cited; translated semantic equivalence, layout and customization rules remain unverified.",
+          "explanation": "All original PDF pages visually reviewed; fields and table continuations are visible. Semantic questions, translated-template applicability and customization rules remain unresolved.",
           "observed": null,
           "expected": "The entire applicable NYS Uniform Hospital Financial Assistance Application is used.",
           "evidence": [
@@ -5914,9 +6065,12 @@
             }
           ],
           "unresolved_questions": [
-            "Anchors establish component presence only, not completeness of every field or disclosure.",
-            "No missing component is asserted solely from a pattern nonmatch.",
-            "Authoritative translated-template applicability, semantic equivalence and permitted customization remain human-review questions."
+            "The application-timing bullet says data-collection period; resolve the existing #64 question against the English collection-process provision.",
+            "Review whether the request for proof of paid medical bills changes the official estimate field, considering the following permission to request documentation.",
+            "Resolve AD/AH overlap for the outdated table.",
+            "Visible fields and tables do not establish authoritative translated-template applicability or legal equivalence.",
+            "No independent human approval, permitted-customization ruling, or institutional grade is recorded.",
+            "Little Falls Spanish DOCX is not covered by this PDF review; its Word rendering attempt timed out."
           ]
         },
         {
@@ -6635,6 +6789,57 @@
           "Authoritative translated-template applicability, semantic equivalence and permitted customization remain human-review questions."
         ],
         "preserved_english_visual_review": null,
+        "translated_visual_review": {
+          "review_id": "application-translated-pdf-visual-v1",
+          "reviewer": "GPT-6 Astra model review; not human approval or certified translation",
+          "method": "All original PDF pages read as page images and source-language text. No replacement render or translated evidence created.",
+          "result": "unclear",
+          "human_review": "pending",
+          "source": {
+            "hospital_key": "1002",
+            "language": "ru",
+            "sha256": "ae4fffcbb353785edf46ad99e1b73ff3ed2e6d54539fe995fa0ca1300aa63058",
+            "reviewed_pages": [
+              "page 1",
+              "page 2",
+              "page 3",
+              "page 4",
+              "page 5",
+              "page 6",
+              "page 7"
+            ],
+            "visual_observations": [
+              "Page 1: identity/contact/guardian fields, family-income instructions and primary-language footnote are visible.",
+              "Page 2: household grid, both insurance checkbox pairs, expense box, declaration and printed-name/date/relationship/signature boxes are visible.",
+              "Page 3: rights/contact bullets and general eligibility introduction are visible. Detailed eligibility categories continue on page 4.",
+              "Page 4: explicit 400% eligibility, 2024 household rows 1–7 and all discount bands are visible.",
+              "Page 5 contains the installment paragraph, including the 5% gross-monthly-income cap and separate 2% interest cap. The otherwise blank page is not an omitted section.",
+              "Pages 6–7: income-proof instructions and nine income categories are visible with repeated continuation headings. No clipping of reviewed fields was observed."
+            ],
+            "questions": [
+              {
+                "locator": "page 3",
+                "quote": "период сбора данных",
+                "question": "The application-timing bullet says data-collection period; resolve the existing #64 question against the English collection-process provision."
+              },
+              {
+                "locator": "page 2",
+                "quote": "предоставьте",
+                "question": "Review whether the request for proof of paid medical bills changes the official estimate field, considering the following permission to request documentation."
+              },
+              {
+                "locator": "page 4",
+                "quote": "(2024)",
+                "question": "Resolve AD/AH overlap for the outdated table."
+              }
+            ]
+          },
+          "limitations": [
+            "Visible fields and tables do not establish authoritative translated-template applicability or legal equivalence.",
+            "No independent human approval, permitted-customization ruling, or institutional grade is recorded.",
+            "Little Falls Spanish DOCX is not covered by this PDF review; its Word rendering attempt timed out."
+          ]
+        },
         "line_alignment": null,
         "differences": [
           {
@@ -8400,6 +8605,7 @@
             }
           }
         },
+        "translated_visual_review": null,
         "line_alignment": {
           "reference_evidence": [
             {
@@ -11598,6 +11804,7 @@
           "Authoritative translated-template applicability, semantic equivalence and permitted customization remain human-review questions."
         ],
         "preserved_english_visual_review": null,
+        "translated_visual_review": null,
         "line_alignment": null,
         "differences": [
           {
