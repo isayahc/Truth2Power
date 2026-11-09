@@ -1,0 +1,173 @@
+{
+  "version": "wave-one-reporting-context-v1",
+  "reviewed_at": "2026-11-09T02:03:44.090023+00:00",
+  "scope": "Saved Wave 1 direct-link inventory plus the designated summaries discovered under #24. Reporting metadata only; not grade inputs.",
+  "hospitals": {
+    "1002": {
+      "reported_counties": [
+        "Ulster",
+        "Dutchess",
+        "Orange",
+        "Sullivan",
+        "Delaware",
+        "Greene",
+        "Columbia"
+      ],
+      "county_status": "explicitly_listed",
+      "statements": [
+        {
+          "document_type": "policy_statement",
+          "language": "English",
+          "geography_type": "counties",
+          "reported_counties": [
+            "Ulster",
+            "Dutchess",
+            "Orange",
+            "Sullivan",
+            "Delaware",
+            "Greene",
+            "Columbia"
+          ],
+          "reported_places": [],
+          "note": "New York State emergency coverage; the listed PSA counties apply to other necessary medical services.",
+          "evidence": {
+            "url": "https://erhny.org/wp-content/uploads/2024/12/Hospital-Financial-Assistance-FINAL-11.24.pdf",
+            "sha256": "29cc78ee470555f1c1aaa3626ec55c460395c6361998981dd55f9c28259bc15c",
+            "artifact_path": "snapshots/29cc78ee470555f1c1aaa3626ec55c460395c6361998981dd55f9c28259bc15c.pdf",
+            "retrieved_at": "2026-11-09T00:39:00.638458+00:00",
+            "locator": "page 1",
+            "quote": "Financial assistance is offered to all patients who reside in New York State for emergency services.\nFor all other necessary medical services, assistance is offered only for patients whose primary\nresidence is within ERH’s primary service area (PSA). ERH’s PSA is comprised of the following\ncounties: Ulster, Dutchess, Orange, Sullivan, Delaware, Greene and Columbia."
+          }
+        },
+        {
+          "document_type": "policy_statement",
+          "language": "Spanish",
+          "geography_type": "counties",
+          "reported_counties": [
+            "Ulster",
+            "Dutchess",
+            "Orange",
+            "Sullivan",
+            "Delaware",
+            "Greene",
+            "Columbia"
+          ],
+          "reported_places": [],
+          "note": "New York State emergency coverage; the listed PSA counties apply to other necessary medical services.",
+          "evidence": {
+            "url": "https://erhny.org/wp-content/uploads/2024/12/Hospital-Financial-Assistance-Spanish.pdf",
+            "sha256": "92c273c3345e59f5a450d0ea776304d1d12ee9625d7b0cdb82ca5499bc68f115",
+            "artifact_path": "snapshots/92c273c3345e59f5a450d0ea776304d1d12ee9625d7b0cdb82ca5499bc68f115.pdf",
+            "retrieved_at": "2026-11-09T00:39:09.479632+00:00",
+            "locator": "page 1",
+            "quote": "Todos los pacientes que viven en el Estado de Nueva York pueden recibir asistencia económica\npor servicios de emergencia. Para todos los demás servicios médicos necesarios, se ofrece asistencia\núnicamente a pacientes cuya residencia principal se encuentre dentro del área de servicio principal\n(PSA) de ERH. El PSA de ERH está compuesto por los siguientes condados: Ulster, Dutchess,\nOrange, Sullivan, Delaware, Greene y Columbia."
+          }
+        },
+        {
+          "document_type": "policy_summary",
+          "language": "English",
+          "geography_type": "counties",
+          "reported_counties": [
+            "Ulster",
+            "Dutchess",
+            "Orange",
+            "Sullivan",
+            "Delaware",
+            "Greene",
+            "Columbia"
+          ],
+          "reported_places": [],
+          "note": "The summary lists the same seven PSA counties for non-emergency medically necessary services.",
+          "evidence": {
+            "url": "https://erhny.org/wp-content/uploads/2024/01/2024-ERH-FA-Summary-English.pdf",
+            "sha256": "43520848e6f87fae9b2c60b93e3c69138f1a425eba7fadc8ac5e57513bb9a883",
+            "artifact_path": "snapshots/43520848e6f87fae9b2c60b93e3c69138f1a425eba7fadc8ac5e57513bb9a883.pdf",
+            "retrieved_at": "2026-11-09T00:39:36.156029+00:00",
+            "locator": "page 1",
+            "quote": "Financial assistance is offered to all patients who reside in New York State for emergency services. For all\nother necessary medical services, assistance is offered within our primary service area of Ulster, Dutchess,\nOrange, Sullivan, Delaware, Greene and Columbia counties. Anyone can apply, regardless of age, race,\ngender, creed, disability, national origin, or immigrant status."
+          }
+        },
+        {
+          "document_type": "policy_summary",
+          "language": "Spanish",
+          "geography_type": "counties",
+          "reported_counties": [
+            "Ulster",
+            "Dutchess",
+            "Orange",
+            "Sullivan",
+            "Delaware",
+            "Greene",
+            "Columbia"
+          ],
+          "reported_places": [],
+          "note": "The summary lists the same seven PSA counties for non-emergency medically necessary services.",
+          "evidence": {
+            "url": "https://erhny.org/wp-content/uploads/2024/01/2024-ERH-FA-Summary-Spanish.pdf",
+            "sha256": "e0c54eef21e7db1cdb65f37f777251556e63d77ddd381c5a4ae97fb34fc5bd13",
+            "artifact_path": "snapshots/e0c54eef21e7db1cdb65f37f777251556e63d77ddd381c5a4ae97fb34fc5bd13.pdf",
+            "retrieved_at": "2026-11-09T00:39:39.744462+00:00",
+            "locator": "page 1",
+            "quote": "Todos los pacientes que viven en el Estado de New York pueden recibir asistencia económica para servicios\nde emergencia. Para todos los demás servicios médicos necesarios, se da asistencia dentro de nuestra área\nprincipal de servicio de los condados de Ulster, Dutchess, Orange, Sullivan, Delaware, Greene y Columbia.\nCualquiera puede enviar una solicitud, independientemente de su edad, raza, sexo, credo, discapacidad,\npaís de origen o estatus migratorio."
+          }
+        }
+      ],
+      "summary_note": "English and Spanish summaries list the seven counties above.",
+      "expected_reference": null
+    },
+    "362": {
+      "reported_counties": null,
+      "county_status": "places_not_counties",
+      "statements": [
+        {
+          "document_type": "policy_statement",
+          "language": "English",
+          "geography_type": "places",
+          "reported_counties": null,
+          "reported_places": [
+            "Little Falls",
+            "Delhi",
+            "Herkimer",
+            "Oneonta",
+            "Cobleskill",
+            "Cooperstown"
+          ],
+          "note": "The network policy names Central New York localities, not counties. Do not convert them into county boundaries. The policy explicitly includes Little Falls Hospital.",
+          "evidence": {
+            "url": "https://www.bassett.org/sites/default/files/2026-07/Bassett-Healthcare-Network-Charity-Care-and-Financial-Assistance-07-09-2026.pdf",
+            "sha256": "bdf455f21be644f06d7d1e9275fcf21eef9453d1846bc74a82d44c60db431619",
+            "artifact_path": "snapshots/bdf455f21be644f06d7d1e9275fcf21eef9453d1846bc74a82d44c60db431619.pdf",
+            "retrieved_at": "2026-11-09T00:39:06.967333+00:00",
+            "locator": "page 2",
+            "quote": "This policy applies to medically necessary professional hospital , and home care services received\nthrough any of the five BHN hospitals and their clinics. An application must be filled out by the patient\nto qualify. BHN will assume patients are eligible for financial assistance for residents of New York\nState, if they reside within the hospital’s primary service area of Central New York (Little Falls, Delhi,\nHerkimer, Oneonta, Cobleskill, and Cooperstown, NY). This policy excludes Valley Health Services,\nValley Residential Services, Skilled Nursing Facilities, and Long-Term Care. This policy also excludes\npatient convenience items, retail services, non -medical services such as eyewear, cosmetic surgery,\ndental services, bariatric, and elective oral surgery."
+          }
+        },
+        {
+          "document_type": "policy_statement",
+          "language": "Spanish",
+          "geography_type": "places",
+          "reported_counties": null,
+          "reported_places": [
+            "Little Falls",
+            "Delhi",
+            "Herkimer",
+            "Oneonta",
+            "Cobleskill",
+            "Cooperstown"
+          ],
+          "note": "The network policy names Central New York localities, not counties. Do not convert them into county boundaries. The policy explicitly includes Little Falls Hospital.",
+          "evidence": {
+            "url": "https://www.bassett.org/sites/default/files/2026-08/Charity-Care-and-Financial-Assistance-Spanish.pdf",
+            "sha256": "4b63c772ce75253028f883b76e6abe549dce7fcc25e3c7d867476942fcabf692",
+            "artifact_path": "snapshots/4b63c772ce75253028f883b76e6abe549dce7fcc25e3c7d867476942fcabf692.pdf",
+            "retrieved_at": "2026-11-09T00:39:10.197760+00:00",
+            "locator": "page 2",
+            "quote": "Esta política se aplica a los servicios profesionales médicamente necesarios, ya sean hospitalarios o de atención en el hogar ,\nrecibidos a través de cualquiera de los cinco hospitales de BHN y sus clínicas. El paciente debe rellenar una solicitud para\ncalificar. BHN dará por hecho que los pacientes califican para recibir asistencia financiera para los residentes del estado de\nNueva York, si residen en el área de servicio principal del hospital en el centro de Nueva York (Little Falls, Delhi, Herkimer,\nOneonta, Cobleskill y Cooperstown, NY). Esta política excluye Valley Health Services, Valley Residential Services, centros\nde enfermería especializada y atención a largo plazo. Esta política también excluye artículos de comodidad para el paciente,\nservicios minoristas, servicios no médicos como anteojos, cirugía cosmética, servicios dentales, cirugía bariátrica y cirugía\nbucal electiva."
+          }
+        }
+      ],
+      "summary_note": "The designated English and Spanish summaries do not describe a geographic service area (#24). The older resource guide is a supplement, not an independent county reference.",
+      "expected_reference": null
+    }
+  }
+}

@@ -1,4 +1,5 @@
 import GradingPanel from "./GradingPanel.jsx";
+import ReportingContext from "./ReportingContext.jsx";
 import AuditPanel from "./AuditPanel.jsx";
 import React from "react";
 import { ratings, ratingByStars } from "./ratings.js";
@@ -99,7 +100,8 @@ export function HospitalDetail({ hospital, onClose, onReview, pendingReviews }) 
           <a href={p.coordinate_source_url}>{p.coordinate_source}</a>
         </dd>
       </dl>
-      <GradingPanel key={hospital.id} hospitalKey={hospital.id} />
+      <ReportingContext key={`reporting-${hospital.id}`} hospitalKey={hospital.id} />
+      <GradingPanel key={`grading-${hospital.id}`} hospitalKey={hospital.id} />
       {hospital.id === "362" && <AuditPanel />}
       <button className="review-nav" onClick={onReview}>Review notifications ({pendingReviews ?? "…"})</button>
       <div className="links">
