@@ -122,12 +122,60 @@ def citations(source, ids):
 
 
 def verify_source(source, fresh_sources):
-    fresh = next((s for s in fresh_sources if s["snapshot"]["snapshot_id"] == source["snapshot"]["snapshot_id"]), None)
+    fresh = next((s for s in fresh_sources if s["snapshot"]["snapshot_id"] == source["snapshot"]["snapshot_id"]
+                  and s['snapshot']['url'] == source['snapshot']['url']), None)
     if fresh is None or len(fresh["segments"]) != len(source["pages"]):
         raise ValueError("Source unavailable or page inventory changed")
+    if any(source['snapshot'].get(key) != fresh['snapshot'].get(key) for key in
+           ('snapshot_id', 'sha256', 'url', 'artifact_path', 'document_type')):
+        raise ValueError('Source identity differs from original collection')
     for page, original in zip(source["pages"], fresh["segments"]):
         if page["locator"] != original["locator"] or "".join(e["quote"] for e in page["passages"]) != original["text"]:
             raise ValueError("Full-page evidence does not match the original snapshot")
+        if page['extraction_status'] != original['status']:
+            raise ValueError('Extraction status differs from original snapshot')
+
+
+def verify_state(state, fresh_sources):
+    """Revalidate persisted coverage and every revision before deriving any outcome."""
+    identities = [(s['snapshot']['url'], s['snapshot']['snapshot_id']) for s in state['sources']]
+    if len(set(identities)) != len(identities) or set(identities) != {(s['snapshot']['url'], s['snapshot']['snapshot_id']) for s in fresh_sources}:
+        raise ValueError('Full review inventory differs from original collection')
+    if len({s['source_id'] for s in state['sources']}) != len(state['sources']):
+        raise ValueError('Duplicate source IDs')
+    for source in state['sources']:
+        verify_source(source, fresh_sources)
+        expected = [f"{source['source_id']}-p{i}" for i in range(1, len(source['pages']) + 1)]
+        if [p['page_id'] for p in source['pages']] != expected:
+            raise ValueError('Page identity changed')
+        if not set(source['delivered_pages']) <= set(expected):
+            raise ValueError('Unknown delivered page')
+        registry = [dict(snapshot_id=source['snapshot']['snapshot_id'], locator=p['locator'], quote=e['quote'])
+                    for p in source['pages'] for e in p['passages']]
+        for review in source['reviews']:
+            pages = review['reviewed_pages']
+            if len(set(pages)) != len(pages) or not set(pages) <= set(source['delivered_pages']):
+                raise ValueError('Invalid saved reviewed-page claim')
+            status = review['status']
+            if status not in {'reviewed', 'unrelated', 'translation_needed', 'unreadable'}:
+                raise ValueError('Invalid saved review status')
+            if status in {'reviewed', 'unrelated'} and (not expected or set(pages) != set(expected)
+                    or any(p['extraction_status'] != 'extracted' for p in source['pages'])):
+                raise ValueError('Saved review lacks complete readable coverage')
+            observations = review['observations']
+            if status == 'reviewed' and {o['measure_id'] for o in observations} != set(MEASURES):
+                raise ValueError('Saved review must address all three measures')
+            if status != 'reviewed' and observations:
+                raise ValueError('Unresolved or unrelated source has observations')
+            if status == 'unrelated' and not review.get('scope_evidence'):
+                raise ValueError('Unrelated source requires scope evidence')
+            for citation in review.get('scope_evidence', []) + [e for o in observations for e in o['evidence']]:
+                if citation not in registry:
+                    raise ValueError('Saved observation citation does not match original source')
+            for observation in observations:
+                Observation.model_validate(dict(observation, evidence_ids=[]))
+                if observation['position'] != 'not_addressed' and not observation['evidence']:
+                    raise ValueError('Saved substantive observation requires evidence')
 
 
 def submit(review_id, source_id, review, output, save):
@@ -244,8 +292,7 @@ def finalize(review_id, output, save):
     from review_identity import review_identity
     state = state_load(output, review_id)
     fresh, current_unavailable = load_sources(state["hospital_key"], state["extraction_id"], output)
-    for source in state["sources"]:
-        verify_source(source, fresh)
+    verify_state(state, fresh)
     for gap in current_unavailable:
         if gap not in state["unavailable"]:
             state["unavailable"].append(gap)

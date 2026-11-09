@@ -7,7 +7,7 @@ from pathlib import Path
 from unittest.mock import patch
 
 from full_review import (MEASURES, aggregate, begin, finalize, read_source,
-                         record_human_decision, state_load, submit)
+                         record_human_decision, state_load, submit, state_path)
 from test_cross_documents import SOURCES
 
 
@@ -137,6 +137,39 @@ class FullReviewTests(unittest.TestCase):
             batch = read_source(self.rid, 's1', batch['next_page'], self.output, self.save)
         result, _ = self.finish(review)
         self.assertEqual(len(result['coverage'][0]['reviewed_pages']), 80)
+
+    def test_finalize_revalidates_saved_observation_and_earlier_revision(self):
+        review = self.review()
+        self.finish(review)
+        self.finish(review)
+        state = state_load(self.output, self.rid)
+        state['sources'][0]['reviews'][0]['observations'][0]['evidence'][0]['quote'] = 'SYN invented quote'
+        self.save(state_path(self.output, self.rid), json.dumps(state).encode())
+        with self.assertRaisesRegex(ValueError, 'citation'):
+            finalize(self.rid, self.output, self.save)
+
+    def test_finalize_rejects_lost_inventory_and_forged_coverage(self):
+        self.finish(self.review())
+        original = state_load(self.output, self.rid)
+        changes = [lambda s: s['sources'].clear(),
+                   lambda s: s['sources'][0]['reviews'][-1]['reviewed_pages'].clear(),
+                   lambda s: s['sources'][0]['reviews'][-1]['observations'].clear(),
+                   lambda s: s['sources'][0]['snapshot'].update(url='https://example.org/SYN-forged'),
+                   lambda s: s['sources'][0]['pages'][0].update(extraction_status='unreadable')]
+        for mutate in changes:
+            with self.subTest(mutation=changes.index(mutate)):
+                state = copy.deepcopy(original)
+                mutate(state)
+                self.save(state_path(self.output, self.rid), json.dumps(state).encode())
+                with self.assertRaises(ValueError):
+                    finalize(self.rid, self.output, self.save)
+
+    def test_all_non_submission_timing_contexts_preserve_favorable_result(self):
+        for context in ('appeal', 'decision_processing', 'collection_wait', 'approval_duration'):
+            review = self.review()
+            review['observations'].append(dict(review['observations'][0], position='restricts', context=context))
+            result, _ = self.finish(review)
+            self.assertEqual(result['findings'][0]['result'], 'yes')
 
 
 if __name__ == '__main__':
