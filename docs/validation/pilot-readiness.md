@@ -43,6 +43,8 @@ These are saved-evidence executions, not new website captures. Little Falls S no
 5. **Policy decisions:** obtain authoritative PSA boundary rules and effective dates (#64); resolve permitted whole-form customization/current-FPL interaction (#72/#76); approve or revise missing-statement override (#10). Preserve the known official-template/HHS arithmetic discrepancy.
 6. **Human review:** record subject-matter agreement on a named commit (#67/#20), then independent finding/translation decisions and assessment-bound institutional authorization. Technical review and merge are not substitutes.
 
+For Ellenville's W/Y/Z follow-up specifically, retain the favorable original citations and resolve the existing #64 questions: timely completion following Medicaid denial versus submission deadlines/Russian data-collection wording (W); personal-resource exhaustion and Spanish asset wording versus income documentation (Y); Ukrainian immigration wording (Z). The unavailable 2021 policy remains a separate source gap. Little Falls needs its own complete structured cross-document review; the Ellenville contradictions are not attributed to it.
+
 ## Verification log
 
 Executed on Windows, Node 22.14.0, existing Python virtual environment; no paid models:
@@ -66,7 +68,11 @@ Schema validation occurs in the grader and its regression tests using the local 
 
 The expanded pipeline browser test now verifies **real saved Little Falls S=yes**, all seven path/title/campus citations, pending authorization and consistent page/grader/overview/inbox revisions. It exposed and fixed a legacy-panel crash: the one-measure `/api/audits/362` endpoint and fixture queue had selected integrated jobs from the shared tables. Those legacy reads/requests are now explicitly scoped to their original rule; integrated publication remains unchanged. The passing expanded test captured `.audit/ui/pilot/little-falls-summary-chain-desktop.png`, which was visually inspected. Python pipeline snapshot/manifest writes also now use flushed temporary files and atomic hard links, avoiding a partial final file after interruption.
 
-### Clean-checkout reproduction
+### Clean-checkout reproduction — multi-hop follow-up
+
+Cloned implementation commit `0db44f7` to a separate directory with `git clone --no-hardlinks --branch feat/56-multihop-evidence`. `npm ci --offline` installed 20 cached packages. After extracting the checked-in ZIP, both runbook `pipeline-cli.js replay` commands returned **identical** reports with 17 outcomes and pending grades. `node --test backend/test/multihop.test.js` passed all three tests, including a new full Little Falls pipeline run using only packaged original bytes; `python -m unittest discover -s tools/live-audit -p test_multihop.py` passed all nine tests. `npm run build` passed, and the checkout remained clean. This used the existing Python environment through `T2P_PYTHON`; it is not a fresh-machine dependency installation or independent operator sign-off.
+
+### Historical clean-checkout reproduction — PR #87
 
 Cloned commit `d2a7c8f` into a separate directory using `git clone --no-hardlinks --branch feat/pilot-audit-orchestration`, with no copied audit database or private working artifacts. `npm ci --offline` installed 20 packages from the existing cache. Python dependencies were supplied through the existing virtual environment, not freshly installed. Extracted the checked-in ZIP and ran both `pipeline-cli.js replay` commands from the runbook: **both reports identical**, 17 findings each, pending grades. A new synthetic `run --mode synthetic --hospital 1002 --year 2026 --date 2026-11-09 --request SYN-clean` produced 17 findings, zero unresolved, calculated B and pending institutional grade. `npm run build` passed there; `git status --short` remained clean. This verifies portable code/evidence execution with preinstalled Python dependencies, not a fresh-machine dependency installation or independent human operation.
 

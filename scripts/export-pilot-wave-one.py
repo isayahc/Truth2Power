@@ -78,6 +78,8 @@ def export(store, destination):
             if len(action) > 260:
                 action = action[:257] + '… (full blockers in report)'
             categories = BLOCKERS.get(m['css_column'], 'Source discovery; missing original evidence') if f['result'] == 'unclear' else 'Resolved posting evidence; institutional authorization still pending'
+            if key == '362' and m['css_column'] == 'U':
+                categories = 'Source discovery; structured-observation coverage (no verified conflict asserted)'
             if key == '1002' and m['css_column'] in ('W', 'Y', 'Z'):
                 categories += '; missing original evidence (2021 policy)'
             lines.append(f'| {m["css_column"]} · {m["title"]} | {f["result"]} | {f["submitted_result"]} | {len(f["evidence"])} | {categories} | {action} |')
