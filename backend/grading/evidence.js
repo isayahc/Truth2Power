@@ -4,7 +4,7 @@ import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import { isDeepStrictEqual } from "node:util";
 import { sourceUrl, sha256, languageTag } from "../review/identity.js";
-import { readArtifact, requireValue, fingerprint, confirmedDocuments } from "./data.js";
+import { readArtifact, requireValue, fingerprint, confirmedDocuments, assistancePages } from "./data.js";
 import { parseProfile } from "./profiles.js";
 
 /** Bind testimony to the exact observations, citations, inventory and completed assessment. */
@@ -62,19 +62,21 @@ export function evidenceStore(input, root, decisionDirectory) {
   requireValue(input.scope.online_application !== "present" || online.length, "Posted online application missing from inventory");
 
   function segment(doc, locator) {
-    if (!textCache.has(doc.source_id)) {
+    const measureLinks = locator.startsWith("link ");
+    const cacheKey = measureLinks ? "links:" + doc.source_id : doc.source_id;
+    if (!textCache.has(cacheKey)) {
       const raw = byteCache.get(doc.source_id), suffix = extname(doc.snapshot.artifact_path).toLowerCase();
       let segments;
       if (suffix === ".txt") segments = Object.fromEntries(raw.toString("utf8").split(/\r?\n/).map((s, i) => ["line " + (i + 1), s]));
       else if ([".html", ".pdf", ".docx"].includes(suffix)) {
-        const proc = spawnSync(process.env.T2P_PYTHON || "python", [fileURLToPath(new URL("extract.py", import.meta.url)), suffix],
+        const proc = spawnSync(process.env.T2P_PYTHON || "python", [fileURLToPath(new URL("extract.py", import.meta.url)), suffix, ...(doc.role === "landing_page" && measureLinks ? [doc.source_id] : [])],
           { input: raw, encoding: "utf8", timeout: 30000, maxBuffer: 16 * 1024 * 1024 });
         requireValue(proc.status === 0, "Offline source extraction unavailable");
         segments = JSON.parse(proc.stdout);
       } else throw Error("Unsupported text evidence format");
-      textCache.set(doc.source_id, segments);
+      textCache.set(cacheKey, segments);
     }
-    return textCache.get(doc.source_id)[locator];
+    return textCache.get(cacheKey)[locator];
   }
 
   function evidence(measure, finding) {
@@ -106,6 +108,23 @@ export function evidenceStore(input, root, decisionDirectory) {
       if (o.method === "source_field") {
         requireValue(Object.hasOwn(c, "value"), "Observation must come from a published structured field");
         value = c.value;
+      } else if (o.method === "posted_link") {
+        requireValue(measure.evaluator === "posting" && c.doc.role === "landing_page" &&
+          c.doc.source_id === assistancePages.get(input.hospital_key), "Expected the hospital roster landing page");
+        const links = [];
+        for (const [index, e] of finding.evidence.entries()) {
+          if (cited[index].doc !== c.doc) continue;
+          requireValue(e.locator.startsWith("link ") && e.quote === cited[index].content, "Expected the exact saved anchor label");
+          const target = e.locator.slice(5);
+          const targetDoc = registry.get(target);
+          const roleRecord = confirmedDocuments.find((d) => d.hospital_key === input.hospital_key && d.sha256 === targetDoc?.snapshot?.sha256 &&
+            d.role === targetDoc.role && measure.expected.any_accessible_role.includes(d.role));
+          requireValue(roleRecord && finding.evidence.some((citation) => citation.source_id === target &&
+            citation.quote === roleRecord.quote && citation.locator === roleRecord.locator), "Missing linked document role evidence");
+          links.push(target);
+        }
+        requireValue(links.length > 0, "Missing posting links");
+        value = { links, search_complete: false };
       } else if (o.method === "text_profile") {
         requireValue(typeof c.content === "string", "Text profile needs located text");
         const confirmed = confirmedDocuments.some((d) => d.hospital_key === c.doc.hospital_key && d.role === c.doc.role && d.sha256 === c.doc.snapshot.sha256);

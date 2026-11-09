@@ -1,0 +1,97 @@
+{
+  "schema_version": "1.0",
+  "hospital_key": "362",
+  "landing_url": "https://www.bassett.org/patients-visitors/billing-insurance/financial-assistance",
+  "attempted_at": "2026-11-09T00:38:50.318979+00:00",
+  "status": "complete",
+  "landing_page": {
+    "url": "https://www.bassett.org/patients-visitors/billing-insurance/financial-assistance",
+    "sha256": "226373789547027be6f33106a3360e0716ca85bf64faa1f3f780c17bfbcb710c",
+    "artifact_path": "snapshots/226373789547027be6f33106a3360e0716ca85bf64faa1f3f780c17bfbcb710c.html",
+    "retrieved_at": "2026-11-09T00:38:55.969272+00:00",
+    "publisher_updated_at": null,
+    "content_type": "text/html",
+    "size_bytes": 64526
+  },
+  "documents": [
+    {
+      "source_url": "https://www.bassett.org/sites/default/files/2026-01/2026-NYS-Bassett-FA-Form-English.docx",
+      "labels": [
+        "Bassett NYS Uniform Hospital Financial Assistance Application (English)"
+      ],
+      "attempted_at": "2026-11-09T00:38:55.975439+00:00",
+      "status": "saved",
+      "url": "https://www.bassett.org/sites/default/files/2026-01/2026-NYS-Bassett-FA-Form-English.docx",
+      "sha256": "3b5149e5b95b27c043114aa6f287d49a2c2c69aa5cab75671ddcb3bd057c9fb8",
+      "artifact_path": "snapshots/3b5149e5b95b27c043114aa6f287d49a2c2c69aa5cab75671ddcb3bd057c9fb8.docx",
+      "retrieved_at": "2026-11-09T00:38:59.513465+00:00",
+      "publisher_updated_at": null,
+      "content_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      "size_bytes": 34386
+    },
+    {
+      "source_url": "https://www.bassett.org/sites/default/files/2026-01/2026-NYS-Bassett-FA-Form-Spanish.docx",
+      "labels": [
+        "Bassett NYS Uniform Hospital Financial Assistance Application (Spanish)"
+      ],
+      "attempted_at": "2026-11-09T00:38:59.513587+00:00",
+      "status": "saved",
+      "url": "https://www.bassett.org/sites/default/files/2026-01/2026-NYS-Bassett-FA-Form-Spanish.docx",
+      "sha256": "ae1641c61feb9d723b29af2f33d6d0bbe41f3d76670923dc2dc6a32764c10be6",
+      "artifact_path": "snapshots/ae1641c61feb9d723b29af2f33d6d0bbe41f3d76670923dc2dc6a32764c10be6.docx",
+      "retrieved_at": "2026-11-09T00:39:03.338557+00:00",
+      "publisher_updated_at": null,
+      "content_type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      "size_bytes": 30028
+    },
+    {
+      "source_url": "https://www.bassett.org/sites/default/files/2026-07/Bassett-Healthcare-Network-Charity-Care-and-Financial-Assistance-07-09-2026.pdf",
+      "labels": [
+        "Charity Care & Financial Assistance (English)"
+      ],
+      "attempted_at": "2026-11-09T00:39:03.338583+00:00",
+      "status": "saved",
+      "url": "https://www.bassett.org/sites/default/files/2026-07/Bassett-Healthcare-Network-Charity-Care-and-Financial-Assistance-07-09-2026.pdf",
+      "sha256": "bdf455f21be644f06d7d1e9275fcf21eef9453d1846bc74a82d44c60db431619",
+      "artifact_path": "snapshots/bdf455f21be644f06d7d1e9275fcf21eef9453d1846bc74a82d44c60db431619.pdf",
+      "retrieved_at": "2026-11-09T00:39:06.967333+00:00",
+      "publisher_updated_at": null,
+      "content_type": "application/pdf",
+      "size_bytes": 330444
+    },
+    {
+      "source_url": "https://www.bassett.org/sites/default/files/2026-08/Charity-Care-and-Financial-Assistance-Spanish.pdf",
+      "labels": [
+        "Charity Care & Financial Assistance (Spanish)"
+      ],
+      "attempted_at": "2026-11-09T00:39:06.967356+00:00",
+      "status": "saved",
+      "url": "https://www.bassett.org/sites/default/files/2026-08/Charity-Care-and-Financial-Assistance-Spanish.pdf",
+      "sha256": "4b63c772ce75253028f883b76e6abe549dce7fcc25e3c7d867476942fcabf692",
+      "artifact_path": "snapshots/4b63c772ce75253028f883b76e6abe549dce7fcc25e3c7d867476942fcabf692.pdf",
+      "retrieved_at": "2026-11-09T00:39:10.197760+00:00",
+      "publisher_updated_at": null,
+      "content_type": "application/pdf",
+      "size_bytes": 449971
+    },
+    {
+      "source_url": "https://www.bassett.org/sites/default/files/hg_features/mercury_standard_layout/46607191876acfcc504a7cc8048608fc.pdf",
+      "labels": [
+        "Financial Assistance Resource Guide"
+      ],
+      "attempted_at": "2026-11-09T00:39:10.197942+00:00",
+      "status": "saved",
+      "url": "https://www.bassett.org/sites/default/files/hg_features/mercury_standard_layout/46607191876acfcc504a7cc8048608fc.pdf",
+      "sha256": "46e36a10a8964085dd8c30a81f53c6407fccc9d14bed712824576c8e199c7b96",
+      "artifact_path": "snapshots/46e36a10a8964085dd8c30a81f53c6407fccc9d14bed712824576c8e199c7b96.pdf",
+      "retrieved_at": "2026-11-09T00:39:13.546716+00:00",
+      "publisher_updated_at": null,
+      "content_type": "application/pdf",
+      "size_bytes": 293751
+    }
+  ],
+  "limitations": [
+    "Direct .pdf/.docx anchors in saved HTML only; no JavaScript or recursive discovery. External hosts require review. Downloading does not verify currency or campus applicability."
+  ],
+  "completed_at": "2026-11-09T00:39:13.546746+00:00"
+}

@@ -5,6 +5,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "tools/live-audit"))
 from extraction import extract_bytes
+from documents import Links
 
 
 def segments(data: bytes, suffix: str) -> dict[str, str | None]:
@@ -13,4 +14,11 @@ def segments(data: bytes, suffix: str) -> dict[str, str | None]:
 
 
 if __name__ == "__main__":
-    print(json.dumps(segments(sys.stdin.buffer.read(), sys.argv[1])))
+    data = sys.stdin.buffer.read()
+    result = segments(data, sys.argv[1])
+    if sys.argv[1] == ".html" and len(sys.argv) == 3:
+        parser = Links(sys.argv[2])
+        parser.feed(data.decode("utf-8", errors="replace"))
+        parser.close()
+        result.update({"link " + url: next((label for label in labels if label), "") for url, labels in parser.links.items()})
+    print(json.dumps(result))
