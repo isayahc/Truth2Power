@@ -5,6 +5,7 @@ import HospitalMap from "./HospitalMap.jsx";
 import HospitalSearch from "./HospitalSearch.jsx";
 import { HospitalDetail, Ratings } from "./Ratings.jsx";
 import ReviewInbox, { reviewRequest } from "./ReviewInbox.jsx";
+import { LanguageSwitch, useLocale } from './locale.jsx';
 
 async function getFeatures(path, signal) {
   const response = await fetch(path, { signal });
@@ -17,6 +18,7 @@ async function getFeatures(path, signal) {
 }
 
 function Header({ onReview, pending }) {
+  const { t, localHref } = useLocale();
   return (
     <header>
       <div className="brand">
@@ -32,26 +34,28 @@ function Header({ onReview, pending }) {
           </svg>
         </span>
         <span className="brand-name">Truth2Power</span>
-        <span className="brand-unit">Health equity atlas</span>
+        <span className="brand-unit">{t('Health equity atlas')}</span>
       </div>
-      <a className="overview-link" href="?view=overview">Audit overview</a>
-      <a className="changes-link" href="?view=changes">Recent changes</a>
-      <button className="review-nav" onClick={onReview}>Review inbox <span>{pending ?? "…"}</span></button>
+      <a className="overview-link" href={localHref('?view=overview')}>{t('Audit overview')}</a>
+      <a className="changes-link" href={localHref('?view=changes')}>{t('Recent changes')}</a>
+      <button className="review-nav" onClick={onReview}>{t('Review inbox')} <span>{pending ?? "…"}</span></button>
+      <LanguageSwitch />
     </header>
   );
 }
 
 function Footer() {
+  const { t } = useLocale();
   return (
     <div className="foot">
       <p>
-        Audit:{" "}
+        {t('Audit:')}{" "}
         <a href="https://docs.google.com/spreadsheets/d/17S2EheUVVr1g911fPpBQJqRpy18pkUlaEEnvGM0LB1o/edit#gid=504145376">
           Community Service Society of New York
         </a>{" "}
-        · Boundaries: <a href="https://gis.ny.gov/civil-boundaries">NYS Geospatial Services</a>
+        · {t('Boundaries:')} <a href="https://gis.ny.gov/civil-boundaries">NYS Geospatial Services</a>
         <br />
-        Coordinates:{" "}
+        {t('Coordinates:')}{" "}
         <a href="https://health.data.ny.gov/Health/Health-Facility-General-Information/vn5v-hh5r">
           NYS DOH
         </a>
@@ -61,7 +65,7 @@ function Footer() {
         </a>
         , <a href="https://www.openstreetmap.org/copyright">© OpenStreetMap contributors</a> · WGS 84
         <br />
-        For demonstration only. Not medical advice. Ratings describe hospital policies in September 2025.
+        {t('For demonstration only. Not medical advice. Ratings describe hospital policies in September 2025.')}
       </p>
       <div className="downloads">
         <a className="download" href="/api/hospitals" download="new-york-hospital-coordinates.geojson">
@@ -77,6 +81,7 @@ function Footer() {
 
 /** Load the public atlas from the Node API and coordinate filters, search and map selection. */
 export default function App() {
+  const { t } = useLocale();
   const [data, setData] = useState(null);
   const [error, setError] = useState(false);
   const [attempt, setAttempt] = useState(0);
@@ -149,39 +154,38 @@ export default function App() {
       <Header onReview={() => openReviews()} pending={reviewError ? "!" : inbox?.pending} />
       <main>
         {reviewOpen ? <>
-          <button className="back plain" onClick={() => setReviewOpen(false)}>← Back to hospital map</button>
-          <ReviewInbox key={reviewHospital} inbox={inbox} error={reviewError} onRefresh={refreshReviews}
+          <button className="back plain" onClick={() => setReviewOpen(false)}>{t('← Back to hospital map')}</button>
+          <div lang="en"><ReviewInbox key={reviewHospital} inbox={inbox} error={reviewError} onRefresh={refreshReviews}
             hospitalKey={reviewHospital} hospitals={data?.hospitals ?? []} onHospital={(hospital) => {
               if (hospital) { selectHospital(hospital); setMapKey((n) => n + 1); setReviewOpen(false); }
-            }} />
-        </> : !selected && new URLSearchParams(window.location.search).get("view") === "changes" ? <Changes /> : !selected && new URLSearchParams(window.location.search).get("view") === "overview" ?
-          (data ? <Overview features={data.hospitals} counties={data.counties} /> :
-            <p role="status">{error ? <button onClick={() => setAttempt(attempt + 1)}>Retry loading atlas</button> : "Loading atlas…"}</p>) : <>
+            }} /></div>
+        </> : !selected && new URLSearchParams(window.location.search).get("view") === "changes" ? <div lang="en"><Changes /></div> : !selected && new URLSearchParams(window.location.search).get("view") === "overview" ?
+          (data ? <div lang="en"><Overview features={data.hospitals} counties={data.counties} /></div> :
+            <p role="status">{error ? <button onClick={() => setAttempt(attempt + 1)}>{t('Retry loading atlas')}</button> : t('Loading atlas…')}</p>) : <>
         <div className="intro">
           <div>
-            <div className="period">September 2025 review</div>
-            <h1>New York hospital compliance</h1>
+            <div className="period">{t('September 2025 review')}</div>
+            <h1>{t('New York hospital compliance')}</h1>
             <p className="descr">
-              Hospital financial assistance policies across New York State, rated from zero to five
-              stars.
+              {t('Hospital financial assistance policies across New York State, rated from zero to five stars.')}
             </p>
           </div>
           {data && (
             <div className="intro-stat">
               <strong>{data.hospitals.length}</strong>
-              <span>Hospitals mapped</span>
+               <span>{t('Hospitals mapped')}</span>
             </div>
           )}
         </div>
         {data ? (
           <div className={`content${selected ? " hospital-selected" : ""}`}>
-            <section className="map-block" aria-label="Hospital locations">
+            <section className="map-block" aria-label={t('Hospital locations')}>
               <div className="toolbar">
                 <div className="geo-label">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
                     <path d="m3 6 6-2 6 3 6-2v14l-6 2-6-3-6 2zM9 4v14m6-11v14" />
                   </svg>
-                  Statewide map
+                  {t('Statewide map')}
                 </div>
                 <HospitalSearch
                   key={searchKey}
@@ -203,10 +207,10 @@ export default function App() {
                 <strong aria-live="polite">
                   {filter === null
                     ? data.hospitals.length
-                    : visible.length + " of " + data.hospitals.length}{" "}
-                  hospital locations
+                    : visible.length + ' ' + t('of') + ' ' + data.hospitals.length}{" "}
+                  {t('hospital locations')}
                 </strong>
-                <span className="hint">Select a hospital for its coordinates and audit record.</span>
+                <span className="hint">{t('Select a hospital for its coordinates and audit record.')}</span>
               </div>
             </section>
             <aside>
@@ -222,13 +226,13 @@ export default function App() {
           <p className="load-status" role="status">
             {error ? (
               <>
-                Couldn’t load the map data.{" "}
+                {t('Couldn’t load the map data.')}{" "}
                 <button className="plain" onClick={() => setAttempt((value) => value + 1)}>
-                  Try again
+                  {t('Try again')}
                 </button>
               </>
             ) : (
-              "Loading hospital locations…"
+              t('Loading hospital locations…')
             )}
           </p>
         )}

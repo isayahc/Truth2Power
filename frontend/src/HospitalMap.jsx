@@ -1,6 +1,7 @@
 import React, { memo, useRef, useState } from "react";
 import { countyPath, metro, metroCounties, statewide } from "./geometry.js";
 import { ratingByStars } from "./ratings.js";
+import { useLocale } from './locale.jsx';
 
 const regions = [
   ["Western NY", -78.75, 42.46],
@@ -30,22 +31,24 @@ const Land = memo(function Land({ counties, project }) {
 });
 
 function Labels({ items, className }) {
+  const { t } = useLocale();
   return items.map(([name, longitude, latitude]) => {
     const [x, y] = statewide([longitude, latitude]);
     return (
       <text key={name} x={x} y={y} className={className}>
-        {name}
+        {t(name)}
       </text>
     );
   });
 }
 
 function Points({ hospitals, project, zoom = 1, selected, onSelect, setHover }) {
+  const { t } = useLocale();
   return hospitals.map((hospital) => {
     const [cx, cy] = project(hospital.geometry.coordinates);
     const { stars, name } = hospital.properties;
     const active = selected?.id === hospital.id;
-    const label = name + " · " + (hospital.markerLabel ?? stars + " stars");
+    const label = name + " · " + (hospital.markerLabel ?? stars + ' ' + t(stars === 1 ? 'star' : 'stars'));
     return (
       <circle
         key={hospital.id}
@@ -77,6 +80,7 @@ function Points({ hospitals, project, zoom = 1, selected, onSelect, setHover }) 
 
 /** Draw both views from the same WGS 84 points and keep pan and zoom local to the map. */
 export default function HospitalMap({ hospitals, counties, selected, onSelect }) {
+  const { t, language } = useLocale();
   const [view, setView] = useState(initialView);
   const [hover, setHover] = useState(null);
   const svg = useRef(null);
@@ -117,13 +121,13 @@ export default function HospitalMap({ hospitals, counties, selected, onSelect })
   }
   const props = { selected, onSelect: choose, setHover };
   return (
-    <div className="viewport">
+    <div className="viewport" lang={language}>
       <svg
         id="map"
         viewBox="0 0 900 555"
         ref={svg}
         className={view.zoom > 1 ? "zoomed" : ""}
-        aria-label="New York hospital map with New York City and Long Island inset"
+        aria-label={t('New York hospital map with New York City and Long Island inset')}
         onPointerDown={(event) => {
           moved.current = false;
           if (view.zoom > 1 && event.button === 0) drag.current = { start: point(event), view };
@@ -149,10 +153,10 @@ export default function HospitalMap({ hospitals, counties, selected, onSelect })
           <g id="metro-inset">
             <rect x="24" y="377" width="420" height="158" rx="4" className="inset-frame" />
             <text x="40" y="398" className="inset-title">
-              New York City &amp; Long Island
+              {t('New York City & Long Island')}
             </text>
             <text x="427" y="397" textAnchor="end" className="inset-kicker">
-              METRO DETAIL
+              {t('METRO DETAIL')}
             </text>
             <defs>
               <clipPath id="inset-clip">
@@ -183,14 +187,14 @@ export default function HospitalMap({ hospitals, counties, selected, onSelect })
         </g>
       </svg>
       <div className="controls">
-        <button aria-label="Zoom in" disabled={view.zoom === 6} onClick={() => changeZoom(1.65)}>
+        <button aria-label={t('Zoom in')} disabled={view.zoom === 6} onClick={() => changeZoom(1.65)}>
           +
         </button>
-        <button aria-label="Zoom out" disabled={view.zoom === 1} onClick={() => changeZoom(1 / 1.65)}>
+        <button aria-label={t('Zoom out')} disabled={view.zoom === 1} onClick={() => changeZoom(1 / 1.65)}>
           −
         </button>
         <button
-          aria-label="Reset map view"
+          aria-label={t('Reset map view')}
           disabled={view.zoom === 1}
           onClick={() => setView(initialView)}
         >

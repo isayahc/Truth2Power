@@ -1,6 +1,8 @@
 import React, { useRef, useState } from "react";
+import { useLocale } from './locale.jsx';
 
 export default function HospitalSearch({ hospitals, onSelect }) {
+  const { t } = useLocale();
   const [query, setQuery] = useState("");
   const [open, setOpen] = useState(false);
   const results = useRef(null);
@@ -39,8 +41,8 @@ export default function HospitalSearch({ hospitals, onSelect }) {
         </svg>
         <input
           type="search"
-          placeholder="Find a hospital or city"
-          aria-label="Find a hospital or city"
+          placeholder={t('Find a hospital or city')}
+          aria-label={t('Find a hospital or city')}
           value={query}
           onChange={(e) => {
             setQuery(e.target.value);
@@ -68,7 +70,7 @@ export default function HospitalSearch({ hospitals, onSelect }) {
               </button>
             ))
           ) : (
-            <p>No matching hospitals.</p>
+            <p>{t('No matching hospitals.')}</p>
           )}
         </div>
       )}
