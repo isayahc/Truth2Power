@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import Overview from "./Overview.jsx";
 import HospitalMap from "./HospitalMap.jsx";
 import HospitalSearch from "./HospitalSearch.jsx";
 import { HospitalDetail, Ratings } from "./Ratings.jsx";
@@ -32,6 +33,7 @@ function Header({ onReview, pending }) {
         <span className="brand-name">Truth2Power</span>
         <span className="brand-unit">Health equity atlas</span>
       </div>
+      <a className="overview-link" href="?view=overview">Audit overview</a>
       <button className="review-nav" onClick={onReview}>Review inbox <span>{pending ?? "…"}</span></button>
     </header>
   );
@@ -123,6 +125,8 @@ export default function App() {
     const url = new URL(window.location.href);
     if (hospital) url.searchParams.set("hospital", hospital.id);
     else url.searchParams.delete("hospital");
+    url.searchParams.delete("view");
+    url.searchParams.delete("revision");
     url.hash = "";
     window.history.pushState(null, "", url);
   }
@@ -148,7 +152,9 @@ export default function App() {
             hospitalKey={reviewHospital} hospitals={data?.hospitals ?? []} onHospital={(hospital) => {
               if (hospital) { selectHospital(hospital); setMapKey((n) => n + 1); setReviewOpen(false); }
             }} />
-        </> : <>
+        </> : !selected && new URLSearchParams(window.location.search).get("view") === "overview" ?
+          (data ? <Overview features={data.hospitals} counties={data.counties} /> :
+            <p role="status">{error ? <button onClick={() => setAttempt(attempt + 1)}>Retry loading atlas</button> : "Loading atlas…"}</p>) : <>
         <div className="intro">
           <div>
             <div className="period">September 2025 review</div>

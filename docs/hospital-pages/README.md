@@ -13,7 +13,7 @@ Each page contains:
 
 ## Data and provenance
 
-`GET /api/hospitals/{key}/page` is read-only. Wave 1 has a checked-in display projection (`1002.json`, `362.json`) so a clean checkout has substantive pages without a private local audit directory. Other hospitals return 404 and an explicit unassessed state.
+`GET /api/hospitals/{key}/page` is read-only. Wave 1 has a checked-in display projection (`1002.json`, `362.json`) so a clean checkout has substantive pages without a private local audit directory. Other hospitals return 404 and an explicit unassessed state until applicable local records exist. An overview link includes the selected page revision. A changed revision returns 409 and offers a fresh overview.
 
 The projections retain original artifact SHA-256 IDs, artifact paths, scope, execution/review dates, producer findings and citation metadata. They come from the #21 posting records, #24 summary records, and saved #22/#64/#76 cross-document/full/application reviews. They do not replace those artifacts or change any decisions. Original full/application reviews remain in the review inbox with their separate human decisions. The page deliberately labels the source drafts rather than representing them as human-approved.
 

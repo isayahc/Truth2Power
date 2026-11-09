@@ -4,6 +4,7 @@ import { createReviewService } from "../review/service.js";
 
 import { gradingRoute } from "../grading/routes.js";
 import { reportingContext } from "../reporting/context.js";
+import { overview } from "../overview/service.js";
 import { hospitalPage } from "../hospital-page/service.js";
 
 let reviewService;
@@ -50,11 +51,22 @@ function errorResponse(statusCode, message) {
 
 /** Serve an API Gateway HTTP API v2 event with a response usable by Node or Lambda. */
 export async function handler(event) {
+  if (event.rawPath === "/api/overview") {
+    if (event.requestContext?.http?.method !== "GET") return errorResponse(405, "Use GET.");
+    try {
+      return { statusCode: 200, headers: { "Content-Type": "application/json", "Cache-Control": "no-store" }, body: JSON.stringify(overview()) };
+    } catch (error) {
+      console.error("overview_failed", error.name);
+      return errorResponse(500, "Audit overview could not be loaded.");
+    }
+  }
   const page = /^\/api\/hospitals\/(\d{1,8}|t2p-\d+)\/page$/.exec(event.rawPath);
   if (page) {
     if (event.requestContext?.http?.method !== "GET") return errorResponse(405, "Use GET.");
     try {
       const data = hospitalPage(page[1]);
+      const expected = event.queryStringParameters?.revision;
+      if (expected && expected !== (data?.revision ?? "unassessed")) return errorResponse(409, "Assessment changed since the overview was loaded.");
       return data ? { statusCode: 200, headers: { "Content-Type": "application/json", "Cache-Control": "no-store" }, body: JSON.stringify(data) } : errorResponse(404, "Hospital page not yet assessed.");
     } catch (error) {
       console.error("hospital_page_failed", error.name);
