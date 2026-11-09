@@ -4,6 +4,14 @@ Updated for the #72 multilingual follow-up to merged PRs #87/#88. Issue #37 is c
 
 ## Multilingual application engineering (#72)
 
+### #64 full-review reproducibility follow-up
+
+The [four-measure Ellenville packet](ellenville-full-review.md) now packages the previously local full-source review, all 52 source units across five languages, 22 model revisions and original results. Finalization now revalidates persisted source identity, full coverage and all revision citations, closing a gap where saved observations could change after submission. Full Python regressions: **101 passed**. A new integrated replay using only the three portable packages completed with 17 measures, 3 resolved / 14 unclear and grade pending (revision `6f4846fd494b669f602809d4d8314e4b6aa330c1579264620dba3a7491e64083`).
+
+The four #64 outcomes remain unclear for specific evidence/rule questions. The unavailable 2021 policy still returns 404. A DOH 2007 county-table lead was found but could not be captured; effective/applicable PSA criteria and human approval remain pending. See [review questions](issue-64-review-questions.md). This follow-up supports reproducible review; it does not satisfy #64's human-confirmation criterion or justify closure.
+
+Clean-clone check at `051c08a`: `scripts/export-full-review.py` regenerated both tracked outputs identically with a clean tree; all 101 Python tests passed from the clone using the existing virtual environment. No local audit state or network was needed for replay. Python dependency installation/auditing and independent operator/subject-matter sign-off were not part of this check.
+
 Final visual follow-up: `references/application-visual-review-v1.json` records model inspection of all 25 translated Ellenville PDF pages. Attachment requires exact hospital/language/hash, complete readable page coverage and verbatim question quotations. Fields and continuations are visible with no observed clipping; specific semantic questions remain. This resolves the uninspected-PDF-layout gap, not semantic equivalence or approval. Little Falls Spanish DOCX rendering remains unresolved. Pipeline job identity pins this review file's hash.
 
 All **seven application versions / 42 source-specific drafts** are reproducible from original public bytes. See [coverage matrix](wave-one-application-coverage.md) and `wave-one-application-reviews.json`. Source-language profiles share a versioned specification between Python and the independent JavaScript verifier. Every hospital now has AH/AI/AJ numeric observations for every application language: **21 source/measure observations**, versus six English-only observations before this change. All five Ellenville tables fail 2026 currency; both Little Falls tables match HHS arithmetic. AE/AG presence drafts retain contacts and linked income/discount rows.
