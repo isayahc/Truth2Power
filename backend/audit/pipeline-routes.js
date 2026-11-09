@@ -1,3 +1,4 @@
+import { runId } from "./run-history.js";
 import { openStore } from "./store.js";
 import { enqueuePipeline, publications, pipelineRoot } from "./pipeline-store.js";
 import { fingerprint, readArtifact } from "../grading/data.js";
@@ -16,7 +17,7 @@ export function pipelineRoute(event) {
       if (!Object.keys(options).every((key) => ["year", "review_date", "mode", "variant", "request_key", "discovery_bounds"].includes(key))) return json(400, { error: "Unsupported audit option." });
       db = openStore();
       const id = enqueuePipeline(db, { ...options, hospital_key: match[1] });
-      return json(202, { id });
+      return json(202, { id, audit_run_id: runId(id) });
     } catch { return json(400, { error: "Invalid or conflicting audit request." }); }
     finally { db?.close(); }
   }

@@ -1,8 +1,9 @@
+import { hospitalHistory, runId } from "./run-history.js";
 import { randomUUID } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { openStore, claim } from "./store.js";
-import { enqueuePipeline, pipelineRoot } from "./pipeline-store.js";
+import { cancelRun, enqueuePipeline, pipelineRoot } from "./pipeline-store.js";
 import { runPipeline } from "./pipeline.js";
 import { grade } from "../grading/grade.js";
 import { overview } from "../overview/service.js";
@@ -14,7 +15,15 @@ const year = Number(option("--year", "2026"));
 const date = option("--date", `${year}-11-09`);
 let db, targetId;
 try {
-  if (command === "replay") {
+  if (command === "cancel") {
+    const id = Number(option("--job"));
+    if (!Number.isSafeInteger(id) || id < 1) throw Error("Pass a numeric --job ID");
+    db = openStore();
+    console.log(JSON.stringify({ audit_run_id: runId(id), cancelled: cancelRun(db, id) }));
+  } else if (command === "history") {
+    db = openStore();
+    console.log(JSON.stringify(hospitalHistory(db, option("--hospital", "1002"), pipelineRoot()), null, 2));
+  } else if (command === "replay") {
     const b = JSON.parse(readFileSync(args[0]));
     if (b.id !== fingerprint({ input: b.input, report: b.report }) || b.rubric_sha256 !== fingerprint(rubric)) throw Error("Assessment identity or rubric bytes differ");
     const report = grade(b.input, { root: resolve(option("--root", pipelineRoot())) });
@@ -30,7 +39,7 @@ try {
         variant: option("--variant", "original"), request_key: option("--request", randomUUID()), evidence_root: resolve(option("--evidence-root", pipelineRoot())),
         classifications: args.includes("--classifications") ? readFileSync(option("--classifications")) : undefined,
         discovery_bounds: JSON.parse(option("--discovery-bounds", "{}")) });
-      console.log(JSON.stringify({ job_id: id, queued: true }));
+      console.log(JSON.stringify({ job_id: id, audit_run_id: runId(id), queued: true }));
       targetId = id;
       if (command === "queue") process.exitCode = 0;
     }

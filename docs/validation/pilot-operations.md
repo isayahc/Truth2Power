@@ -180,3 +180,18 @@ Run `.venv/Scripts/python.exe scripts/export-full-review.py`. The checked-in `el
 The script re-extracts all originals, verifies every stored source/page identity, coverage claim and quotation in every revision, and requires the recomputed three-measure aggregate to match the preserved result. It emits `ellenville-full-review.json` and `.md`, including a fourth, still-unclear PSA finding with source citations and specific rule questions. Original model dates remain separate from the follow-up date; no fresh full-source review or human approval is invented. See `issue-64-review-questions.md` for research/retrieval limitations and decisions needed.
 
 To include this history in an integrated replay, extract this ZIP into the same evidence root as the pilot and application-reference ZIPs before running `pipeline-cli.js run --mode replay --hospital 1002 ... --evidence-root <directory>`. The existing adapter/inbox handles the preserved native results. A follow-up run verified 17 measures, 3 resolved / 14 unclear, with the institutional grade pending. No qualitative or translation gate is relaxed.
+
+## Logical run history (#95, epic #93)
+
+Run `npm run audit:pilot -- history --hospital 739` for the local operator receipt. The queue response includes the numeric job ID and its store-scoped stable alias `audit-run-<id>`. A request-key retry returns the same run. Each worker claim generates a distinct attempt token. To stop a selected pending or running job, use `npm run audit:pilot -- cancel --job 123`. Cancellation fences subsequent publication. A network request already in flight can finish.
+
+Opening the writable store installs the additive `audit_run_events(seq,job,attempt,state,at,detail)` table and indexes on job/sequence, attempt job and hospital/rule/job. Sequence is the event order. Timestamps are UTC. The worker appends actual collection, extraction, checkpoint reuse and grading boundaries. A successful publication commits its terminal event, revision pointer and attempt status atomically. A partial execution records the gap count. Source capture entries retain original retrieval times and hashes. A failed attempt keeps its failure reason even after a retry. Three failed or expired claims exhaust the job.
+
+The local read contract returns jobs newest first, original pinned context (including evidence root), request keys, attempts, ordered events, current state and scan/assessment IDs. The read uses one SQLite snapshot. Operator receipts include local paths. History is scoped to the configured review directory. Synthetic runs are inspectable but excluded from operational clocks. Each clock includes the run, attempt and mode supplying it.
+
+- Last attempted uses the latest worker claim.
+- Last completed execution includes scans, replays and partial publications.
+- Last successful retrieval uses the latest captured source timestamp from a committed live run or scan. Next due is 30 days later. With no known retrieval both are null.
+- Last eligible assessment uses the highest published live/full job ID, including partial evidence-backed assessments. A late older job cannot supersede it. Replays never advance this clock.
+
+Legacy integrated jobs keep their original IDs, attempts, request keys, recorded completion times and revisions. Historical events, capture clocks and missing timestamps are not synthesized. The older single-measure demo has a separate history contract. Keep the SQLite database and the complete evidence directory together for the lifetime of the audit history. Stop all writers before backup, preserve SQLite WAL files if present, and restore both database and artifacts together. An older application can ignore the additive table; restoring a pre-upgrade backup loses subsequent runs.
