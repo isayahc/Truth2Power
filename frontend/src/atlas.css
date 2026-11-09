@@ -894,3 +894,18 @@ h2 {
   stroke: #102f35;
   stroke-width: 3px;
 }
+
+.overview-link { margin-left:auto; margin-right:12px; color:inherit; font-weight:600; }
+.overview { padding: 24px 0; }
+.overview h2 { margin: 28px 0 12px; }
+.overview-scroll { overflow-x:auto; }
+.overview table { width:100%; border-collapse:collapse; background:white; }
+.overview th, .overview td { padding:8px 12px; text-align:left; border-bottom:1px solid var(--line); }
+.overview thead { background:#edf3ef; }
+.overview-controls { display:flex; flex-wrap:wrap; align-items:end; gap:12px; }
+.overview-controls label { display:grid; gap:5px; }
+.overview button, .overview select { cursor:pointer; }
+@media (max-width:600px) { header { flex-wrap:wrap; gap:8px; } .overview-link { margin-right:0; } .overview td,.overview th {padding:6px;} }
+.correction-draft label { display:grid; gap:6px; margin:8px 0; }
+.correction-draft textarea { width:100%; padding:8px; font:inherit; }
+.overview-heading { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; }

@@ -1,0 +1,16 @@
+{
+  "source": "https://regionalcouncils.ny.gov/sites/default/files/2025-04/2025-REDC-Guidebook.pdf",
+  "locator": "10 Regional Councils, page 4",
+  "regions": {
+    "Capital Region": ["Albany","Columbia","Greene","Rensselaer","Saratoga","Schenectady","Warren","Washington"],
+    "Central New York": ["Cayuga","Cortland","Madison","Onondaga","Oswego"],
+    "Finger Lakes": ["Genesee","Livingston","Monroe","Ontario","Orleans","Seneca","Wayne","Wyoming","Yates"],
+    "Long Island": ["Nassau","Suffolk"],
+    "Mid-Hudson": ["Dutchess","Orange","Putnam","Rockland","Sullivan","Ulster","Westchester"],
+    "Mohawk Valley": ["Fulton","Herkimer","Montgomery","Oneida","Otsego","Schoharie"],
+    "New York City": ["Bronx","Kings","New York","Queens","Richmond"],
+    "North Country": ["Clinton","Essex","Franklin","Hamilton","Jefferson","Lewis","St. Lawrence"],
+    "Southern Tier": ["Broome","Chemung","Chenango","Delaware","Schuyler","Steuben","Tioga","Tompkins"],
+    "Western New York": ["Allegany","Cattaraugus","Chautauqua","Erie","Niagara"]
+  }
+}

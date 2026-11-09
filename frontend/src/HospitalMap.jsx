@@ -45,7 +45,7 @@ function Points({ hospitals, project, zoom = 1, selected, onSelect, setHover }) 
     const [cx, cy] = project(hospital.geometry.coordinates);
     const { stars, name } = hospital.properties;
     const active = selected?.id === hospital.id;
-    const label = name + " · " + stars + " stars";
+    const label = name + " · " + (hospital.markerLabel ?? stars + " stars");
     return (
       <circle
         key={hospital.id}
@@ -53,7 +53,7 @@ function Points({ hospitals, project, zoom = 1, selected, onSelect, setHover }) 
         cy={cy}
         r={(active ? 5.4 : 3.65) / zoom}
         className={active ? "dot active" : "dot"}
-        fill={ratingByStars.get(stars).color}
+        fill={hospital.markerColor ?? ratingByStars.get(stars).color}
         role="button"
         aria-label={label}
         tabIndex={0}

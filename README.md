@@ -255,3 +255,13 @@ For a provider-independent live smoke test, run `python tools/live-audit/smoke.p
 The [Wave 1 posting results and replay commands](docs/audit-format/posting/README.md) cover application, summary and policy-statement availability for Ellenville and Little Falls. Each positive finding joins an actual landing-page anchor to a saved document and a content-confirmed role excerpt. The CLI reads saved captures offline.
 
 The [Wave 1 CSS agreement report](docs/validation/wave-one-css-agreement.md) compares the September 2025 hospital row exports with the published Wave 1 draft projections for all 17 measures. Run `node scripts/compare-wave-one.js --json` for the cell, assessment scope, date and citation metadata behind each comparison.
+
+### Statewide audit overview
+
+Open **Audit overview** in the atlas header, or visit `/?view=overview`. The read-only `GET /api/overview` response includes all 212 roster entries, state and regional totals, and the data timestamp. Select a regional count to list those hospitals. The coverage map and directory use that same filtered snapshot. Select a failed measure to see affected hospitals and open their dated evidence. A hospital with a cited draft failure offers an editable correction request alongside the finding.
+
+Regions use the facility county and the [NYS Regional Economic Development Councils map, page 4](https://regionalcouncils.ny.gov/sites/default/files/2025-04/2025-REDC-Guidebook.pdf). This grouping is independent of a hospital’s patient service area. September 2025 grades use the published roster. Current institutional grades come only from the hospital-page projection. In the shipped data those grades are pending for assessed hospitals and unassessed elsewhere.
+
+For the 2026 audit, **last successful check** is the most recent successful, scoped measure assessment, including an unclear finding. The overview uses a rolling 30-day UTC monitoring window. A hospital is overdue at its due timestamp. A failed attempt leaves that clock unchanged. Never checked means no successful measure assessment in this audit year. Each facility counts once in its region, each grade bucket and each affected-measure count, regardless of its number of documents. Coverage warnings surface unreadable local records.
+
+Revision-bound links open the findings used for the overview. A later record triggers a refresh notice on an older link. Reproduce the feature tests with `node --test backend/test/overview.test.js`, then `npm run build && node scripts/test-overview-e2e.js`. Use `CHROMIUM_PATH` for an installed Chromium executable.

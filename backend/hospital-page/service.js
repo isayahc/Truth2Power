@@ -1,5 +1,6 @@
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
+import { sha256 } from "../review/identity.js";
 import { latestByScope, localRecords, validDate } from "./records.js";
 
 const load = (path) => JSON.parse(readFileSync(new URL(path, import.meta.url), "utf8"));
@@ -26,11 +27,18 @@ const explanations = {
   AN: ["Does the summary state the income levels for assistance?", "§ 2807-k(9-a)(c)", "The summary must include the income levels used to decide eligibility."],
 };
 
-export function hospitalPage(key, { root = process.env.T2P_REVIEW_DIRECTORY || fileURLToPath(new URL("../../.audit/live/", import.meta.url)), records, year = 2026 } = {}) {
-  if (!["1002", "362"].includes(key)) return null;
-  const local = records ? { records, unavailable: [] } : localRecords(root);
-  const merged = new Map([...local.records, ...(records ? [] : baseline)].map((r) => [r.record_id, r]));
-  const all = [...merged.values()].filter((r) => r.hospital_key === key && r.guideline_year === year);
+/** Read one consistent set of input records for an entire overview request. */
+export function pageInputs(root = process.env.T2P_REVIEW_DIRECTORY || fileURLToPath(new URL("../../.audit/live/", import.meta.url))) {
+  const local = localRecords(root);
+  const merged = new Map([...local.records, ...baseline].map((r) => [r.record_id, r]));
+  return { records: [...merged.values()], unavailable: local.unavailable };
+}
+
+export function hospitalPage(key, { root, records, year = 2026, unavailable = [] } = {}) {
+  const inputs = records ? { records, unavailable } : pageInputs(root);
+  const all = inputs.records.filter((r) => r.hospital_key === key && r.guideline_year === year);
+  if (!all.length && !["1002", "362"].includes(key)) return null;
+  const revision = sha256(JSON.stringify([key, year, all.map((r) => r.record_id).sort()]));
   const scopes = latestByScope(all);
   const measures = rubric.measures.map((m) => {
     const versions = scopes.filter((s) => s.latest.measure_id === m.measure_id).map((s) => ({
@@ -51,12 +59,12 @@ export function hospitalPage(key, { root = process.env.T2P_REVIEW_DIRECTORY || f
   });
   const successes = scopes.map((s) => s.success?.checked_at).filter(Boolean).sort((a, b) => Date.parse(b) - Date.parse(a));
   const landing = all.flatMap((r) => r.landing_page || []).filter((s) => validDate(s.retrieved_at)).sort((a,b) => Date.parse(b.retrieved_at)-Date.parse(a.retrieved_at))[0];
-  return { hospital_key: key, guideline_year: year, current_grade: null,
+  return { hospital_key: key, revision, guideline_year: year, current_grade: null,
     grade_note: "Current institutional grade pending. These source-scoped drafts are not a single approved hospital assessment.",
     latest_successful_assessment_at: successes[0] ?? null,
     publisher_updated_at: landing?.publisher_updated_at ?? null, publisher_page_url: landing?.url ?? null,
     landing_retrieved_at: landing?.retrieved_at ?? null,
-    unavailable_records: local.unavailable.length, measures,
+    unavailable_records: inputs.unavailable.length, measures,
     failed_measures: measures.filter((m) => m.versions.some((v) => v.finding?.result === "no")).map((m) => m.measure_id),
   };
 }

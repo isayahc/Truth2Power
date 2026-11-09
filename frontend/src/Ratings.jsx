@@ -103,7 +103,7 @@ export function HospitalDetail({ hospital, onClose, onReview, pendingReviews }) 
       </dl>
       {p.assistance_url && <p><a href={p.assistance_url} target="_blank" rel="noreferrer">Get hospital financial assistance (HFA) ↗</a></p>}
       <a href={`?hospital=${encodeURIComponent(hospital.id)}`}>Permanent link to this hospital page</a>
-      <HospitalAssessment key={`assessment-${hospital.id}`} hospitalKey={hospital.id} />
+      <HospitalAssessment key={`assessment-${hospital.id}`} hospitalKey={hospital.id} hospitalName={p.name} />
       <ReportingContext key={`reporting-${hospital.id}`} hospitalKey={hospital.id} />
       <GradingPanel key={`grading-${hospital.id}`} hospitalKey={hospital.id} />
       {hospital.id === "362" && <AuditPanel />}

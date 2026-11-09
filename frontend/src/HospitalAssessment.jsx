@@ -4,20 +4,27 @@ const labels = { yes: "Yes", no: "No", unclear: "Unclear", n_a: "Not applicable"
 const date = (value) => value ? new Date(value).toISOString().replace("T", " ").replace(/\.\d+Z$/, " UTC") : "Unknown";
 const safeUrl = (url) => typeof url === "string" && /^https:\/\//.test(url) ? url : undefined;
 
-export default function HospitalAssessment({ hospitalKey }) {
+export default function HospitalAssessment({ hospitalKey, hospitalName }) {
   const [state, setState] = useState({ loading: true });
   const [reload, setReload] = useState(0);
+  const revision = new URLSearchParams(window.location.search).get("revision");
   useEffect(() => {
     const controller = new AbortController();
     setState({ loading: true });
-    fetch(`/api/hospitals/${encodeURIComponent(hospitalKey)}/page`, { signal: controller.signal }).then(async (r) => {
+    fetch(`/api/hospitals/${encodeURIComponent(hospitalKey)}/page${revision ? "?revision=" + encodeURIComponent(revision) : ""}`, { signal: controller.signal }).then(async (r) => {
+      if (r.status === 409) return { changed: true };
       if (r.status === 404) return { unavailable: true };
       if (!r.ok) throw Error();
       return { data: await r.json() };
     }).then((next) => { if (!controller.signal.aborted) setState(next); })
       .catch(() => { if (!controller.signal.aborted) setState({ error: true }); });
     return () => controller.abort();
-  }, [hospitalKey, reload]);
+  }, [hospitalKey, reload, revision]);
+  useEffect(() => {
+    const hash = window.location.hash.slice(1);
+    if (state.data && hash.startsWith("measure-" + hospitalKey + "-")) document.getElementById(hash)?.scrollIntoView();
+  }, [state.data, hospitalKey]);
+  if (state.changed) return <p role="alert">The assessment changed since this overview. <a href="?view=overview">Refresh the overview</a></p>;
   if (state.loading) return <p role="status">Loading hospital findings…</p>;
   if (state.unavailable) return <p>Current measure-by-measure page: not yet assessed.</p>;
   if (state.error) return <div role="alert">Hospital findings could not be loaded. <button onClick={() => setReload((n) => n + 1)}>Try again</button></div>;
@@ -41,6 +48,13 @@ export default function HospitalAssessment({ hospitalKey }) {
       <h4>{m.column} · {m.question}</h4>
       <p><strong className={`measure-result result-${m.result}`}>{labels[m.result]}{m.versions.length ? " · draft" : " · not assessed"}</strong></p>
       <p>{m.reason}</p>
+      {m.versions.filter((v) => v.finding?.result === "no" && v.finding.evidence.length > 0).map((v) => {
+        const e = v.finding.evidence[0];
+        return <details key={v.record_id + v.scope} className="correction-draft"><summary>Draft a correction request · {v.label}</summary>
+          <label>Editable letter to the financial assistance office<textarea rows={8}
+            defaultValue={`To the financial assistance office at ${hospitalName},\n\nPlease review this draft finding about ${m.title.toLowerCase()}. The review dated ${v.review_date || v.assessed_at} recorded the following for ${v.label}:\n\n${v.finding.explanation}\n\nSource: ${e.url} (${e.locator})\n\nCould you clarify the current policy or provide an updated public document?`} /></label>
+        </details>;
+      })}
       {m.versions.flatMap((v) => v.failures.map((f) => ({ ...f, scope: v.scope, retained: Boolean(v.finding) }))).map((f, i) =>
         <p className="recheck-failed" key={`${f.scope}-${i}`}><strong>Failed recheck · {date(f.attempted_at)}</strong> — {f.retained ? "Last successful finding retained below." : "No successful finding yet."}</p>)}
       <p><a href={m.law.url} target="_blank" rel="noreferrer">{m.law.section}</a>: {m.law.plain_language}</p>
