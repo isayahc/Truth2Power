@@ -76,6 +76,8 @@ For Ellenville's W/Y/Z follow-up specifically, retain the favorable original cit
 
 ### #72 clean-clone reproduction
 
+Final follow-up: fast-forwarded that clone to `19d2bd9`, including the translated visual attachment. Both updated integrated reports replayed identically; application JSON and Markdown regenerated with a clean working tree. Six targeted Node tests, seven multilingual Python tests and the build passed. This final check covers the added visual binding; the earlier check below describes the initial implementation.
+
 Cloned implementation commit `e322027` with `git clone --no-hardlinks --branch feat/72-multilingual-applications`, installed cached Node dependencies with `npm ci --offline`, and extracted both checked-in evidence ZIPs. Both grading replay commands returned **identical** 17-measure reports with pending grades. Regenerating all seven application reviews reproduced the tracked JSON exactly. Six targeted Node tests and six multilingual Python tests passed from the clone, including full new pipeline runs for both hospitals and historical normalization; the production build passed. Generated Markdown also has explicit LF attributes for Windows reproducibility. Python dependencies were reused via the existing virtual environment, not freshly installed. This is not independent operator or subject-matter sign-off.
 
 Executed on Windows, Node 22.14.0, existing Python virtual environment; no paid models:
