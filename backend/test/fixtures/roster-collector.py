@@ -20,7 +20,7 @@ def document() -> bytes:
            '<w:body><w:p><w:r><w:t>SYN financial assistance policy summary. Applies to '
            'A.O. Fox Memorial Hospital.</w:t></w:r></w:p></w:body></w:document>')
     with zipfile.ZipFile(output, 'w') as archive:
-        archive.writestr('word/document.xml', xml)
+        archive.writestr(zipfile.ZipInfo('word/document.xml'), xml)
     return output.getvalue()
 
 
@@ -35,7 +35,7 @@ def main() -> None:
     def fetch(url: str, host: str) -> tuple[bytes, str, str]:
         """Return only predeclared synthetic responses and a pinned other-campus document."""
         if url == landing:
-            html = ('<p>SYN hospital financial assistance page.</p><a href="/resources">SYN resources</a>' if key == '739' else
+            html = ('<p>SYN hospital financial assistance page.</p><a href="/resources">SYN resources</a>' if key in {'739', '1'} else
                     '<script></script><a href="/missing.pdf">SYN application</a>'
                     '<a href="https://other.invalid/policy.pdf">SYN policy</a>')
             return html.encode(), url, 'text/html'
