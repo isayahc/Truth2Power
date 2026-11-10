@@ -987,6 +987,16 @@ h2 {
 .ops .ops-totals dd {font-size:1.35rem;font-weight:650}
 
 /* Keep the atlas and hospital findings in one desktop workspace. */
+.hospital-panel-nav { display: flex; gap: 6px; position: sticky; top: -2px; background: var(--paper, #fafbf7); padding: 4px 0 10px; z-index: 2; }
+.hospital-panel-nav button { padding: 7px 12px; border: 1px solid var(--line); border-radius: 4px; background: white; cursor: pointer; }
+.hospital-panel-nav button[aria-pressed="true"] { background: var(--ink); color: white; }
+.hospital-findings .hospital-runs { margin: 0; border: 0; padding: 0; }
+.hospital-findings .hospital-runs > dl { display: grid; grid-template-columns: minmax(130px, 1fr) 2fr; gap: 5px 12px; margin: 12px 0; }
+.hospital-findings .hospital-runs > dl dd { margin: 0; }
+.hospital-summary > a, .hospital-summary > p { display: block; margin: 10px 0; font-size: 12px; }
+.hospital-coordinates { margin: 10px 0; font-size: 12px; }
+.hospital-coordinates summary { cursor: pointer; }
+.hospital-summary .review-nav { margin: 12px 0; font-size: 12px; padding: 8px; }
 .ops-dashboard { margin: 12px 0; }
 .ops-dashboard h1 { font-size: 28px; margin: 8px 0; letter-spacing: -1px; }
 .ops-dashboard dl.ops-totals { margin: 8px 0; }

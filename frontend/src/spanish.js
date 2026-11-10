@@ -1,5 +1,9 @@
 // Main-page translation draft for #45. Fluent-reader approval is tracked separately.
 export const spanish = {
+  'Map coordinates': 'Coordenadas del mapa',
+  'Hospital workspace': 'Panel del hospital',
+  'Findings': 'Hallazgos',
+  'Audits and history': 'Auditorías e historial',
   'Health equity atlas': 'Atlas de equidad en salud',
   'Audit overview': 'Resumen de auditorías (en inglés)',
   'Recent changes': 'Cambios recientes (en inglés)',
