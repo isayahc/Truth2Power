@@ -265,3 +265,52 @@ Budget stops are terminal. The receipt's `budget_stop` and timeline distinguish 
 Only the read-only planning command is implemented. It examines all 212 roster entries against the existing 30-day fresh-fetch clock, includes never-checked facilities, and selects at most the requested interval throughput. Selection skips currently queued/running/retrying latest jobs and applies a 24-hour backoff after a failed latest attempt. The plan reports due keys, selected keys, max operations and cost uncertainty; it does not enqueue, install a timer or contact hospitals.
 
 Recurring execution remains disabled. A future #36 opt-in controller should persist an enabled/paused flag, take an interval lock, recheck due and active state under that lock, use one deterministic request key per facility/interval, and enqueue at most the configured limit under a shared interval spend cap. Pause must prevent new admissions; resume must replan without catch-up bursts. #90 owns concurrent execution. Today an operator can run individual jobs explicitly or cancel them with `cancel --job ID`. To roll back, stop workers, retain the whole SQLite and evidence directory, and restore a pre-upgrade backup before running an older worker that cannot enforce pinned caps.
+
+## Independent operator handoff (#100)
+
+Use Linux or WSL, Python 3.12, a supported Node release (22.13 or newer), and Git. Install dependencies and the browser before disconnecting from the network. The release exercise used Chromium headless shell via `CHROMIUM_PATH`; leave it unset to use the Playwright-managed binary. If Chromium lacks system libraries, install its Linux dependencies before running the suites.
+
+```bash
+git clone https://github.com/isayahc/Truth2Power.git
+cd Truth2Power
+# Select the merged release or the #100 PR commit under review.
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip
+python -m pip install -r tools/live-audit/requirements.txt
+npm ci
+npx playwright install chromium
+export T2P_PYTHON="$VIRTUAL_ENV/bin/python"
+npm run build
+```
+
+**Offline demo and restore drill.** Run the command below from the repository root. It creates a new, isolated demo store containing fabricated responses for real roster keys and saved Wave 1 originals. Keep this store separate from operational records. Allow roughly a minute. No model key is needed. The Python command exits nonzero if the receipt reconciliation, draft grades, history, duplicate requests or restoration assertions fail.
+
+```bash
+handoff_dir=$(mktemp -d)
+python scripts/verify-operator-handoff.py --keep "$handoff_dir/demo" > "$handoff_dir/benchmark.json"
+export AUDIT_DIR="$handoff_dir/demo/audit"
+export T2P_REVIEW_DIRECTORY="$AUDIT_DIR/live"
+node backend/audit/pipeline-cli.js history --hospital 1
+node backend/audit/pipeline-cli.js receipt --job 8
+node backend/audit/pipeline-cli.js schedule-preview --max-facilities 2
+npm start
+```
+
+Open `http://127.0.0.1:8000/?view=operations`, search for Albany Medical Center, and select PFI 1. Open the first replay and download an original source and CSV receipt. Reopen the second replay. Both have 17 draft slots and 17 unresolved measures. The replay execution timestamp exists; the fresh-fetch clock stays unknown. The completed second-round Ellenville replay (job 8) has 14 unresolved measures and a pending institutional grade. The fixture exercise also writes one clearly labeled request for information and verifies it after restoration.
+
+**Regression run.** Stop the demo server first. Use a separate empty store for the suites. The nine browser scripts start their own localhost servers on the ports specified in each script. Set `CHROMIUM_PATH` only if selecting an existing compatible browser. Save command outputs and the candidate Git SHA with your observations.
+
+```bash
+set -e
+export AUDIT_DIR="$(mktemp -d)/audit"
+export T2P_REVIEW_DIRECTORY="$AUDIT_DIR/live"
+node --test backend/test/*.test.js
+python -m unittest discover -s tools/live-audit
+npm run build
+for suite in scripts/test-*-e2e.js; do node "$suite"; done
+```
+
+**Recovery.** Stop all writers and copy the entire audit directory, including SQLite/WAL files, snapshots, classifications, assessments, run events, cost ledger and review decisions. Separately copy any external evidence roots, pinned price/budget files and environment configuration. Restore to the same absolute locations because job contexts bind those paths. Preserve the pre-restore directory until the integrity check, receipt comparison, review history and independent assessment replay pass. Rolling back to a backup intentionally drops subsequent jobs. Restoring an older application that predates budgets requires its matching pre-upgrade store. The handoff script rehearses these checks on disposable data. Retention and cleanup of real evidence remain operator decisions.
+
+**Independent observation — pending.** Record operator role, date, Git SHA, OS/Node/Python/browser versions, benchmark JSON, observed run IDs and receipt fields, source download, restored decision, pass/fail, and any unclear step in #100 or #93. Include only public/synthetic evidence. Independent operator observation and legal/policy approval are separate gates.

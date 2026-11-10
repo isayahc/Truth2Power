@@ -1,6 +1,8 @@
 # Pilot readiness — 9 November 2026
 
-Updated for the #72 multilingual follow-up to merged PRs #87/#88. Issue #37 is closed; policy and approval issues remain open.
+For the #93 statewide operator workflow, see the [final acceptance matrix and benchmark](roster-release-gate.md). The independent operator handoff is pending.
+
+Historical readiness evidence below was updated for the #72 multilingual follow-up to merged PRs #87/#88. Issue #37 is closed; policy and approval issues remain open.
 
 ## Multilingual application engineering (#72)
 
