@@ -21,7 +21,7 @@ test('challenge -> inbox -> verified public PDF import -> idempotent offline res
   assert.equal(JSON.parse(call('/interventions').body).items.length,1);
   assert.equal(JSON.parse(call(`/runs/audit-run-${id}`).body).status,'needs_human');
   assert.equal(call(base+'/resume',{confirm:true}).statusCode,400);
-  const pdf=execFileSync(process.env.T2P_PYTHON||'python',['-c',"import sys;from pypdf import PdfWriter;w=PdfWriter();w.add_blank_page(width=100,height=100);w.add_metadata({'/Title':'SYN public blank test document'});w.write(sys.stdout.buffer)"]);
+  const pdf=execFileSync(process.env.T2P_PYTHON||'python',['-c',"import io,sys;from pypdf import PdfWriter;w=PdfWriter();w.add_blank_page(width=100,height=100);w.add_metadata({'/Title':'SYN public blank test document'});buffer=io.BytesIO();w.write(buffer);sys.stdout.buffer.write(buffer.getvalue())"]);
   const body={source_url:'https://public.example/SYN-blank.pdf',retrieved_at:'2026-11-09T12:00:00Z',language:'en',public_document:true,bytes:pdf.toString('base64')};
   assert.equal(call(base+'/documents',body,{}).statusCode,403);
   assert.equal(call(base+'/documents',{...body,public_document:false}).statusCode,400);

@@ -260,4 +260,6 @@ def extract_collection(hospital_key, collection_id, output, save):
               "\nPDF locators preserve original page numbers. No OCR, translation or compliance findings. "
                "DOCX uses body locators, not rendered page numbers; extra content requires visual review. "
                "Sparse/blank pages are flagged conservatively; text presence does not prove completeness or correct table structure.")
-    return dict(report=report, manifest_file=str(output / manifest_path), document_count=len(results), review_count=review_count)
+    return dict(report=report, manifest_file=str(output / manifest_path), document_count=len(results), review_count=review_count,
+                file_text_status={r["snapshot_sha256"]: r["status"] for r, doc in zip(results, records)
+                                  if doc.get("status") == "saved" and doc.get("artifact_path", "").endswith((".pdf", ".docx"))})

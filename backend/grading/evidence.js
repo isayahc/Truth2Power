@@ -8,6 +8,7 @@ import { sourceUrl, sha256, languageTag } from "../review/identity.js";
 import { readArtifact, requireValue, fingerprint, confirmedDocuments, assistancePages } from "./data.js";
 import { parseProfile } from "./profiles.js";
 import { readClassifications } from "./source-classification.js";
+import { verifyPublishedLinks } from "./published-links.js";
 import { postingPaths, isPostingPage } from "./posting-paths.js";
 
 /** Bind testimony to the exact observations, citations, inventory and completed assessment. */
@@ -76,6 +77,7 @@ export function evidenceStore(input, root, decisionDirectory) {
     } else requireValue(!["available", "reviewed"].includes(doc.status), "Reviewed source lacks snapshot bytes");
     registry.set(url, doc);
   }
+  verifyPublishedLinks(new Map(input.sources.map(s => [s.source_id, s.snapshot])), assistancePages.get(input.hospital_key), root);
   requireValue(input.scope.required_sources.length === registry.size &&
     input.scope.required_sources.every((id) => registry.has(id)), "Required inventory and sources differ");
   requireValue(input.scope.inventory_status !== "partial" || input.scope.gaps.length, "Describe the incomplete inventory");

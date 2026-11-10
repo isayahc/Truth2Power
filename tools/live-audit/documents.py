@@ -1,4 +1,4 @@
-"""Bounded, same-host resource discovery extending the original immutable collector."""
+"""Bounded hospital-page traversal and retrieval of directly published documents."""
 from run_budget import current, BudgetStop
 from usage import measured
 import hashlib
@@ -47,6 +47,7 @@ class Links(HTMLParser):
     def __init__(self, base, all_links=False):
         super().__init__()
         self.base, self.links, self.current = base, {}, None
+        self.file_anchors: set[str] = set()
         self.all_links = all_links
         self.truncated = False
         self.base_seen = False
@@ -57,17 +58,21 @@ class Links(HTMLParser):
             if self.links:
                 # Do not certify earlier anchors using a base that the browser would replace.
                 self.links.clear()
+                self.file_anchors.clear()
                 self.late_base = True
             self.base_seen = True
             self.base = urljoin(self.base, dict(attrs)["href"])
         if tag == "a":
-            href = dict(attrs).get("href", "")
+            attributes = dict(attrs)
+            href = attributes.get("href") or ""
             try:
                 url = normalize_url(urljoin(self.base, href))
             except ValueError:
                 self.current = None
                 return
-            self.current = (url, []) if self.all_links or urlsplit(url).path.lower().endswith((".pdf", ".docx")) else None
+            declared_file = "download" in attributes or attributes.get("type") in {
+                "application/pdf", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"}
+            self.current = (url, [], declared_file) if self.all_links or urlsplit(url).path.lower().endswith((".pdf", ".docx")) else None
 
     def handle_data(self, text):
         if self.current:
@@ -75,12 +80,44 @@ class Links(HTMLParser):
 
     def handle_endtag(self, tag):
         if tag == "a" and self.current:
-            url, text = self.current
+            url, text, declared_file = self.current
             if self.all_links and len(self.links) >= 5000 and url not in self.links:
                 self.truncated = True
             else:
+                if declared_file:
+                    self.file_anchors.add(url)
                 self.links.setdefault(url, []).append(" ".join("".join(text).split()))
             self.current = None
+
+
+DOCUMENT_SUFFIXES = {".pdf", ".docx"}
+HTML_TYPES = {"text/html", "application/xhtml+xml"}
+DOCUMENT_HINT = re.compile(
+    r"\b(?:pdf|docx|download|application form|financial assistance application|policy summary|"
+    r"plain language summary|assistance policy|poverty guidelines)\b", re.I
+)
+
+
+def document_hint(url: str, labels: list[str]) -> bool:
+    """Permit a terminal file request for explicit file links and labeled download endpoints."""
+    path = urlsplit(url).path
+    return Path(path).suffix.lower() in DOCUMENT_SUFFIXES or bool(
+        DOCUMENT_HINT.search(" ".join([path.replace("/", " ").replace("-", " ").replace("_", " "), *labels]))
+    )
+
+
+def document_suffix(data: bytes, expected: str) -> str:
+    """Check the response bytes before recording a PDF or Word document capture."""
+    if data.startswith(b"%PDF-") and expected != ".docx":
+        return ".pdf"
+    if data.startswith(b"PK") and expected != ".pdf":
+        try:
+            with zipfile.ZipFile(io.BytesIO(data)) as archive:
+                if "word/document.xml" in archive.namelist():
+                    return ".docx"
+        except zipfile.BadZipFile:
+            pass
+    raise SourceBoundaryError("Response was not the linked PDF or DOCX", "invalid_document")
 
 
 def public_ip(value):
@@ -99,16 +136,12 @@ def approved(url, host):
     parsed = urlsplit(url)
     if (parsed.scheme != "https" or parsed.hostname not in {host, "www." + host}
             or parsed.port not in {None, 443} or parsed.username or parsed.password
-            or any(ord(c) < 33 for c in url) or "\\" in url):
+            or len(url) > 4096 or any(ord(c) < 33 for c in url) or "\\" in url):
         raise SourceBoundaryError("Document or redirect is outside the roster site's HTTPS host")
-    try:
-        if not public_ip(parsed.hostname):
-            raise SourceBoundaryError("Private address prohibited", "unsafe_destination")
-    except ValueError as error:
-        if str(error) == "Private address prohibited":
-            raise
-    if parsed.hostname in {"localhost", "metadata.google.internal"} or parsed.hostname.endswith((".local", ".internal")):
-        raise SourceBoundaryError("Internal hostname prohibited", "unsafe_destination")
+    if (not re.fullmatch(r"[a-z0-9.-]+\.[a-z]+", parsed.hostname or "", re.I)
+            or parsed.hostname == "metadata.google.internal"
+            or parsed.hostname.endswith((".local", ".internal", ".localhost"))):
+        raise SourceBoundaryError("Internal hostname or literal address prohibited", "unsafe_destination")
     return url
 
 
@@ -213,7 +246,7 @@ def download(url, host, bounds=None, trace=None):
                 measured("network_bytes", len(part))
                 size += len(part)
                 if size > bounds.bytes_per_resource:
-                    raise ValueError("Resource byte limit reached")
+                    raise SourceBoundaryError("Resource byte limit reached", "resource_limit")
             return b"".join(chunks), url, response.headers.get_content_type()
         finally:
             connection.close()
@@ -250,7 +283,7 @@ def collect(hospital_key, root, output, save, fetch=download, bounds=None):
                    attempted_at=now(), status="failed", landing_page=None, documents=[],
                     pages=[], links=[], bounds=asdict(bounds),
                     limitations=["Bounded HTML-anchor traversal is not an exhaustive absence search. JavaScript-only resources require review; scripts are never executed. "
-                                  "HTTPS server redirects are followed with public-IP-pinned TLS. Traversal stays on the roster or migrated landing host. Redirects do not establish campus/role/language applicability."])
+                                  "HTTPS server redirects are followed with public-IP-pinned TLS. HTML traversal stays on the roster or migrated landing host. Verified pages may link to terminal documents hosted elsewhere. Retrieval does not establish campus, role or language."])
 
     def snapshot(data, final_url, suffix, mime):
         digest = hashlib.sha256(data).hexdigest()
@@ -259,48 +292,62 @@ def collect(hospital_key, root, output, save, fetch=download, bounds=None):
         return dict(url=final_url, sha256=digest, artifact_path=path.as_posix(),
                     retrieved_at=now(), publisher_updated_at=None, content_type=mime, size_bytes=len(data))
 
-    queue, visited, total = deque([(url, [], 0, None)]), set(), 0
+    queue, visited, total = deque([(url, [], 0, None, False)]), set(), 0
+    counts = {"pages": 0, "documents": 0}
+
+    def reserve(kind: str) -> None:
+        """Bound requests before fetching and charge newly identified documents before saving."""
+        if counts[kind] >= getattr(bounds, kind):
+            raise SourceBoundaryError("Resource count limit reached", "resource_limit")
+        if current.get():
+            current.get().reserve(kind)
+        counts[kind] += 1
+
     landing_host = host
     started = time.monotonic()
     while queue:
-        source, labels, depth, parent = queue.popleft()
+        source, labels, depth, parent, file_hint = queue.popleft()
         if source in visited:
             continue
         visited.add(source)
         suffix = Path(urlsplit(source).path).suffix.lower()
-        is_document = suffix in {".pdf", ".docx"}
-        bucket = attempt["documents"] if is_document else attempt["pages"]
-        record = dict(source_url=source, labels=labels, parent_url=parent, depth=depth,
-                      attempted_at=now(), status="failed", classification="unverified")
+        source_host = (urlsplit(source).hostname or '').removeprefix('www.')
+        is_external = source_host not in {host, landing_host}
+        document_only = suffix in DOCUMENT_SUFFIXES or is_external
+        kind = "documents" if document_only or file_hint else "pages"
+        bucket = attempt[kind]
+        record = dict(source_url=source, labels=labels, parent_url=parent["parent_url"] if parent else None,
+                      depth=depth, attempted_at=now(), status="failed", classification="unverified", redirects=[])
+        if parent:
+            record["published_link"] = parent
         bucket.append(record)
-        trace = []
-        record['redirects'] = trace
+        trace = record["redirects"]
         try:
-            source_host = (urlsplit(source).hostname or '').removeprefix('www.')
-            approved(source, host if source_host == host else landing_host)
-            if depth > bounds.depth or len(bucket) > (bounds.documents if is_document else bounds.pages):
-                raise ValueError("Traversal depth or resource count limit reached")
-            if time.monotonic() - started >= bounds.seconds or total >= bounds.total_bytes:
-                raise ValueError("Traversal time or total byte limit reached")
-            if current.get():
-                current.get().reserve("documents" if is_document else "pages")
+            if is_external and (not parent or not file_hint):
+                raise SourceBoundaryError("External HTML is outside the hospital crawl")
+            approved(source, source_host)
+            if depth > bounds.depth or time.monotonic() - started >= bounds.seconds or total >= bounds.total_bytes:
+                raise SourceBoundaryError("Traversal depth, time or byte limit reached", "resource_limit")
+            reserve(kind)
             data, destination, mime = fetch(source, source_host, bounds, trace) if fetch is download else fetch(source, source_host)
-            # Injected test fetchers still require a same-host response; only the
-            # pinned downloader may supply a verified cross-host redirect chain.
-            approved(destination, (urlsplit(destination).hostname or '').removeprefix('www.') if fetch is download else source_host)
+            final_host = (urlsplit(destination).hostname or '').removeprefix('www.')
+            approved(destination, final_host if fetch is download else source_host)
             total += len(data)
             if len(data) > bounds.bytes_per_resource or total > bounds.total_bytes:
-                raise ValueError("Traversal byte limit reached")
+                raise SourceBoundaryError("Traversal byte limit reached", "resource_limit")
+            is_document = document_only or mime not in HTML_TYPES or data.startswith((b"%PDF-", b"PK"))
+            received_kind = "documents" if is_document else "pages"
+            if kind != received_kind and parent:
+                bucket.pop()
+                attempt[received_kind].append(record)
+                reserve(received_kind)
             if is_document:
-                if suffix == ".pdf" and not data.startswith(b"%PDF-"):
-                    raise ValueError("Linked document is not a PDF")
-                if suffix == ".docx":
-                    with zipfile.ZipFile(io.BytesIO(data)) as archive:
-                        if "word/document.xml" not in archive.namelist():
-                            raise ValueError("Linked document is not a DOCX")
+                if not parent:
+                    raise SourceBoundaryError("Roster landing page did not return HTML", "invalid_content")
+                suffix = document_suffix(data, suffix)
             else:
-                if mime not in {"text/html", "application/xhtml+xml"}:
-                    raise ValueError("Resource page did not return HTML; classify manually")
+                if source != url and final_host not in {host, landing_host}:
+                    raise SourceBoundaryError("Redirected HTML is outside the hospital crawl")
                 suffix = ".html"
             record.update(snapshot(data, destination, suffix, mime), final_url=destination, redirects=trace, status="saved")
             classified = next((d for d in known if d['sha256'] == record['sha256'] and d['hospital_key'] == hospital_key), None)
@@ -326,20 +373,32 @@ def collect(hospital_key, root, output, save, fetch=download, bounds=None):
                     if len(attempt["links"]) >= 5000:
                         attempt["limitations"].append("5000-link inventory limit reached; remaining anchors not traversed.")
                         break
-                    relevant = (urlsplit(target).path.lower().endswith((".pdf", ".docx")) or
-                                urlsplit(target).path.startswith(urlsplit(destination).path.rstrip('/') + '/') or
-                                re.search(r"financial|assistance|charity|plain.language|documents|resources|/docs/|application|billing", target + " " + " ".join(names), re.I))
-                    attempt["links"].append(dict(parent_url=source, parent_sha256=record["sha256"], target_url=target,
-                                                 labels=names, disposition="candidate" if relevant else "out_of_scope"))
+                    parsed = urlsplit(target)
+                    web_link = parsed.scheme in {"http", "https"}
+                    file_hint = target in links.file_anchors or document_hint(target, names)
+                    in_scope = (parsed.hostname or "").removeprefix("www.") in {host, landing_host}
+                    relevant = web_link and (file_hint or (in_scope and (
+                        parsed.path.startswith(urlsplit(destination).path.rstrip('/') + '/') or
+                        re.search(r"financial|assistance|charity|plain.language|documents|resources|/docs/|application|billing",
+                                  target + " " + " ".join(names), re.I))))
+                    edge = dict(parent_url=source, parent_sha256=record["sha256"], target_url=target,
+                                anchor_label=next((name for name in names if name), ""))
+                    disposition = "candidate" if relevant else "out_of_scope" if web_link else "non_retrieval"
+                    attempt["links"].append({**edge, "labels": names, "disposition": disposition})
                     if relevant and target not in visited:
-                        queue.append((target, names, depth + 1, source))
+                        queue.append((target, names, depth + 1, edge, file_hint))
         except BudgetStop as error:
             attempt["budget_stop"] = str(error)
             record["reason"] = str(error)
+            record["error_code"] = "resource_limit"
             attempt["limitations"].append("Run budget stopped collection: " + str(error))
             break
         except Exception as error:
             record["error_type"] = type(error).__name__
+            if isinstance(error, socket.gaierror):
+                record['error_code'] = 'dns_resolution_failed'
+            elif isinstance(error, TimeoutError):
+                record['error_code'] = 'retrieval_timeout'
             if isinstance(error, ssl.SSLCertVerificationError):
                 record['error_code'] = 'tls_certificate_invalid'
             if isinstance(error, SourceBoundaryError):

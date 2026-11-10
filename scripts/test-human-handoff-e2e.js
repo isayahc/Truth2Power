@@ -17,7 +17,7 @@ const server=spawn(process.execPath,['backend/src/local-server.js','--dev'],{env
 let browser;
 try {
   browser=await chromium.launch();
-  const pdf=execFileSync(process.env.T2P_PYTHON||'python',['-c',"import sys;from pypdf import PdfWriter;w=PdfWriter();w.add_blank_page(width=100,height=100);w.add_metadata({'/Title':'SYN public blank test document'});w.write(sys.stdout.buffer)"]);
+  const pdf=execFileSync(process.env.T2P_PYTHON||'python',['-c',"import io,sys;from pypdf import PdfWriter;w=PdfWriter();w.add_blank_page(width=100,height=100);w.add_metadata({'/Title':'SYN public blank test document'});buffer=io.BytesIO();w.write(buffer);sys.stdout.buffer.write(buffer.getvalue())"]);
   for(const [language,width] of [['en',1440],['es',390]]) {
     const id=enqueuePipeline(db,{hospital_key:'798',mode:'full_audit',year:2026,review_date:'2026-11-10',request_key:`SYN-browser-${language}`});
     failPipeline(db,claim(db),{code:'website_verification_required',diagnostic:{http_status:403,source_url:'https://public.example/SYN-financial-assistance'}});

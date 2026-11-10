@@ -185,13 +185,13 @@ do {
       if (job.context.pipeline) await runPipeline(db, job);
       else finish(db, job, await audit(job));
     } catch (error) {
-      if (!job.context.pipeline) finish(
-        db,
-        job,
-        null,
-        "Retrieval or extraction failed. Check the server, browser and pdftotext, then retry.",
-      );
-      console.error("audit_failed", job.id, error.name);
+      if (!job.context.pipeline) {
+        finish(
+          db, job, null,
+          "Retrieval or extraction failed. Check the server, browser and pdftotext, then retry.",
+        );
+        console.error("audit_failed", job.id, error.name);
+      }
     } finally {
       clearInterval(heartbeat);
     }

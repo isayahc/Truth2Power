@@ -6,7 +6,7 @@ import { join } from 'node:path';
 import { openStore, claim } from '../audit/store.js';
 import { enqueuePipeline, failPipeline } from '../audit/pipeline-store.js';
 import { sourceInventory } from '../audit/roster-inventory.js';
-import { failureDiagnostic } from '../audit/failure-diagnostic.js';
+import { documentAttempts, failureDiagnostic } from '../audit/failure-diagnostic.js';
 
 test('HTTP diagnostics preserve status, remove secrets and distinguish permanent and transient failures', (t) => {
   const root = mkdtempSync(join(tmpdir(), 'SYN-http-'));
@@ -67,4 +67,12 @@ test('blocked source host stops after one attempt and records a safe diagnostic'
   const events = db.prepare('SELECT state,detail FROM audit_run_events WHERE job=?').all(id);
   assert.equal(events.some(e => e.state === 'retrying'), false);
   assert.equal(JSON.parse(events.find(e => e.state === 'failed').detail).error_code, 'source_host_blocked');
+});
+
+test('historical CDN rejections retain the cause while removing query strings and raw exception text', () => {
+  const parent_url = 'https://hospital.example/aid';
+  const doc = {status:'failed', parent_url, source_url:'https://files.example/application.pdf?token=PRIVATE',
+    error_code:'source_host_blocked', reason:"Document or redirect is outside the roster site's HTTPS host", redirects:[]};
+  assert.deepEqual(documentAttempts({documents:[doc]}), [{source_url:'https://files.example/application.pdf',
+    parent_url, status:'failed', reason:'off_host_document_blocked', http_status:null, sha256:null}]);
 });

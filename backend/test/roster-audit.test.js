@@ -53,7 +53,7 @@ test("a failed-resource scan and full audit work for the roster facility without
   assert.equal(scan.inventory.pfi, null);
   assert.equal(scan.inventory.schema_version, "hospital-source-inventory-v1");
   assert.match(scan.inventory.gaps.join(" "), /Scripts not executed/);
-  assert.match(scan.inventory.gaps.join(" "), /outside the roster/);
+  assert.ok(scan.inventory.gaps.some(g => g.includes("https://other.invalid/policy.pdf") && g.includes("404")));
   assert.match(scan.inventory.gaps.join(" "), /404/);
   assert.equal(scan.inventory.sources.find((s) => s.source_id.endsWith("/missing.pdf")).capture_status, "failed");
   assert.equal(scan.report, undefined);
@@ -65,6 +65,12 @@ test("a failed-resource scan and full audit work for the roster facility without
   assert.equal(new Set(b.report.findings.map((f) => f.measure_id)).size, 17);
   assert.ok(b.report.findings.every((f) => f.result === "unclear"));
   assert.equal(b.report.final_grade, null);
+  const { reportingRoute } = await import("../audit/reporting-api.js");
+  const log = JSON.parse(reportingRoute({rawPath: `/api/pilot/v1/runs/audit-run-${full}/log.json`, requestContext: {http: {method:"GET"}}}).body);
+  assert.equal(log.documents.captured, 0);
+  assert.equal(log.documents.candidates, 2);
+  assert.ok(log.documents.attempts.every(d => d.reason === "http_error" && d.http_status === 404));
+  assert.equal(log.timeline.find(e => e.stage === "collection_saved").document_attempts.length, 2);
   const next = enqueuePipeline(db, { ...options("discovery_only", "SYN-later-scan"), hospital_key: key });
   await runPipeline(db, claim(db, 600000, { id: next }), offlineCollection);
   assert.equal(JSON.parse(route(path).body).latest, b.id);
@@ -77,6 +83,7 @@ test("reviewing exact campus and role citations resolves only the supported post
     ...options(mode, request), hospital_key: key, classifications }) });
   const scan = await runPipeline(db, queue("discovery_only", "SYN-shared-host"), offlineCollection);
   const captured = scan.inventory.sources.find((s) => s.source_id.endsWith("/unknown.docx"));
+  assert.equal(captured.published_link.target_url, "https://files.example/unknown.docx");
   assert.equal(captured.role, "unclassified");
   assert.equal(captured.language, "und");
   const other = scan.inventory.sources.find((s) => s.source_id.endsWith("/application.docx"));
@@ -106,6 +113,9 @@ test("reviewing exact campus and role citations resolves only the supported post
   assert.ok(items.every((item) => item.status === "pending"));
   assert.equal(b.report.final_grade, null);
   assert.deepEqual(grade(b.input, { root: b.root }), b.report);
+  const altered = structuredClone(b.input);
+  altered.sources.find(s => s.source_id === doc.source_id).snapshot.published_link.anchor_label = "SYN wrong label";
+  assert.throws(() => grade(altered, { root: b.root }), /label missing/);
   assert.equal(publications().events.length, 0, "Classifying unchanged bytes cannot create a material change");
   assert.throws(() => sourceInventory(facilityFor(key), { ...scan.discovery, landing_url: "https://other.invalid" }), /roster landing/);
   await assert.rejects(run("SYN-wrong-quote", record([{ ...doc, applicability: { locator, quote: "Another facility" } }])), /citation/);

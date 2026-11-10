@@ -378,11 +378,59 @@ function Receipt({ run, refresh }) {
     </section>
   );
 }
-function FailureDiagnostic({ event }) {
+const retrievalReasons = {
+  off_host_document_blocked: "The collector blocked a hospital-linked file because it was hosted on another domain.",
+  source_host_blocked: "Source URL is outside discovery scope or is not valid HTTPS.",
+  unsafe_destination: "Source resolves to a private or internal address. Retrieval blocked.",
+  redirect_loop: "Source redirect loop detected. Automatic retries stopped.",
+  redirect_limit: "Source exceeded the redirect limit. Automatic retries stopped.",
+  tls_certificate_invalid: "Certificate verification failed. Check the worker trust store and website certificate chain. Automatic retries stopped.",
+  http_error: "The website returned an HTTP error.",
+  website_verification_required: "Human intervention required: website verification.",
+  collection_failed: "Source collection failed. A specific cause was not recorded.",
+  dns_resolution_failed: "The worker could not resolve the website hostname. Check DNS from the worker.",
+  retrieval_timeout: "The website did not respond before the retrieval deadline.",
+  invalid_document: "The response did not contain a valid PDF or Word document.",
+  invalid_content: "The response did not contain the expected page.",
+  resource_limit: "The collection reached a resource limit.",
+};
+
+function DocumentResults({ documents }) {
+  const { t } = useLocale();
+  if (!documents) return null;
+  const failures = documents.attempts.filter(d => d.status === "failed");
+  const reasons = new Map();
+  for (const d of failures) {
+    const message = t(retrievalReasons[d.reason] ?? retrievalReasons.collection_failed) + (d.http_status ? ` (HTTP ${d.http_status})` : "");
+    reasons.set(message, (reasons.get(message) ?? 0) + 1);
+  }
+  const unreadable = documents.attempts.filter(d => d.text_status === "needs_review");
+  return <section aria-label={t("Document retrieval")}>
+    <h4>{t("Document retrieval")}</h4>
+    {documents.captured === 0 ? <p><strong>{t("No PDF or Word documents were captured.")}</strong></p> :
+      documents.classified_assistance_documents === 0 && <p><strong>{t("The captured files still need their document role and hospital verified.")}</strong></p>}
+    <p>{t("Documents captured")} · {documents.captured} / {documents.candidates}</p>
+    {reasons.size > 0 && <ul>{[...reasons].map(([reason, count]) => <li key={reason}>{count} × {reason}</li>)}</ul>}
+    {unreadable.length > 0 && <details>
+      <summary>{t("Files needing text extraction review")} ({unreadable.length})</summary>
+      <ul>{unreadable.map((d, i) => <li key={i}>{d.source_url ?? t("Unknown")}</li>)}</ul>
+    </details>}
+    {failures.length > 0 && <details>
+      <summary>{t("Why document retrieval failed")} ({failures.length})</summary>
+      <ul>{failures.map((d, i) => <li key={i}>
+        {d.source_url && <><a href={d.source_url} target="_blank" rel="noreferrer">{d.source_url}</a>{" · "}</>}
+        {t(retrievalReasons[d.reason] ?? retrievalReasons.collection_failed)} {d.http_status && `(HTTP ${d.http_status})`}
+      </li>)}</ul>
+    </details>}
+  </section>;
+}
+
+function FailureDiagnostic({ event, showReason = false }) {
   const { t } = useLocale();
   if (!event?.diagnostic) return null;
   const d = event.diagnostic;
   return <div className="run-diagnostic">
+    {showReason && retrievalReasons[event.reason] && <p><strong>{t(retrievalReasons[event.reason])}</strong></p>}
     {d.http_status && <p>{t('HTTP status')}: <strong>{d.http_status}</strong>{d.http_status === 403 ? ` · ${t('The website refused the request.')}` : ''}</p>}
     {d.source_url && <p>{t('Failed source')}: <a href={d.source_url} target="_blank" rel="noreferrer">{d.source_url}</a></p>}
     {event.retry_scheduled != null && <p>{t(event.retry_scheduled ? 'Another attempt is scheduled.' : 'No automatic retry is scheduled.')}</p>}
@@ -405,6 +453,7 @@ function RunDetail({ path, refresh }) {
             {t(modes[run.mode])} · <strong>{t(statusNames[run.status])}</strong>{" "}
             · {t("Attempts")} {run.attempts}
           </p>
+          <DocumentResults documents={run.documents} />
           <h4>{t("Timeline")}</h4>
           <Paged url={run.timeline} refresh={refresh + tick}>
             {(events) => (
@@ -429,14 +478,11 @@ function RunDetail({ path, refresh }) {
                         ·{" "}
                         {t(
                           {
-                            audit_failed: "Audit failed", source_host_blocked: "Source URL is outside discovery scope or is not valid HTTPS.", unsafe_destination: "Source resolves to a private or internal address. Retrieval blocked.", redirect_loop: "Source redirect loop detected. Automatic retries stopped.", redirect_limit: "Source exceeded the redirect limit. Automatic retries stopped.", budget_exhausted:"Run budget exhausted", quota_exceeded:"Resource quota exceeded", unknown_price:"Provider price unknown",
-                            lease_expired: "Worker lease expired",
-                            retry_scheduled: "Retry scheduled",
-                            tls_certificate_invalid: "Certificate verification failed. Check the worker trust store and website certificate chain. Automatic retries stopped.",
+                            ...retrievalReasons,
+                            audit_failed: "Audit failed", budget_exhausted: "Run budget exhausted",
+                            quota_exceeded: "Resource quota exceeded", unknown_price: "Provider price unknown",
+                            lease_expired: "Worker lease expired", retry_scheduled: "Retry scheduled",
                             operator_cancelled: "Cancelled by operator",
-                            website_verification_required: 'Human intervention required: website verification.',
-                            http_error: "The website returned an HTTP error.",
-                            collection_failed: "Source collection failed. A specific cause was not recorded.",
                           }[e.reason],
                         )}
                       </>
@@ -645,7 +691,7 @@ export function HospitalRuns({ hospitalKey }) {
         {r.receivedAt && <small>{t("Status checked")}: {new Date(r.receivedAt).toLocaleTimeString(language)}</small>}
         {currentStage && <p>{t("Last recorded task")}: {t(stageNames[currentStage] ?? "Unknown")}</p>}
         {lastActivity && <p>{t("Last worker event")}: {date(lastActivity.at, language, t)} · {t(statusNames[lastActivity.state] ?? "Unknown")}</p>}
-        <FailureDiagnostic event={lastActivity} />
+        <FailureDiagnostic event={lastActivity} showReason />
         {latest && <a href={`${api}/runs/${latest.audit_run_id}/log.json`} download={`${latest.audit_run_id}-log.json`}>{t("Download run log (JSON)")}</a>}
       </div>}
       <div className="ops-controls">

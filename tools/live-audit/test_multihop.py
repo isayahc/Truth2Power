@@ -100,19 +100,39 @@ class MultihopTests(unittest.TestCase):
                 with self.assertRaises(ValueError):
                     public_addresses('example.org')
 
-    def test_external_links_not_fetched_and_limits_are_explicit(self):
-        self.web['/financial-assistance'] += b'<a href="https://other.example/x.pdf">External</a>'
-        result = self.run_collection(pages=1)
-        self.assertEqual(result['status'], 'partial')
-        self.assertFalse(any('other.example' in c for c in self.calls))
-        self.assertTrue(any('outside' in d.get('reason', '') for d in result['documents']))
+    def test_external_files_are_terminal_and_contacts_do_not_consume_budget(self) -> None:
+        """File links may delegate retrieval, while external HTML and contact links never extend a crawl."""
+        self.web['/financial-assistance'] = (
+            b'<a href="https://files.example/get">Financial assistance application</a>'
+            b'<a href="https://files.example/bad.pdf">PDF</a>'
+            b'<a href="https://other.example/resources">Financial assistance resources</a>'
+            b'<a href="mailto:aid@example.org">Application</a><a href="tel:5550000">Billing</a>')
+        self.web['/get'] = (b'%PDF-SYN', 'https://files.example/get', 'application/octet-stream')
+        self.web['/bad.pdf'] = b'<a href="/secret.pdf">PDF</a>'
+        result = self.run_collection()
+        good, bad = result['documents']
+        self.assertEqual(good['status'], 'saved')
+        self.assertEqual(good['published_link']['parent_sha256'], result['landing_page']['sha256'])
+        self.assertEqual(good['published_link']['anchor_label'], 'Financial assistance application')
+        self.assertEqual(bad['error_code'], 'invalid_document')
+        self.assertEqual(len(self.calls), 3)
+        self.assertEqual(sum(e['disposition'] == 'non_retrieval' for e in result['links']), 2)
+        self.assertEqual(self.run_collection(documents=1)['documents'][1]['error_code'], 'resource_limit')
         self.assertEqual(self.run_collection(bytes_per_resource=10)['status'], 'failed')
         with self.assertRaises(ValueError):
             Bounds(pages=101)
-        self.web['/financial-assistance'] = b'<base href="https://outside.example/"><a href="form.pdf">Financial assistance</a>'
-        based = self.run_collection()
-        self.assertEqual(based['documents'][0]['source_url'], 'https://outside.example/form.pdf')
-        self.assertEqual(based['documents'][0]['status'], 'failed')
+
+    def test_typed_extensionless_document_and_same_host_content_detection(self) -> None:
+        """An explicit download anchor or a document response can identify a file without a suffix."""
+        self.web['/financial-assistance'] = (
+            b'<a type="application/pdf" href="https://files.example/id">English</a>'
+            b'<a href="/resources">Resources</a>')
+        self.web['/id'] = (b'%PDF-SYN typed', 'https://files.example/id', 'application/pdf')
+        self.web['/resources'] = (b'%PDF-SYN local', 'https://example.org/resources', 'application/pdf')
+        result = self.run_collection()
+        self.assertEqual(len(result['pages']), 1)
+        self.assertEqual([d['status'] for d in result['documents']], ['saved', 'saved'])
+        self.assertTrue(all(d['artifact_path'].endswith('.pdf') for d in result['documents']))
 
     def test_campus_classification_requires_pinned_content_not_link_label(self):
         path = self.root / 'docs/audit-format/wave-one-document-inventory.json'

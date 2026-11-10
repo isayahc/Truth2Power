@@ -40,7 +40,7 @@ def main() -> None:
                     '<a href="https://other.invalid/policy.pdf">SYN policy</a>')
             return html.encode(), url, 'text/html'
         if url == urljoin(landing, '/resources'):
-            return b'<p>SYN public financial assistance materials.</p><a href="/unknown.docx">SYN item</a><a href="/application.docx">SYN other campus</a>', url, 'text/html'
+            return b'<p>SYN public financial assistance materials.</p><a href="https://files.example/unknown.docx">SYN item</a><a href="https://files.example/application.docx">SYN other campus</a>', url, 'text/html'
         if url.endswith('/unknown.docx'):
             return document(), url, 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
         if url.endswith('/application.docx'):

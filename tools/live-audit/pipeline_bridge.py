@@ -17,7 +17,7 @@ class CollectionFailure(ValueError):
         self.code = code
         self.diagnostic = diagnostic or {}
 
-SOURCE_FAILURE_CODES = {'source_host_blocked', 'unsafe_destination', 'redirect_loop', 'redirect_limit', 'tls_certificate_invalid', 'website_verification_required'}
+SOURCE_FAILURE_CODES = {'source_host_blocked', 'unsafe_destination', 'redirect_loop', 'redirect_limit', 'tls_certificate_invalid', 'website_verification_required', 'dns_resolution_failed', 'retrieval_timeout', 'invalid_content', 'resource_limit'}
 
 
 def save(path, data):
@@ -73,9 +73,11 @@ def run(root, request):
         if request.get('discovery_only'):
             return dict(collection=result['output'])
         extracted = extract_collection(request['hospital_key'], Path(result['manifest_file']).stem, root, save)
-        return dict(collection=result['output'], extraction_manifest=str(Path(extracted['manifest_file']).relative_to(root)))
+        return dict(collection=result['output'], extraction_manifest=str(Path(extracted['manifest_file']).relative_to(root)),
+                    file_text_status=extracted['file_text_status'])
     sources = {}
     applications = []
+    file_text_status = {}
     for source in request['sources']:
         snapshot = source.get('snapshot')
         if not snapshot:
@@ -86,16 +88,27 @@ def run(root, request):
         raw = path.read_bytes()
         if hashlib.sha256(raw).hexdigest() != snapshot['sha256']:
             raise ValueError('snapshot_hash_mismatch')
-        # Preserve unknown bytes for later classification without interpreting their contents.
+        # Reuse extraction of these exact bytes. An offline replay may have only the original files.
         if source.get('role') == 'unclassified' and path.suffix != '.html':
+            status = request.get('file_text_status', {}).get(snapshot['sha256'])
+            if status not in {'extracted', 'needs_review'}:
+                try:
+                    parts = extract_bytes(raw, path.suffix)
+                    status = 'extracted' if parts and all(p['status'] == 'extracted' for p in parts) else 'needs_review'
+                except Exception:
+                    status = 'needs_review'
+            file_text_status[snapshot['sha256']] = status
             sources[source['source_id']] = []
             continue
         try:
             segments = extract_bytes(raw, path.suffix)
         except Exception:
+            file_text_status[snapshot['sha256']] = 'needs_review'
             sources[source['source_id']] = [dict(locator='Original document', text='', status='needs_review',
                                                   reason='unsupported_or_unreadable_document')]
             continue
+        if path.suffix in {'.pdf', '.docx'}:
+            file_text_status[snapshot['sha256']] = 'extracted' if segments and all(p['status'] == 'extracted' for p in segments) else 'needs_review'
         if path.suffix == '.html':
             parser = Links(snapshot.get('final_url', source['source_id']), all_links=True)
             parser.feed(raw.decode('utf-8', errors='replace'))
@@ -119,7 +132,7 @@ def run(root, request):
                 reviewed_segments=[p['locator'] for p in segments],
                 drawings=[d for p in segments for d in p.get('drawings', [])]))
     if request.get('application_review_date'):
-        return dict(sources=sources, application_reviews=applications)
+        return dict(sources=sources, application_reviews=applications, file_text_status=file_text_status)
     return sources
 
 

@@ -1,5 +1,17 @@
 // Main-page translation draft for #45. Fluent-reader approval is tracked separately.
 export const spanish = {
+  "Files needing text extraction review": "Archivos cuya extracción de texto requiere revisión",
+  "The collector blocked a hospital-linked file because it was hosted on another domain.": "El sistema bloqueó un archivo enlazado por el hospital porque estaba alojado en otro dominio.",
+  "Document retrieval": "Recuperación de documentos",
+  "No PDF or Word documents were captured.": "No se obtuvo ningún documento PDF o Word.",
+  "The captured files still need their document role and hospital verified.": "Todavía hay que verificar qué tipo de documento es cada archivo obtenido y a qué hospital corresponde.",
+  "Documents captured": "Documentos obtenidos",
+  "Why document retrieval failed": "Por qué no se pudieron obtener los documentos",
+  "The worker could not resolve the website hostname. Check DNS from the worker.": "El proceso de auditoría no pudo resolver el nombre del sitio. Revise el DNS desde el equipo que ejecuta la auditoría.",
+  "The website did not respond before the retrieval deadline.": "El sitio web no respondió a tiempo.",
+  "The response did not contain a valid PDF or Word document.": "La respuesta no contenía un documento PDF o Word válido.",
+  "The response did not contain the expected page.": "La respuesta no contenía la página esperada.",
+  "The collection reached a resource limit.": "Se alcanzó un límite de recursos al recopilar los documentos.",
   'Public document imported': 'Documento público importado',
   'Resumed with imported evidence': 'Continuación con documentos importados',
   'Imported evidence linked': 'Documentos importados vinculados',

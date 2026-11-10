@@ -1,5 +1,6 @@
 import { BudgetStop, deadline, defaults } from "./budgets.js";
 import { meterAttempt, meterStage, measure } from "./usage-ledger.js";
+import { documentAttempts, failureDiagnostic } from "./failure-diagnostic.js";
 import { stage } from "./run-history.js";
 import { readFileSync, existsSync } from "node:fs";
 import { join } from "node:path";
@@ -37,7 +38,7 @@ async function bridge(root, request) {
           measure(packet.usage);
            if (packet.failed) {
              const error = Error("Collection or extraction failed");
-             if (["source_host_blocked", "unsafe_destination", "redirect_loop", "redirect_limit", "tls_certificate_invalid", "http_error", "collection_failed", "website_verification_required"].includes(packet.error_code)) {
+             if (failureDiagnostic(packet.error_code, packet.diagnostic)) {
                error.code = packet.error_code;
                error.diagnostic = packet.diagnostic;
              }
@@ -131,15 +132,15 @@ async function real(db, job, collect) {
     mode: "live", hospital_key: job.hospital, bounds: job.context.discovery_bounds, discovery_only: scan,
   });
   if (collected?.budget_stop) {
-    stage(db,job,"collection_stopped",{manifest:collected.manifest, captures:[...(collected.collection.pages??[]),...collected.collection.documents]
+    stage(db,job,"collection_stopped",{manifest:collected.manifest, document_attempts:documentAttempts(collected.collection), captures:[...(collected.collection.pages??[]),...collected.collection.documents]
       .filter(s=>s.status==="saved").map(s=>({sha256:s.sha256,retrieved_at:s.retrieved_at}))});
     throw new BudgetStop(collected.budget_stop==="seconds"?"budget_exhausted":"quota_exceeded",collected.budget_stop);
   }
   const collection = job.context.manual_import ? null : replay ? savedCollection(originalRoot,job.hospital) : collected.collection;
-  const inventory = sourceInventory(facility, collection, seeds);
-  if (collection && !replay) stage(db, job, "collection_saved", { collection_sha256: inventory.collection_sha256,
-    captures: inventory.sources.filter((s) => s.capture_status === "saved").map((s) => ({
-      source_id: s.source_id, sha256: s.digest, retrieved_at: s.retrieved_at })) });
+  if (collection && !replay) stage(db, job, "collection_saved", { collection_sha256: fingerprint(collection), document_attempts: documentAttempts(collection),
+    captures: [...(collection.pages || []), ...collection.documents].filter(s => s.status === "saved").map(s => ({
+      source_id: s.source_url, sha256: s.sha256, retrieved_at: s.retrieved_at })) });
+  const inventory = sourceInventory(facility, collection, seeds, replay ? originalRoot : root);
   const documents = inventory.sources;
   gaps.push(...inventory.gaps);
   const classifications = readClassifications(root, job.context.classification_sha256, job.hospital);
@@ -155,6 +156,7 @@ async function real(db, job, collect) {
       if (sha256(raw) !== d.digest) throw Error("Source snapshot checksum mismatch");
       immutable(root, path, raw);
       source.snapshot = { snapshot_id: d.digest, sha256: d.digest, artifact_path: path, url: d.source_id, retrieved_at: d.retrieved_at, publisher_updated_at: null };
+      if (d.published_link) source.snapshot.published_link = d.published_link;
       if (d.final_url && d.final_url !== d.source_id) {
         source.snapshot.final_url = d.final_url;
         source.snapshot.redirects = d.redirects;
@@ -186,8 +188,11 @@ async function real(db, job, collect) {
   input.scope.required_sources = input.sources.map((s) => s.source_id);
   meterStage("extract_documents");
   stage(db, job, "extract_documents");
-  const analysis = await bridge(root, { mode: "extract", deadline:deadline(db,job), sources: input.sources, application_review_date: job.review_date });
+  const analysis = await bridge(root, { mode: "extract", deadline:deadline(db,job), sources: input.sources, file_text_status: collected?.file_text_status, application_review_date: job.review_date });
   const extracted = analysis.sources;
+  for (const doc of documents) {
+    if (doc.digest && analysis.file_text_status?.[doc.digest]) doc.text_status = analysis.file_text_status[doc.digest];
+  }
   const content = {};
   for (const s of input.sources) if (s.snapshot) {
     const segments = extracted[s.source_id];
@@ -197,7 +202,7 @@ async function real(db, job, collect) {
         p.status === "extracted" && p.locator === c.locator && p.text.includes(c.quote)))) throw Error("Unverified classification citation");
     }
     content[s.source_id] = !segments.length ? s.snapshot.sha256 : fingerprint(segments.map((p) => [p.locator, p.text]));
-    if (segments.some((p) => p.status !== "extracted")) { s.status = "unreadable"; gaps.push(`Review extraction gaps in ${s.source_id}`); }
+    if (analysis.file_text_status?.[s.snapshot.sha256] === "needs_review" || segments.some((p) => p.status !== "extracted")) { s.status = "unreadable"; gaps.push(`Review extraction gaps in ${s.source_id}`); }
     else if (s.language !== "en" && !(s.snapshot.artifact_path.endsWith(".html") && s.language === "und")) { s.status = "translation_needed"; gaps.push(`Qualified language/measure interpretation needed: ${s.source_id} [${s.language}]`); }
     else if (s.role === "application" && records.some((r) => r.kind === "application-reviews" && r.findings.some((f) => f.evidence.some((e) => e.url === s.source_id && e.sha256 === s.snapshot.sha256)))) s.status = "reviewed";
   }
@@ -338,7 +343,12 @@ async function executePipeline(db, job, collect) {
     return publishPipeline(db, job, bundle) ? bundle : null;
   } catch (error) {
     failPipeline(db, job, error);
-    console.error("pipeline_failed", job.id, error.name);
+    const diagnostic = failureDiagnostic(error.code, error.diagnostic);
+    const last = db.prepare("SELECT json_extract(detail,'$.name') stage FROM audit_run_events WHERE job=? AND attempt=? AND state='stage' ORDER BY seq DESC LIMIT 1").get(job.id, job.token);
+    console.error("pipeline_failed", JSON.stringify({
+      job_id: job.id, stage: last?.stage ?? "prepare", reason: diagnostic?.code ?? (error instanceof BudgetStop ? error.code : "audit_failed"),
+      source_url: diagnostic?.source_url, http_status: diagnostic?.http_status, manifest_id: diagnostic?.manifest_id,
+    }));
     throw error;
   }
 }
