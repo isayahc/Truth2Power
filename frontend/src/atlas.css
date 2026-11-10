@@ -929,3 +929,32 @@ h2 {
 .changes-feed article { margin:20px 0; padding:20px; border:1px solid var(--line); background:white; border-radius:8px; overflow-wrap:anywhere; }
 .changes-feed blockquote { margin:10px 0; padding-left:12px; border-left:3px solid var(--deep); white-space:pre-line; }
 .change-measure { margin-right:0.8em; }
+
+.ops {margin:2rem 0;color:#183e34;line-height:1.5;min-width:0}
+.ops h1,.ops h3,.ops h4 {line-height:1.18;letter-spacing:-.025em}
+.ops h1 {font-size:clamp(2rem,5vw,3.6rem);margin:.4em 0}
+.ops h3 {font-size:1.45rem;margin:.6em 0}
+.ops h4 {font-size:1.05rem;margin:1.2em 0 .5em}
+.ops-controls {display:flex;align-items:end;gap:.65rem;flex-wrap:wrap;margin:.7rem 0}
+.ops button,.ops input,.ops select {font:inherit;border:1px solid #839b90;border-radius:5px;padding:.45rem .7rem;background:#fff;color:#183e34}
+.ops button {cursor:pointer}
+.ops button:disabled {opacity:.55;cursor:default}
+.ops :focus-visible {outline:3px solid #996000;outline-offset:2px}
+.ops label {display:grid;gap:.2rem;font-size:.9rem}
+.ops-scroll {max-width:100%;overflow:auto}
+.ops table {border-collapse:collapse;width:100%;font-size:.9rem}
+.ops th,.ops td {text-align:left;padding:.65rem;border-bottom:1px solid #cbd8d1;vertical-align:top}
+.ops thead {background:#e5eee8}
+.ops th[scope=row] {min-width:13rem}
+.hospital-runs {padding:1rem;border:1px solid #b9ccc2;border-top:4px solid #28694d;border-radius:6px;background:#fafcf9;scroll-margin-top:1rem}
+.ops-confirm {padding:1rem;background:#fff5d8;border-left:3px solid #986700}
+.ops-confirm button:first-of-type {background:#183e34;color:white}
+.ops dl {display:grid;grid-template-columns:minmax(7rem,1fr) 1.5fr;align-items:baseline;gap:.35rem .75rem}
+.ops dl dt,.ops dl dd {margin:0;font-size:.85rem;letter-spacing:normal;text-transform:none}
+.ops details>summary {cursor:pointer;font-weight:600}
+.run-record {border-top:1px solid #bacbc0;padding-top:.8rem;overflow-wrap:anywhere}
+.ops ol,.ops ul {padding-inline-start:1.4rem}
+.ops li {margin-block:.3rem}
+.ops dl.ops-totals {display:flex;align-items:stretch;flex-wrap:wrap;gap:1px;background:#cbd8d1;border:1px solid #cbd8d1;margin:1rem 0}
+.ops-totals div {flex:1 1 9rem;background:#f1f6f1;padding:.7rem 1rem}
+.ops .ops-totals dd {font-size:1.35rem;font-weight:650}

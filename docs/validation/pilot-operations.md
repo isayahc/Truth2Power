@@ -227,3 +227,17 @@ node backend/audit/pipeline-cli.js receipt --job 12 | jq '{run:.audit_run_id,mod
 Back up `audit_prices` and `audit_usage` with the existing SQLite backup. Receipts replay persisted quantities with the frozen card. Subsequent billing reconciliation appends a row and changes the reconciled receipt.
 
 The [audit reporting API v1](reporting-api.md) exposes hospital histories, monitoring clocks, filtered statewide totals, and JSON/CSV run receipts.
+
+## Hospital audit dashboard (#98)
+
+Start the local app and worker in the same audit directory. Open **Audit operations** to search all 212 hospitals by name, identifier or region. Sort the roster by hospital, status or monitoring date. The financial summary covers statewide recorded runs; the hospital search narrows the table. The cost availability column refers to the latest run.
+
+Select a hospital and choose **Scan documents**, **Full audit** or **Replay saved evidence**. Read the scope and confirm the individual run. If the queue response is lost, **Retry same request** reuses its request key. Active jobs refresh at five-second intervals, up to 120 refreshes. Leaving the hospital stops monitoring. **Refresh** checks again manually. The worker continues independently of the page.
+
+Open any run in the hospital's history to inspect the ordered attempt timeline, saved sources, draft measures, stage costs or CSV receipt. Missing amounts display as unknown. A completed replay advances execution time while preserving the source-fetch timestamp. The September 2025 rating remains the historical published rating.
+
+### Reproduce the offline demo
+
+Run `npm run test:operations` after installing Playwright Chromium and the existing Python dependencies. Set `CHROMIUM_PATH` to use an installed Chromium binary. The test creates an isolated store, starts a localhost server, searches for PFI 739, queues a scan with a simulated lost response, collects fixture documents, replays them and inspects an older revision after a failed full audit. It switches to Spanish at mobile width and checks keyboard navigation and the accessibility tree. It also exercises controlled stale, completed and checkpoint-reuse display states. The test writes `operations-desktop.png` and `hospital-mobile-es.png` under `.audit/ui/operations/`. Spanish strings are implementation translations pending fluent-reader review.
+
+Offline fixture screenshots: [statewide operations](operations-ui/desktop.webp) and [hospital controls in Spanish on mobile](operations-ui/mobile-es.webp).

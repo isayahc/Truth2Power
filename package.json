@@ -11,6 +11,7 @@
     "start": "node backend/src/local-server.js",
     "audit:worker": "node backend/audit/worker.js",
     "audit:pilot": "node backend/audit/pipeline-cli.js",
+    "test:operations": "npm run build && node scripts/test-operations-e2e.js",
     "test:pilot": "node --test backend/test/pipeline.test.js backend/test/roster-audit.test.js && npm run build && node scripts/test-pipeline-e2e.js",
     "test:audit": "npm run build && node scripts/test-audit-e2e.js",
     "grade": "node backend/grading/cli.js",
