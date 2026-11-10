@@ -996,6 +996,9 @@ h2 {
 .hospital-summary > a, .hospital-summary > p { display: block; margin: 10px 0; font-size: 12px; }
 .hospital-coordinates { margin: 10px 0; font-size: 12px; }
 .hospital-coordinates summary { cursor: pointer; }
+.audit-live-status { margin: 10px 0; padding: 10px 12px; border: 1px solid #9ebdb1; border-left: 4px solid #19776b; border-radius: 4px; background: #edf6f1; }
+.audit-live-status p { margin: 4px 0; font-size: 12px; }
+.audit-live-status small { color: #425f56; }
 .hospital-summary .review-nav { margin: 12px 0; font-size: 12px; padding: 8px; }
 .ops-dashboard { margin: 12px 0; }
 .ops-dashboard h1 { font-size: 28px; margin: 8px 0; letter-spacing: -1px; }
