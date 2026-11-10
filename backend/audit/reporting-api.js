@@ -106,6 +106,7 @@ function runRow(r) {
           ? "partial"
           : "complete",
     unresolved_measures: r.unresolved,
+    coverage_gaps: r.gaps,
     assessment_id: r.assessment_id,
     scan_id: r.scan_id,
     timeline: path + "/timeline",
@@ -143,6 +144,7 @@ function publicReceipt(db, r) {
   delete units.meter_finished;
   delete units.telemetry_missing;
   const stage_usage = {};
+  const stage_costs = {};
   for (const [name, stage] of Object.entries(c.stages)) {
     const label = [
       "prepare",
@@ -154,6 +156,16 @@ function publicReceipt(db, r) {
     ].includes(name)
       ? name
       : "external";
+    const cost = stage_costs[label] ??= { billed_by_currency: {}, estimated_local_usd: null, calculated_provider_usd: null };
+    for (const [currency, amount] of Object.entries(stage.billed_by_currency))
+      cost.billed_by_currency[currency] = (cost.billed_by_currency[currency] ?? 0) + amount;
+    if (Object.keys(c.rate_card?.local ?? {}).some(unit => stage.units[unit] > 0))
+      cost.estimated_local_usd = (cost.estimated_local_usd ?? 0) + stage.estimated_local_usd;
+    if (stage.calculated_usd > 0 || c.rows.some(row => row.stage === name && row.kind === "provider" &&
+      Object.entries(row.payload.usage).some(([unit, n]) => n > 0 && c.rate_card?.models?.[
+        [row.payload.provider,row.payload.region,row.payload.model].join("/")
+      ]?.[unit] != null)))
+      cost.calculated_provider_usd = (cost.calculated_provider_usd ?? 0) + stage.calculated_usd;
     const target = (stage_usage[label] ??= {});
     for (const [unit, quantity] of Object.entries(stage.units)) {
       if (unit !== "meter_finished" && unit !== "telemetry_missing")
@@ -183,6 +195,7 @@ function publicReceipt(db, r) {
     status: r.status,
     units,
     stage_usage,
+    stage_costs,
     cost_status: c.complete
       ? "complete"
       : c.known_billed_usd != null ||
@@ -362,7 +375,7 @@ export function reportingRoute(event) {
       }
     }
     if (method !== "GET") reject(405, "method_not_allowed");
-    if (!facility && !run && path !== "/summary")
+    if (!facility && !run && path !== "/summary" && path !== "/operations")
       reject(404, "unknown_endpoint");
     const file = join(directory, "audit.sqlite");
     if (existsSync(file)) {
@@ -383,6 +396,16 @@ export function reportingRoute(event) {
         db.exec(
           "CREATE TEMP TABLE audit_usage(id,job,attempt,stage,kind,payload,at); CREATE TEMP TABLE audit_prices(job,card)",
         );
+    }
+    if (path === "/operations") {
+      params(q, []);
+      const latest = new Map();
+      if (db) for (const row of db.prepare(`SELECT * FROM (SELECT p.*, row_number() OVER (PARTITION BY hospital ORDER BY id DESC) AS rank FROM (${projection}) p) WHERE rank=1`).iterate(pipelineRoot())) latest.set(row.hospital,row);
+      return json(200,{items:[...hospitals.values()].map(h => {
+        const r = latest.get(h.hospital_key);
+        return {...h,clocks:clocks(r ? db : null,h.hospital_key),latest:r ? runRow(r) : null,
+          cost_status:r ? publicReceipt(db,r).cost_status : "unknown"};
+      })});
     }
     if (path === "/summary") return json(200, summary(db, q));
     if (facility) {
@@ -520,6 +543,16 @@ function attachment(sources, digest) {
   };
 }
 
+function gapTypes(gaps) {
+  return [...new Set((gaps ?? []).map(g => {
+    if (/campus|classif/i.test(g)) return "campus";
+    if (/language|translation/i.test(g)) return "language";
+    if (/template/i.test(g)) return "template";
+    if (/governing|reference/i.test(g)) return "reference";
+    if (/unavailable|not captured|404|410|snapshot/i.test(g)) return "missing";
+    return "scope";
+  }))];
+}
 function revision(db, r, id, digest) {
   const snapshotPath =
     base + "/runs/" + runId(r.id) + "/revision/" + id + "/snapshots/";
@@ -538,6 +571,7 @@ function revision(db, r, id, digest) {
       );
     return {
       revision: id,
+      source_count:b.input.sources.filter(s=>s.snapshot).length, gap_types:gapTypes(b.report.coverage_gaps),
       findings: b.report.findings.map(({ measure_id, result }) => ({
         measure_id,
         result,
@@ -564,6 +598,7 @@ function revision(db, r, id, digest) {
     );
   return {
     revision: id,
+    source_count:scan.inventory.sources.filter(s=>s.capture_status==="saved").length, gap_types:gapTypes(scan.inventory.gaps),
     sources: scan.inventory.sources.map((s) => ({
       role: s.role,
       language: s.language,

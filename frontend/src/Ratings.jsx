@@ -1,3 +1,4 @@
+import { HospitalRuns } from "./AuditOperations.jsx";
 import GradingPanel from "./GradingPanel.jsx";
 import ReportingContext from "./ReportingContext.jsx";
 import HospitalAssessment from "./HospitalAssessment.jsx";
@@ -106,6 +107,7 @@ export function HospitalDetail({ hospital, onClose, onReview, pendingReviews }) 
       </dl>
       {p.assistance_url && <p><a href={p.assistance_url} target="_blank" rel="noreferrer">{t('Get hospital financial assistance (HFA) ↗')}</a></p>}
       <a href={localHref(`?hospital=${encodeURIComponent(hospital.id)}`)}>{t('Permanent link to this hospital page')}</a>
+      <HospitalRuns key={hospital.id} hospitalKey={hospital.id} />
       {language === 'es' && <p className="translation-scope">{t('Detailed audit and review panels below are in English. Quotations retain the original document language.')}</p>}
       <div lang="en">
       <HospitalAssessment key={`assessment-${hospital.id}`} hospitalKey={hospital.id} hospitalName={p.name} />

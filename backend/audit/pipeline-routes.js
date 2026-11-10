@@ -28,7 +28,7 @@ export function pipelineRoute(event) {
     const publicJob = job && Object.fromEntries(["id", "status", "attempted", "attempts", "error", "year"].map((k) => [k, job[k]]));
     const scan = data.jobs.find((j) => j.hospital === match[1] && j.context.mode === "discovery_only" && j.status === "completed");
     return json(200, { job: publicJob ? { ...publicJob, mode: job.context.mode } : null,
-      latest_scan: scan ? JSON.parse(scan.checkpoint).scan_id : null, latest: data.bundles.find((b) => b.input.hospital_key === match[1])?.id ?? null });
+      demo_enabled: process.env.T2P_PILOT_DEMO === "1", latest_scan: scan ? JSON.parse(scan.checkpoint).scan_id : null, latest: data.bundles.find((b) => b.input.hospital_key === match[1])?.id ?? null });
   }
   const scanPath = /^\/api\/pilot\/scans\/([a-f0-9]{64})$/.exec(event.rawPath);
   if (scanPath) {

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 
 export default function PilotAudit({ hospitalKey }) {
   const [data, setData] = useState(null), [message, setMessage] = useState("");
-  const [mode, setMode] = useState("replay"), [variant, setVariant] = useState("original");
+  const [mode, setMode] = useState("synthetic"), [variant, setVariant] = useState("original");
   async function refresh() {
     try {
       const r = await fetch(`/api/pilot/hospitals/${hospitalKey}`);
@@ -11,7 +11,7 @@ export default function PilotAudit({ hospitalKey }) {
     } catch { setMessage("Audit status unavailable. Saved findings remain unchanged."); }
   }
   useEffect(() => { refresh(); }, [hospitalKey]);
-  if (!["1002", "362"].includes(String(hospitalKey))) return null;
+  if (String(hospitalKey) !== "1002" || !data?.demo_enabled) return null;
   async function queue() {
     setMessage("Queuing audit…");
     try {
@@ -25,7 +25,6 @@ export default function PilotAudit({ hospitalKey }) {
     <h3>Run a 17-measure audit</h3>
     <p>Jobs run in the persistent worker after you close this page. A completed job can still have evidence and approval blockers.</p>
     <label>Evidence mode <select value={mode} onChange={(e) => setMode(e.target.value)}>
-      <option value="replay">Reverify saved public evidence</option><option value="live">Collect current public documents</option>
       {String(hospitalKey) === "1002" && <option value="synthetic">Synthetic offline demo (isolated server only)</option>}
     </select></label>
     {mode === "synthetic" && <label> Synthetic source version <select value={variant} onChange={(e) => setVariant(e.target.value)}>

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Changes from "./Changes.jsx";
+import { AuditOperations } from "./AuditOperations.jsx";
 import Overview from "./Overview.jsx";
 import HospitalMap from "./HospitalMap.jsx";
 import HospitalSearch from "./HospitalSearch.jsx";
@@ -37,6 +38,7 @@ function Header({ onReview, pending }) {
         <span className="brand-unit">{t('Health equity atlas')}</span>
       </div>
       <a className="overview-link" href={localHref('?view=overview')}>{t('Audit overview')}</a>
+      <a className="changes-link" href={localHref('?view=operations')}>{t('Audit operations')}</a>
       <a className="changes-link" href={localHref('?view=changes')}>{t('Recent changes')}</a>
       <button className="review-nav" onClick={onReview}>{t('Review inbox')} <span>{pending ?? "…"}</span></button>
       <LanguageSwitch />
@@ -159,7 +161,7 @@ export default function App() {
             hospitalKey={reviewHospital} hospitals={data?.hospitals ?? []} onHospital={(hospital) => {
               if (hospital) { selectHospital(hospital); setMapKey((n) => n + 1); setReviewOpen(false); }
             }} /></div>
-        </> : !selected && new URLSearchParams(window.location.search).get("view") === "changes" ? <div lang="en"><Changes /></div> : !selected && new URLSearchParams(window.location.search).get("view") === "overview" ?
+        </> : !selected && new URLSearchParams(window.location.search).get("view") === "operations" ? <AuditOperations /> : !selected && new URLSearchParams(window.location.search).get("view") === "changes" ? <div lang="en"><Changes /></div> : !selected && new URLSearchParams(window.location.search).get("view") === "overview" ?
           (data ? <div lang="en"><Overview features={data.hospitals} counties={data.counties} /></div> :
             <p role="status">{error ? <button onClick={() => setAttempt(attempt + 1)}>{t('Retry loading atlas')}</button> : t('Loading atlas…')}</p>) : <>
         <div className="intro">
