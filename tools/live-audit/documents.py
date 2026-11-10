@@ -88,20 +88,27 @@ def public_ip(value):
     return address.is_global and not address.is_multicast and not address.is_reserved
 
 
+class SourceBoundaryError(ValueError):
+    code = "source_host_blocked"
+    def __init__(self, message, code="source_host_blocked"):
+        super().__init__(message)
+        self.code = code
+
+
 def approved(url, host):
     parsed = urlsplit(url)
     if (parsed.scheme != "https" or parsed.hostname not in {host, "www." + host}
             or parsed.port not in {None, 443} or parsed.username or parsed.password
             or any(ord(c) < 33 for c in url) or "\\" in url):
-        raise ValueError("Document or redirect is outside the roster site's HTTPS host")
+        raise SourceBoundaryError("Document or redirect is outside the roster site's HTTPS host")
     try:
         if not public_ip(parsed.hostname):
-            raise ValueError("Private address prohibited")
+            raise SourceBoundaryError("Private address prohibited", "unsafe_destination")
     except ValueError as error:
         if str(error) == "Private address prohibited":
             raise
     if parsed.hostname in {"localhost", "metadata.google.internal"} or parsed.hostname.endswith((".local", ".internal")):
-        raise ValueError("Internal hostname prohibited")
+        raise SourceBoundaryError("Internal hostname prohibited", "unsafe_destination")
     return url
 
 
@@ -140,7 +147,7 @@ def public_addresses(host, timeout=20):
         raise rows
     addresses = sorted({row[4][0] for row in rows})
     if not addresses or any(not public_ip(a) for a in addresses):
-        raise ValueError("DNS resolved to a non-public address")
+        raise SourceBoundaryError("DNS resolved to a non-public address", "unsafe_destination")
     return addresses
 
 
@@ -148,8 +155,15 @@ def download(url, host, bounds=None, trace=None):
     """Pin the validated public IP for each TLS connection; never use proxies or a second DNS lookup."""
     bounds = bounds or Bounds()
     deadline = time.monotonic() + bounds.timeout
+    approved(url, host)
+    seen = set()
     for hop in range(bounds.redirects + 1):
-        approved(url, host)
+        if url in seen:
+            raise SourceBoundaryError("Redirect loop detected", "redirect_loop")
+        seen.add(url)
+        # A server-side redirect delegates retrieval, not clinical applicability.
+        # Validate HTTPS and public DNS independently on EVERY destination.
+        approved(url, (urlsplit(url).hostname or '').removeprefix('www.'))
         if current.get():
             current.get().reserve("network_requests", 0)
             current.get().reserve("network_bytes", 0)
@@ -169,7 +183,8 @@ def download(url, host, bounds=None, trace=None):
                                headers={"User-Agent": "Truth2Power public document collection", "Accept-Encoding": "identity"})
             response = connection.getresponse()
             if response.status in {301, 302, 303, 307, 308}:
-                target = approved(urldefrag(urljoin(url, response.getheader("Location", "")))[0], host)
+                target = urldefrag(urljoin(url, response.getheader("Location", "")))[0]
+                approved(target, (urlsplit(target).hostname or '').removeprefix('www.'))
                 if trace is not None:
                     trace.append(dict(source_url=url, final_url=target, http_status=response.status))
                 url = target
@@ -202,7 +217,7 @@ def download(url, host, bounds=None, trace=None):
             return b"".join(chunks), url, response.headers.get_content_type()
         finally:
             connection.close()
-    raise ValueError("Redirect limit reached")
+    raise SourceBoundaryError("Redirect limit reached", "redirect_limit")
 
 
 def collect(hospital_key, root, output, save, fetch=download, bounds=None):
@@ -235,7 +250,7 @@ def collect(hospital_key, root, output, save, fetch=download, bounds=None):
                    attempted_at=now(), status="failed", landing_page=None, documents=[],
                     pages=[], links=[], bounds=asdict(bounds),
                     limitations=["Bounded HTML-anchor traversal is not an exhaustive absence search. JavaScript-only resources require review; scripts are never executed. "
-                                 "Only the roster host and its www alias are trusted, including redirects. Unknown campus/role/language requires review."])
+                                  "HTTPS server redirects are followed with public-IP-pinned TLS. Traversal stays on the roster or migrated landing host. Redirects do not establish campus/role/language applicability."])
 
     def snapshot(data, final_url, suffix, mime):
         digest = hashlib.sha256(data).hexdigest()
@@ -245,6 +260,7 @@ def collect(hospital_key, root, output, save, fetch=download, bounds=None):
                     retrieved_at=now(), publisher_updated_at=None, content_type=mime, size_bytes=len(data))
 
     queue, visited, total = deque([(url, [], 0, None)]), set(), 0
+    landing_host = host
     started = time.monotonic()
     while queue:
         source, labels, depth, parent = queue.popleft()
@@ -257,17 +273,21 @@ def collect(hospital_key, root, output, save, fetch=download, bounds=None):
         record = dict(source_url=source, labels=labels, parent_url=parent, depth=depth,
                       attempted_at=now(), status="failed", classification="unverified")
         bucket.append(record)
+        trace = []
+        record['redirects'] = trace
         try:
-            approved(source, host)
+            source_host = (urlsplit(source).hostname or '').removeprefix('www.')
+            approved(source, host if source_host == host else landing_host)
             if depth > bounds.depth or len(bucket) > (bounds.documents if is_document else bounds.pages):
                 raise ValueError("Traversal depth or resource count limit reached")
             if time.monotonic() - started >= bounds.seconds or total >= bounds.total_bytes:
                 raise ValueError("Traversal time or total byte limit reached")
             if current.get():
                 current.get().reserve("documents" if is_document else "pages")
-            trace = []
-            data, destination, mime = fetch(source, host, bounds, trace) if fetch is download else fetch(source, host)
-            approved(destination, host)
+            data, destination, mime = fetch(source, source_host, bounds, trace) if fetch is download else fetch(source, source_host)
+            # Injected test fetchers still require a same-host response; only the
+            # pinned downloader may supply a verified cross-host redirect chain.
+            approved(destination, (urlsplit(destination).hostname or '').removeprefix('www.') if fetch is download else source_host)
             total += len(data)
             if len(data) > bounds.bytes_per_resource or total > bounds.total_bytes:
                 raise ValueError("Traversal byte limit reached")
@@ -291,6 +311,7 @@ def collect(hospital_key, root, output, save, fetch=download, bounds=None):
                 record["classification"] = "other_campus_requires_review"
             if source == url:
                 attempt["landing_page"] = dict(record)
+                landing_host = (urlsplit(destination).hostname or '').removeprefix('www.')
             if not is_document:
                 links = Links(destination, all_links=True)
                 links.feed(data.decode("utf-8", errors="replace"))
@@ -319,8 +340,14 @@ def collect(hospital_key, root, output, save, fetch=download, bounds=None):
             break
         except Exception as error:
             record["error_type"] = type(error).__name__
+            if isinstance(error, ssl.SSLCertVerificationError):
+                record['error_code'] = 'tls_certificate_invalid'
+            if isinstance(error, SourceBoundaryError):
+                record['error_code'] = error.code
             if isinstance(error, HTTPError):
                 record["http_status"] = error.code
+                if error.code == 403 and error.headers and error.headers.get('Cf-Mitigated', '').lower() == 'challenge':
+                    record['error_code'] = 'website_verification_required'
                 record["availability"] = "http_gone_not_confirmed_withdrawal" if error.code == 410 else "inaccessible"
             elif isinstance(error, ValueError):
                 record["reason"] = str(error)

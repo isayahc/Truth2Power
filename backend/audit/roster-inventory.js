@@ -31,16 +31,40 @@ export function savedCollection(root, key) {
 export function sourceInventory(facility, collection, seeds = []) {
   const { hospital_key, landing_url } = facility;
   const expectedHost = new URL(landing_url).hostname.replace(/^www\./, "");
+  const safe = (url) => {
+    const u = new URL(sourceUrl(url));
+    if (u.protocol !== "https:" || u.port || u.username || u.password || isIP(u.hostname) ||
+        !/^[a-z0-9.-]+\.[a-z]+$/i.test(u.hostname) || /\.(internal|local|localhost)$/.test(u.hostname) || u.hostname === 'metadata.google.internal')
+      throw Error('Invalid redirect provenance URL');
+    return u.href;
+  };
+  const destination = (resource, start) => {
+    let at = safe(start);
+    const seen = new Set([at]);
+    const chain = resource.redirects || [];
+    if (chain.length > 8) throw Error('Redirect provenance limit exceeded');
+    for (const hop of chain) {
+      if (safe(hop.source_url) !== at || ![301,302,303,307,308].includes(hop.http_status)) throw Error('Broken redirect provenance');
+      at = safe(hop.final_url);
+      if (seen.has(at)) throw Error('Redirect provenance loop');
+      seen.add(at);
+    }
+    const final = safe(resource.final_url || resource.url || start);
+    if (at !== final) throw Error('Missing redirect provenance');
+    return final;
+  };
+  const landingFinal = collection?.landing_page ? destination(collection.landing_page, landing_url) : landing_url;
+  const landingHost = new URL(landingFinal).hostname.replace(/^www\./, '');
   const trusted = (url) => {
     const u = new URL(sourceUrl(url));
-    return u.protocol === "https:" && !u.port && u.hostname.replace(/^www\./, "") === expectedHost;
+    return u.protocol === "https:" && !u.port && [expectedHost, landingHost].includes(u.hostname.replace(/^www\./, ""));
   };
   const rows = new Map(), gaps = new Set();
   const put = (source_id, values) => rows.set(source_id, { source_id, role: "unclassified", language: "und",
     campus_applicability: "unknown", provenance: "roster", digest: null, retrieved_at: null, capture_status: "not_captured", ...values });
   put(landing_url, { role: "landing_page" });
-  for (const s of seeds) put(s.source_id, { ...s, role: s.digest ? s.role : "unclassified", provenance: "curated_inventory",
-    campus_applicability: s.digest && s.role !== "landing_page" ? "applicable" : "unknown" });
+  for (const s of seeds) put(s.source_id, { ...s, role: s.digest ? s.role : "unclassified", provenance: s.provenance === 'human_import' ? 'human_import' : "curated_inventory",
+    campus_applicability: s.provenance === 'human_import' ? 'unknown' : s.digest && s.role !== "landing_page" ? "applicable" : "unknown" });
   if (!collection) {
     if (!seeds.length) gaps.add("No saved collection for the roster landing page.");
   } else {
@@ -62,8 +86,8 @@ export function sourceInventory(facility, collection, seeds = []) {
         if (attempted && !rows.get(attempted)?.digest) put(attempted, { capture_status: "failed", provenance: "collection" });
         continue;
       }
-      const final = s.final_url || s.url || id;
-      if (!trusted(id) || !trusted(final) || (s.redirects || []).some((r) => !trusted(r.source_url) || !trusted(r.final_url)))
+      const final = destination(s, id);
+      if (!trusted(id))
         throw Error("Untrusted saved collection URL");
       if (!/^[a-f0-9]{64}$/.test(s.sha256) || !["html", "pdf", "docx"].some((ext) =>
         s.artifact_path === `snapshots/${s.sha256}.${ext}`) || !Number.isFinite(Date.parse(s.retrieved_at))) throw Error("Invalid saved resource");
@@ -72,7 +96,7 @@ export function sourceInventory(facility, collection, seeds = []) {
       const other = !known && (s.classification === "other_campus_requires_review" || confirmedDocuments.some((d) => d.sha256 === s.sha256));
       put(sourceUrl(id), { role: known?.role ?? (page && id === landing_url ? "landing_page" : "unclassified"),
         language: known ? languageTag(known.language) : "und", digest: s.sha256, retrieved_at: s.retrieved_at,
-        artifact_path: s.artifact_path, final_url: final, provenance: known ? "pinned_campus_inventory" : "collection",
+        artifact_path: s.artifact_path, final_url: final, redirects: s.redirects || [], provenance: known ? "pinned_campus_inventory" : "collection",
         capture_status: "saved", campus_applicability: known ? "applicable" : other ? "other_campus_requires_review" : "unknown" });
     }
   }

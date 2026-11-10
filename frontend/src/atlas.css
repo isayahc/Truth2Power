@@ -999,6 +999,20 @@ h2 {
 .audit-live-status { margin: 10px 0; padding: 10px 12px; border: 1px solid #9ebdb1; border-left: 4px solid #19776b; border-radius: 4px; background: #edf6f1; }
 .audit-live-status p { margin: 4px 0; font-size: 12px; }
 .audit-live-status small { color: #425f56; }
+.human-intervention { margin: 12px 0; padding: 12px; border: 1px solid #bfa362; border-radius: 4px; background: #fffaf0; overflow-wrap: anywhere; }
+.human-intervention form { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 10px; margin: 10px 0; }
+.human-intervention label { display: block; font-size: 12px; }
+.human-intervention input:not([type=checkbox]), .human-intervention select { display: block; width: 100%; min-width: 0; padding: 6px; }
+.human-intervention label:has([type=checkbox]) { grid-column: 1 / -1; }
+.ops .human-intervention h4 { margin: 0 0 6px; }
+.ops .human-intervention p, .ops .human-intervention li { font-size: 12px; line-height: 1.4; margin: 4px 0; }
+.ops.hospital-runs:has(.human-intervention) > .audit-live-status p,
+.ops.hospital-runs:has(.human-intervention) > .audit-live-status small,
+.ops.hospital-runs:has(.human-intervention) > .audit-live-status .run-diagnostic,
+.ops.hospital-runs:has(.human-intervention) > .ops-controls { display: none; }
+.ops.hospital-runs:has(.human-intervention) > .audit-live-status a[download] { display: block; margin-top: 4px; }
+.ops.hospital-runs:has(.human-intervention) > h3 { font-size: 18px; margin: 6px 0; }
+@media(max-width:600px) { .human-intervention form { grid-template-columns: 1fr; } }
 .hospital-summary .review-nav { margin: 12px 0; font-size: 12px; padding: 8px; }
 .ops-dashboard { margin: 12px 0; }
 .ops-dashboard h1 { font-size: 28px; margin: 8px 0; letter-spacing: -1px; }

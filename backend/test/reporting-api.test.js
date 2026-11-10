@@ -114,6 +114,25 @@ test("reporting API queues, pages, scopes, reconciles totals and redacts private
     "started",
   );
   const aggregate = await get("/summary", { pfi: "739", mode: "replay" });
+  for (let i = 0; i < 105; i++) db.prepare('INSERT INTO audit_run_events(job,attempt,state,at,detail) VALUES(?,?,?,?,?)')
+    .run(job.id, job.token, 'stage', new Date().toISOString(), JSON.stringify({ name: 'collect_sources', reason: 'PRIVATE_LOG_SECRET', local_path: root }));
+  db.prepare('INSERT INTO audit_run_events(job,attempt,state,at,detail) VALUES(?,?,?,?,?)')
+    .run(job.id, job.token, 'failed', new Date().toISOString(), JSON.stringify({error_code:'http_error',retry_scheduled:false,diagnostic:{http_status:403,source_url:'https://hospital.example/aid?secret=PRIVATE_LOG_SECRET',raw:'PRIVATE_LOG_SECRET'}}));
+  const download = await call(endpoint + '/log.json');
+  assert.equal(download.statusCode, 200);
+  assert.match(download.headers['Content-Disposition'], /attachment; filename="audit-run-\d+-log.json"/);
+  const log = JSON.parse(download.body);
+  assert.equal(log.run.audit_run_id, run.audit_run_id);
+  assert.equal(log.timeline.length, db.prepare('SELECT count(*) n FROM audit_run_events WHERE job=?').get(job.id).n);
+  assert.ok(log.timeline.length > 100);
+  assert.ok(log.attempts.length);
+  assert.ok(log.receipt);
+  assert.equal(log.timeline.at(-1).diagnostic.http_status, 403);
+  assert.equal(log.timeline.at(-1).diagnostic.source_url, 'https://hospital.example/aid');
+  assert.equal(log.timeline.at(-1).retry_scheduled, false);
+  assert.doesNotMatch(download.body, /PRIVATE_LOG_SECRET|PRIVATE_PROVIDER|PRIVATE_MODEL|PRIVATE_SECRET/);
+  assert.equal(download.body.includes(job.token), false);
+  assert.equal((await call('/runs/audit-run-999999/log.json')).statusCode, 404);
   assert.equal(aggregate.runs, 2);
   assert.equal(aggregate.facilities_with_runs, 1);
   assert.equal(aggregate.units.input_tokens, 10);

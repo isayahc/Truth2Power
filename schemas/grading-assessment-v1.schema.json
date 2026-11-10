@@ -175,6 +175,18 @@
                     "pattern": "^https?://",
                     "maxLength": 4096
                   },
+                  "redirects": {
+                    "type": "array", "maxItems": 8,
+                    "items": {
+                      "type": "object", "additionalProperties": false,
+                      "required": ["source_url", "final_url", "http_status"],
+                      "properties": {
+                        "source_url": {"type": "string", "format": "uri", "maxLength": 4096},
+                        "final_url": {"type": "string", "format": "uri", "maxLength": 4096},
+                        "http_status": {"enum": [301, 302, 303, 307, 308]}
+                      }
+                    }
+                  },
                   "final_url": {
                     "type": "string",
                     "format": "uri",

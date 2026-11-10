@@ -3,6 +3,7 @@ import { join, extname } from "node:path";
 import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import { isDeepStrictEqual } from "node:util";
+import { isIP } from "node:net";
 import { sourceUrl, sha256, languageTag } from "../review/identity.js";
 import { readArtifact, requireValue, fingerprint, confirmedDocuments, assistancePages } from "./data.js";
 import { parseProfile } from "./profiles.js";
@@ -44,8 +45,22 @@ export function evidenceStore(input, root, decisionDirectory) {
       requireValue(sourceUrl(s.url) === url, "Snapshot URL does not match logical source");
       if (s.final_url) {
         const final = new URL(s.final_url), original = new URL(url);
+        let at = url;
+        const seen = new Set([at]);
+        const chain = s.redirects || [];
+        requireValue(chain.length <= 8, "Redirect provenance limit exceeded");
+        for (const hop of chain) {
+          const target = new URL(hop.final_url);
+          requireValue(hop.source_url === at && [301,302,303,307,308].includes(hop.http_status) &&
+            target.protocol === 'https:' && !target.username && !target.password && !target.port &&
+            !isIP(target.hostname) && /^[a-z0-9.-]+\.[a-z]+$/i.test(target.hostname) &&
+            !/\.(internal|local|localhost)$/.test(target.hostname) && target.hostname !== 'metadata.google.internal' &&
+            !seen.has(hop.final_url), 'Invalid snapshot redirect provenance');
+          at = hop.final_url;
+          seen.add(at);
+        }
         requireValue(final.protocol === "https:" && !final.username && !final.password && (!final.port || final.port === "443") &&
-          final.hostname.replace(/^www\./, "") === original.hostname.replace(/^www\./, ""), "Untrusted snapshot redirect destination");
+          (chain.length ? at === s.final_url : final.hostname.replace(/^www\./, "") === original.hostname.replace(/^www\./, "")), "Untrusted snapshot redirect destination");
       }
       const raw = readArtifact(root, s.artifact_path);
       requireValue(sha256(raw) === s.sha256, "Snapshot failed SHA-256 verification");

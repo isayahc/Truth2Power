@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useLocale } from "./locale.jsx";
+import { HumanIntervention } from './HumanIntervention.jsx';
 
 const api = "/api/pilot/v1";
 const modes = {
@@ -9,6 +10,10 @@ const modes = {
   live: "Full audit",
 };
 const statusNames = {
+  human_document_imported: 'Public document imported',
+  human_resumed: 'Resumed with imported evidence',
+  human_import_linked: 'Imported evidence linked',
+  needs_human: 'Human intervention required',
   queued: "Queued",
   running: "Running",
   retrying: "Retrying",
@@ -373,6 +378,17 @@ function Receipt({ run, refresh }) {
     </section>
   );
 }
+function FailureDiagnostic({ event }) {
+  const { t } = useLocale();
+  if (!event?.diagnostic) return null;
+  const d = event.diagnostic;
+  return <div className="run-diagnostic">
+    {d.http_status && <p>{t('HTTP status')}: <strong>{d.http_status}</strong>{d.http_status === 403 ? ` · ${t('The website refused the request.')}` : ''}</p>}
+    {d.source_url && <p>{t('Failed source')}: <a href={d.source_url} target="_blank" rel="noreferrer">{d.source_url}</a></p>}
+    {event.retry_scheduled != null && <p>{t(event.retry_scheduled ? 'Another attempt is scheduled.' : 'No automatic retry is scheduled.')}</p>}
+  </div>;
+}
+
 function RunDetail({ path, refresh }) {
   const { t, language } = useLocale(),
     [tick, bump] = useState(0),
@@ -384,6 +400,7 @@ function RunDetail({ path, refresh }) {
       {run && (
         <section className="run-record">
           <h3>{run.audit_run_id}</h3>
+          <a className="run-log-download" href={`${path}/log.json`} download={`${run.audit_run_id}-log.json`}>{t("Download run log (JSON)")}</a>
           <p>
             {t(modes[run.mode])} · <strong>{t(statusNames[run.status])}</strong>{" "}
             · {t("Attempts")} {run.attempts}
@@ -412,14 +429,19 @@ function RunDetail({ path, refresh }) {
                         ·{" "}
                         {t(
                           {
-                            audit_failed: "Audit failed", budget_exhausted:"Run budget exhausted", quota_exceeded:"Resource quota exceeded", unknown_price:"Provider price unknown",
+                            audit_failed: "Audit failed", source_host_blocked: "Source URL is outside discovery scope or is not valid HTTPS.", unsafe_destination: "Source resolves to a private or internal address. Retrieval blocked.", redirect_loop: "Source redirect loop detected. Automatic retries stopped.", redirect_limit: "Source exceeded the redirect limit. Automatic retries stopped.", budget_exhausted:"Run budget exhausted", quota_exceeded:"Resource quota exceeded", unknown_price:"Provider price unknown",
                             lease_expired: "Worker lease expired",
                             retry_scheduled: "Retry scheduled",
+                            tls_certificate_invalid: "Certificate verification failed. Check the worker trust store and website certificate chain. Automatic retries stopped.",
                             operator_cancelled: "Cancelled by operator",
+                            website_verification_required: 'Human intervention required: website verification.',
+                            http_error: "The website returned an HTTP error.",
+                            collection_failed: "Source collection failed. A specific cause was not recorded.",
                           }[e.reason],
                         )}
                       </>
                     )}
+                    <FailureDiagnostic event={e} />
                   </li>
                 ))}
               </ol>
@@ -530,6 +552,9 @@ export function HospitalRuns({ hospitalKey }) {
     polls = useRef(0);
   const r = useJson(url + "?limit=1", tick),
     latest = r.data?.items[0];
+  const activity = useJson(latest ? `${api}/runs/${latest.audit_run_id}/timeline?limit=100` : null, tick);
+  const lastActivity = activity.data?.items?.at(-1);
+  const currentStage = activity.data?.items?.filter((event) => event.stage).at(-1)?.stage;
   useEffect(() => {
     alive.current = true;
     return () => {
@@ -613,15 +638,20 @@ export function HospitalRuns({ hospitalKey }) {
           partial: "Audit finished with gaps. Check the run details below.",
           failed: "Audit failed. Check the run details below for the reason.",
           cancelled: "Audit cancelled.",
+          needs_human: 'Human intervention required: website verification.',
         }[latest.status] ?? "Check the run details below for the latest recorded state.")}</p>}
         {!busy && active(latest?.status) && <p>{t(r.error ? "Status updates unavailable. Use Refresh to reconnect." : polls.current >= 120 ? "Automatic updates paused. Use Refresh to resume." : "Checking status every 5 seconds. Audit buttons are disabled while this run is pending.")}</p>}
         {!busy && latest?.status === 'queued' && <p>{t("If it stays queued, the local audit worker may not be running.")}</p>}
         {r.receivedAt && <small>{t("Status checked")}: {new Date(r.receivedAt).toLocaleTimeString(language)}</small>}
+        {currentStage && <p>{t("Last recorded task")}: {t(stageNames[currentStage] ?? "Unknown")}</p>}
+        {lastActivity && <p>{t("Last worker event")}: {date(lastActivity.at, language, t)} · {t(statusNames[lastActivity.state] ?? "Unknown")}</p>}
+        <FailureDiagnostic event={lastActivity} />
+        {latest && <a href={`${api}/runs/${latest.audit_run_id}/log.json`} download={`${latest.audit_run_id}-log.json`}>{t("Download run log (JSON)")}</a>}
       </div>}
       <div className="ops-controls">
         {["discovery_only", "full_audit", "replay"].map((m) => (
           <button
-            disabled={busy || !!intent || active(latest?.status) || !r.data || acceptedJob > (latest?.job_id ?? 0)}
+            disabled={busy || !!intent || active(latest?.status) || latest?.status === 'needs_human' || !r.data || acceptedJob > (latest?.job_id ?? 0)}
             key={m}
             onClick={() => choose(m)}
           >
@@ -664,6 +694,7 @@ export function HospitalRuns({ hospitalKey }) {
           </button>
         </div>
       )}
+      {latest?.status === 'needs_human' && <HumanIntervention key={latest.audit_run_id} runId={latest.audit_run_id} onResume={()=>{polls.current=0;bump(n=>n+1)}} />}
       {failed && (
         <p role="alert">
           {t(
