@@ -111,6 +111,21 @@ header {
   justify-content: space-between;
 }
 .language-switch { display: flex; gap: 4px; }
+.header-actions { display: flex; align-items: center; justify-content: flex-end; gap: 14px; min-width: 0; }
+.header-actions > a { font-size: 13px; white-space: nowrap; }
+.header-actions .review-nav { margin: 0; font-size: 13px; white-space: nowrap; padding: 8px 10px; }
+.header-actions .language-switch { flex-shrink: 0; }
+.header-actions .language-switch button { font-size: 13px; padding: 7px 9px; }
+@media (min-width: 1200px) {
+  header { flex-wrap: nowrap; gap: 16px; }
+  header .brand { flex-shrink: 0; }
+}
+@media (max-width: 1599px) {
+  header .brand-unit { display: none; }
+}
+@media (max-width: 1199px) {
+  .header-actions { flex-wrap: wrap; justify-content: flex-start; gap: 8px 14px; }
+}
 .language-switch button {
   font: inherit; padding: 8px 10px; border: 1px solid #8aa69b;
   border-radius: 5px; background: transparent; color: #183e34; cursor: pointer;
@@ -177,7 +192,7 @@ header {
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
-  margin: 30px 0 23px;
+  margin: 18px 0 16px;
   gap: 20px;
 }
 .period {
@@ -193,7 +208,7 @@ header {
   background: var(--deep);
 }
 h1 {
-  font-size: clamp(33px, 3.55vw, 55px);
+  font-size: clamp(28px, 2.7vw, 42px);
   letter-spacing: -2.5px;
   line-height: 1.03;
   margin: 0;
@@ -345,9 +360,8 @@ p {
 #map {
   display: block;
   width: 100%;
-  height: 100%;
-  min-height: 410px;
-  aspect-ratio: 900/555;
+  height: clamp(280px, 52dvh, 560px);
+  min-height: 0;
   user-select: none;
   touch-action: pan-y;
 }
@@ -641,7 +655,20 @@ h2 {
 .hospital-assessment { overflow-wrap: anywhere; }
 .hospital-assessment p, .hospital-assessment li { font-size: 14px; line-height: 1.6; }
 .hospital-assessment summary { cursor: pointer; font-size: 14px; font-weight: 600; }
-.measure-card { padding: 16px; margin: 16px 0; border: 1px solid #c7d8cf; border-radius: 8px; background: #fff; scroll-margin-top: 20px; }
+.measure-card { padding: 0; margin: 6px 0; border: 1px solid #c7d8cf; border-radius: 6px; background: #fff; scroll-margin-top: 20px; }
+.measure-card > summary { padding: 10px 12px; display: list-item; }
+.measure-card > summary > span { display: inline-block; width: calc(100% - 180px); vertical-align: middle; }
+.measure-card > summary .measure-result { font-size: 12px; margin-left: 8px; vertical-align: middle; }
+.measure-body { padding: 0 12px 12px; }
+.assessment-dates { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4px 16px; }
+.assessment-dates dt { grid-row: 1; }
+.assessment-dates dd { margin: 0; }
+@media (max-width: 600px) {
+  .measure-card > summary > span { width: auto; display: inline; }
+  .measure-card > summary .measure-result { margin: 6px 0 0 16px; }
+  .assessment-dates { grid-template-columns: 1fr; }
+  .assessment-dates dt { grid-row: auto; }
+}
 .measure-card h4 { margin: 0 0 10px; }
 .measure-scope { margin: 16px 0; padding-top: 8px; border-top: 1px solid #c7d8cf; }
 .measure-scope h5 { font-size: 14px; margin: 8px 0; }
@@ -958,3 +985,57 @@ h2 {
 .ops dl.ops-totals {display:flex;align-items:stretch;flex-wrap:wrap;gap:1px;background:#cbd8d1;border:1px solid #cbd8d1;margin:1rem 0}
 .ops-totals div {flex:1 1 9rem;background:#f1f6f1;padding:.7rem 1rem}
 .ops .ops-totals dd {font-size:1.35rem;font-weight:650}
+
+/* Keep the atlas and hospital findings in one desktop workspace. */
+.ops-dashboard { margin: 12px 0; }
+.ops-dashboard h1 { font-size: 28px; margin: 8px 0; letter-spacing: -1px; }
+.ops-dashboard dl.ops-totals { margin: 8px 0; }
+.ops-dashboard .ops-totals div { padding: 6px 10px; }
+.ops-dashboard .ops-totals dd { font-size: 18px; }
+.ops-dashboard .ops-controls { margin: 6px 0; gap: 8px; }
+.ops-dashboard .ops-controls input, .ops-dashboard .ops-controls select, .ops-dashboard .ops-controls button { padding: 6px 8px; font-size: 13px; }
+.ops-dashboard table { font-size: 12px; }
+.ops-dashboard th, .ops-dashboard td { padding: 7px 8px; line-height: 1.35; }
+.ops-dashboard thead th { position: sticky; top: 0; background: #e5eee8; z-index: 1; }
+@media (min-width: 1000px) {
+  .page:has(.ops-dashboard) { height: 100dvh; max-width: none; padding-inline: 20px; display: flex; flex-direction: column; }
+  .page:has(.ops-dashboard) > header { flex-shrink: 0; }
+  .page:has(.ops-dashboard) > main { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+  .ops-dashboard { flex: 1; min-height: 0; display: flex; flex-direction: column; font-size: 12px; }
+  .ops-dashboard > * { flex-shrink: 0; }
+  .ops-dashboard .ops-scroll { flex: 1; min-height: 0; overflow: auto; }
+  .ops-dashboard .ops-controls:last-child { margin-bottom: 0; }
+}
+@media (min-width: 1000px) {
+  .page:has(.content) { height: 100dvh; display: flex; flex-direction: column; padding-inline: 20px; max-width: none; }
+  .page:has(.content) > header { flex-shrink: 0; }
+  .page:has(.content) > main { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+  .page:has(.content) .intro { margin: 10px 0; flex-shrink: 0; }
+  .page:has(.content) h1 { font-size: 28px; letter-spacing: -1px; }
+  .page:has(.content) .descr { margin-top: 5px; font-size: 13px; }
+  .page:has(.content) .period { margin-bottom: 5px; }
+  .content { flex: 1; min-height: 0; }
+  .content.hospital-selected { grid-template-columns: minmax(240px, 27%) minmax(0, 1fr); }
+  .content .map-block { min-height: 0; }
+  .content #map { height: 100%; min-height: 0; aspect-ratio: auto; }
+  .content .viewport { flex: 1; min-height: 0; }
+  .content aside { overflow: auto; min-height: 0; padding: 12px; }
+  .hospital-selected aside { overflow: hidden; }
+  .hospital-selected .toolbar { height: auto; padding: 8px; flex-wrap: wrap; }
+  .hospital-selected .search-box { width: 100%; }
+  .hospital-selected .detail { height: 100%; display: grid; grid-template-columns: minmax(160px, 27%) minmax(0, 1fr); gap: 14px; }
+  .hospital-summary, .hospital-findings { min-width: 0; min-height: 0; overflow: auto; padding: 2px 8px 8px 2px; }
+  .hospital-findings { border-left: 1px solid var(--line); padding-left: 12px; }
+  .hospital-summary h2 { font-size: 21px; margin: 8px 0; }
+  .hospital-summary dl { margin: 12px 0; }
+  .hospital-summary dd { margin-bottom: 8px; }
+  .hospital-assessment > h4 { margin: 10px 0; }
+  .assessment-context > summary { padding: 6px 0; }
+  .measure-card { margin: 3px 0; border-radius: 3px; }
+  .measure-card > summary { display: flex; align-items: center; gap: 5px; padding: 5px 7px; font-size: 12px; line-height: 1.3; }
+  .measure-card > summary::before { content: "▸"; flex: none; }
+  .measure-card[open] > summary::before { content: "▾"; }
+  .measure-card > summary > span { width: auto; flex: 1; min-width: 0; }
+  .measure-card > summary .measure-result { flex: none; font-size: 10px; padding: 2px 4px; margin-left: 4px; }
+  .page:has(.content) footer { flex-shrink: 0; margin: 8px 0; padding: 0; font-size: 10px; }
+}
