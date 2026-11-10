@@ -11,6 +11,16 @@ from pipeline_bridge import save
 
 
 class MultihopTests(unittest.TestCase):
+    def test_cloudflare_challenge_requires_human_not_every_403(self):
+        from email.message import Message
+        headers=Message();headers['Cf-Mitigated']='challenge'
+        def blocked(url,host):
+            raise HTTPError(url,403,'Forbidden',headers,None)
+        result=collect('362',self.root,self.root/'out',save,blocked)['output']
+        self.assertEqual(result['pages'][0]['error_code'],'website_verification_required')
+        del headers['Cf-Mitigated']
+        result=collect('362',self.root,self.root/'out',save,blocked)['output']
+        self.assertNotIn('error_code',result['pages'][0])
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
         self.addCleanup(self.tmp.cleanup)
@@ -141,9 +151,41 @@ class MultihopTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 download('https://example.org/a.pdf', 'example.org')
             response.getheader.return_value = '/a.pdf'
-            with self.assertRaisesRegex(ValueError, 'Redirect limit'):
+            with self.assertRaisesRegex(ValueError, 'Redirect loop'):
                 download('https://example.org/a.pdf', 'example.org', Bounds(redirects=1))
-            self.assertEqual(counters, {'network_requests': 4, 'network_bytes': len(data)})
+            self.assertEqual(counters, {'network_requests': 3, 'network_bytes': len(data)})
+
+    def test_cross_host_redirect_is_pinned_and_traced_but_private_dns_is_blocked(self):
+        import io
+        from email.message import Message
+        from unittest.mock import MagicMock
+        first, final = MagicMock(), MagicMock()
+        first.status = 301
+        first.getheader.return_value = 'https://network.example/financial-assistance'
+        final.status = 200
+        final.headers = Message()
+        final.headers['Content-Type'] = 'text/html'
+        final.read1.side_effect = io.BytesIO(b'<html>SYN hospital network</html>').read1
+        connection = MagicMock()
+        connection.getresponse.side_effect = [first, final]
+        trace = []
+        with patch('documents.public_addresses', return_value=['8.8.8.8']) as dns, \
+                patch('documents.socket.create_connection'), \
+                patch('documents.ssl.create_default_context') as tls, \
+                patch('documents.http.client.HTTPSConnection', return_value=connection):
+            _, url, _ = download('https://example.org/old', 'example.org', trace=trace)
+            self.assertEqual(url, 'https://network.example/financial-assistance')
+            self.assertEqual([c.args[0] for c in dns.call_args_list], ['example.org', 'network.example'])
+            self.assertEqual(tls.return_value.wrap_socket.call_args.kwargs['server_hostname'], 'network.example')
+            self.assertEqual(trace, [dict(source_url='https://example.org/old', final_url=url, http_status=301)])
+        connection.getresponse.side_effect = [first]
+        with patch('documents.public_addresses', side_effect=[['8.8.8.8'], ValueError('DNS resolved to a non-public address')]), \
+                patch('documents.socket.create_connection') as connect, \
+                patch('documents.ssl.create_default_context'), \
+                patch('documents.http.client.HTTPSConnection', return_value=connection):
+            with self.assertRaisesRegex(ValueError, 'non-public'):
+                download('https://example.org/old', 'example.org')
+            self.assertEqual(connect.call_count, 1)
 
     def test_little_falls_original_html_discovers_both_campus_confirmed_summaries(self):
         import zipfile

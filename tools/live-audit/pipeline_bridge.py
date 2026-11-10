@@ -11,6 +11,14 @@ from pathlib import Path
 from documents import collect, LIMIT, Links, Bounds
 from extraction import extract_collection, extract_bytes, layout_inventory
 
+class CollectionFailure(ValueError):
+    def __init__(self, code, diagnostic=None):
+        super().__init__(code)
+        self.code = code
+        self.diagnostic = diagnostic or {}
+
+SOURCE_FAILURE_CODES = {'source_host_blocked', 'unsafe_destination', 'redirect_loop', 'redirect_limit', 'tls_certificate_invalid', 'website_verification_required'}
+
 
 def save(path, data):
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -39,7 +47,29 @@ def run(root, request):
         if result['output'].get('budget_stop'):
             return dict(collection=result['output'], budget_stop=result['output']['budget_stop'], manifest=Path(result['manifest_file']).name)
         if result['output']['status'] == 'failed':
-            raise ValueError('landing_collection_failed')
+            from urllib.parse import urlsplit, urlunsplit
+            from documents import approved
+            output = result['output']
+            page = next((p for p in output.get('pages', []) if p.get('source_url') == output.get('landing_url')), {})
+            raw_url = page.get('source_url') or output.get('landing_url')
+            parsed = urlsplit(raw_url or '')
+            source_url = None
+            try:
+                approved(raw_url, (parsed.hostname or '').removeprefix('www.'))
+                source_url = urlunsplit((parsed.scheme, parsed.netloc, parsed.path, '', ''))
+            except (ValueError, TypeError):
+                pass
+            diagnostic = dict(source_url=source_url, manifest_id=Path(result['manifest_file']).stem if result.get('manifest_file') else None)
+            status = page.get('http_status', output.get('http_status'))
+            if type(status) is int and 400 <= status <= 599:
+                diagnostic['http_status'] = status
+                if page.get('error_code') == 'website_verification_required':
+                    raise CollectionFailure('website_verification_required', diagnostic)
+                raise CollectionFailure('http_error', diagnostic)
+            for page in result['output'].get('pages', []):
+                if page.get('error_code') in SOURCE_FAILURE_CODES:
+                    raise CollectionFailure(page['error_code'], diagnostic)
+            raise CollectionFailure('collection_failed', diagnostic)
         if request.get('discovery_only'):
             return dict(collection=result['output'])
         extracted = extract_collection(request['hospital_key'], Path(result['manifest_file']).stem, root, save)
@@ -107,8 +137,10 @@ if __name__ == '__main__':
         usage.set(counters)
         try:
             response = {"result": run(args.root, request)}
-        except Exception:
-            response = {"failed": True}
+        except Exception as error:
+            # Only allowlisted diagnostic codes cross the IPC boundary, never raw errors.
+            response = {"failed": True, "error_code": error.code if isinstance(error, CollectionFailure) else None,
+                        "diagnostic": error.diagnostic if isinstance(error, CollectionFailure) else None}
         print(json.dumps({**response, "usage": counters}, ensure_ascii=True))
     else:
         print(json.dumps(run(args.root, request), ensure_ascii=True))

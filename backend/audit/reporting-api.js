@@ -1,4 +1,6 @@
 import { budgetPolicy, preview } from "./budgets.js";
+import { failureDiagnostic } from './failure-diagnostic.js';
+import { interventionRoute, interventionFor } from './interventions.js';
 import { DatabaseSync } from "node:sqlite";
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
@@ -40,6 +42,7 @@ const statuses = [
   "completed",
   "failed",
   "cancelled",
+  "needs_human",
 ];
 const stages = new Set([
   "load_saved_evidence",
@@ -55,6 +58,19 @@ const json = (statusCode, data) => ({
   headers: { "Content-Type": "application/json", "Cache-Control": "no-store" },
   body: JSON.stringify({ schema_version: version, ...data }),
 });
+function publicEvent(e) {
+  let metadata;
+  try { metadata = JSON.parse(e.diagnostic ?? 'null'); } catch { metadata = null; }
+  const diagnostic = failureDiagnostic(e.error_code, metadata);
+  return {
+    seq: e.seq, state: e.state, captured_sources: e.capture_count,
+    at: e.at, attempt_id: e.attempt ? sha256(e.attempt) : null,
+    stage: stages.has(e.stage) ? e.stage : null,
+    diagnostic, retry_scheduled: e.retry_scheduled == null ? null : Boolean(e.retry_scheduled),
+    reason: e.stop_code ?? diagnostic?.code ??
+      ({ failed: "audit_failed", interrupted: "lease_expired", retrying: "retry_scheduled", cancelled: "operator_cancelled" }[e.state] ?? null),
+  };
+}
 const reject = (status, code) => {
   throw Object.assign(Error(code), { status, code });
 };
@@ -81,7 +97,7 @@ function page(rows, limit, key) {
 // ownership tokens, paths and free-text provider metadata inside the operator's store.
 const projection = `SELECT j.id,j.hospital,j.attempted,j.attempts,j.year,json_extract(j.context,'$.mode') mode,
   (SELECT at FROM audit_run_events WHERE job=j.id AND state='queued' ORDER BY seq LIMIT 1) queued_at,
-  COALESCE(e.state, CASE WHEN j.status='queued' AND j.error IS NOT NULL THEN 'retrying' ELSE j.status END) status,
+  COALESCE(e.state, CASE WHEN j.status='failed' AND EXISTS(SELECT 1 FROM audit_run_events x WHERE x.job=j.id AND json_extract(x.detail,'$.error_code')='website_verification_required') AND NOT EXISTS(SELECT 1 FROM audit_run_events x WHERE x.job=j.id AND x.state='human_resumed') THEN 'needs_human' WHEN j.status='queued' AND j.error IS NOT NULL THEN 'retrying' ELSE j.status END) status,
   json_extract(a.output,'$.id') assessment_id,json_extract(j.checkpoint,'$.scan_id') scan_id,
   a.completed assessed_at,COALESCE(e.at,a.completed) completed_at,
   json_extract(e.detail,'$.coverage_gaps') gaps,json_extract(e.detail,'$.unresolved_measures') unresolved,
@@ -320,12 +336,14 @@ function summary(db, q) {
 }
 
 export function reportingRoute(event) {
+  const intervention = interventionRoute(event);
+  if (intervention) return intervention;
   const path = event.rawPath.slice(base.length),
     method = event.requestContext?.http?.method,
     q = event.queryStringParameters ?? {};
   const facility = /^\/hospitals\/([\w-]+)\/runs$/.exec(path);
   const run =
-    /^\/runs\/audit-run-([1-9]\d*)(?:\/(timeline|receipt(?:\.csv)?|revision\/([a-f0-9]{64})(?:\/snapshots\/([a-f0-9]{64}))?))?$/.exec(
+    /^\/runs\/audit-run-([1-9]\d*)(?:\/(timeline|log\.json|receipt(?:\.csv)?|revision\/([a-f0-9]{64})(?:\/snapshots\/([a-f0-9]{64}))?))?$/.exec(
       path,
     );
   let db;
@@ -435,6 +453,33 @@ export function reportingRoute(event) {
       ?.prepare(`SELECT * FROM (${projection}) WHERE id=?`)
       .get(pipelineRoot(), id);
     if (!r) reject(404, "unknown_run");
+    if (run[2] === 'log.json') {
+      params(q, []);
+      const events = db.prepare(`SELECT seq,attempt,state,at,json_extract(detail,'$.name') stage,
+        json_extract(detail,'$.stop_code') stop_code,json_extract(detail,'$.error_code') error_code,
+        json_extract(detail,'$.diagnostic') diagnostic,json_extract(detail,'$.retry_scheduled') retry_scheduled,
+        json_array_length(detail,'$.captures') capture_count FROM audit_run_events WHERE job=? ORDER BY seq`).all(id);
+      const attempts = db.prepare('SELECT token,started,status FROM attempts WHERE job=? ORDER BY started,rowid').all(id);
+      const handoff = interventionFor(db, r);
+      if (handoff) handoff.documents = handoff.documents.map(({artifact_path, ...d})=>d);
+      const origin = db.prepare("SELECT json_extract(detail,'$.parent_run_id') parent_run_id, json_extract(detail,'$.manifest_sha256') manifest_sha256 FROM audit_run_events WHERE job=? AND state='human_import_linked' ORDER BY seq LIMIT 1").get(id);
+      const response = json(200, {
+        log_version: 'audit-run-log-v1', exported_at: new Date().toISOString(),
+        hospital: hospitals.get(r.hospital), run: runRow(r),
+        human_intervention: handoff, imported_evidence_origin: origin ?? null,
+        attempts: attempts.map(a => ({ attempt_id: sha256(a.token), started_at: a.started, status: a.status })),
+        timeline: events.map(publicEvent), receipt: publicReceipt(db, r),
+        limitations: [
+          'Point-in-time export; an active run may produce more events after download.',
+          'Contains recorded task events, not a continuous worker heartbeat or model reasoning.',
+          'Legacy audit_failed events may lack a specific cause; this export does not infer missing diagnostics.',
+          'Raw exception text, document contents, credentials and local filesystem paths are excluded.',
+        ],
+      });
+      response.headers['Content-Disposition'] = `attachment; filename="audit-run-${id}-log.json"`;
+      response.body = JSON.stringify(JSON.parse(response.body), null, 2);
+      return response;
+    }
     if (run[2] === "timeline") {
       params(q, ["limit", "cursor"]);
       const limit = integer(q.limit ?? "25", 100),
@@ -444,28 +489,14 @@ export function reportingRoute(event) {
             : integer(q.cursor, Number.MAX_SAFE_INTEGER);
       const rows = db
         .prepare(
-          `SELECT seq,attempt,state,at,json_extract(detail,'$.name') stage,json_extract(detail,'$.stop_code') stop_code,json_array_length(detail,'$.captures') capture_count FROM audit_run_events
+          `SELECT seq,attempt,state,at,json_extract(detail,'$.name') stage,json_extract(detail,'$.stop_code') stop_code,json_extract(detail,'$.error_code') error_code,json_extract(detail,'$.diagnostic') diagnostic,json_extract(detail,'$.retry_scheduled') retry_scheduled,json_array_length(detail,'$.captures') capture_count FROM audit_run_events
         WHERE job=? AND seq>? ORDER BY seq LIMIT ?`,
         )
         .all(id, cursor, limit + 1);
       return json(
         200,
         page(
-          rows.map((e) => ({
-            seq: e.seq,
-            state: e.state,
-            captured_sources: e.capture_count,
-            at: e.at,
-            attempt_id: e.attempt ? sha256(e.attempt) : null,
-            stage: stages.has(e.stage) ? e.stage : null,
-            reason: e.stop_code ??
-              {
-                failed: "audit_failed",
-                interrupted: "lease_expired",
-                retrying: "retry_scheduled",
-                cancelled: "operator_cancelled",
-              }[e.state] ?? null,
-          })),
+          rows.map(publicEvent),
           limit,
           "seq",
         ),

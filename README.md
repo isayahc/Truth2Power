@@ -67,6 +67,24 @@ In **Audits and history**, the status above the buttons distinguishes **Queued**
 
 If a run stays queued, check the worker terminal first. A successful page/API response only confirms the web server is running. Check for worker startup errors, matching `AUDIT_DIR` values, and missing Python dependencies. The UI's last status-check time confirms a response from the backend, not a worker heartbeat.
 
+If Python reports `CERTIFICATE_VERIFY_FAILED` / `unable to get local issuer
+certificate`, check the worker's CA trust configuration. On this Windows setup,
+the project environment already includes `certifi`; its CA bundle verified the
+Carthage source where Python's default Windows/OpenSSL trust setup failed.
+Before starting the worker, select that installed bundle explicitly:
+
+```powershell
+$env:T2P_PYTHON = "$PWD\.venv\Scripts\python.exe"
+$env:SSL_CERT_FILE = (& $env:T2P_PYTHON -c 'import certifi; print(certifi.where())')
+npm run audit:worker
+```
+
+This requires `certifi` in that environment; if it is absent, configure an
+approved PEM CA bundle via `SSL_CERT_FILE` instead. Never disable certificate or
+hostname verification. A certificate error may also be a website configuration
+problem; adding a CA bundle is not a universal remedy. Certificate failures stop
+automatic retries until the configuration or source is corrected.
+
 ### Run the production build
 
 After installing dependencies, stop the development server, then run:
@@ -83,6 +101,65 @@ Open the same local URL. To choose a different port on Linux or WSL2, use `PORT=
 For the original self-contained map, download [maps/index.html](maps/index.html) using GitHub’s **Download raw file** button and open the file in a browser. This HTML snapshot includes its own data. The React app reads the files in `data/maps/` each time you load the page.
 
 ## Check that it’s working
+
+Hospital-domain migrations are discovered during collection rather than patched
+into individual roster entries. HTTPS redirects are followed with per-hop public
+DNS checks, IP-pinned TLS, loop detection and a redirect limit. The redirect trail
+is retained through grading; a new domain does not automatically establish campus
+applicability. Ordinary external HTML links remain outside traversal scope.
+The audit status panel shows the last recorded task and worker event separately
+from the backend status-check time. See [redirect validation and live retests](docs/validation/elizabethtown-source-update.md).
+
+Use **Download run log (JSON)** in the audit status panel or beside a selected
+run's details to export its complete recorded timeline (not just the visible
+page), attempts, run/hospital identifiers and resource/cost receipt. The endpoint
+is `/api/pilot/v1/runs/audit-run-N/log.json`. Downloads are point-in-time snapshots;
+download again after an active run finishes. Older generic failures cannot gain
+missing diagnostics retroactively. The export excludes document contents, raw
+exception messages, credentials and local filesystem paths.
+
+New collection failures carry structured diagnostics through the worker, timeline
+and JSON log: error code, HTTP status when available, source URL without query or
+fragment, immutable collection manifest ID, and whether another attempt is
+scheduled. HTTP 4xx responses stop retries except 408 and 429; transient 5xx
+responses retain bounded retries. This reports website refusal rather than
+claiming the hospital has no financial assistance documents.
+
+### Human handoff for website verification
+
+When the source returns an explicit website-verification challenge (currently
+identified by the Cloudflare `Cf-Mitigated: challenge` response header), the run
+shows **Human intervention required** after one attempt. A task appears in the
+**Review inbox**, and the hospital's **Audits and history** panel shows the same
+handoff. An ordinary 403 without that signal remains an HTTP access failure.
+
+1. Open the blocked website link and complete verification yourself in your browser.
+2. Download public blank assistance PDFs. Do not upload patient records or completed applications.
+3. In the handoff, supply each public document's HTTPS URL, actual retrieval date,
+   and language; confirm that it contains no patient information; select **Import document**.
+   Files must be readable, unencrypted PDFs up to 4 MB and 200 pages; at most 20
+   documents per task. URLs with credentials, queries, fragments or private/internal
+   hosts are not accepted. DOCX import is not supported in this form.
+4. Select **Resume with imported documents**. This creates a linked, idempotent
+   offline replay run; the original blocked run remains in history. No browser
+   cookies, challenge tokens or logged-in sessions are transferred to the worker.
+
+Imports retain SHA-256, source URL, operator-attested retrieval time, server import
+time, language, and parent/resumed run linkage. These are included in run logs.
+The replay parses and evaluates saved bytes without refetching the blocked site.
+It does not automatically approve campus applicability, document roles, findings
+or an institutional grade. The failed capture clock is not relabeled as fresh.
+
+Regression checks (with `T2P_PYTHON` set to the project environment):
+
+```powershell
+node --test backend/test/human-intervention.test.js
+node scripts/test-human-handoff-e2e.js
+```
+
+The browser test uses a separate synthetic store and verifies English desktop
+and Spanish mobile inbox → import → resume → download-log linkage, including
+zero network requests in the resumed run.
 
 The statewide map should show **212 hospital locations**. Select **0 ★** in the rating legend to show the four hospitals that had no application posted. Choose **Show all**, then select any hospital to see its latitude and longitude.
 

@@ -26,7 +26,7 @@ export function immutable(root, path, bytes) {
   finally { unlinkSync(temporary); }
   return path;
 }
-export function enqueuePipeline(db, { hospital_key, year = 2026, review_date, mode = "replay", variant = "original", request_key, root = pipelineRoot(), evidence_root = root, discovery_bounds = {}, budget, allow_paid = false, classifications }) {
+export function enqueuePipeline(db, { hospital_key, year = 2026, review_date, mode = "replay", variant = "original", request_key, root = pipelineRoot(), evidence_root = root, discovery_bounds = {}, budget, allow_paid = false, classifications, manual_import }) {
   const caps = { depth: 8, pages: 100, documents: 100, bytes_per_resource: 12582912, total_bytes: 134217728, timeout: 30, seconds: 150, redirects: 8 };
   if (!discovery_bounds || typeof discovery_bounds !== "object" || Array.isArray(discovery_bounds) || Object.entries(discovery_bounds).some(([k, v]) => !Object.hasOwn(caps, k) || !Number.isInteger(v) || v < 1 || v > caps[k])) throw Error("Invalid discovery bounds");
   const facility = facilityFor(hospital_key);
@@ -39,6 +39,10 @@ export function enqueuePipeline(db, { hospital_key, year = 2026, review_date, mo
     hospital_key, year, review_date, rubric_version: rubric.version, rubric_sha256: fingerprint(rubric), reference_version: hhs.reference_version, reference_sha256: referenceHash,
     facility: facility.name };
   if (mode !== "synthetic") context.roster_sha256 = fingerprint(facility);
+  if (manual_import !== undefined) {
+    if (mode !== 'replay' || !/^[a-f0-9]{64}$/.test(manual_import)) throw Error('Invalid human import');
+    context.manual_import = manual_import;
+  }
   if (classifications !== undefined) {
     if (!Buffer.isBuffer(classifications) || classifications.length > 256 * 1024 || ["synthetic", "discovery_only"].includes(mode)) throw Error("Invalid classification input");
     classificationFile(classifications, hospital_key);
@@ -113,16 +117,19 @@ export function publishPipeline(db, job, bundle) {
 export function failPipeline(db, job, cause) {
   return transaction(db, () => {
     const stop = cause instanceof BudgetStop;
-    const message = stop ? cause.message : "Audit failed during retrieval, extraction or verification; prior successful assessment retained.";
+    const diagnostic = failureDiagnostic(cause?.code, cause?.diagnostic);
+    const blocked = diagnostic && !diagnostic.retryable;
+    const message = stop ? cause.message : diagnostic?.message ?? "Audit failed during retrieval, extraction or verification; prior successful assessment retained.";
     const retry = db.prepare("SELECT attempts FROM jobs WHERE id=? AND token=? AND status='running'").get(job.id, job.token);
     if (!retry) return false;
-    const again = !stop && retry.attempts <= (job.context.budget?.retries ?? 2);
+    const again = !stop && !blocked && retry.attempts <= (job.context.budget?.retries ?? 2);
     db.prepare("UPDATE jobs SET status=?,lease=NULL,error=?,available_at=? WHERE id=? AND token=?")
       .run(again ? "queued" : "failed", message, Date.now() + 1000 * 2 ** retry.attempts, job.id, job.token);
     db.prepare("UPDATE attempts SET status='failed',error=? WHERE token=?").run(message, job.token);
-    const reason = stop ? {stop_code:cause.code,unit:cause.unit} : !again ? {retry_limit_reached:true} : {};
+    const reason = stop ? {stop_code:cause.code,unit:cause.unit} : { ...(diagnostic ? {error_code:diagnostic.code, diagnostic} : {}), ...(!again && !blocked ? {retry_limit_reached:true} : {}) };
+    reason.retry_scheduled = again;
     event(db, job.id, job.token, "failed", { reason: message, ...reason });
-    if (again) event(db, job.id, job.token, "retrying", { reason: message });
+    if (again) event(db, job.id, job.token, "retrying", { reason: message, ...reason });
     return true;
   });
 }
@@ -159,3 +166,4 @@ export function cancelRun(db, id, root = pipelineRoot()) {
     return true;
   });
 }
+import { failureDiagnostic } from './failure-diagnostic.js';

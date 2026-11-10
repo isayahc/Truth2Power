@@ -7,6 +7,7 @@ import HospitalSearch from "./HospitalSearch.jsx";
 import { HospitalDetail, Ratings } from "./Ratings.jsx";
 import ReviewInbox, { reviewRequest } from "./ReviewInbox.jsx";
 import { LanguageSwitch, useLocale } from './locale.jsx';
+import { HumanInterventionInbox } from './HumanIntervention.jsx';
 
 async function getFeatures(path, signal) {
   const response = await fetch(path, { signal });
@@ -20,6 +21,8 @@ async function getFeatures(path, signal) {
 
 function Header({ onReview, pending }) {
   const { t, localHref } = useLocale();
+  const [humanTasks,setHumanTasks]=useState(0);
+  useEffect(()=>{let live=true;const load=()=>fetch('/api/pilot/v1/interventions').then(r=>r.ok?r.json():null).then(x=>{if(live&&x)setHumanTasks(x.items.length)}).catch(()=>{});load();const timer=setInterval(load,10000);return()=>{live=false;clearInterval(timer)}},[]);
   return (
     <header>
       <div className="brand">
@@ -41,7 +44,7 @@ function Header({ onReview, pending }) {
       <a className="overview-link" href={localHref('?view=overview')}>{t('Audit overview')}</a>
       <a className="changes-link" href={localHref('?view=operations')}>{t('Audit operations')}</a>
       <a className="changes-link" href={localHref('?view=changes')}>{t('Recent changes')}</a>
-      <button className="review-nav" onClick={onReview}>{t('Review inbox')} <span>{pending ?? "…"}</span></button>
+      <button className="review-nav" onClick={onReview}>{t('Review inbox')} <span>{typeof pending==='number' ? pending+humanTasks : pending ?? "…"}</span></button>
       <LanguageSwitch />
       </div>
     </header>
@@ -158,6 +161,7 @@ export default function App() {
       <Header onReview={() => openReviews()} pending={reviewError ? "!" : inbox?.pending} />
       <main>
         {reviewOpen ? <>
+          <HumanInterventionInbox />
           <button className="back plain" onClick={() => setReviewOpen(false)}>{t('← Back to hospital map')}</button>
           <div lang="en"><ReviewInbox key={reviewHospital} inbox={inbox} error={reviewError} onRefresh={refreshReviews}
             hospitalKey={reviewHospital} hospitals={data?.hospitals ?? []} onHospital={(hospital) => {

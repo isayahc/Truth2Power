@@ -63,7 +63,8 @@ const server = createServer(async (req, res) => {
         let size = 0;
         for await (const chunk of req) {
           size += chunk.length;
-          if (size > 8192) { res.writeHead(413).end(); return; }
+            const limit = /^\/api\/pilot\/v1\/runs\/audit-run-[1-9]\d*\/intervention\/documents$/.test(path) ? 6 * 1024 * 1024 : 8192;
+            if (size > limit) { res.writeHead(413).end(); return; }
           chunks.push(chunk);
         }
         body = Buffer.concat(chunks).toString("utf8");

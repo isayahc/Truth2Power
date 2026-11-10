@@ -35,7 +35,14 @@ async function bridge(root, request) {
           if (error) throw Error();
           const packet = JSON.parse(stdout);
           measure(packet.usage);
-          if (packet.failed) return reject(Error("Collection or extraction failed"));
+           if (packet.failed) {
+             const error = Error("Collection or extraction failed");
+             if (["source_host_blocked", "unsafe_destination", "redirect_loop", "redirect_limit", "tls_certificate_invalid", "http_error", "collection_failed", "website_verification_required"].includes(packet.error_code)) {
+               error.code = packet.error_code;
+               error.diagnostic = packet.diagnostic;
+             }
+             return reject(error);
+           }
           resolve(packet.result);
         } catch {
           measure({ telemetry_missing: 1 });
@@ -100,6 +107,16 @@ async function real(db, job, collect) {
   const candidates = records.flatMap((r) => r.findings.flatMap((f) => f.evidence));
   const seeds = (display?.documents ?? []).map((d) => ({ source_id: d.url, role: d.role, language: languageTag(d.language), digest: d.sha256,
     retrieved_at: d.retrieved_at, publisher_updated_at: null }));
+  if (job.context.manual_import) {
+    const raw = readArtifact(root, `human-imports/${job.context.manual_import}.json`);
+    if (sha256(raw) !== job.context.manual_import) throw Error('Human import checksum mismatch');
+    const imported = JSON.parse(raw);
+    if (imported.hospital_key !== job.hospital) throw Error('Human import hospital mismatch');
+    seeds.length = 0;
+    seeds.push(...imported.documents.map(d => ({source_id:d.source_url, role:'unclassified', language:d.language,
+      digest:d.sha256, artifact_path:d.artifact_path, retrieved_at:d.retrieved_at, provenance:'human_import', campus_applicability:'unknown'})));
+    gaps.push('Human-supplied public documents. Retrieval dates are operator-attested; campus, role and discovery completeness require review.');
+  }
   for (const r of pinned) for (const s of r.landing_page || []) {
     const e = candidates.find((e) => e.url === s.url);
     if (e && !seeds.some((d) => d.source_id === s.url)) seeds.push({ source_id: s.url, role: "landing_page", language: "en", digest: e.sha256, retrieved_at: e.retrieved_at });
@@ -118,7 +135,7 @@ async function real(db, job, collect) {
       .filter(s=>s.status==="saved").map(s=>({sha256:s.sha256,retrieved_at:s.retrieved_at}))});
     throw new BudgetStop(collected.budget_stop==="seconds"?"budget_exhausted":"quota_exceeded",collected.budget_stop);
   }
-  const collection = replay ? savedCollection(originalRoot,job.hospital) : collected.collection;
+  const collection = job.context.manual_import ? null : replay ? savedCollection(originalRoot,job.hospital) : collected.collection;
   const inventory = sourceInventory(facility, collection, seeds);
   if (collection && !replay) stage(db, job, "collection_saved", { collection_sha256: inventory.collection_sha256,
     captures: inventory.sources.filter((s) => s.capture_status === "saved").map((s) => ({
@@ -138,7 +155,10 @@ async function real(db, job, collect) {
       if (sha256(raw) !== d.digest) throw Error("Source snapshot checksum mismatch");
       immutable(root, path, raw);
       source.snapshot = { snapshot_id: d.digest, sha256: d.digest, artifact_path: path, url: d.source_id, retrieved_at: d.retrieved_at, publisher_updated_at: null };
-      if (d.final_url && d.final_url !== d.source_id) source.snapshot.final_url = d.final_url;
+      if (d.final_url && d.final_url !== d.source_id) {
+        source.snapshot.final_url = d.final_url;
+        source.snapshot.redirects = d.redirects;
+      }
       source.status = "available";
       const review = classifications.find((c) => c.source_id === d.source_id && c.sha256 === d.digest);
       if (review && d.role === "unclassified" && d.campus_applicability !== "other_campus_requires_review") {
