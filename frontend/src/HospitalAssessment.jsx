@@ -22,7 +22,10 @@ export default function HospitalAssessment({ hospitalKey, hospitalName }) {
   }, [hospitalKey, reload, revision]);
   useEffect(() => {
     const hash = window.location.hash.slice(1);
-    if (state.data && hash.startsWith("measure-" + hospitalKey + "-")) document.getElementById(hash)?.scrollIntoView();
+    if (state.data && hash.startsWith("measure-" + hospitalKey + "-")) {
+      const target = document.getElementById(hash);
+      if (target) { target.open = true; target.scrollIntoView(); }
+    }
   }, [state.data, hospitalKey]);
   if (state.changed) return <p role="alert">The assessment changed since this overview. <a href="?view=overview">Refresh the overview</a></p>;
   if (state.loading) return <p role="status">Loading hospital findings…</p>;
@@ -30,7 +33,7 @@ export default function HospitalAssessment({ hospitalKey, hospitalName }) {
   if (state.error) return <div role="alert">Hospital findings could not be loaded. <button onClick={() => setReload((n) => n + 1)}>Try again</button></div>;
   const report = state.data;
   return <section className="hospital-assessment" aria-label="Current hospital findings">
-    <h3>Current financial assistance findings</h3>
+    <details className="assessment-context"><summary>Current financial assistance findings</summary>
     {report.synthetic && <p role="status"><strong>SYNTHETIC DEMO — fabricated evidence, not hospital compliance findings.</strong></p>}
     {report.integrated_report_url && <p><a href={report.integrated_report_url}>Inspect immutable 17-measure assessment</a> · revision {report.revision.slice(0, 12)}</p>}
     {report.integrated_report_url && <p>Evidence coverage: {report.evidence_complete ? "complete for this scope" : "partial — see blockers"}. Source freshness clock: {date(report.monitoring_at)}. Replaying saved bytes does not reset their retrieval date.</p>}
@@ -44,12 +47,13 @@ export default function HospitalAssessment({ hospitalKey, hospitalName }) {
     {report.unavailable_records > 0 && <p role="status">Some local review records could not be read. Saved findings remain visible; refresh coverage is incomplete.</p>}
     <h4>Checks with a “No” finding ({report.failed_measures.length})</h4>
     <p>Draft findings below identify the affected check and related law. Human review remains separate.</p>
-    <ul>{report.failed_measures.map((id) => { const m = report.measures.find((m) => m.measure_id === id); return <li key={id}><a href={`#measure-${hospitalKey}-${m.column}`}>{m.question}</a></li>; })}</ul>
+    <ul>{report.failed_measures.map((id) => { const m = report.measures.find((m) => m.measure_id === id); return <li key={id}><a href={`#measure-${hospitalKey}-${m.column}`} onClick={() => { const target = document.getElementById(`measure-${hospitalKey}-${m.column}`); if (target) target.open = true; }}>{m.question}</a></li>; })}</ul>
     {!report.failed_measures.length && <p>No “No” finding in the available drafts. Unclear or unassessed checks are not passes.</p>}
+    </details>
     <h4>All 17 measures · {report.guideline_year} review</h4>
-    {report.measures.map((m) => <article className="measure-card" id={`measure-${hospitalKey}-${m.column}`} key={m.measure_id}>
-      <h4>{m.column} · {m.question}</h4>
-      <p><strong className={`measure-result result-${m.result}`}>{labels[m.result]}{m.versions.length ? " · draft" : " · not assessed"}</strong></p>
+    {report.measures.map((m) => <details className="measure-card" id={`measure-${hospitalKey}-${m.column}`} key={m.measure_id}>
+      <summary><span>{m.column} · {m.question}</span> <strong className={`measure-result result-${m.result}`}>{labels[m.result]}{m.versions.length ? " · draft" : " · not assessed"}</strong></summary>
+      <div className="measure-body">
       <p>{m.reason}</p>
       {m.versions.filter((v) => v.finding?.result === "no" && v.finding.evidence.length > 0).map((v) => {
         const e = v.finding.evidence[0];
@@ -80,6 +84,7 @@ export default function HospitalAssessment({ hospitalKey, hospitalName }) {
           {!v.finding?.evidence.length && <p>No located evidence supplied; review needed.</p>}
         </section>)}
       </details>
-    </article>)}
+      </div>
+    </details>)}
   </section>;
 }

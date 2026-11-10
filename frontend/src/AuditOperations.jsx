@@ -153,7 +153,7 @@ export function AuditOperations() {
     );
   });
   return (
-    <section className="ops">
+    <section className="ops ops-dashboard">
       <a href={localHref("?")}>{t("← Back to hospital map")}</a>
       <h1>{t("Audit operations")}</h1>
       <Notice resource={totals} retry={() => bump((n) => n + 1)} />
@@ -244,7 +244,7 @@ export function AuditOperations() {
                 </tr>
               </thead>
               <tbody>
-                {rows.slice(offset, offset + 20).map((h) => (
+                {rows.slice(offset, offset + 10).map((h) => (
                   <tr key={h.hospital_key}>
                     <th scope="row">
                       <a
@@ -281,12 +281,12 @@ export function AuditOperations() {
             </table>
           </div>
           <div className="ops-controls">
-            <button disabled={!offset} onClick={() => setOffset(offset - 20)}>
+            <button disabled={!offset} onClick={() => setOffset(offset - 10)}>
               {t("Previous page")}
             </button>
             <button
-              disabled={offset + 20 >= rows.length}
-              onClick={() => setOffset(offset + 20)}
+              disabled={offset + 10 >= rows.length}
+              onClick={() => setOffset(offset + 10)}
             >
               {t("Next page")}
             </button>

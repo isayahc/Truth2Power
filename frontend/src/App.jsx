@@ -37,11 +37,13 @@ function Header({ onReview, pending }) {
         <span className="brand-name">Truth2Power</span>
         <span className="brand-unit">{t('Health equity atlas')}</span>
       </div>
+      <div className="header-actions">
       <a className="overview-link" href={localHref('?view=overview')}>{t('Audit overview')}</a>
       <a className="changes-link" href={localHref('?view=operations')}>{t('Audit operations')}</a>
       <a className="changes-link" href={localHref('?view=changes')}>{t('Recent changes')}</a>
       <button className="review-nav" onClick={onReview}>{t('Review inbox')} <span>{pending ?? "…"}</span></button>
       <LanguageSwitch />
+      </div>
     </header>
   );
 }

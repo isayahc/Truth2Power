@@ -80,6 +80,7 @@ export function HospitalDetail({ hospital, onClose, onReview, pendingReviews }) 
         if (e.key === "Escape") onClose();
       }}
     >
+      <div className="hospital-summary">
       <button className="back plain" onClick={onClose}>
         {t('← Statewide ratings')}
       </button>
@@ -109,17 +110,18 @@ export function HospitalDetail({ hospital, onClose, onReview, pendingReviews }) 
       <a href={localHref(`?hospital=${encodeURIComponent(hospital.id)}`)}>{t('Permanent link to this hospital page')}</a>
       <HospitalRuns key={hospital.id} hospitalKey={hospital.id} />
       {language === 'es' && <p className="translation-scope">{t('Detailed audit and review panels below are in English. Quotations retain the original document language.')}</p>}
-      <div lang="en">
+      <button className="review-nav" onClick={onReview}>{t('Review notifications')} ({pendingReviews ?? "…"})</button>
+      <div className="links">
+        <a href={p.audit_url}>{t('Audit row ↗')}</a>
+        {p.assistance_url && <a href={p.assistance_url}>{t('Financial assistance ↗')}</a>}
+      </div>
+      </div>
+      <div className="hospital-findings" lang="en">
       <HospitalAssessment key={`assessment-${hospital.id}`} hospitalKey={hospital.id} hospitalName={p.name} />
       <PilotAudit key={`pilot-${hospital.id}`} hospitalKey={hospital.id} />
       <ReportingContext key={`reporting-${hospital.id}`} hospitalKey={hospital.id} />
       <GradingPanel key={`grading-${hospital.id}`} hospitalKey={hospital.id} />
       {hospital.id === "362" && <AuditPanel />}
-      </div>
-      <button className="review-nav" onClick={onReview}>{t('Review notifications')} ({pendingReviews ?? "…"})</button>
-      <div className="links">
-        <a href={p.audit_url}>{t('Audit row ↗')}</a>
-        {p.assistance_url && <a href={p.assistance_url}>{t('Financial assistance ↗')}</a>}
       </div>
     </div>
   );
