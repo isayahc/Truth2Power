@@ -1,3 +1,5 @@
+import { budgetPolicy,preview } from "./budgets.js";
+import { reportingRoute } from "./reporting-api.js";
 import { costReceipt, providerEvent } from "./usage-ledger.js";
 import { hospitalHistory, runId } from "./run-history.js";
 import { randomUUID } from "node:crypto";
@@ -16,7 +18,22 @@ const year = Number(option("--year", "2026"));
 const date = option("--date", `${year}-11-09`);
 let db, targetId;
 try {
-  if (command === "import-usage") {
+  if (command === "schedule-preview") {
+    const max = Number(option("--max-facilities","5"));
+    if (!Number.isInteger(max) || max<1 || max>212) throw Error("Invalid interval throughput");
+    const response=reportingRoute({rawPath:"/api/pilot/v1/operations",requestContext:{http:{method:"GET"}}});
+    if(response.statusCode!==200) throw Error("Cannot inspect hospital clocks");
+    const now=Date.now(), rows=JSON.parse(response.body).items;
+    const due=rows.filter(h=>!h.clocks.next_due_at || Date.parse(h.clocks.next_due_at)<=now)
+      .sort((a,b)=>(a.clocks.next_due_at??"").localeCompare(b.clocks.next_due_at??"") || a.hospital_key.localeCompare(b.hospital_key));
+    const backoffMs = 86400000;
+    const eligible=due.filter(h=>!["queued","retrying","running"].includes(h.latest?.status) &&
+      !(h.latest?.status==="failed" && now-Date.parse(h.latest.attempted_at)<backoffMs));
+    console.log(JSON.stringify({dry_run:true,roster:rows.length,due:due.map(h=>h.hospital_key),
+      max_operations:max,selected:eligible.slice(0,max).map(h=>h.hospital_key),per_run:preview(budgetPolicy(),"discovery_only")},null,2));
+  } else if (command === "estimate") {
+    console.log(JSON.stringify(preview(budgetPolicy(JSON.parse(option("--budget","{}")),args.includes("--allow-paid")),option("--mode","replay"))));
+  } else if (command === "import-usage") {
     const entry = JSON.parse(readFileSync(option("--file"), "utf8"));
     db = openStore();
     providerEvent(db, entry);
@@ -47,6 +64,7 @@ try {
       const id = enqueuePipeline(db, { hospital_key: option("--hospital", "1002"), year, review_date: date, mode: option("--mode", "replay"),
         variant: option("--variant", "original"), request_key: option("--request", randomUUID()), evidence_root: resolve(option("--evidence-root", pipelineRoot())),
         classifications: args.includes("--classifications") ? readFileSync(option("--classifications")) : undefined,
+        budget:args.includes("--budget")?JSON.parse(option("--budget")):undefined, allow_paid:args.includes("--allow-paid"),
         discovery_bounds: JSON.parse(option("--discovery-bounds", "{}")) });
       console.log(JSON.stringify({ job_id: id, audit_run_id: runId(id), queued: true }));
       targetId = id;

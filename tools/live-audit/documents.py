@@ -1,4 +1,5 @@
 """Bounded, same-host resource discovery extending the original immutable collector."""
+from run_budget import current, BudgetStop
 from usage import measured
 import hashlib
 import json
@@ -149,6 +150,9 @@ def download(url, host, bounds=None, trace=None):
     deadline = time.monotonic() + bounds.timeout
     for hop in range(bounds.redirects + 1):
         approved(url, host)
+        if current.get():
+            current.get().reserve("network_requests", 0)
+            current.get().reserve("network_bytes", 0)
         parsed = urlsplit(url)
         address = public_addresses(parsed.hostname, max(0.001, deadline - time.monotonic()))[0]
         remaining = deadline - time.monotonic()
@@ -158,6 +162,8 @@ def download(url, host, bounds=None, trace=None):
         try:
             sock = socket.create_connection((address, 443), timeout=remaining)
             connection.sock = ssl.create_default_context().wrap_socket(sock, server_hostname=parsed.hostname)
+            if current.get():
+                current.get().reserve("network_requests")
             measured("network_requests")
             connection.request("GET", parsed.path + ("?" + parsed.query if parsed.query else "") or "/",
                                headers={"User-Agent": "Truth2Power public document collection", "Accept-Encoding": "identity"})
@@ -177,7 +183,15 @@ def download(url, host, bounds=None, trace=None):
                     raise TimeoutError("Download deadline reached")
                 if connection.sock:
                     connection.sock.settimeout(remaining)
-                part = response.read1(min(65536, bounds.bytes_per_resource + 1 - size))
+                if response.length == 0:
+                    break
+                chunk_size = min(65536, bounds.bytes_per_resource + 1 - size)
+                budget = current.get()
+                if budget:
+                    chunk_size = budget.reserve("network_bytes", chunk_size, partial=True)
+                part = response.read1(chunk_size)
+                if budget and len(part) < chunk_size:
+                    budget.refund("network_bytes", chunk_size - len(part))
                 if not part:
                     break
                 chunks.append(part)
@@ -249,6 +263,8 @@ def collect(hospital_key, root, output, save, fetch=download, bounds=None):
                 raise ValueError("Traversal depth or resource count limit reached")
             if time.monotonic() - started >= bounds.seconds or total >= bounds.total_bytes:
                 raise ValueError("Traversal time or total byte limit reached")
+            if current.get():
+                current.get().reserve("documents" if is_document else "pages")
             trace = []
             data, destination, mime = fetch(source, host, bounds, trace) if fetch is download else fetch(source, host)
             approved(destination, host)
@@ -296,6 +312,11 @@ def collect(hospital_key, root, output, save, fetch=download, bounds=None):
                                                  labels=names, disposition="candidate" if relevant else "out_of_scope"))
                     if relevant and target not in visited:
                         queue.append((target, names, depth + 1, source))
+        except BudgetStop as error:
+            attempt["budget_stop"] = str(error)
+            record["reason"] = str(error)
+            attempt["limitations"].append("Run budget stopped collection: " + str(error))
+            break
         except Exception as error:
             record["error_type"] = type(error).__name__
             if isinstance(error, HTTPError):

@@ -27,6 +27,7 @@ const stageNames = {
   load_saved_evidence: "Load saved evidence",
   collect_sources: "Collect sources",
   collection_saved: "Collection saved",
+  collection_stopped: "Collection stopped",
   extract_documents: "Extract documents",
   restore_checkpoint: "Restore checkpoint",
   grade: "Evaluate findings",
@@ -404,13 +405,14 @@ function RunDetail({ path, refresh }) {
                         )
                       </small>
                     )}
+                    {e.stage === "collection_stopped" && <> · {t("Saved sources")} {e.captured_sources ?? 0}</>}
                     {e.reason && (
                       <>
                         {" "}
                         ·{" "}
                         {t(
                           {
-                            audit_failed: "Audit failed",
+                            audit_failed: "Audit failed", budget_exhausted:"Run budget exhausted", quota_exceeded:"Resource quota exceeded", unknown_price:"Provider price unknown",
                             lease_expired: "Worker lease expired",
                             retry_scheduled: "Retry scheduled",
                             operator_cancelled: "Cancelled by operator",
@@ -627,6 +629,9 @@ export function HospitalRuns({ hospitalKey }) {
               }[intent.mode],
             )}
           </p>
+          {r.data?.preflight?.[intent.mode] && <p>{t("Maximum requests")} · {r.data.preflight[intent.mode].network_requests_max}
+            <br/>{t("Maximum download bytes")} · {r.data.preflight[intent.mode].network_bytes_max}
+            <br/>{t("Paid services off. Local cost unknown.")}</p>}
           <button disabled={busy} onClick={submit}>
             {t(failed ? "Retry same request" : "Confirm run")}
           </button>{" "}

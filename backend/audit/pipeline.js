@@ -1,3 +1,4 @@
+import { BudgetStop, deadline, defaults } from "./budgets.js";
 import { meterAttempt, meterStage, measure } from "./usage-ledger.js";
 import { stage } from "./run-history.js";
 import { readFileSync, existsSync } from "node:fs";
@@ -21,10 +22,16 @@ import { normalizeObservations } from "./normalize-observations.js";
 const examples = fileURLToPath(new URL("../../docs/grading/examples/", import.meta.url));
 async function bridge(root, request) {
   // execFile's stdin is written explicitly; no shell or model-selected command.
+  const remaining = request.deadline - Date.now();
+  if (remaining <= 0) throw new BudgetStop("budget_exhausted","seconds");
   return new Promise((resolve, reject) => {
     const child = execFile(process.env.T2P_PYTHON || "python", [fileURLToPath(new URL("../../tools/live-audit/pipeline_bridge.py", import.meta.url)), "--root", root],
-      { timeout: request.mode === "live" ? 180000 : 120000, maxBuffer: 32 * 1024 * 1024 }, (error, stdout) => {
+      { timeout: Math.min(remaining, request.mode === "live" ? 180000 : 120000), maxBuffer: 32 * 1024 * 1024 }, (error, stdout) => {
         try {
+          if (error?.killed && error.code !== "ERR_CHILD_PROCESS_STDIO_MAXBUFFER") {
+            measure({ telemetry_missing: 1 });
+            return reject(new BudgetStop("budget_exhausted", "seconds"));
+          }
           if (error) throw Error();
           const packet = JSON.parse(stdout);
           measure(packet.usage);
@@ -100,9 +107,18 @@ async function real(db, job, collect) {
   const replay = job.context.mode === "replay", scan = job.context.mode === "discovery_only";
   meterStage(replay ? "load_saved_evidence" : "collect_sources");
   stage(db, job, replay ? "load_saved_evidence" : "collect_sources");
-  const collection = replay ? savedCollection(originalRoot, job.hospital) : (await collect(root, {
+  const end = deadline(db,job);
+  const collected = replay ? null : await collect(root, {
+    deadline:end, run_budget:{job:job.id,token:job.token,limits:job.context.budget??defaults,deadline:end,
+      database:db.prepare("PRAGMA database_list").all().find(row=>row.name==="main").file},
     mode: "live", hospital_key: job.hospital, bounds: job.context.discovery_bounds, discovery_only: scan,
-  })).collection;
+  });
+  if (collected?.budget_stop) {
+    stage(db,job,"collection_stopped",{manifest:collected.manifest, captures:[...(collected.collection.pages??[]),...collected.collection.documents]
+      .filter(s=>s.status==="saved").map(s=>({sha256:s.sha256,retrieved_at:s.retrieved_at}))});
+    throw new BudgetStop(collected.budget_stop==="seconds"?"budget_exhausted":"quota_exceeded",collected.budget_stop);
+  }
+  const collection = replay ? savedCollection(originalRoot,job.hospital) : collected.collection;
   const inventory = sourceInventory(facility, collection, seeds);
   if (collection && !replay) stage(db, job, "collection_saved", { collection_sha256: inventory.collection_sha256,
     captures: inventory.sources.filter((s) => s.capture_status === "saved").map((s) => ({
@@ -150,7 +166,7 @@ async function real(db, job, collect) {
   input.scope.required_sources = input.sources.map((s) => s.source_id);
   meterStage("extract_documents");
   stage(db, job, "extract_documents");
-  const analysis = await bridge(root, { mode: "extract", sources: input.sources, application_review_date: job.review_date });
+  const analysis = await bridge(root, { mode: "extract", deadline:deadline(db,job), sources: input.sources, application_review_date: job.review_date });
   const extracted = analysis.sources;
   const content = {};
   for (const s of input.sources) if (s.snapshot) {
@@ -253,6 +269,7 @@ export async function runPipeline(db, job, collect = bridge) {
 
 async function executePipeline(db, job, collect) {
   try {
+    deadline(db,job);
     if (job.context.engine_version !== "multilingual-v1") throw Error("Pipeline engine changed; enqueue a new job");
     if (job.context.application_profile_sha256 !== applicationProfileHash) throw Error("Application profile changed; enqueue a new job");
     if (job.context.application_visual_sha256 !== applicationVisualHash) throw Error("Application visual review changed; enqueue a new job");
@@ -276,12 +293,14 @@ async function executePipeline(db, job, collect) {
       immutable(job.context.root, path, raw);
       db.prepare("UPDATE jobs SET checkpoint=? WHERE id=? AND token=? AND status='running'").run(JSON.stringify({ pipeline: 1, path, sha256: digest }), job.id, job.token);
     }
+    deadline(db,job);
     if (job.context.mode === "discovery_only") {
       meterStage("publish");
       const scan = { mode: job.context.mode, job: job.id, ...prepared };
       scan.id = fingerprint(scan);
       const path = `pipeline-scans/${scan.id}.json`;
       immutable(job.context.root, path, Buffer.from(JSON.stringify(scan)));
+      deadline(db,job);
       return publishScan(db, job, scan) ? scan : null;
     }
     prepared.input = { ...prepared.input, ...context(job) };
@@ -289,14 +308,16 @@ async function executePipeline(db, job, collect) {
     meterStage("grade");
     stage(db, job, "grade");
     const report = grade(prepared.input, { root: job.context.root });
+    deadline(db,job);
     validateSchema(report, "grading-report-v1.schema.json");
     const bundle = { pipeline: 1, mode: job.context.mode, root: job.context.root, rubric_sha256: fingerprint(rubric), ...prepared, report, content_fingerprint: fingerprint(prepared.content) };
     bundle.id = fingerprint({ input: bundle.input, report });
     meterStage("publish");
     immutable(job.context.root, `pipeline-assessments/${bundle.id}.json`, Buffer.from(JSON.stringify(bundle, null, 2) + "\n"));
+    deadline(db,job);
     return publishPipeline(db, job, bundle) ? bundle : null;
   } catch (error) {
-    failPipeline(db, job);
+    failPipeline(db, job, error);
     console.error("pipeline_failed", job.id, error.name);
     throw error;
   }
