@@ -1,3 +1,4 @@
+import { budgetPolicy, BudgetStop } from "./budgets.js";
 import { pinPrices, measure } from "./usage-ledger.js";
 import { event, recordPublication } from "./run-history.js";
 import { DatabaseSync } from "node:sqlite";
@@ -25,7 +26,7 @@ export function immutable(root, path, bytes) {
   finally { unlinkSync(temporary); }
   return path;
 }
-export function enqueuePipeline(db, { hospital_key, year = 2026, review_date, mode = "replay", variant = "original", request_key, root = pipelineRoot(), evidence_root = root, discovery_bounds = {}, classifications }) {
+export function enqueuePipeline(db, { hospital_key, year = 2026, review_date, mode = "replay", variant = "original", request_key, root = pipelineRoot(), evidence_root = root, discovery_bounds = {}, budget, allow_paid = false, classifications }) {
   const caps = { depth: 8, pages: 100, documents: 100, bytes_per_resource: 12582912, total_bytes: 134217728, timeout: 30, seconds: 150, redirects: 8 };
   if (!discovery_bounds || typeof discovery_bounds !== "object" || Array.isArray(discovery_bounds) || Object.entries(discovery_bounds).some(([k, v]) => !Object.hasOwn(caps, k) || !Number.isInteger(v) || v < 1 || v > caps[k])) throw Error("Invalid discovery bounds");
   const facility = facilityFor(hospital_key);
@@ -44,6 +45,8 @@ export function enqueuePipeline(db, { hospital_key, year = 2026, review_date, mo
     context.classification_sha256 = sha256(classifications);
     immutable(context.root, `source-classifications/${context.classification_sha256}.json`, classifications);
   }
+  if (budget !== undefined) context.requested_budget = budget;
+  if (allow_paid) context.allow_paid = true;
   const hash = fingerprint(context);
   return transaction(db, () => {
     const old = db.prepare("SELECT * FROM pipeline_requests WHERE request_key=?").get(request_key);
@@ -53,10 +56,13 @@ export function enqueuePipeline(db, { hospital_key, year = 2026, review_date, mo
       if (old.context_hash !== hash && old.context_hash !== fingerprint(legacy)) throw Error("Idempotency key already used with different context");
       return Number(old.job);
     }
+    context.budget = budgetPolicy(budget,allow_paid);
     const id = Number(db.prepare("INSERT INTO jobs(hospital,year,rule,review_date,context) VALUES(?,?,?,?,?)")
       .run(hospital_key, year, "css-17-v1", review_date, JSON.stringify(context)).lastInsertRowid);
     db.prepare("INSERT INTO pipeline_requests VALUES(?,?,?)").run(request_key, id, hash);
     pinPrices(db, id);
+    if (allow_paid && !Object.keys(JSON.parse(db.prepare("SELECT card FROM audit_prices WHERE job=?").get(id).card).models).length)
+      throw new BudgetStop("unknown_price","paid_usd_micros");
     event(db, id, null, "queued");
     return id;
   });
@@ -104,16 +110,19 @@ export function publishPipeline(db, job, bundle) {
     return true;
   });
 }
-export function failPipeline(db, job) {
+export function failPipeline(db, job, cause) {
   return transaction(db, () => {
-    const message = "Audit failed during retrieval, extraction or verification; prior successful assessment retained.";
+    const stop = cause instanceof BudgetStop;
+    const message = stop ? cause.message : "Audit failed during retrieval, extraction or verification; prior successful assessment retained.";
     const retry = db.prepare("SELECT attempts FROM jobs WHERE id=? AND token=? AND status='running'").get(job.id, job.token);
     if (!retry) return false;
+    const again = !stop && retry.attempts <= (job.context.budget?.retries ?? 2);
     db.prepare("UPDATE jobs SET status=?,lease=NULL,error=?,available_at=? WHERE id=? AND token=?")
-      .run(retry.attempts < 3 ? "queued" : "failed", message, Date.now() + 1000 * 2 ** retry.attempts, job.id, job.token);
+      .run(again ? "queued" : "failed", message, Date.now() + 1000 * 2 ** retry.attempts, job.id, job.token);
     db.prepare("UPDATE attempts SET status='failed',error=? WHERE token=?").run(message, job.token);
-    event(db, job.id, job.token, "failed", { reason: message });
-    if (retry.attempts < 3) event(db, job.id, job.token, "retrying", { reason: message });
+    const reason = stop ? {stop_code:cause.code,unit:cause.unit} : !again ? {retry_limit_reached:true} : {};
+    event(db, job.id, job.token, "failed", { reason: message, ...reason });
+    if (again) event(db, job.id, job.token, "retrying", { reason: message });
     return true;
   });
 }

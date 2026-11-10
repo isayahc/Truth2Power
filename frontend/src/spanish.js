@@ -174,4 +174,11 @@ export const spanish = {
   "Input tokens": "Tokens de entrada",
   "Output tokens": "Tokens de salida",
   "Cached input tokens": "Tokens de entrada en caché",
+  "Collection stopped":"Recopilación detenida",
+  "Run budget exhausted":"Presupuesto agotado",
+  "Resource quota exceeded":"Cuota de recursos excedida",
+  "Provider price unknown":"Precio del proveedor desconocido",
+  "Maximum requests":"Máximo de solicitudes",
+  "Maximum download bytes":"Máximo de bytes de descarga",
+  "Paid services off. Local cost unknown.":"Servicios de pago desactivados. Costo local desconocido.",
 };

@@ -19,8 +19,7 @@ export function installLedger(db) {
   }
 }
 
-/** Freeze the operator's USD/unit assumptions once, in the queue transaction. */
-export function pinPrices(db, job) {
+export function configuredPrices() {
   const file = process.env.T2P_RATE_CARD;
   const card = file ? JSON.parse(readFileSync(file, "utf8")) :
     { version: "unpriced-v1", effective_date: null, currency: "USD", local: {}, models: {} };
@@ -35,7 +34,12 @@ export function pinPrices(db, job) {
   }
   validate(card.local, localUnits);
   for (const rates of Object.values(card.models)) validate(rates, tokens);
-  db.prepare("INSERT INTO audit_prices VALUES(?,?)").run(job, JSON.stringify(card));
+  return card;
+}
+
+/** Freeze the operator's USD/unit assumptions once, in the queue transaction. */
+export function pinPrices(db, job) {
+  db.prepare("INSERT INTO audit_prices VALUES(?,?)").run(job, JSON.stringify(configuredPrices()));
 }
 
 function append(db, job, attempt, stage, id, kind, payload) {
@@ -105,7 +109,7 @@ export function costReceipt(db, job) {
 }
 
 export function readReceipt(db, job) {
-  const run = db.prepare("SELECT status,hospital,json_extract(context,'$.mode') AS mode FROM jobs WHERE id=? AND rule='css-17-v1'").get(job);
+  const run = db.prepare("SELECT status,hospital,json_extract(context,'$.budget') AS budget,json_extract(context,'$.mode') AS mode FROM jobs WHERE id=? AND rule='css-17-v1'").get(job);
   if (!run) throw Error("Unknown audit run");
   const card = JSON.parse(db.prepare("SELECT card FROM audit_prices WHERE job=?").get(job)?.card ?? "null");
   const rows = db.prepare("SELECT * FROM audit_usage WHERE job=? ORDER BY rowid").all(job)
@@ -161,7 +165,8 @@ export function readReceipt(db, job) {
   if (!measured || run.status !== "completed" && run.status !== "failed") warnings.push("Execution or attempt metering incomplete");
   if (units.telemetry_missing) warnings.push("Subprocess usage unavailable");
   const zero = measured && requests.size === 0;
-  return { schema_version: "audit-cost-receipt-v1", audit_run_id: runId(job), job, hospital_key: run.hospital, mode: run.mode, status: run.status, rate_card: card, attempts, stages, units, rows,
+  const stopped = db.prepare("SELECT json_extract(detail,'$.stop_code') code,json_extract(detail,'$.unit') unit FROM audit_run_events WHERE job=? AND state='failed' ORDER BY seq DESC LIMIT 1").get(job);
+  return { budget:JSON.parse(run.budget??"null"),budget_stop:stopped?.code ? stopped : null, schema_version: "audit-cost-receipt-v1", audit_run_id: runId(job), job, hospital_key: run.hospital, mode: run.mode, status: run.status, rate_card: card, attempts, stages, units, rows,
     actual_billed: nativeBilled, known_billed_usd: billedUsd ?? (zero ? 0 : null),
     calculated_from_usage_and_pinned_rate: calculated, estimated_local_compute_storage_network: local,
     estimated_subtotal_usd: local + calculated, zero_incremental_api: zero, unknown_unpriced: unpriced,

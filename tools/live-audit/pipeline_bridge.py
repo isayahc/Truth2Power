@@ -1,6 +1,7 @@
 """Bounded worker bridge to the existing collector and extractor. No model calls."""
 from collections import Counter
 from usage import measured, usage
+from run_budget import current, RunBudget
 import argparse
 import hashlib
 import json
@@ -35,6 +36,8 @@ def run(root, request):
     root = root.resolve()
     if request['mode'] == 'live':
         result = collect(request['hospital_key'], Path(__file__).resolve().parents[2], root, save, bounds=Bounds(**request.get('bounds', {})))
+        if result['output'].get('budget_stop'):
+            return dict(collection=result['output'], budget_stop=result['output']['budget_stop'], manifest=Path(result['manifest_file']).name)
         if result['output']['status'] == 'failed':
             raise ValueError('landing_collection_failed')
         if request.get('discovery_only'):
@@ -97,6 +100,8 @@ if __name__ == '__main__':
     args = parser.parse_args()
     # Internal IPC output, not application logging. The Node worker logs metadata only.
     request = json.load(sys.stdin)
+    if request.get("run_budget"):
+        current.set(RunBudget(request["run_budget"]))
     if request.pop("meter", False):
         counters: Counter[str] = Counter()
         usage.set(counters)

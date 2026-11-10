@@ -1,3 +1,4 @@
+import { budgetPolicy, preview } from "./budgets.js";
 import { DatabaseSync } from "node:sqlite";
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
@@ -44,6 +45,7 @@ const stages = new Set([
   "load_saved_evidence",
   "collect_sources",
   "collection_saved",
+  "collection_stopped",
   "extract_documents",
   "restore_checkpoint",
   "grade",
@@ -195,7 +197,7 @@ function publicReceipt(db, r) {
     status: r.status,
     units,
     stage_usage,
-    stage_costs,
+    stage_costs, budget_stop:c.budget_stop,
     cost_status: c.complete
       ? "complete"
       : c.known_billed_usd != null ||
@@ -355,7 +357,7 @@ export function reportingRoute(event) {
               "review_date",
               "mode",
               "request_key",
-              "discovery_bounds",
+              "discovery_bounds", "budget",
             ].includes(k),
         )
       )
@@ -423,6 +425,7 @@ export function reportingRoute(event) {
           .all(pipelineRoot(), facility[1], cursor, limit + 1) ?? [];
       return json(200, {
         hospital: hospitals.get(facility[1]),
+        preflight: Object.fromEntries(modes.map(mode=>[mode,preview(budgetPolicy(),mode)])),
         clocks: clocks(db, facility[1]),
         ...page(rows.map(runRow), limit, "job_id"),
       });
@@ -441,7 +444,7 @@ export function reportingRoute(event) {
             : integer(q.cursor, Number.MAX_SAFE_INTEGER);
       const rows = db
         .prepare(
-          `SELECT seq,attempt,state,at,json_extract(detail,'$.name') stage FROM audit_run_events
+          `SELECT seq,attempt,state,at,json_extract(detail,'$.name') stage,json_extract(detail,'$.stop_code') stop_code,json_array_length(detail,'$.captures') capture_count FROM audit_run_events
         WHERE job=? AND seq>? ORDER BY seq LIMIT ?`,
         )
         .all(id, cursor, limit + 1);
@@ -451,10 +454,11 @@ export function reportingRoute(event) {
           rows.map((e) => ({
             seq: e.seq,
             state: e.state,
+            captured_sources: e.capture_count,
             at: e.at,
             attempt_id: e.attempt ? sha256(e.attempt) : null,
             stage: stages.has(e.stage) ? e.stage : null,
-            reason:
+            reason: e.stop_code ??
               {
                 failed: "audit_failed",
                 interrupted: "lease_expired",

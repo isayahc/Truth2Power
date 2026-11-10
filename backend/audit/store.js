@@ -11,6 +11,8 @@ export function openStore(root = directory) {
   mkdirSync(root, { recursive: true });
   const db = new DatabaseSync(join(root, "audit.sqlite"));
   db.exec(`PRAGMA busy_timeout=5000; PRAGMA journal_mode=WAL;
+    CREATE TABLE IF NOT EXISTS audit_quota(job INTEGER,unit TEXT,used INTEGER NOT NULL,PRIMARY KEY(job,unit));
+    CREATE TABLE IF NOT EXISTS paid_reservations(job INTEGER,request_key TEXT,binding TEXT,tokens INTEGER,micros INTEGER,PRIMARY KEY(job,request_key));
     CREATE TABLE IF NOT EXISTS jobs (
       id INTEGER PRIMARY KEY, hospital TEXT NOT NULL, year INTEGER NOT NULL, rule TEXT NOT NULL,
       review_date TEXT NOT NULL, context TEXT NOT NULL, status TEXT NOT NULL DEFAULT 'queued',
@@ -107,10 +109,10 @@ export function claim(db, leaseMs = 90000, { id = null, rule = null } = {}) {
       db.prepare("UPDATE attempts SET status='interrupted' WHERE token=?").run(
         job.token,
       );
-      if (job.rule === "css-17-v1" && job.attempts >= 3) {
+      if (job.rule === "css-17-v1" && job.attempts >= 1 + (JSON.parse(job.context).budget?.retries ?? 2)) {
         const reason = "Retry limit reached after worker lease expired";
         db.prepare("UPDATE jobs SET status='failed',lease=NULL,error=? WHERE id=?").run(reason, job.id);
-        event(db, job.id, job.token, "failed", { reason });
+        event(db, job.id, job.token, "failed", { reason, stop_code:"quota_exceeded",unit:"retries" });
         return null;
       }
     }
