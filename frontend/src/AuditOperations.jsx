@@ -77,7 +77,7 @@ function useJson(url, refresh = 0) {
         return r.json();
       })
       .then((data) => {
-        if (!controller.signal.aborted) set({ url, data });
+        if (!controller.signal.aborted) set({ url, data, receivedAt: new Date().toISOString() });
       })
       .catch(() => {
         if (!controller.signal.aborted) set({ url, error: true });
@@ -603,6 +603,21 @@ export function HospitalRuns({ hospitalKey }) {
           "Current audits produce draft findings. The published September 2025 rating is separate.",
         )}
       </p>
+      {(busy || latest || acceptedJob > 0) && <div className="audit-live-status" role="status" aria-live="polite">
+        <strong>{busy ? t("Submitting audit request…") : acceptedJob > (latest?.job_id ?? 0) ? t("Request accepted. Waiting for status…") : `${t(modes[latest.mode])} · ${t(statusNames[latest.status] ?? "Unknown")}`}</strong>
+        {!busy && latest && <p>{t({
+          queued: "Waiting for a worker. The audit has not started yet.",
+          running: "A worker is processing this audit. Results will appear when available.",
+          retrying: "The audit is waiting for another attempt.",
+          completed: "Run finished. Check the saved results in the run details below.",
+          partial: "Audit finished with gaps. Check the run details below.",
+          failed: "Audit failed. Check the run details below for the reason.",
+          cancelled: "Audit cancelled.",
+        }[latest.status] ?? "Check the run details below for the latest recorded state.")}</p>}
+        {!busy && active(latest?.status) && <p>{t(r.error ? "Status updates unavailable. Use Refresh to reconnect." : polls.current >= 120 ? "Automatic updates paused. Use Refresh to resume." : "Checking status every 5 seconds. Audit buttons are disabled while this run is pending.")}</p>}
+        {!busy && latest?.status === 'queued' && <p>{t("If it stays queued, the local audit worker may not be running.")}</p>}
+        {r.receivedAt && <small>{t("Status checked")}: {new Date(r.receivedAt).toLocaleTimeString(language)}</small>}
+      </div>}
       <div className="ops-controls">
         {["discovery_only", "full_audit", "replay"].map((m) => (
           <button

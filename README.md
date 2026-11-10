@@ -27,6 +27,46 @@ Open [http://127.0.0.1:8000/](http://127.0.0.1:8000/) in your browser. The same 
 
 Choose **Español** in the header or visit `/?lang=es` for the Spanish main atlas page, search, rating legend and hospital summary. Your browser remembers the choice. Detailed audit/review panels remain labeled English. The translation is awaiting the fluent-reader approval required by #45; see [Spanish UI review and verification](docs/validation/spanish-ui.md).
 
+### Start the audit worker (required for scans and audits)
+
+`npm run dev` starts the frontend and backend, **not the audit worker**. The app can load normally while every requested audit remains queued. Keep a second terminal running the worker, from the same repository root.
+
+For the default port (8000):
+
+```bash
+# Terminal 1: frontend and backend
+npm run dev
+```
+
+```bash
+# Terminal 2: process queued scans and audits
+npm run audit:worker
+```
+
+For port **5180** in Windows PowerShell:
+
+```powershell
+# Terminal 1
+$env:PORT = '5180'
+npm run dev
+```
+
+```powershell
+# Terminal 2
+$env:PORT = '5180'
+# Use this if the project's Python dependencies are installed in .venv:
+$env:T2P_PYTHON = "$PWD\.venv\Scripts\python.exe"
+npm run audit:worker
+```
+
+Open http://127.0.0.1:5180/. On Linux/WSL, use `PORT=5180 npm run dev` and `PORT=5180 npm run audit:worker` in separate terminals; set `T2P_PYTHON` to your installed Python interpreter as needed. Install the [Python audit dependencies](#replay-the-17-measure-compliance-assessment) before processing audits. The synthetic browser audit also requires `npx playwright install chromium`.
+
+Both processes must use the same `AUDIT_DIR` (default: `.audit/`) and `PORT`. Starting the worker processes existing queued jobs; do not submit duplicate scans just because a job is waiting. Press **Ctrl+C** in the worker terminal to stop processing.
+
+In **Audits and history**, the status above the buttons distinguishes **Queued** (not started), **Running**, and finished runs. Active runs are checked every five seconds, for up to 120 checks; use **Refresh** to resume after polling pauses or a connection fails. Disabled audit buttons prevent another run while the current one is pending.
+
+If a run stays queued, check the worker terminal first. A successful page/API response only confirms the web server is running. Check for worker startup errors, matching `AUDIT_DIR` values, and missing Python dependencies. The UI's last status-check time confirms a response from the backend, not a worker heartbeat.
+
 ### Run the production build
 
 After installing dependencies, stop the development server, then run:
