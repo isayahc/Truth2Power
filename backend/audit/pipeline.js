@@ -16,6 +16,7 @@ import { immutable, publishPipeline, publishScan, failPipeline } from "./pipelin
 import { facilityFor, sourceInventory, savedCollection } from "./roster-inventory.js";
 import { readClassifications } from "../grading/source-classification.js";
 import { reviewCapturedSources, attachWebsiteLinks } from "./evidence-workers.js";
+import { reviewWithAgents } from "./opencode-review.js";
 import { reconcileFindings } from "./assessment-coordinator.js";
 import { adaptArtifact } from "../grading/adapter.js";
 import { normalizeObservations } from "./normalize-observations.js";
@@ -27,7 +28,7 @@ async function bridge(root, request) {
   if (remaining <= 0) throw new BudgetStop("budget_exhausted","seconds");
   return new Promise((resolve, reject) => {
     const child = execFile(process.env.T2P_PYTHON || "python", [fileURLToPath(new URL("../../tools/live-audit/pipeline_bridge.py", import.meta.url)), "--root", root],
-      { timeout: Math.min(remaining, request.mode === "live" ? 180000 : 120000), maxBuffer: 32 * 1024 * 1024 }, (error, stdout) => {
+      { timeout: remaining, maxBuffer: 32 * 1024 * 1024 }, (error, stdout) => {
         try {
           if (error?.killed && error.code !== "ERR_CHILD_PROCESS_STDIO_MAXBUFFER") {
             measure({ telemetry_missing: 1 });
@@ -91,7 +92,7 @@ function synthetic(job) {
   return { input, content, producer_records: [], extraction: { mode: "published-fields-v1", note: "Synthetic original structured publications; not a PDF transcription." } };
 }
 
-async function real(db, job, collect) {
+async function real(db, job, collect, invokeAgent) {
   const root = job.context.root, originalRoot = job.context.evidence_root;
   const display = reportingContext(job.hospital), gaps = ["Complete website/online-application discovery and governing interpretations require review; direct links do not prove absence."];
   const facility = facilityFor(job.hospital);
@@ -156,7 +157,8 @@ async function real(db, job, collect) {
       const path = `snapshots/${d.digest}${suffix}`, raw = readArtifact(from, path);
       Object.assign(d, { artifact_path: path, capture_status: "saved" });
       if (sha256(raw) !== d.digest) throw Error("Source snapshot checksum mismatch");
-      immutable(root, path, raw);
+      if (from === root) measure({ artifact_reuses: 1 });
+      else immutable(root, path, raw);
       source.snapshot = { snapshot_id: d.digest, sha256: d.digest, artifact_path: path, url: d.source_id, retrieved_at: d.retrieved_at, publisher_updated_at: null };
       if (d.published_link) source.snapshot.published_link = d.published_link;
       if (d.final_url && d.final_url !== d.source_id) {
@@ -191,7 +193,7 @@ async function real(db, job, collect) {
   meterStage("extract_documents");
   stage(db, job, "extract_documents");
   const analysis = await reviewCapturedSources(input.sources, documents, sources =>
-    bridge(root, { mode: "extract", deadline: end, sources, application_review_date: job.review_date }));
+    bridge(root, { mode: "extract", deadline: end, sources, prepared_extractions: collected?.prepared_extractions, application_review_date: job.review_date }));
   attachWebsiteLinks(analysis, collection);
   const extracted = analysis.sources;
   for (const doc of documents) {
@@ -247,19 +249,33 @@ async function real(db, job, collect) {
   for (const review of analysis.application_reviews) {
     if (review.template_comparison?.result !== "yes") gaps.push(`Template equivalence requires review: ${review.source_id}`);
   }
+  let agentReview;
+  if (!replay) {
+    if (job.context.agent_review) {
+      stage(db, job, "model_review");
+      meterStage("model_review");
+    }
+    // Leave time to persist the evidence and grade it if a model stalls.
+    const publishReserveMs = Math.min(15_000, (job.context.budget ?? defaults).seconds * 100);
+    agentReview = await reviewWithAgents({ db, job, analysis, input, deadline: end - publishReserveMs, invoke: invokeAgent });
+    if (job.context.agent_review && agentReview.status !== "completed") {
+      gaps.push("The requested model evidence review was incomplete. See the reviewers and citations for this run.");
+    }
+    inventory.agent_review_sha256 = fingerprint(agentReview);
+  }
   input.scope.gaps = [...new Set(gaps)];
   inventory.gaps = input.scope.gaps;
   input.scope.inventory_sha256 = fingerprint(inventory);
-  return { input, content, inventory, producer_records: records, normalization, application_reviews: analysis.application_reviews, discovery: collection,
+  return { input, content, inventory, agent_review: agentReview, producer_records: records, normalization, application_reviews: analysis.application_reviews, discovery: collection,
     extraction: { parser: "document-text-v5", collection_status: collection?.status ?? "saved_evidence_replay" } };
 }
 
-export async function runPipeline(db, job, collect = bridge) {
+export async function runPipeline(db, job, collect = bridge, invokeAgent) {
   if (!db.prepare("SELECT id FROM jobs WHERE id=? AND token=? AND status='running'").get(job.id, job.token)) return null;
-  return meterAttempt(db, job, () => executePipeline(db, job, collect));
+  return meterAttempt(db, job, () => executePipeline(db, job, collect, invokeAgent));
 }
 
-async function executePipeline(db, job, collect) {
+async function executePipeline(db, job, collect, invokeAgent) {
   try {
     deadline(db,job);
     if (job.context.engine_version !== "multilingual-v1") throw Error("Pipeline engine changed; enqueue a new job");
@@ -279,7 +295,7 @@ async function executePipeline(db, job, collect) {
       }
     }
     if (!prepared) {
-      prepared = job.context.mode === "synthetic" ? synthetic(job) : await real(db, job, collect);
+      prepared = job.context.mode === "synthetic" ? synthetic(job) : await real(db, job, collect, invokeAgent);
       prepared.job_context_sha256 = fingerprint(job.context);
       const raw = Buffer.from(JSON.stringify(prepared)), digest = sha256(raw), path = `pipeline-checkpoints/${digest}.json`;
       immutable(job.context.root, path, raw);

@@ -2,6 +2,8 @@
 import io
 import json
 import sqlite3
+import threading
+from concurrent.futures import ThreadPoolExecutor
 import tempfile
 import time
 import unittest
@@ -61,6 +63,48 @@ class CollectorBudgetTests(unittest.TestCase):
                 self.db.execute("UPDATE jobs SET status='cancelled'")
             with self.assertRaisesRegex(BudgetStop,"inactive_attempt"):
                 self.budget.reserve("pages")
+
+    def test_short_reads_share_prepaid_bytes_and_check_the_worker_lease(self) -> None:
+        """Hundreds of short reads need three reservations for a roughly 3 MiB response."""
+        size = 3 * 1024 * 1024 - 11
+        self.spec['limits']['network_bytes'] = size + 1024 * 1024
+        stream = io.BytesIO(b'x' * size)
+        response = MagicMock()
+        response.read1.side_effect = lambda maximum: stream.read1(min(maximum, 16 * 1024))
+        writes = []
+        self.budget.db.set_trace_callback(lambda sql: writes.append(sql) if sql.startswith('INSERT INTO audit_quota') else None)
+        with self.budget.downloader():
+            while stream.tell() < size:
+                self.budget.read(response, 64 * 1024)
+            with self.db:
+                self.db.execute("UPDATE jobs SET token='replacement'")
+            with self.assertRaisesRegex(BudgetStop, "inactive_attempt"):
+                self.budget.read(response, 64 * 1024)
+        self.assertEqual(len(writes), 3)
+        self.assertEqual(self.db.execute("SELECT used FROM audit_quota WHERE unit='network_bytes'").fetchone()[0], size)
+
+    def test_concurrent_downloaders_never_spend_over_the_same_byte_budget(self) -> None:
+        """Short reads racing at the quota boundary consume exactly the shared allowance."""
+        self.spec['limits']['network_bytes'] = 90_000
+        streams = [io.BytesIO(b'x' * 60_000) for _ in range(2)]
+        start = threading.Barrier(2)
+
+        def transfer(stream: io.BytesIO) -> None:
+            """Spend under one lease, forcing concurrent consumption with short reads."""
+            with self.budget.downloader():
+                start.wait(timeout=3)
+                while stream.tell() < 60_000:
+                    try:
+                        self.budget.read(stream, 2048)
+                    except BudgetStop as error:
+                        self.assertEqual(str(error), 'network_bytes')
+                        break
+
+        with ThreadPoolExecutor(2) as workers:
+            list(workers.map(transfer, streams))
+        used = self.db.execute("SELECT used FROM audit_quota WHERE unit='network_bytes'").fetchone()[0]
+        self.assertEqual(used, 90_000)
+        self.assertEqual(sum(s.tell() for s in streams), used)
 
     def test_partial_manifest_keeps_first_page(self) -> None:
         """Exhausting the page quota preserves the first captured original."""

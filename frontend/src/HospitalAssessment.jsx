@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { AgentFinding } from "./AgentReview.jsx";
 
 const labels = { yes: "Yes", no: "No", unclear: "Unclear", n_a: "Not applicable" };
 const date = (value) => value ? new Date(value).toISOString().replace("T", " ").replace(/\.\d+Z$/, " UTC") : "Unknown";
@@ -55,6 +56,7 @@ export default function HospitalAssessment({ hospitalKey, hospitalName, publishe
       <summary><span>{m.column} · {m.question}</span> <strong className={`measure-result result-${m.result}`}>{labels[m.result]}{m.versions.length ? " · draft" : " · not assessed"}</strong></summary>
       <div className="measure-body">
       <p>{m.reason}</p>
+      {m.agent_finding && <AgentFinding finding={m.agent_finding} revision={report.revision} heading />}
       {m.versions.filter((v) => v.finding?.result === "no" && v.finding.evidence.length > 0).map((v) => {
         const e = v.finding.evidence[0];
         return <details key={v.record_id + v.scope} className="correction-draft"><summary>Draft a correction request · {v.label}</summary>
