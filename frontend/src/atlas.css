@@ -148,6 +148,13 @@ header {
 }
 .brand {
   gap: 13px;
+  color: inherit;
+  text-decoration: none;
+}
+.brand:focus-visible {
+  outline: 3px solid #b06b00;
+  outline-offset: 4px;
+  border-radius: 5px;
 }
 .mark {
   display: inline-grid;

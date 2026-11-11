@@ -25,7 +25,7 @@ function Header({ onReview, pending }) {
   useEffect(()=>{let live=true;const load=()=>fetch('/api/pilot/v1/interventions').then(r=>r.ok?r.json():null).then(x=>{if(live&&x)setHumanTasks(x.items.length)}).catch(()=>{});load();const timer=setInterval(load,10000);return()=>{live=false;clearInterval(timer)}},[]);
   return (
     <header>
-      <div className="brand">
+      <a className="brand" href={localHref('/')} aria-label={t('Truth2Power homepage')}>
         <span className="mark" aria-hidden="true">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
             <path
@@ -39,7 +39,7 @@ function Header({ onReview, pending }) {
         </span>
         <span className="brand-name">Truth2Power</span>
         <span className="brand-unit">{t('Health equity atlas')}</span>
-      </div>
+      </a>
       <div className="header-actions">
       <a className="overview-link" href={localHref('?view=overview')}>{t('Audit overview')}</a>
       <a className="changes-link" href={localHref('?view=operations')}>{t('Audit operations')}</a>

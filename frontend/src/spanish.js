@@ -1,5 +1,6 @@
 // Main-page translation draft for #45. Fluent-reader approval is tracked separately.
 export const spanish = {
+  "Truth2Power homepage": "Página de inicio de Truth2Power",
   "Link depth limit": "Límite de profundidad de enlaces",
   "Page count limit": "Límite de páginas",
   "Document count limit": "Límite de documentos",
