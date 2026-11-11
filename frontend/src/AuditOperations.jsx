@@ -33,7 +33,8 @@ const stageNames = {
   collect_sources: "Collect sources",
   collection_saved: "Collection saved",
   collection_stopped: "Collection stopped",
-  extract_documents: "Extract documents",
+  extract_documents: "Review website and documents",
+  reconcile_evidence: "Reconcile evidence by criterion",
   restore_checkpoint: "Restore checkpoint",
   grade: "Evaluate findings",
   publish: "Publish results",
@@ -577,7 +578,7 @@ const roleLabels = {
   unclassified: "Unclassified",
   supplement: "Supplement",
 };
-export function HospitalRuns({ hospitalKey }) {
+export function HospitalRuns({ hospitalKey, onAssessment }) {
   const { t, language } = useLocale(),
     url = api + "/hospitals/" + hospitalKey + "/runs";
   const storageKey = "audit-queue-intent-" + hospitalKey;
@@ -599,6 +600,9 @@ export function HospitalRuns({ hospitalKey }) {
   const r = useJson(url + "?limit=1", tick),
     latest = r.data?.items[0];
   const activity = useJson(latest ? `${api}/runs/${latest.audit_run_id}/timeline?limit=100` : null, tick);
+  useEffect(() => {
+    if (latest?.assessment_id) onAssessment?.(latest.assessment_id);
+  }, [latest?.assessment_id, onAssessment]);
   const lastActivity = activity.data?.items?.at(-1);
   const currentStage = activity.data?.items?.filter((event) => event.stage).at(-1)?.stage;
   useEffect(() => {

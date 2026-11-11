@@ -4,7 +4,7 @@ const labels = { yes: "Yes", no: "No", unclear: "Unclear", n_a: "Not applicable"
 const date = (value) => value ? new Date(value).toISOString().replace("T", " ").replace(/\.\d+Z$/, " UTC") : "Unknown";
 const safeUrl = (url) => typeof url === "string" && /^https:\/\//.test(url) ? url : undefined;
 
-export default function HospitalAssessment({ hospitalKey, hospitalName }) {
+export default function HospitalAssessment({ hospitalKey, hospitalName, publishedRevision }) {
   const [state, setState] = useState({ loading: true });
   const [reload, setReload] = useState(0);
   const revision = new URLSearchParams(window.location.search).get("revision");
@@ -19,7 +19,7 @@ export default function HospitalAssessment({ hospitalKey, hospitalName }) {
     }).then((next) => { if (!controller.signal.aborted) setState(next); })
       .catch(() => { if (!controller.signal.aborted) setState({ error: true }); });
     return () => controller.abort();
-  }, [hospitalKey, reload, revision]);
+  }, [hospitalKey, reload, revision, publishedRevision]);
   useEffect(() => {
     const hash = window.location.hash.slice(1);
     if (state.data && hash.startsWith("measure-" + hospitalKey + "-")) {
@@ -81,6 +81,15 @@ export default function HospitalAssessment({ hospitalKey, hospitalName }) {
             <p>Snapshot SHA-256: <code>{e.sha256}</code></p>
             {e.export_verification === "original_snapshot_unavailable" && <p>Original snapshot is unavailable in this checkout. The saved assessment citation is retained; the live link may have changed.</p>}
           </details>)}
+          {!!v.finding?.candidate_passages?.length && <details>
+            <summary>Candidate passages for review ({v.finding.candidate_passages.length})</summary>
+            {v.finding.candidate_passages.map((p, i) => <div key={i}>
+              <p>{p.worker === "website_reviewer" ? "Website review" : "Document review"} · {p.locator}</p>
+              <blockquote>{p.quote}</blockquote>
+              <a href={p.saved_url} download>Download cited snapshot</a> · <a href={safeUrl(p.source_url)} target="_blank" rel="noreferrer">Original source ↗</a>
+              <p>Document role: {p.role} · Language: {p.language} · Campus: {p.campus.replaceAll("_", " ")}</p>
+            </div>)}
+          </details>}
           {!v.finding?.evidence.length && <p>No located evidence supplied; review needed.</p>}
         </section>)}
       </details>

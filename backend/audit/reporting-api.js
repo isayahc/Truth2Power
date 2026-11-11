@@ -50,6 +50,7 @@ const stages = new Set([
   "collection_saved",
   "collection_stopped",
   "extract_documents",
+  "reconcile_evidence",
   "restore_checkpoint",
   "grade",
 ]);
@@ -169,6 +170,7 @@ function publicReceipt(db, r) {
       "collect_sources",
       "load_saved_evidence",
       "extract_documents",
+      "reconcile_evidence",
       "grade",
       "publish",
     ].includes(name)

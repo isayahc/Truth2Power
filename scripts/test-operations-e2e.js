@@ -72,7 +72,7 @@ try {
     panel.getByRole("button", { name: "Confirm run" }).click();
   const refresh = () =>
     panel.getByRole("button", { name: "Refresh", exact: true }).click();
-  async function work() {
+  async function work(scenario) {
     const job = claim(db);
     assert.ok(job);
     await runPipeline(db, job, (dir, request) =>
@@ -80,7 +80,7 @@ try {
         execFileSync(
           process.env.T2P_PYTHON || "python",
           ["backend/test/fixtures/roster-collector.py", dir],
-          { input: JSON.stringify(request), encoding: "utf8" },
+          { input: JSON.stringify({ ...request, scenario }), encoding: "utf8" },
         ),
       ),
     );
@@ -206,6 +206,24 @@ try {
     .getByText(/Vencida/)
     .first()
     .waitFor();
+  // Run the CDN regression through the same button operators use for any roster entry.
+  await page.clock.setFixedTime(new Date("2026-11-10T17:00:00Z"));
+  await page.goto(origin + "/?hospital=324&lang=en");
+  await page.getByRole("button", { name: "Audits and history" }).click();
+  await choose("Full audit");
+  await confirm();
+  await panel.getByRole("heading", { name: "audit-run-4", exact: true }).waitFor();
+  await work("public-files");
+  await page.getByRole("button", { name: "Findings", exact: true }).click();
+  const summary = page.locator("#measure-324-S");
+  await summary.locator(":scope > summary").click();
+  await summary.getByText("Yes · draft", { exact: true }).waitFor();
+  await summary.getByText(/Evidence, dates and scope/).click();
+  await summary.locator(".measure-evidence > summary").filter({ hasText: "page 1" }).first().click();
+  await summary.locator(".measure-evidence[open] blockquote").filter({ hasText: "Financial Assistance Policy Summary" }).first().waitFor();
+  const application = page.locator("#measure-324-R");
+  await application.locator(":scope > summary").click();
+  await application.getByText(/Linked file unavailable/).first().waitFor();
   assert.deepEqual(errors, []);
   console.log("Offline operations flow passed; screenshots at " + artifacts);
 } finally {

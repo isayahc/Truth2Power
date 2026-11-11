@@ -70,6 +70,7 @@ export function Ratings({ hospitals, filter, onFilter }) {
 
 export function HospitalDetail({ hospital, onClose, onReview, pendingReviews }) {
   const { t, language, localHref } = useLocale();
+  const [publishedRevision, setPublishedRevision] = useState(null);
   const [panel, setPanel] = useState(window.location.hash === '#audit-runs' ? 'audits' : 'findings');
   useEffect(() => {
     const sync = () => setPanel(window.location.hash === '#audit-runs' ? 'audits' : 'findings');
@@ -128,11 +129,11 @@ export function HospitalDetail({ hospital, onClose, onReview, pendingReviews }) 
         <button aria-pressed={panel === 'findings'} onClick={() => setPanel('findings')}>{t('Findings')}</button>
         <button aria-pressed={panel === 'audits'} onClick={() => setPanel('audits')}>{t('Audits and history')}</button>
       </nav>
-      <div hidden={panel !== 'audits'}><HospitalRuns key={hospital.id} hospitalKey={hospital.id} /></div>
+      <div hidden={panel !== 'audits'}><HospitalRuns key={hospital.id} hospitalKey={hospital.id} onAssessment={setPublishedRevision} /></div>
       <div hidden={panel !== 'findings'}>
       {language === 'es' && <p className="translation-scope">{t('Detailed audit and review panels below are in English. Quotations retain the original document language.')}</p>}
       <div lang="en">
-      <HospitalAssessment key={`assessment-${hospital.id}`} hospitalKey={hospital.id} hospitalName={p.name} />
+      <HospitalAssessment key={`assessment-${hospital.id}`} hospitalKey={hospital.id} hospitalName={p.name} publishedRevision={publishedRevision} />
       <PilotAudit key={`pilot-${hospital.id}`} hospitalKey={hospital.id} />
       <ReportingContext key={`reporting-${hospital.id}`} hospitalKey={hospital.id} />
       <GradingPanel key={`grading-${hospital.id}`} hospitalKey={hospital.id} />
