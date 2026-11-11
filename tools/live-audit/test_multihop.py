@@ -69,6 +69,51 @@ class MultihopTests(unittest.TestCase):
         shallow = self.run_collection(depth=1)
         self.assertEqual(shallow['status'], 'partial')
         self.assertEqual(shallow['documents'][0]['status'], 'failed')
+        self.assertEqual(shallow['documents'][0]['limit'], 'depth')
+
+    def test_financial_aid_sources_take_precedence_on_a_mixed_documents_page(self) -> None:
+        """Capture both applications, the notice and guidelines within four slots."""
+        other_files = ['/financial-assistance/board.pdf', '/transportation.pdf', '/volunteer.pdf']
+        applications = [
+            ('/NOTICE-OF-FINANCIAL-AID.pdf', 'Notice'),
+            ('https://files.example/01', 'Financial assistance application'),
+            ('/descarga.pdf', 'Solicitud de ayuda financiera'),
+            ('/FA_Guidelines.pdf', 'Read guidelines'),
+        ]
+        self.web['/financial-assistance'] = (
+            ''.join(f'<a href="{url}">Public records</a>' for url in other_files)
+            + '<a href="/resources">Patient resources</a>'
+        ).encode()
+        self.web['/resources'] = ''.join(
+            f'<a type="application/pdf" href="{url}">{label}</a>' for url, label in applications
+        ).encode()
+        for path in other_files + ['/NOTICE-OF-FINANCIAL-AID.pdf', '/descarga.pdf', '/FA_Guidelines.pdf']:
+            self.web[path] = b'%PDF-SYN ' + path.encode()
+        self.web['/01'] = (b'%PDF-SYN form', 'https://files.example/01', 'application/pdf')
+
+        result = self.run_collection(documents=4)
+        documents = result['documents']
+        saved = [doc for doc in documents if doc['status'] == 'saved']
+        self.assertEqual([doc['published_link']['anchor_label'] for doc in saved],
+                         [label for _, label in applications])
+        parent = result['pages'][1]
+        self.assertTrue(all(doc['published_link']['parent_sha256'] == parent['sha256'] for doc in saved))
+        self.assertTrue(all(doc['classification'] == 'unverified' for doc in saved))
+        failed = [doc for doc in documents if doc['status'] == 'failed']
+        self.assertEqual([doc['source_url'] for doc in failed], ['https://example.org' + p for p in other_files])
+        self.assertTrue(all(doc['error_code'] == 'resource_limit' and doc['limit'] == 'documents' for doc in failed))
+        self.assertEqual(len(self.calls), 6)
+        self.assertEqual(result['status'], 'partial')
+        self.assertEqual(self.run_collection()['status'], 'complete')
+
+    def test_time_and_total_size_limits_remain_distinct(self) -> None:
+        """The audit can distinguish an expired crawl from exhausted download capacity."""
+        self.web['/financial-assistance'] = b'<a href="/en.pdf">Application</a>'
+        with patch('documents.time.monotonic', side_effect=[0, 0, 1]):
+            expired = self.run_collection(seconds=1)
+        self.assertEqual(expired['documents'][0]['limit'], 'seconds')
+        exhausted = self.run_collection(total_bytes=len(self.web['/financial-assistance']))
+        self.assertEqual(exhausted['documents'][0]['limit'], 'total_bytes')
 
     def test_broken_child_and_javascript_are_gaps_not_absence(self):
         self.web['/financial-assistance'] += b'<script>SYN no execution</script><a href="/missing">Financial help</a>'

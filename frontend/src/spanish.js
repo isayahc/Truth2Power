@@ -1,5 +1,13 @@
 // Main-page translation draft for #45. Fluent-reader approval is tracked separately.
 export const spanish = {
+  "Link depth limit": "Límite de profundidad de enlaces",
+  "Page count limit": "Límite de páginas",
+  "Document count limit": "Límite de documentos",
+  "Collection time limit": "Límite de tiempo de recopilación",
+  "File size limit": "Límite de tamaño por archivo",
+  "Total download size limit": "Límite de tamaño total de descarga",
+  "Run download quota": "Cuota de descarga de la auditoría",
+  "Run request quota": "Cuota de solicitudes de la auditoría",
   "Files needing text extraction review": "Archivos cuya extracción de texto requiere revisión",
   "The collector blocked a hospital-linked file because it was hosted on another domain.": "El sistema bloqueó un archivo enlazado por el hospital porque estaba alojado en otro dominio.",
   "Document retrieval": "Recuperación de documentos",

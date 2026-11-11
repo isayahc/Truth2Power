@@ -64,6 +64,8 @@ export function documentAttempts(collection) {
     }
     return {
       source_url, parent_url,
+      ...(reason === 'resource_limit' && ['depth', 'pages', 'documents', 'seconds', 'bytes_per_resource',
+        'total_bytes', 'network_bytes', 'network_requests'].includes(doc.limit) ? { limit: doc.limit } : {}),
       status: saved ? 'saved' : 'failed', reason,
       http_status: failureDiagnostic(reason, doc)?.http_status ?? null,
       sha256: saved && /^[0-9a-f]{64}$/.test(doc.sha256) ? doc.sha256 : null,

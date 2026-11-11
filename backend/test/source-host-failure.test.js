@@ -76,3 +76,13 @@ test('historical CDN rejections retain the cause while removing query strings an
   assert.deepEqual(documentAttempts({documents:[doc]}), [{source_url:'https://files.example/application.pdf',
     parent_url, status:'failed', reason:'off_host_document_blocked', http_status:null, sha256:null}]);
 });
+
+test('document diagnostics retain known limits across manifest and run log projections', () => {
+  const failure = {status: 'failed', source_url: 'https://hospital.example/form.pdf', error_code: 'resource_limit'};
+  const attempts = documentAttempts({documents: [
+    {...failure, limit: 'seconds'}, {...failure, limit: 'documents'}, failure,
+    {...failure, limit: 'SYN-private-detail'}, {...failure, error_code: 'http_error', limit: 'seconds'},
+  ]});
+  assert.deepEqual(attempts.map(a => a.limit), ['seconds', 'documents', undefined, undefined, undefined]);
+  assert.deepEqual(documentAttempts({documents: attempts}), attempts);
+});
