@@ -65,7 +65,7 @@ export function Ratings({ hospitals, filter, onFilter }) {
   );
 }
 
-export function HospitalDetail({ hospital, onClose }) {
+export function HospitalDetail({ hospital, onClose, onReview, pendingReviews }) {
   const { t, language, localHref } = useLocale();
   // Phase 1: no audit-run source exists yet, so there is no published
   // revision to report. The state stays null until Phase 3 wires it.
@@ -116,6 +116,7 @@ export function HospitalDetail({ hospital, onClose }) {
           <p>{t('Audit operations arrive in Phase 3.')}</p>
         </div>
       </section>
+      <button className="review-nav" onClick={onReview}>{t('Review notifications')} ({pendingReviews ?? "…"})</button>
       <details className="location-details">
         <summary>{t('Location details')}</summary>
         <dl>

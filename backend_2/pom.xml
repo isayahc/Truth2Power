@@ -48,6 +48,33 @@
 			<artifactId>mysql-connector-j</artifactId>
 			<scope>runtime</scope>
 		</dependency>
+		<!-- Jackson 2: the code imports com.fasterxml.jackson.* (Jackson 2 API).
+		     Spring Boot 4 ships Jackson 3 under tools.jackson.* instead, so the
+		     Jackson 2 databind must be declared explicitly. Verified against
+		     2.20.0 during Phase 1 parity testing. -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>2.20.0</version>
+		</dependency>
+		<!-- Flyway: Spring Boot 4 moved the Flyway auto-configuration out of
+		     spring-boot-autoconfigure into spring-boot-flyway, which only
+		     comes in via this starter. Declaring flyway-core alone leaves
+		     the schema unmigrated (Hibernate validation then fails on the
+		     missing tables) with no Flyway log output at all. -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-flyway</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.flywaydb</groupId>
+			<artifactId>flyway-mysql</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<scope>test</scope>
+		</dependency>
 		<dependency>
 			<groupId>org.xerial</groupId>
 			<artifactId>sqlite-jdbc</artifactId>

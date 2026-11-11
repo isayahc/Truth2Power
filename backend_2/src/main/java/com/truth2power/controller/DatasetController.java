@@ -2,9 +2,11 @@ package com.truth2power.controller;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.truth2power.config.RepoPaths;
+import com.truth2power.service.DbReadService;
 import com.truth2power.service.Json;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -24,20 +26,30 @@ import java.nio.file.Files;
 public class DatasetController {
 
     private final RepoPaths paths;
+    private final DbReadService dbReads;
 
-    public DatasetController(RepoPaths paths) {
+    @Value("${t2p.reads-from-db:false}")
+    private boolean readsFromDb;
+
+    public DatasetController(RepoPaths paths, DbReadService dbReads) {
         this.paths = paths;
+        this.dbReads = dbReads;
     }
 
     private void serve(HttpServletRequest request, HttpServletResponse response,
             String filename, String type) throws Exception {
+        byte[] body = Files.readAllBytes(paths.mapsDir().resolve(filename));
+        serveBytes(request, response, body, type);
+    }
+
+    private void serveBytes(HttpServletRequest request, HttpServletResponse response,
+            byte[] body, String type) throws Exception {
         String method = request.getMethod();
         if (!"GET".equals(method) && !"HEAD".equals(method)) {
             errorJson(response, 405, "Use GET or HEAD.", "GET, HEAD");
             return;
         }
         try {
-            byte[] body = Files.readAllBytes(paths.mapsDir().resolve(filename));
             response.setStatus(200);
             response.addHeader("Content-Type", type + "; charset=utf-8");
             if ("GET".equals(method)) response.getOutputStream().write(body);
@@ -48,6 +60,14 @@ public class DatasetController {
 
     @RequestMapping("/api/hospitals")
     public void hospitals(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        if (readsFromDb && dbReads.dbAvailable()) {
+            try {
+                serveBytes(request, response, dbReads.hospitalsJson(), "application/geo+json");
+            } catch (Exception e) {
+                errorJson(response, 500, "The dataset could not be loaded.", null);
+            }
+            return;
+        }
         serve(request, response, "hospitals.geojson", "application/geo+json");
     }
 

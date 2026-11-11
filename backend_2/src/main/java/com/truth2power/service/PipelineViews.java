@@ -140,7 +140,51 @@ public final class PipelineViews {
         return new Publications(bundles, failures);
     }
 
-    private static ObjectNode reviewEnvelope(ObjectNode bundle) {
+    /** The committed pipeline bundles (for the review inbox's pipeline drafts). */
+    public static List<ObjectNode> pipelineBundles(Path auditDir, Path root) {
+        boolean includeSynthetic = "1".equals(System.getenv("T2P_PILOT_DEMO"));
+        return publications(auditDir, root, includeSynthetic).bundles();
+    }
+
+    /**
+     * The stored pipeline change events (for GET /api/changes): the
+     * pipeline_events rows, newest job first, restricted to jobs that have a
+     * committed bundle — same as publications(root).events in pipeline-store.js.
+     */
+    public static List<ObjectNode> pipelineEvents(Path auditDir, Path root) {
+        boolean includeSynthetic = "1".equals(System.getenv("T2P_PILOT_DEMO"));
+        Publications pubs = publications(auditDir, root, includeSynthetic);
+        java.util.Set<Long> ids = new java.util.HashSet<>();
+        for (ObjectNode b : pubs.bundles()) {
+            ids.add(b.get("job").asLong());
+        }
+        if (ids.isEmpty()) {
+            return List.of();
+        }
+        Path dbPath = auditDir.resolve("audit.sqlite");
+        if (!Files.exists(dbPath)) {
+            return List.of();
+        }
+        List<ObjectNode> events = new ArrayList<>();
+        try (Connection db = DriverManager.getConnection("jdbc:sqlite:" + dbPath + "?mode=ro")) {
+            try (PreparedStatement ps = db.prepareStatement(
+                    "SELECT job,output FROM pipeline_events ORDER BY job DESC")) {
+                ResultSet rs = ps.executeQuery();
+                while (rs.next()) {
+                    if (!ids.contains(rs.getLong(1))) {
+                        continue;
+                    }
+                    events.add((ObjectNode) Json.MAPPER.readTree(rs.getString(2)));
+                }
+            }
+        } catch (Exception e) {
+            throw new IllegalStateException("Pipeline events could not be read", e);
+        }
+        return events;
+    }
+
+    /** Port of reviewEnvelope(bundle) from pipeline-views.js. */
+    public static ObjectNode reviewEnvelope(ObjectNode bundle) {
         JsonNode input = bundle.get("input");
         JsonNode report = bundle.get("report");
         String id = Json.text(bundle, "id");

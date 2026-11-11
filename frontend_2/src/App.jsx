@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from "react";
+import Changes from "./features/changes/Changes.jsx";
 import Overview from "./features/audit/Overview.jsx";
 import HospitalMap from "./features/atlas/HospitalMap.jsx";
 import HospitalSearch from "./features/atlas/HospitalSearch.jsx";
 import { HospitalDetail, Ratings } from "./features/hospital/Ratings.jsx";
+import ReviewInbox from "./features/review/ReviewInbox.jsx";
 import { hospitalFeatures, countyFeatures } from "./api/hospitals.js";
+import { getJson } from "./api/client.js";
 import { LanguageSwitch, useLocale } from "./i18n/locale.jsx";
 
-function Header() {
+function Header({ onReview, pending }) {
   const { t, localHref } = useLocale();
   return (
     <header>
@@ -27,6 +30,9 @@ function Header() {
       </a>
       <div className="header-actions">
         <a className="overview-link" href={localHref('?view=overview')}>{t('Audit overview')}</a>
+        <a className="changes-link" href={localHref('?view=operations')}>{t('Audit operations')}</a>
+        <a className="changes-link" href={localHref('?view=changes')}>{t('Recent changes')}</a>
+        <button className="review-nav" onClick={onReview}>{t('Review inbox')} <span>{typeof pending === 'number' ? pending : pending ?? "…"}</span></button>
         <LanguageSwitch />
       </div>
     </header>
@@ -76,6 +82,16 @@ export default function App() {
   const [attempt, setAttempt] = useState(0);
   const [filter, setFilter] = useState(null);
   const [selected, setSelected] = useState(null);
+  const [reviewOpen, setReviewOpen] = useState(false);
+  const [reviewHospital, setReviewHospital] = useState("");
+  const [inbox, setInbox] = useState(null);
+  const [reviewError, setReviewError] = useState("");
+  async function refreshReviews() {
+    try { setInbox(await getJson("/api/reviews")); setReviewError(""); }
+    catch (e) { setReviewError(e.message); }
+  }
+  useEffect(() => { refreshReviews(); }, []);
+  function openReviews(hospital = "") { setReviewHospital(hospital); setReviewOpen(true); refreshReviews(); }
   useEffect(() => {
     const controller = new AbortController();
     setError(false);
@@ -97,6 +113,7 @@ export default function App() {
     const restore = () => {
       const key = new URL(window.location.href).searchParams.get("hospital");
       setSelected(data.hospitals.find((h) => String(h.id) === key) || null);
+      setReviewOpen(false);
     };
     restore();
     window.addEventListener("popstate", restore);
@@ -125,9 +142,16 @@ export default function App() {
   const visible = data?.hospitals.filter((h) => filter === null || h.properties.stars === filter);
   return (
     <div className="page">
-      <Header />
+      <Header onReview={() => openReviews()} pending={reviewError ? "!" : inbox?.pending} />
       <main>
-        {!selected && new URLSearchParams(window.location.search).get("view") === "overview" ?
+        {reviewOpen ? <>
+          <button className="back plain" onClick={() => setReviewOpen(false)}>{t(selected ? '← Back to hospital record' : '← Back to hospital map')}</button>
+          <ReviewInbox key={reviewHospital} inbox={inbox} error={reviewError} onRefresh={refreshReviews}
+            hospitalKey={reviewHospital} hospitals={data?.hospitals ?? []} onHospital={(hospital) => {
+              if (hospital) { selectHospital(hospital); setReviewOpen(false); }
+            }} />
+        </> : !selected && new URLSearchParams(window.location.search).get("view") === "operations" ?
+          <p role="status">{t('Audit operations arrive in Phase 3.')}</p> : !selected && new URLSearchParams(window.location.search).get("view") === "changes" ? <Changes /> : !selected && new URLSearchParams(window.location.search).get("view") === "overview" ?
           (data ? <div lang="en"><Overview features={data.hospitals} counties={data.counties} /></div> :
             <p role="status">{error ? <button onClick={() => setAttempt(attempt + 1)}>{t('Retry loading atlas')}</button> : t('Loading atlas…')}</p>) : <>
         <div className="intro" hidden={!!selected}>
@@ -181,7 +205,8 @@ export default function App() {
               <Ratings hospitals={data.hospitals} filter={filter} onFilter={setFilter} />
             </aside>
           </div>
-          {selected && <HospitalDetail key={selected.id} hospital={selected} onClose={closeDetail} />}
+          {selected && <HospitalDetail key={selected.id} hospital={selected} onClose={closeDetail} onReview={() => openReviews(String(selected.id))}
+            pendingReviews={inbox?.items.filter((r) => r.hospital_key === String(selected.id) && r.status !== "resolved").length} />}
           </>
         ) : (
           <p className="load-status" role="status">

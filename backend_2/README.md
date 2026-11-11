@@ -39,8 +39,41 @@ RFC 9110; no client distinguishes them.
 - Security headers on every response (`nosniff`, `DENY`, `no-referrer`),
   same as the old Node server.
 - Binds `127.0.0.1:8080` only (repo AGENTS.md rule — never `0.0.0.0`).
-- No database yet: JPA auto-configuration is excluded in
-  `application.properties` until Phase 2 wires TiDB.
+- Default profile: no database; JPA auto-configuration is excluded in
+  `application.properties` and the app serves the files directly (Phase 1
+  behaviour, unchanged).
+
+## Phase 2 — TiDB read model + write paths (done Nov 11)
+
+- Flyway `V1__truth2power.sql` (`counties`, `hospitals`, `assessments`,
+  `measure_results`, `audit_runs`, `dataset_meta`) runs automatically under
+  the `tidb` profile. **Boot 4 note:** Flyway auto-config only arrives via
+  `spring-boot-starter-flyway` — `flyway-core` alone never runs migrations.
+- Import the Wave 1 data (62 counties / 212 hospitals / 212 assessments /
+  3604 measure results; 2 known BronxCare count quirks are stored as both
+  counts and reported, never adjusted):
+  ```bash
+  SPRING_DATASOURCE_URL='jdbc:mysql://<host>:4000/truth2power?sslMode=VERIFY_IDENTITY' \
+  SPRING_DATASOURCE_USERNAME='<prefix>.root' \
+  SPRING_DATASOURCE_PASSWORD='...' \
+  ./mvnw spring-boot:run -Dspring-boot.run.profiles=tidb,import
+  ```
+  TiDB cluster choice (Option A: new `truth2power` database on the existing
+  portfolio cluster; Option B: second free Starter cluster) is a deploy-time
+  pick — the code is identical either way, only the env values differ.
+- Flip reads to the database with `--t2p.reads-from-db=true` (default false).
+  DB `/api/hospitals` is JSON-equal to the file in roster order (compact
+  output); the file path still serves the pretty-printed bytes.
+- `ReviewController` (`GET /api/reviews`, `GET /api/reviews/{id}`,
+  `GET /api/reviews/{id}/sources/{snapshotId}`, `POST /api/reviews/{id}/decisions`)
+  and `ChangesController` (`GET /api/changes`, `/assessments/{sha256}`,
+  `/snapshots/{sha256}.{html|pdf|docx}`) port the old app exactly — same
+  routes, same error strings, same file/compute backing (`.audit/live/`
+  result files, append-only decision JSONs, `tools/live-audit/changes.py` +
+  `audit.sqlite`). No review/changes tables. POST decisions need the
+  `x-review-request: 1` header (the frontend sends it via
+  `api/client.js` `reviewRequest()`); without it the request is rejected
+  with a bare 403.
 
 ## Run
 

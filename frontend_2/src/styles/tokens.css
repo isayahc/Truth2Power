@@ -30,6 +30,13 @@
   --color-black: #232c37;
   --color-link: #125850;
 
+  /* Review inbox / changes feed surfaces (Phase 2, from old atlas.css). */
+  --color-review-active-bg: #ecf5ef;
+  --color-question-bg: #f5f2e5;
+  --color-question-border: #976c18;
+  --color-form-bg: #eef5f1;
+  --color-badge-bg: #d4eee1;
+
   --space-xs: 4px;
   --space-sm: 8px;
   --space-md: 12px;

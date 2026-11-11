@@ -5,7 +5,16 @@ const BASE = import.meta.env.VITE_API_BASE_URL ?? "";
 
 async function request(path, options = {}) {
   const response = await fetch(`${BASE}${path}`, options);
-  if (!response.ok) throw new Error("Request failed.");
+  if (!response.ok) {
+    // Surface the server's error message when it has one, like the old
+    // app's reviewRequest did (the review form shows 400/409 messages).
+    let message = "Request failed.";
+    try {
+      const data = await response.json();
+      if (data?.error) message = data.error;
+    } catch { /* keep the default message */ }
+    throw new Error(message);
+  }
   return response.json();
 }
 

@@ -60,6 +60,17 @@ public class OverviewService {
     }
 
     public ObjectNode overview(Instant asOf) {
+        return overviewWith(roster, regionByCounty, asOf);
+    }
+
+    /** Same computation with a DB-backed roster and county→region map. */
+    public ObjectNode overviewFromDb(List<JsonNode> features, Map<String, String> regionByCounty) {
+        ArrayNode rosterNode = Json.MAPPER.createArrayNode();
+        features.forEach(rosterNode::add);
+        return overviewWith(rosterNode, regionByCounty, Instant.now());
+    }
+
+    private ObjectNode overviewWith(JsonNode roster, Map<String, String> regionByCounty, Instant asOf) {
         HospitalPageService.PageInputs inputs = pages.pageInputs();
         Map<String, List<ObjectNode>> byHospital = new LinkedHashMap<>();
         for (ObjectNode r : inputs.records()) {
@@ -71,7 +82,7 @@ public class OverviewService {
             List<ObjectNode> records = byHospital.getOrDefault(key, List.of());
             ObjectNode page = pages.hospitalPage(key,
                     new HospitalPageService.PageInputs(records, inputs.unavailable()), 2026);
-            hospitals.add(hospitalRow(feature, page, asOf));
+            hospitals.add(hospitalRow(feature, page, regionByCounty, asOf));
         }
         ObjectNode out = Json.MAPPER.createObjectNode();
         out.put("as_of", Json.toIso(asOf));
@@ -95,7 +106,8 @@ public class OverviewService {
         return out;
     }
 
-    private ObjectNode hospitalRow(JsonNode feature, ObjectNode page, Instant asOf) {
+    private ObjectNode hospitalRow(JsonNode feature, ObjectNode page,
+                                   Map<String, String> regionByCounty, Instant asOf) {
         JsonNode p = feature.get("properties");
         String id = feature.get("id").asText();
         String last = page == null ? null : Json.text(page, "latest_successful_assessment_at");
