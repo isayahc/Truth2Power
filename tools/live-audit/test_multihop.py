@@ -1,6 +1,7 @@
 """Deterministic traversal and SSRF tests. No network or browser dependency."""
 import hashlib
 import json
+import threading
 import tempfile
 import unittest
 from pathlib import Path
@@ -105,6 +106,91 @@ class MultihopTests(unittest.TestCase):
         self.assertEqual(len(self.calls), 6)
         self.assertEqual(result['status'], 'partial')
         self.assertEqual(self.run_collection()['status'], 'complete')
+
+    def test_concurrent_files_stream_ready_artifacts_with_stable_provenance(self) -> None:
+        """A quick download reaches analysis while an earlier download is still in flight."""
+        self.web['/financial-assistance'] = b'<a href="/en.pdf">English</a><a href="/es.pdf">Spanish</a>'
+        coordinator = threading.get_ident()
+        started = threading.Barrier(2)
+        reviewed = threading.Event()
+        captures = []
+
+        def fetch(url: str, host: str) -> tuple[bytes, str, str]:
+            """Force two overlapping file reads without relying on machine speed."""
+            if url.endswith('.pdf'):
+                started.wait(timeout=4)
+                if url.endswith('/en.pdf') and not reviewed.wait(timeout=4):
+                    raise AssertionError('Ready Spanish document was blocked behind English')
+            return self.fetch(url, host)
+
+        def on_capture(record: dict) -> None:
+            """The coordinator publishes only complete, digest-matched artifacts."""
+            self.assertEqual(threading.get_ident(), coordinator)
+            data = (self.root / 'out' / record['artifact_path']).read_bytes()
+            self.assertEqual(hashlib.sha256(data).hexdigest(), record['sha256'])
+            captures.append(record['source_url'])
+            if record['source_url'].endswith('/es.pdf'):
+                reviewed.set()
+
+        result = collect('362', self.root, self.root / 'out', save, fetch, on_capture=on_capture)['output']
+        self.assertEqual(result['status'], 'complete')
+        self.assertEqual([u.split('/')[-1] for u in captures], ['financial-assistance', 'es.pdf', 'en.pdf'])
+        self.assertEqual([d['labels'][0] for d in result['documents']], ['English', 'Spanish'])
+        for doc in result['documents']:
+            self.assertIs(doc['download_attempted'], True)
+            self.assertGreaterEqual(doc['elapsed_ms'], 0)
+            self.assertEqual(doc['published_link']['parent_sha256'], result['landing_page']['sha256'])
+
+    def test_root_navigation_keeps_low_priority_fallback_and_patient_discovery(self) -> None:
+        """An entire hospital sitemap should not consume the page budget before the patient portal."""
+        (self.root / 'data/maps/hospitals.geojson').write_text(json.dumps({'features': [
+            {'id': '362', 'properties': {'assistance_url': 'https://example.org/'}}]}))
+        self.web['/'] = (b'<a href="/news">News</a><a href="/visiting">Patients &amp; Visitors</a>'
+                         b'<a href="/unknown.pdf">Download</a>')
+        self.web['/news'] = b'SYN hospital news'
+        self.web['/visiting'] = b'<a href="/en.pdf">Financial Assistance Application</a>'
+        self.web['/unknown.pdf'] = b'%PDF-SYN document'
+        result = self.run_collection(pages=2)
+        self.assertEqual([doc['status'] for doc in result['documents']], ['saved', 'saved'])
+        self.assertEqual(self.calls[1:], ['https://example.org/visiting', 'https://example.org/en.pdf',
+                                          'https://example.org/unknown.pdf'])
+        self.assertEqual(result['pages'][-1]['limit'], 'pages')
+        self.assertIs(result['pages'][-1]['download_attempted'], False)
+        self.assertNotIn('elapsed_ms', result['pages'][-1])
+        self.assertEqual(self.run_collection()['status'], 'complete')
+        self.assertEqual(self.calls[-1], 'https://example.org/news')
+
+    def test_persistent_connection_is_keyed_by_validated_host_and_ip(self) -> None:
+        """Reuse same-origin TLS, reopen a stale idle socket once and repin changed DNS."""
+        from collections import Counter
+        from email.message import Message
+        from http.client import RemoteDisconnected
+        from unittest.mock import MagicMock
+        from documents import PinnedConnections
+        from usage import usage
+
+        counters = Counter()
+        self.addCleanup(usage.reset, usage.set(counters))
+        response = MagicMock(status=200, length=0, will_close=False)
+        response.headers = Message()
+        old, fresh, moved = MagicMock(), MagicMock(), MagicMock()
+        old.getresponse.side_effect = [response, response, RemoteDisconnected()]
+        fresh.getresponse.return_value = moved.getresponse.return_value = response
+        ips = [['8.8.8.8']] * 3 + [['1.1.1.1']]
+        with patch('documents.public_addresses', side_effect=ips) as dns, patch('documents.socket.create_connection') as connect, \
+                patch('documents.ssl.create_default_context') as tls, \
+                patch('documents.http.client.HTTPSConnection', side_effect=[old, fresh, moved]):
+            pool = PinnedConnections()
+            try:
+                for index in range(4):
+                    download(f'https://example.org/{index}', 'example.org', connections=pool)
+            finally:
+                pool.close()
+        self.assertEqual(dns.call_count, 4)
+        self.assertEqual([call.args[0][0] for call in connect.call_args_list], ['8.8.8.8', '8.8.8.8', '1.1.1.1'])
+        self.assertEqual(tls.call_count, 1)
+        self.assertEqual(counters['network_requests'], 5)
+        self.assertEqual([conn.close.call_count for conn in (old, fresh, moved)], [1, 1, 1])
 
     def test_time_and_total_size_limits_remain_distinct(self) -> None:
         """The audit can distinguish an expired crawl from exhausted download capacity."""

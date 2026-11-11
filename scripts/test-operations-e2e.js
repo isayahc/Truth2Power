@@ -224,6 +224,55 @@ try {
   const application = page.locator("#measure-324-R");
   await application.locator(":scope > summary").click();
   await application.getByText(/Linked file unavailable/).first().waitFor();
+  // Exercise the model draft UI against an actual downloadable revision snapshot.
+  const detail = await (await page.request.get(origin + "/api/pilot/v1/runs/audit-run-4")).json();
+  const revision = detail.revision;
+  let modelFinding;
+  await page.route(url => url.pathname === revision, async route => {
+    const response = await route.fetch();
+    const data = await response.json();
+    const source = data.sources.find(s => s.role === "policy_summary" && s.download);
+    assert.ok(source);
+    data.agent_review = {
+      status: "partial",
+      agents: {website: {status: "unavailable", reason: "agent_timeout"}, documents: {status: "completed"}, coordinator: {status: "completed"}},
+      findings: [{measure_id: "posted_materials.policy_summary_posted", result: "yes",
+        explanation: "SYN model draft about the saved summary.",
+        evidence: [{sha256: source.sha256, download: source.download,
+          source_id: "https://fixture.example/file?token=SYN-secret",
+          locator: "page 1", quote: "Financial Assistance Policy Summary"}]}],
+    };
+    [modelFinding] = data.agent_review.findings;
+    modelFinding.identity_basis = [{
+      source_id: modelFinding.evidence[0].source_id, proposed_role: "policy_summary",
+      evidence: [{...modelFinding.evidence[0], quote: "SYN scope quote"}],
+    }];
+    await route.fulfill({response, json: data});
+  });
+  await page.goto(origin + "/?hospital=324&lang=es#audit-runs");
+  const model = page.getByRole("region", {name: "Revisión del modelo"});
+  await model.getByText("Revisor del sitio web · No disponible · La revisión del modelo alcanzó su límite de tiempo.").waitFor();
+  await model.getByText("Hallazgos del modelo por criterio (1)").click();
+  await model.getByText("S · Resumen de la política publicado en lenguaje sencillo").click();
+  assert.match(await model.innerText(), /SYN model draft/);
+  assert.match(await model.locator("blockquote").first().innerText(), /Financial Assistance Policy Summary/);
+  await model.getByText("Evidencia sobre la identidad del documento").click();
+  await model.getByText("SYN scope quote").waitFor();
+  assert.doesNotMatch(await model.innerHTML(), /SYN-secret/);
+  const snapshot = await model.getByRole("link", {name: "Descargar copia citada"}).first().getAttribute("href");
+  assert.match(snapshot, /\/snapshots\/[a-f0-9]{64}$/);
+  assert.equal((await page.request.get(origin + snapshot)).status(), 200);
+  await page.route("**/api/hospitals/324/page", async route => {
+    const response = await route.fetch(), data = await response.json();
+    data.measures.find(m => m.measure_id === modelFinding.measure_id).agent_finding = modelFinding;
+    await route.fulfill({ response, json: data });
+  });
+  await page.goto(origin + "/?hospital=324&lang=en");
+  const criterion = page.locator("#measure-324-S");
+  await criterion.locator(":scope > summary").click();
+  await criterion.getByRole("heading", {name: "Model review · Draft · Yes"}).waitFor();
+  await criterion.getByText("SYN model draft about the saved summary.").waitFor();
+  assert.equal(await criterion.getByRole("link", {name: "Download cited snapshot", exact: true}).first().getAttribute("href"), snapshot);
   assert.deepEqual(errors, []);
   console.log("Offline operations flow passed; screenshots at " + artifacts);
 } finally {

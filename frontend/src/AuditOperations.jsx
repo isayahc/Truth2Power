@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useLocale } from "./locale.jsx";
 import { HumanIntervention } from './HumanIntervention.jsx';
+import AgentReview from "./AgentReview.jsx";
 
 const api = "/api/pilot/v1";
 const modes = {
@@ -35,6 +36,7 @@ const stageNames = {
   collection_stopped: "Collection stopped",
   extract_documents: "Review website and documents",
   reconcile_evidence: "Reconcile evidence by criterion",
+  model_review: "Specialist and coordinator model review",
   restore_checkpoint: "Restore checkpoint",
   grade: "Evaluate findings",
   publish: "Publish results",
@@ -404,11 +406,12 @@ const limitLabels = {
 
 function retrievalMessage(attempt, t) {
   const label = limitLabels[attempt.limit] ?? retrievalReasons[attempt.reason] ?? retrievalReasons.collection_failed;
-  return t(label) + (attempt.http_status ? ` (HTTP ${attempt.http_status})` : "");
+  const prefix = attempt.download_attempted === false ? t("Skipped before download") + " · " : "";
+  return prefix + t(label) + (attempt.http_status ? ` (HTTP ${attempt.http_status})` : "");
 }
 
 function DocumentResults({ documents }) {
-  const { t } = useLocale();
+  const { t, language } = useLocale();
   if (!documents) return null;
   const failures = documents.attempts.filter(d => d.status === "failed");
   const reasons = new Map();
@@ -417,18 +420,31 @@ function DocumentResults({ documents }) {
     reasons.set(message, (reasons.get(message) ?? 0) + 1);
   }
   const unreadable = documents.attempts.filter(d => d.text_status === "needs_review");
+  const slowest = documents.attempts.filter(d => d.elapsed_ms != null)
+    .sort((a, b) => b.elapsed_ms - a.elapsed_ms).slice(0, 3);
+  const seconds = new Intl.NumberFormat(language, { style: "unit", unit: "second", maximumFractionDigits: 3 });
+  const bytes = new Intl.NumberFormat(language, { style: "unit", unit: "byte" });
   return <section aria-label={t("Document retrieval")}>
     <h4>{t("Document retrieval")}</h4>
     {documents.captured === 0 ? <p><strong>{t("No PDF or Word documents were captured.")}</strong></p> :
-      documents.classified_assistance_documents === 0 && <p><strong>{t("The captured files still need their document role and hospital verified.")}</strong></p>}
+      documents.classified_assistance_documents === 0 && <p><strong>{t("No captured file has been verified as financial assistance material for this hospital.")}</strong></p>}
     <p>{t("Documents captured")} · {documents.captured} / {documents.candidates}</p>
     {reasons.size > 0 && <ul>{[...reasons].map(([reason, count]) => <li key={reason}>{count} × {reason}</li>)}</ul>}
+    {slowest.length > 0 && <details>
+      <summary>{t("Slowest document requests")}</summary>
+      <ol>{slowest.map((d, i) => <li key={i}>
+        <strong>{seconds.format(d.elapsed_ms / 1000)}</strong>{" · "}
+        {d.source_url ? <a href={d.source_url} target="_blank" rel="noreferrer">{d.source_url}</a> : t("Unknown")}
+        {" · "}{d.status === "saved" ? t("Captured") : retrievalMessage(d, t)}
+        {d.size_bytes != null && <>{" · "}{bytes.format(d.size_bytes)}</>}
+      </li>)}</ol>
+    </details>}
     {unreadable.length > 0 && <details>
       <summary>{t("Files needing text extraction review")} ({unreadable.length})</summary>
       <ul>{unreadable.map((d, i) => <li key={i}>{d.source_url ?? t("Unknown")}</li>)}</ul>
     </details>}
     {failures.length > 0 && <details>
-      <summary>{t("Why document retrieval failed")} ({failures.length})</summary>
+      <summary>{t("Documents not captured")} ({failures.length})</summary>
       <ul>{failures.map((d, i) => <li key={i}>
         {d.source_url && <><a href={d.source_url} target="_blank" rel="noreferrer">{d.source_url}</a>{" · "}</>}
         {retrievalMessage(d, t)}
@@ -517,6 +533,7 @@ function RunDetail({ path, refresh }) {
               <Paged field="sources" url={run.revision} refresh={refresh}>
                 {(sources, data) => (
                   <>
+                    <AgentReview review={data.agent_review} revision={data.revision} />
                     {data.findings && (
                       <details>
                         <summary>{t("Draft findings")}</summary>
@@ -606,8 +623,7 @@ export function HospitalRuns({ hospitalKey, onAssessment }) {
     [busy, setBusy] = useState(false),
     [failed, setFailed] = useState(false);
   const lock = useRef(false),
-    alive = useRef(true),
-    polls = useRef(0);
+    alive = useRef(true);
   const r = useJson(url + "?limit=1", tick),
     latest = r.data?.items[0];
   const activity = useJson(latest ? `${api}/runs/${latest.audit_run_id}/timeline?limit=100` : null, tick);
@@ -623,9 +639,8 @@ export function HospitalRuns({ hospitalKey, onAssessment }) {
     };
   }, []);
   useEffect(() => {
-    if (!active(latest?.status) || polls.current >= 120 || r.error) return;
+    if (!active(latest?.status) || r.error) return;
     const id = setTimeout(() => {
-      polls.current++;
       bump((n) => n + 1);
     }, 5000);
     return () => clearTimeout(id);
@@ -635,6 +650,12 @@ export function HospitalRuns({ hospitalKey, onAssessment }) {
     const day = new Date().toISOString().slice(0, 10);
     setIntent({
       mode,
+      ...(mode === "full_audit" && r.data?.agent_review && {
+        review_config: r.data.agent_review.config_id,
+        ...(r.data.agent_review.paid && r.data.agent_review.available && {
+          allow_paid: true, budget: { paid_usd_micros: Math.round(r.data.agent_review.max_paid_usd * 1e6) },
+        }),
+      }),
       review_date: day,
       year: Number(day.slice(0, 4)),
       request_key: crypto.randomUUID(),
@@ -667,7 +688,6 @@ export function HospitalRuns({ hospitalKey, onAssessment }) {
         setAcceptedJob(Number(data.audit_run_id.slice("audit-run-".length)));
         select(data.url);
         setIntent(null);
-        polls.current = 0;
         bump((n) => n + 1);
       }
     } catch {
@@ -701,7 +721,7 @@ export function HospitalRuns({ hospitalKey, onAssessment }) {
           cancelled: "Audit cancelled.",
           needs_human: 'Human intervention required: website verification.',
         }[latest.status] ?? "Check the run details below for the latest recorded state.")}</p>}
-        {!busy && active(latest?.status) && <p>{t(r.error ? "Status updates unavailable. Use Refresh to reconnect." : polls.current >= 120 ? "Automatic updates paused. Use Refresh to resume." : "Checking status every 5 seconds. Audit buttons are disabled while this run is pending.")}</p>}
+        {!busy && active(latest?.status) && <p>{t(r.error ? "Status updates unavailable. Use Refresh to reconnect." : "Checking status every 5 seconds. Audit buttons are disabled while this run is pending.")}</p>}
         {!busy && latest?.status === 'queued' && <p>{t("If it stays queued, the local audit worker may not be running.")}</p>}
         {r.receivedAt && <small>{t("Status checked")}: {new Date(r.receivedAt).toLocaleTimeString(language)}</small>}
         {currentStage && <p>{t("Last recorded task")}: {t(stageNames[currentStage] ?? "Unknown")}</p>}
@@ -737,7 +757,16 @@ export function HospitalRuns({ hospitalKey, onAssessment }) {
           </p>
           {r.data?.preflight?.[intent.mode] && <p>{t("Maximum requests")} · {r.data.preflight[intent.mode].network_requests_max}
             <br/>{t("Maximum download bytes")} · {r.data.preflight[intent.mode].network_bytes_max}
-            <br/>{t("Paid services off. Local cost unknown.")}</p>}
+            {intent.allow_paid
+              ? <><br/>{t("Model spending limit for this run")} · {money(intent.budget.paid_usd_micros / 1e6, language, t)}</>
+              : <><br/>{t("Paid services off. Local cost unknown.")}</>}</p>}
+          {intent.mode === "full_audit" && r.data?.agent_review && <p>
+            {r.data.agent_review.runtime === "offline"
+              ? t("Rules-based review. Configure a model on the server to enable the website, document and coordinator agents.")
+              : r.data.agent_review.available
+                ? <>{t("Website, document and coordinator agents")} · {r.data.agent_review.model}</>
+                : t("Rules-based review. Paid model review needs a funded run budget and a model rate card.")}
+          </p>}
           <button disabled={busy} onClick={submit}>
             {t(failed ? "Retry same request" : "Confirm run")}
           </button>{" "}
@@ -755,7 +784,7 @@ export function HospitalRuns({ hospitalKey, onAssessment }) {
           </button>
         </div>
       )}
-      {latest?.status === 'needs_human' && <HumanIntervention key={latest.audit_run_id} runId={latest.audit_run_id} onResume={()=>{polls.current=0;bump(n=>n+1)}} />}
+      {latest?.status === 'needs_human' && <HumanIntervention key={latest.audit_run_id} runId={latest.audit_run_id} onResume={() => bump(n => n + 1)} />}
       {failed && (
         <p role="alert">
           {t(
@@ -781,10 +810,7 @@ export function HospitalRuns({ hospitalKey, onAssessment }) {
             ))}
           </dl>
           <button
-            onClick={() => {
-              polls.current = 0;
-              bump((n) => n + 1);
-            }}
+            onClick={() => bump((n) => n + 1)}
           >
             {t("Refresh")}
           </button>

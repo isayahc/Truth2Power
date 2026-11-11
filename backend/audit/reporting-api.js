@@ -5,7 +5,8 @@ import { DatabaseSync } from "node:sqlite";
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { directory, openStore } from "./store.js";
-import { enqueuePipeline, pipelineRoot } from "./pipeline-store.js";
+import { enqueuePipeline, fullAuditReview, pipelineRoot } from "./pipeline-store.js";
+import { publicAgentReview } from "./pipeline-views.js";
 import { roster } from "./roster-inventory.js";
 import { readReceipt } from "./usage-ledger.js";
 import { runId } from "./run-history.js";
@@ -50,6 +51,7 @@ const stages = new Set([
   "collection_saved",
   "collection_stopped",
   "extract_documents",
+  "model_review",
   "reconcile_evidence",
   "restore_checkpoint",
   "grade",
@@ -170,6 +172,7 @@ function publicReceipt(db, r) {
       "collect_sources",
       "load_saved_evidence",
       "extract_documents",
+      "model_review",
       "reconcile_evidence",
       "grade",
       "publish",
@@ -377,11 +380,12 @@ export function reportingRoute(event) {
               "review_date",
               "mode",
               "request_key",
-              "discovery_bounds", "budget",
+              "discovery_bounds", "budget", "allow_paid", "review_config",
             ].includes(k),
         )
       )
         reject(400, "invalid_request");
+      if (o.allow_paid !== undefined && (o.allow_paid !== true || o.mode !== "full_audit" || !o.review_config)) reject(400, "invalid_paid_confirmation");
       db = openStore();
       try {
         const id = enqueuePipeline(db, { ...o, hospital_key: facility[1] });
@@ -390,7 +394,7 @@ export function reportingRoute(event) {
           url: base + "/runs/" + runId(id),
         });
       } catch (err) {
-        if (/Idempotency key/.test(err.message))
+        if (/Idempotency key|Review configuration changed/.test(err.message))
           reject(409, "request_conflict");
         if (/Invalid/.test(err.message)) reject(400, "invalid_request");
         throw err;
@@ -402,7 +406,7 @@ export function reportingRoute(event) {
     const file = join(directory, "audit.sqlite");
     if (existsSync(file)) {
       db = new DatabaseSync(file, { readOnly: true });
-      db.exec("BEGIN");
+      db.exec("PRAGMA busy_timeout=5000; BEGIN");
       // Read-only reporting cannot migrate a historical database.
       if (
         !db
@@ -445,6 +449,7 @@ export function reportingRoute(event) {
           .all(pipelineRoot(), facility[1], cursor, limit + 1) ?? [];
       return json(200, {
         hospital: hospitals.get(facility[1]),
+        agent_review: fullAuditReview(),
         preflight: Object.fromEntries(modes.map(mode=>[mode,preview(budgetPolicy(),mode)])),
         clocks: clocks(db, facility[1]),
         ...page(rows.map(runRow), limit, "job_id"),
@@ -640,8 +645,12 @@ function revision(db, r, id, digest) {
         b.input.sources.map((s) => s.snapshot),
         digest,
       );
+    const review = b.agent_review;
+    if ((review || b.inventory?.agent_review_sha256) && (fingerprint(review ?? null) !== b.inventory?.agent_review_sha256 ||
+        fingerprint(b.inventory) !== b.input.scope.inventory_sha256)) reject(422, "review_integrity");
     return {
       revision: id,
+      ...(review && { agent_review: publicAgentReview(b, r.id) }),
       source_count:b.input.sources.filter(s=>s.snapshot).length, gap_types:gapTypes(b.report.coverage_gaps),
       findings: b.report.findings.map(({ measure_id, result }) => ({
         measure_id,

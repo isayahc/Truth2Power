@@ -29,6 +29,27 @@
         { "action": "truth2power_*", "resource": "*", "effect": "allow" }
       ],
       "system": "{file:tools/live-audit/agent.md}"
+    },
+    "audit-website": {
+      "description": "Review website sources against the assigned rubric.",
+      "mode": "primary",
+      "steps": 1,
+      "permissions": [{ "action": "*", "resource": "*", "effect": "deny" }],
+      "system": "{file:tools/live-audit/prompts/audit-website.md}"
+    },
+    "audit-documents": {
+      "description": "Review captured document passages against the assigned rubric.",
+      "mode": "primary",
+      "steps": 1,
+      "permissions": [{ "action": "*", "resource": "*", "effect": "deny" }],
+      "system": "{file:tools/live-audit/prompts/audit-documents.md}"
+    },
+    "audit-coordinator": {
+      "description": "Reconcile specialist evidence into cited draft findings.",
+      "mode": "primary",
+      "steps": 1,
+      "permissions": [{ "action": "*", "resource": "*", "effect": "deny" }],
+      "system": "{file:tools/live-audit/prompts/audit-coordinator.md}"
     }
   }
 }

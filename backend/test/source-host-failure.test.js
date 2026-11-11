@@ -86,3 +86,20 @@ test('document diagnostics retain known limits across manifest and run log proje
   assert.deepEqual(attempts.map(a => a.limit), ['seconds', 'documents', undefined, undefined, undefined]);
   assert.deepEqual(documentAttempts({documents: attempts}), attempts);
 });
+
+test('document timings survive run log export and missing measurements stay unknown', () => {
+  const docs = [
+    {status: 'saved', source_url: 'https://hospital.example/fast.pdf?token=SYN', elapsed_ms: 0, size_bytes: 6},
+    {status: 'failed', error_code: 'retrieval_timeout', elapsed_ms: 19999, download_attempted: true},
+    {status: 'failed', error_code: 'resource_limit', limit: 'depth', download_attempted: false},
+    {status: 'saved', elapsed_ms: -1, size_bytes: -3},
+    {status: 'failed', elapsed_ms: '5000', size_bytes: 92},
+    {status: 'saved', elapsed_ms: 0.7, size_bytes: '44000'},
+  ];
+  const attempts = documentAttempts({documents: docs});
+  assert.deepEqual(attempts.map(d => d.elapsed_ms), [0, 19999, undefined, undefined, undefined, undefined]);
+  assert.deepEqual(attempts.map(d => d.download_attempted), [undefined, true, false, undefined, undefined, undefined]);
+  assert.deepEqual(attempts.map(d => d.size_bytes), [6, undefined, undefined, undefined, undefined, undefined]);
+  assert.equal(attempts[0].source_url, 'https://hospital.example/fast.pdf');
+  assert.deepEqual(documentAttempts({documents: attempts}), attempts);
+});

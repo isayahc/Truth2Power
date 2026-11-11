@@ -30,7 +30,7 @@ export function failureDiagnostic(code, metadata = {}) {
 }
 
 /** Remove credentials, query strings, fragments and local destinations from run diagnostics. */
-function publicSourceUrl(value) {
+export function publicSourceUrl(value) {
   let source_url = null;
   try {
     const u = new URL(value);
@@ -64,6 +64,9 @@ export function documentAttempts(collection) {
     }
     return {
       source_url, parent_url,
+      ...(typeof doc.download_attempted === 'boolean' ? { download_attempted: doc.download_attempted } : {}),
+      ...(Number.isSafeInteger(doc.elapsed_ms) && doc.elapsed_ms >= 0 ? { elapsed_ms: doc.elapsed_ms } : {}),
+      ...(saved && Number.isSafeInteger(doc.size_bytes) && doc.size_bytes >= 0 ? { size_bytes: doc.size_bytes } : {}),
       ...(reason === 'resource_limit' && ['depth', 'pages', 'documents', 'seconds', 'bytes_per_resource',
         'total_bytes', 'network_bytes', 'network_requests'].includes(doc.limit) ? { limit: doc.limit } : {}),
       status: saved ? 'saved' : 'failed', reason,

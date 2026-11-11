@@ -1,4 +1,24 @@
+import { publicSourceUrl } from "./failure-diagnostic.js";
 import { publications } from "./pipeline-store.js";
+
+/** Publish cited original snapshots using revision-scoped download links. */
+export function publicAgentReview(bundle, jobId) {
+  const review = bundle.agent_review;
+  if (!review) return null;
+  const revisionUrl = `/api/pilot/v1/runs/audit-run-${jobId}/revision/${bundle.id}`;
+  const cite = ({source_id, sha256, locator, quote}) => ({
+    source_id: publicSourceUrl(source_id), sha256, quote,
+    locator: locator.startsWith("link ") ? "link " + (publicSourceUrl(locator.slice(5)) ?? "on saved page") : locator,
+    download: `${revisionUrl}/snapshots/${sha256}`,
+  });
+  const findings = review.findings.map(({measure_id, result, explanation, evidence, identity_basis}) => ({
+    measure_id, result, explanation, revision_url: revisionUrl, evidence: evidence.map(cite),
+    ...(identity_basis?.length && { identity_basis: identity_basis.map(i => ({
+      source_id: publicSourceUrl(i.source_id), proposed_role: i.proposed_role, evidence: i.evidence.map(cite),
+    })) }),
+  }));
+  return { status: review.status, agents: review.agents, omitted_passages: review.omitted_passages, findings };
+}
 
 export function reviewEnvelope(bundle) {
   const { input, report } = bundle;
@@ -25,11 +45,13 @@ export function publishedRecords(root) {
   for (const b of selected.values()) {
     const sourceReviews = b.inventory?.sources.filter(s => s.review) ?? [];
     const envelope = reviewEnvelope(b);
+    const agentReview = publicAgentReview(b, b.job);
     records.push({ hospital_key: b.input.hospital_key, record_id: b.id, scope: "integrated-assessment", kind: "pipeline", synthetic: b.input.synthetic,
       scope_label: envelope.scope_label, guideline_year: b.input.guideline_year, review_date: b.input.review_date,
       checked_at: envelope.checked_at, status: "completed", report: b.report, audit_mode: b.mode || "replay",
       monitoring_at: b.input.sources.filter((s) => s.snapshot && !["uniform_reference", "psa_reference"].includes(s.role)).map((s) => s.snapshot.retrieved_at).sort((a, b) => Date.parse(a) - Date.parse(b))[0] ?? null,
       landing_page: b.input.sources.filter((s) => s.role === "landing_page" && s.snapshot).map((s) => s.snapshot),
+      ...(agentReview?.findings.length && { agent_findings: agentReview.findings }),
       findings: envelope.findings.map((f, index) => ({ ...f,
         candidate_passages: sourceReviews.flatMap(s => {
           const passages = s.review.observations[f.measure_id] ?? [];
