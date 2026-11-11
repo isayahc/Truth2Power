@@ -29,12 +29,12 @@ export default function HospitalAssessment({ hospitalKey, hospitalName, publishe
   }, [state.data, hospitalKey]);
   if (state.changed) return <p role="alert">The assessment changed since this overview. <a href="?view=overview">Refresh the overview</a></p>;
   if (state.loading) return <p role="status">Loading hospital findings…</p>;
-  if (state.unavailable) return <p>Current measure-by-measure page: not yet assessed.</p>;
+  if (state.unavailable) return <p>The current review has no measure-by-measure findings yet.</p>;
   if (state.error) return <div role="alert">Hospital findings could not be loaded. <button onClick={() => setReload((n) => n + 1)}>Try again</button></div>;
   const report = state.data;
   return <section className="hospital-assessment" aria-label="Current hospital findings">
-    <details className="assessment-context"><summary>Current financial assistance findings</summary>
     {report.synthetic && <p role="status"><strong>SYNTHETIC DEMO — fabricated evidence, not hospital compliance findings.</strong></p>}
+    <details className="assessment-context"><summary>Current financial assistance findings</summary>
     {report.integrated_report_url && <p><a href={report.integrated_report_url}>Inspect immutable 17-measure assessment</a> · revision {report.revision.slice(0, 12)}</p>}
     {report.integrated_report_url && <p>Evidence coverage: {report.evidence_complete ? "complete for this scope" : "partial — see blockers"}. Source freshness clock: {date(report.monitoring_at)}. Replaying saved bytes does not reset their retrieval date.</p>}
     <p><strong>Current grade: pending</strong></p><p>{report.grade_note}</p>

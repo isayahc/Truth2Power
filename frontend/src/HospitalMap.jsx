@@ -187,18 +187,17 @@ export default function HospitalMap({ hospitals, counties, selected, onSelect })
         </g>
       </svg>
       <div className="controls">
-        <button aria-label={t('Zoom in')} disabled={view.zoom === 6} onClick={() => changeZoom(1.65)}>
-          +
+        <button disabled={view.zoom === 6} onClick={() => changeZoom(1.65)}>
+          {t('Zoom in')}
         </button>
-        <button aria-label={t('Zoom out')} disabled={view.zoom === 1} onClick={() => changeZoom(1 / 1.65)}>
-          −
+        <button disabled={view.zoom === 1} onClick={() => changeZoom(1 / 1.65)}>
+          {t('Zoom out')}
         </button>
         <button
-          aria-label={t('Reset map view')}
           disabled={view.zoom === 1}
           onClick={() => setView(initialView)}
         >
-          ⌂
+          {t('Reset map view')}
         </button>
       </div>
       {hover && <div className="pin-tip">{hover}</div>}

@@ -13,7 +13,7 @@ export default function GradingPanel({ hospitalKey }) {
     } catch (error) { setStatus(error.message); }
   }
   return <section aria-label="Saved compliance assessment">
-    <button className="plain" onClick={load}>View saved 17-measure assessment</button>
+    <button className="plain" onClick={load}>Check for a saved 17-measure assessment</button>
     {status && <p role="status">{status}</p>}
     {report && <>
       <h3>{report.synthetic ? "Synthetic draft assessment" : "Draft assessment"}</h3>
