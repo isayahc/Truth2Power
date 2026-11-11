@@ -1,0 +1,205 @@
+import React, { useEffect, useState } from "react";
+import Overview from "./features/audit/Overview.jsx";
+import HospitalMap from "./features/atlas/HospitalMap.jsx";
+import HospitalSearch from "./features/atlas/HospitalSearch.jsx";
+import { HospitalDetail, Ratings } from "./features/hospital/Ratings.jsx";
+import { hospitalFeatures, countyFeatures } from "./api/hospitals.js";
+import { LanguageSwitch, useLocale } from "./i18n/locale.jsx";
+
+function Header() {
+  const { t, localHref } = useLocale();
+  return (
+    <header>
+      <a className="brand" href={localHref('/')} aria-label={t('Truth2Power homepage')}>
+        <span className="mark" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+            <path
+              d="M4 16 11 6h8l-7 12H7l5-9"
+              stroke="#b4e7cf"
+              strokeWidth="1.8"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </span>
+        <span className="brand-name">Truth2Power</span>
+        <span className="brand-unit">{t('Health equity atlas')}</span>
+      </a>
+      <div className="header-actions">
+        <a className="overview-link" href={localHref('?view=overview')}>{t('Audit overview')}</a>
+        <LanguageSwitch />
+      </div>
+    </header>
+  );
+}
+
+function Footer() {
+  const { t } = useLocale();
+  return (
+    <div className="foot">
+      <p>
+        {t('Audit:')}{" "}
+        <a href="https://docs.google.com/spreadsheets/d/17S2EheUVVr1g911fPpBQJqRpy18pkUlaEEnvGM0LB1o/edit#gid=504145376">
+          Community Service Society of New York
+        </a>{" "}
+        · {t('Boundaries:')} <a href="https://gis.ny.gov/civil-boundaries">NYS Geospatial Services</a>
+        <br />
+        {t('Coordinates:')}{" "}
+        <a href="https://health.data.ny.gov/Health/Health-Facility-General-Information/vn5v-hh5r">
+          NYS DOH
+        </a>
+        ,{" "}
+        <a href="https://services2.arcgis.com/FiaPA4ga0iQKduv3/ArcGIS/rest/services/Extract_Data_Hospitals_HIFLD/FeatureServer/0">
+          HIFLD Hospitals
+        </a>
+        , <a href="https://www.openstreetmap.org/copyright">© OpenStreetMap contributors</a> · WGS 84
+        <br />
+        {t('For demonstration only. Not medical advice. Ratings describe hospital policies in September 2025.')}
+      </p>
+      <div className="downloads">
+        <a className="download" href="/api/hospitals" download="new-york-hospital-coordinates.geojson">
+          ↓ GeoJSON
+        </a>
+        <a className="download" href="/api/coordinates.csv" download="hospital-coordinates.csv">
+          ↓ CSV
+        </a>
+      </div>
+    </div>
+  );
+}
+
+/** Load the public atlas from the API and coordinate filters, search and map selection. */
+export default function App() {
+  const { t } = useLocale();
+  const [data, setData] = useState(null);
+  const [error, setError] = useState(false);
+  const [attempt, setAttempt] = useState(0);
+  const [filter, setFilter] = useState(null);
+  const [selected, setSelected] = useState(null);
+  useEffect(() => {
+    const controller = new AbortController();
+    setError(false);
+    Promise.all([
+      hospitalFeatures(controller.signal),
+      countyFeatures(controller.signal),
+    ])
+      .then(([hospitals, counties]) => {
+        if (!controller.signal.aborted) setData({ hospitals, counties });
+      })
+      .catch(() => {
+        if (!controller.signal.aborted) setError(true);
+      });
+    return () => controller.abort();
+  }, [attempt]);
+
+  useEffect(() => {
+    if (!data) return;
+    const restore = () => {
+      const key = new URL(window.location.href).searchParams.get("hospital");
+      setSelected(data.hospitals.find((h) => String(h.id) === key) || null);
+    };
+    restore();
+    window.addEventListener("popstate", restore);
+    return () => window.removeEventListener("popstate", restore);
+  }, [data]);
+
+  function hospitalUrl(hospital) {
+    const url = new URL(window.location.href);
+    if (hospital) url.searchParams.set("hospital", hospital.id);
+    else url.searchParams.delete("hospital");
+    url.searchParams.delete("view");
+    url.searchParams.delete("revision");
+    url.hash = "";
+    window.history.pushState(null, "", url);
+  }
+
+  function selectHospital(hospital) {
+    setSelected(hospital);
+    hospitalUrl(hospital);
+  }
+  function closeDetail() {
+    setSelected(null);
+    hospitalUrl(null);
+    requestAnimationFrame(() => document.querySelector(".search-bar input")?.focus());
+  }
+  const visible = data?.hospitals.filter((h) => filter === null || h.properties.stars === filter);
+  return (
+    <div className="page">
+      <Header />
+      <main>
+        {!selected && new URLSearchParams(window.location.search).get("view") === "overview" ?
+          (data ? <div lang="en"><Overview features={data.hospitals} counties={data.counties} /></div> :
+            <p role="status">{error ? <button onClick={() => setAttempt(attempt + 1)}>{t('Retry loading atlas')}</button> : t('Loading atlas…')}</p>) : <>
+        <div className="intro" hidden={!!selected}>
+          <div>
+            <div className="period">{t('September 2025 review')}</div>
+            <h1>{t('New York hospital compliance')}</h1>
+            <p className="descr">
+              {t('Hospital financial assistance policies across New York State, rated from zero to five stars.')}
+            </p>
+          </div>
+          {data && (
+            <div className="intro-stat">
+              <strong>{data.hospitals.length}</strong>
+               <span>{t('Hospitals mapped')}</span>
+            </div>
+          )}
+        </div>
+        {data ? (
+          <>
+          <div className="content" hidden={!!selected}>
+            <section className="map-block" aria-label={t('Hospital locations')}>
+              <div className="toolbar">
+                <div className="geo-label">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
+                    <path d="m3 6 6-2 6 3 6-2v14l-6 2-6-3-6 2zM9 4v14m6-11v14" />
+                  </svg>
+                  {t('Statewide map')}
+                </div>
+                <HospitalSearch
+                  hospitals={data.hospitals}
+                  onSelect={selectHospital}
+                />
+              </div>
+              <HospitalMap
+                hospitals={visible}
+                counties={data.counties}
+                selected={selected}
+                onSelect={selectHospital}
+              />
+              <div className="map-footer">
+                <strong aria-live="polite">
+                  {filter === null
+                    ? data.hospitals.length
+                    : visible.length + ' ' + t('of') + ' ' + data.hospitals.length}{" "}
+                  {t('hospital locations')}
+                </strong>
+                <span className="hint">{t('Select a hospital for its coordinates and audit record.')}</span>
+              </div>
+            </section>
+            <aside>
+              <Ratings hospitals={data.hospitals} filter={filter} onFilter={setFilter} />
+            </aside>
+          </div>
+          {selected && <HospitalDetail key={selected.id} hospital={selected} onClose={closeDetail} />}
+          </>
+        ) : (
+          <p className="load-status" role="status">
+            {error ? (
+              <>
+                {t('Couldn’t load the map data.')}{" "}
+                <button className="plain" onClick={() => setAttempt((value) => value + 1)}>
+                  {t('Try again')}
+                </button>
+              </>
+            ) : (
+              t('Loading hospital locations…')
+            )}
+          </p>
+        )}
+        </>}
+        <Footer />
+      </main>
+    </div>
+  );
+}

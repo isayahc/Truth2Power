@@ -1,0 +1,77 @@
+@import "./tokens.css";
+
+/* Global element rules, ported verbatim from the old app's atlas.css. */
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--color-paper);
+  color: var(--color-text);
+  font-family: var(--font-body);
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
+
+button,
+a,
+input {
+  touch-action: manipulation;
+}
+
+button {
+  cursor: pointer;
+  color: inherit;
+}
+
+a {
+  color: var(--color-link);
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible {
+  outline: 3px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+/* Page typography, ported from the old app's atlas.css. */
+
+h1 {
+  font-size: clamp(28px, 2.7vw, 42px);
+  letter-spacing: -2.5px;
+  line-height: 1.03;
+  margin: 0;
+  font-weight: 650;
+}
+
+p {
+  margin: 0;
+}
+
+h2 {
+  font-size: 23px;
+  letter-spacing: -0.8px;
+  font-weight: 650;
+  line-height: 1.12;
+  margin: 0;
+}
+
+@media (max-width: 730px) {
+
+  h1 {
+    letter-spacing: -1.4px;
+    font-size: 34px;
+  }
+
+}

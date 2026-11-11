@@ -1,0 +1,43 @@
+/* Design tokens — every colour/spacing value in frontend_2 comes from here.
+   Values mirror the old app's atlas.css palette exactly (Phase 0 + Phase 1).
+   No hex codes inside component CSS. */
+:root {
+  --color-header-bg: #183e34;
+  --color-header-bg-deep: #102f35;
+  --color-page-bg: #fffefa;
+  --color-surface: #fff;
+  --color-surface-warm: #fffdf5;
+  --color-border: #cbd8d1;
+  --color-border-soft: #e5eee8;
+  --color-text: #102f35;
+  --color-text-muted: #638b76;
+  --color-accent: #007885;
+  --color-focus: #b06b00;
+  --color-brand-mark: #b4e7cf;
+
+  /* Old atlas.css :root palette (Phase 1). */
+  --color-muted: #52696b;
+  --color-line: #c9d6d1;
+  --color-paper: #fafaf5;
+  --color-land: #a5d6d1;
+  --color-map: #eaf4f1;
+  --color-deep: #13776c;
+  --color-green: #087652;
+  --color-yellow: #f3bc29;
+  --color-orange: #df782c;
+  --color-red: #d03e3a;
+  --color-burgundy: #802c50;
+  --color-black: #232c37;
+  --color-link: #125850;
+
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 12px;
+  --space-lg: 16px;
+  --space-xl: 24px;
+
+  --radius-sm: 5px;
+  --radius-md: 8px;
+
+  --font-body: Inter, Arial, Helvetica, sans-serif;
+}
