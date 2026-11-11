@@ -1,0 +1,28 @@
+/* Audit-overview styles — ported from the old app's atlas.css (Phase 1).
+   Coverage tables and filter controls. Colours come from tokens.css variables. */
+
+.overview { padding: 24px 0; }
+
+.overview h2 { margin: 28px 0 12px; }
+
+.overview-scroll { overflow-x:auto; }
+
+.overview table { width:100%; border-collapse:collapse; background:var(--color-surface); }
+
+.overview th, .overview td { padding:8px 12px; text-align:left; border-bottom:1px solid var(--color-line); }
+
+.overview thead { background:#edf3ef; }
+
+.overview-controls { display:flex; flex-wrap:wrap; align-items:end; gap:12px; }
+
+.overview-controls label { display:grid; gap:5px; }
+
+.overview button, .overview select { cursor:pointer; }
+
+.overview-heading { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; }
+
+@media (max-width:600px) {
+
+  .overview td,.overview th {padding:6px;}
+
+}

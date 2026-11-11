@@ -1,0 +1,371 @@
+{
+  "version": "css-17-v1",
+  "authority": "CSS September 2025 measures and the project decision record for the live demo",
+  "reference_version": "hhs-contiguous-2025-2026-v1",
+  "decisions": {
+    "grade_rules": "https://github.com/isayahc/Truth2Power/issues/28",
+    "policy_statement": "https://github.com/isayahc/Truth2Power/issues/10",
+    "css_questions": "https://github.com/isayahc/Truth2Power/issues/9",
+    "format": "https://github.com/isayahc/Truth2Power/issues/20#issuecomment-6726107321",
+    "subject_matter": "https://github.com/isayahc/Truth2Power/issues/67"
+  },
+  "authority_status": {
+    "format_technical": "agreed_v1_at_576aa33",
+    "format_subject_matter": "pending",
+    "institutional_release": "pending"
+  },
+  "measures": [
+    {
+      "measure_id": "posted_materials.application_posted",
+      "css_column": "R",
+      "title": "Financial assistance application posted",
+      "roles": [
+        "landing_page",
+        "application",
+        "online_application"
+      ],
+      "evaluator": "posting",
+      "evidence_requirement": "Document links and completed searches on the applicable landing pages; any accessible application suffices.",
+      "exemptions": [],
+      "expected": {
+        "any_accessible_role": [
+          "application",
+          "online_application"
+        ]
+      }
+    },
+    {
+      "measure_id": "posted_materials.policy_summary_posted",
+      "css_column": "S",
+      "title": "Plain-language policy summary posted",
+      "roles": [
+        "landing_page",
+        "policy_summary"
+      ],
+      "evaluator": "posting",
+      "evidence_requirement": "Direct link to an accessible designated summary, or a documented complete search.",
+      "exemptions": [],
+      "expected": {
+        "any_accessible_role": [
+          "policy_summary"
+        ]
+      }
+    },
+    {
+      "measure_id": "posted_materials.policy_statement_posted",
+      "css_column": "T",
+      "title": "Policy statement posted",
+      "roles": [
+        "landing_page",
+        "policy_statement"
+      ],
+      "evaluator": "posting",
+      "evidence_requirement": "Direct link to an accessible designated statement, or a documented complete search. Outdated text alone does not establish absence.",
+      "exemptions": [],
+      "expected": {
+        "any_accessible_role": [
+          "policy_statement"
+        ]
+      }
+    },
+    {
+      "measure_id": "posted_materials.consistent_across_documents",
+      "css_column": "U",
+      "title": "Posted materials are consistent",
+      "roles": [
+        "application",
+        "policy_summary",
+        "policy_statement",
+        "online_application",
+        "landing_page",
+        "supplement"
+      ],
+      "evaluator": "consistency",
+      "evidence_requirement": "Compare like terms across all applicable materials including online applications. Identify conflicts and gaps.",
+      "exemptions": [],
+      "expected": {
+        "conflicting_terms": 0,
+        "include_online_application": true
+      }
+    },
+    {
+      "measure_id": "posted_materials.primary_service_area_boundaries_compliant",
+      "css_column": "V",
+      "title": "Primary service-area boundaries comply",
+      "roles": [
+        "policy_statement",
+        "psa_reference"
+      ],
+      "evaluator": "service_area",
+      "evidence_requirement": "Published service counties and a dated applicable authority for this facility's required counties.",
+      "exemptions": [],
+      "expected": {
+        "required_counties": "applicable_facility_reference"
+      }
+    },
+    {
+      "measure_id": "posted_materials.no_submission_time_limit",
+      "css_column": "W",
+      "title": "No application submission deadline",
+      "roles": [
+        "application",
+        "policy_summary",
+        "policy_statement",
+        "online_application",
+        "landing_page",
+        "supplement"
+      ],
+      "evaluator": "deadline",
+      "evidence_requirement": "Distinguish a time limit for submitting applications from collection or processing intervals.",
+      "exemptions": [],
+      "expected": {
+        "application_submission": "any_time"
+      }
+    },
+    {
+      "measure_id": "posted_materials.no_evidence_of_asset_checks",
+      "css_column": "Y",
+      "title": "No asset-based eligibility check",
+      "roles": [
+        "application",
+        "policy_summary",
+        "policy_statement",
+        "online_application",
+        "landing_page",
+        "supplement"
+      ],
+      "evaluator": "assets",
+      "evidence_requirement": "Review eligibility provisions for required asset tests, including exceptions.",
+      "exemptions": [],
+      "expected": {
+        "eligibility_asset_test": "no_asset_test"
+      }
+    },
+    {
+      "measure_id": "posted_materials.no_immigration_status_barrier",
+      "css_column": "Z",
+      "title": "Immigration status is not a barrier",
+      "roles": [
+        "application",
+        "policy_summary",
+        "policy_statement",
+        "online_application",
+        "landing_page",
+        "supplement"
+      ],
+      "evaluator": "immigration",
+      "evidence_requirement": "Review immigration eligibility restrictions separately from optional demographic fields.",
+      "exemptions": [],
+      "expected": {
+        "immigration_eligibility": "regardless_of_status"
+      }
+    },
+    {
+      "measure_id": "application.uniform_application",
+      "css_column": "AD",
+      "title": "Entire NYS Uniform Application used",
+      "roles": [
+        "application",
+        "uniform_reference"
+      ],
+      "evaluator": "uniform",
+      "evidence_requirement": "Compare the whole designated form with its versioned official template, including required sections and customization questions.",
+      "exemptions": [],
+      "expected": {
+        "required_sections": "applicable_uniform_template",
+        "visual_review_complete": true
+      }
+    },
+    {
+      "measure_id": "application.contact_information",
+      "css_column": "AE",
+      "title": "Application contact information provided",
+      "roles": [
+        "application"
+      ],
+      "evaluator": "contact",
+      "evidence_requirement": "Cite the application-assistance contact and usable contact channel.",
+      "exemptions": [],
+      "expected": {
+        "minimum_application_assistance_channels": 1
+      }
+    },
+    {
+      "measure_id": "application.income_discount_tables",
+      "css_column": "AG",
+      "title": "Income and discount tables included",
+      "roles": [
+        "application"
+      ],
+      "evaluator": "tables",
+      "evidence_requirement": "Identify both the income thresholds and the discount table in the application.",
+      "exemptions": [],
+      "expected": {
+        "income_table": true,
+        "discount_table": true
+      }
+    },
+    {
+      "measure_id": "application.fpl_guidelines",
+      "css_column": "AH",
+      "title": "Correct FPL year and dollar amounts",
+      "roles": [
+        "application"
+      ],
+      "evaluator": "fpl",
+      "evidence_requirement": "Compare the published annual USD year and household-size cells to the pinned HHS table. A complete profile covers sizes 1–8 at 200/300/400%.",
+      "exemptions": [],
+      "expected": {
+        "currency": "USD",
+        "period": "annual",
+        "reference_version": "hhs-contiguous-2025-2026-v1",
+        "required_household_sizes": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "required_fpl_percentages": [
+          200,
+          300,
+          400
+        ]
+      }
+    },
+    {
+      "measure_id": "application.maximum_fpl",
+      "css_column": "AI",
+      "title": "Eligibility through at least 400% FPL",
+      "roles": [
+        "application"
+      ],
+      "evaluator": "maximum",
+      "evidence_requirement": "Explicit eligibility limit and the scope of exclusions; a table heading alone does not establish eligibility.",
+      "exemptions": [],
+      "expected": {
+        "minimum_percent": 400
+      }
+    },
+    {
+      "measure_id": "application.installments_cap",
+      "css_column": "AJ",
+      "title": "Monthly installments capped at 5% of gross income",
+      "roles": [
+        "application"
+      ],
+      "evaluator": "installments",
+      "evidence_requirement": "Explicit cap on monthly installments as a percentage of gross monthly income, distinct from interest.",
+      "exemptions": [],
+      "expected": {
+        "maximum_percent": 5,
+        "basis": "gross_monthly_income"
+      }
+    },
+    {
+      "measure_id": "policy_summary.primary_service_area_described",
+      "css_column": "AL",
+      "title": "Summary describes primary service area",
+      "roles": [
+        "policy_summary"
+      ],
+      "evaluator": "summary_area",
+      "evidence_requirement": "Cite the service-area description in the plain-language summary.",
+      "exemptions": [],
+      "expected": {
+        "minimum_described_areas": 1
+      }
+    },
+    {
+      "measure_id": "policy_summary.means_of_applying_explained",
+      "css_column": "AM",
+      "title": "Summary explains application process",
+      "roles": [
+        "policy_summary"
+      ],
+      "evaluator": "summary_process",
+      "evidence_requirement": "Cite the route or instructions for submitting an application in the designated summary.",
+      "exemptions": [],
+      "expected": {
+        "minimum_application_instructions": 1
+      }
+    },
+    {
+      "measure_id": "policy_summary.income_levels_included",
+      "css_column": "AN",
+      "title": "Summary specifies assistance income levels",
+      "roles": [
+        "policy_summary"
+      ],
+      "evaluator": "summary_income",
+      "evidence_requirement": "Cite explicit assistance income levels in the designated summary.",
+      "exemptions": [],
+      "expected": {
+        "minimum_stated_income_levels": 1
+      }
+    }
+  ],
+  "bands": [
+    {
+      "grade": "A",
+      "min_errors": 0,
+      "max_errors": 0
+    },
+    {
+      "grade": "B",
+      "min_errors": 1,
+      "max_errors": 3
+    },
+    {
+      "grade": "C",
+      "min_errors": 4,
+      "max_errors": 6
+    },
+    {
+      "grade": "D",
+      "min_errors": 7,
+      "max_errors": 9
+    },
+    {
+      "grade": "F",
+      "min_errors": 10,
+      "max_errors": 17
+    }
+  ],
+  "overrides": [
+    {
+      "measure_id": "posted_materials.application_posted",
+      "on_result": "no",
+      "grade": "F",
+      "status": "applicable"
+    },
+    {
+      "measure_id": "application.uniform_application",
+      "on_result": "no",
+      "grade": "F",
+      "status": "applicable"
+    },
+    {
+      "measure_id": "posted_materials.policy_statement_posted",
+      "on_result": "no",
+      "grade": "F",
+      "status": "disputed"
+    }
+  ],
+  "precedence": [
+    "applicable_override",
+    "error_band",
+    "evaluate_disputed_alternative",
+    "withhold_for_unresolved_evidence_or_authority"
+  ],
+  "results": {
+    "yes": "Verified observation satisfies the measure across its applicable scope.",
+    "no": "Verified contradiction or documented complete posting search.",
+    "unclear": "Incomplete, incompatible, conflicting or unavailable evidence; report as unresolved.",
+    "n_a": "Requires an approved exemption and denominator rule. This version authorizes none."
+  },
+  "unresolved_policy": "Retain all 17 measures. Report possible grades across unresolved findings and disputed overrides; withhold a final grade for any unresolved finding, missing authorization or applicable policy uncertainty."
+}
