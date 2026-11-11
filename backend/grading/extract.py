@@ -23,6 +23,10 @@ def anchor_labels(data: bytes, base_url: str) -> dict[str, str]:
 
 if __name__ == "__main__":
     data = sys.stdin.buffer.read()
+    if sys.argv[1] == "--identity":
+        from evidence_workers import explicit_identity
+        print(json.dumps(explicit_identity(extract_bytes(data, sys.argv[2]), sys.argv[3])))
+        sys.exit(0)
     if sys.argv[1] == "--anchors":
         print(json.dumps(list(anchor_labels(data, sys.argv[2]).items())))
         sys.exit(0)

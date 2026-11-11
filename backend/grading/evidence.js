@@ -104,6 +104,19 @@ export function evidenceStore(input, root, decisionDirectory) {
   }
 
   const verifiedDocuments = [...confirmedDocuments];
+  for (const doc of input.sources.filter(s => s.identity_method === "explicit-scope-v1")) {
+    const suffix = extname(doc.snapshot?.artifact_path ?? "");
+    requireValue([".pdf", ".docx"].includes(suffix) && doc.snapshot.published_link && !doc.classification_sha256 &&
+      !confirmedDocuments.some(d => d.sha256 === doc.snapshot.sha256), "Unexpected automatic classification");
+    const check = spawnSync(process.env.T2P_PYTHON || "python",
+      [fileURLToPath(new URL("extract.py", import.meta.url)), "--identity", suffix, input.hospital_key],
+      { input: byteCache.get(doc.source_id), encoding: "utf8", timeout: 30000 });
+    requireValue(check.status === 0, "Could not verify document identity");
+    const identity = JSON.parse(check.stdout);
+    requireValue(identity && identity.role === doc.role && identity.language === doc.language,
+      "Role or campus is unsupported by the original document");
+    verifiedDocuments.push({ ...identity, source_id: doc.source_id, sha256: doc.snapshot.sha256 });
+  }
   const classificationFiles = new Map();
   for (const doc of input.sources.filter((s) => s.classification_sha256)) {
     const hash = doc.classification_sha256;

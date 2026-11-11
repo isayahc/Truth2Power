@@ -6,17 +6,17 @@ import { readFileSync, existsSync } from "node:fs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { execFile } from "node:child_process";
-import { rubric, hhs, referenceHash, contextOf, expectedFor, readArtifact, fingerprint, validateSchema, confirmedDocuments, assistancePages } from "../grading/data.js";
+import { rubric, hhs, referenceHash, contextOf, expectedFor, readArtifact, fingerprint, validateSchema, confirmedDocuments } from "../grading/data.js";
 import { grade } from "../grading/grade.js";
-import { parseProfile, applicationProfileHash, applicationVisualHash } from "../grading/profiles.js";
-import { fplComparison } from "../grading/measures.js";
+import { applicationProfileHash, applicationVisualHash } from "../grading/profiles.js";
 import { sha256, languageTag } from "../review/identity.js";
 import { reportingContext } from "../reporting/context.js";
 import { localRecords, latestByScope, projectRecord } from "../hospital-page/records.js";
 import { immutable, publishPipeline, publishScan, failPipeline } from "./pipeline-store.js";
 import { facilityFor, sourceInventory, savedCollection } from "./roster-inventory.js";
 import { readClassifications } from "../grading/source-classification.js";
-import { postingPaths } from "../grading/posting-paths.js";
+import { reviewCapturedSources, attachWebsiteLinks } from "./evidence-workers.js";
+import { reconcileFindings } from "./assessment-coordinator.js";
 import { adaptArtifact } from "../grading/adapter.js";
 import { normalizeObservations } from "./normalize-observations.js";
 
@@ -98,9 +98,11 @@ async function real(db, job, collect) {
   if (job.context.roster_sha256 && fingerprint(facility) !== job.context.roster_sha256) throw Error("Roster changed; enqueue a new job");
   const curated = new URL(`../../docs/hospital-pages/${job.hospital}.json`, import.meta.url);
   const pinned = existsSync(curated) ? JSON.parse(readFileSync(curated)).records : [];
-  if (job.hospital === "362") {
-    const path = "docs/audit-format/changes/362-summary-posting.json";
-    pinned.push(projectRecord(readFileSync(new URL("../../" + path, import.meta.url)), path, "posting"));
+  const postingPath = `docs/audit-format/changes/${facility.hospital_key}-summary-posting.json`;
+  const postingFile = new URL("../../" + postingPath, import.meta.url);
+  if (existsSync(postingFile)) {
+    const prior = projectRecord(readFileSync(postingFile), postingPath, "posting");
+    if (prior?.hospital_key === facility.hospital_key) pinned.push(prior);
   }
   const local = localRecords(originalRoot);
   if (local.unavailable.length) gaps.push(`${local.unavailable.length} source-review artifacts could not be read.`);
@@ -171,7 +173,7 @@ async function real(db, job, collect) {
           provenance: "operator_classification", classification_sha256: source.classification_sha256 });
         verified.push(review);
       }
-      if (source.role === "unclassified") gaps.push(`Classify document role and campus (${d.campus_applicability}): ${d.source_id}`);
+      if (scan && source.role === "unclassified") gaps.push(`Classify document role and campus (${d.campus_applicability}): ${d.source_id}`);
       if (source.language === "und") gaps.push(`Unknown language: ${d.source_id}`);
     } else {
       if (d.digest) d.capture_status = "snapshot_unavailable";
@@ -188,10 +190,26 @@ async function real(db, job, collect) {
   input.scope.required_sources = input.sources.map((s) => s.source_id);
   meterStage("extract_documents");
   stage(db, job, "extract_documents");
-  const analysis = await bridge(root, { mode: "extract", deadline:deadline(db,job), sources: input.sources, file_text_status: collected?.file_text_status, application_review_date: job.review_date });
+  const analysis = await reviewCapturedSources(input.sources, documents, sources =>
+    bridge(root, { mode: "extract", deadline: end, sources, application_review_date: job.review_date }));
+  attachWebsiteLinks(analysis, collection);
   const extracted = analysis.sources;
   for (const doc of documents) {
-    if (doc.digest && analysis.file_text_status?.[doc.digest]) doc.text_status = analysis.file_text_status[doc.digest];
+    if (doc.capture_status !== "saved" || !doc.artifact_path) continue;
+    const review = analysis.reviews[doc.source_id];
+    if (review?.sha256 !== doc.digest || review.source_id !== doc.source_id) throw Error("Unbound specialist evidence");
+    review.campus_applicability = review.explicit_identity ? "applicable" : doc.campus_applicability;
+    doc.review = review;
+    if (review.explicit_identity) {
+      const identity = review.explicit_identity;
+      const source = input.sources.find(s => s.source_id === doc.source_id);
+      Object.assign(source, { role: identity.role, language: identity.language, identity_method: "explicit-scope-v1" });
+      Object.assign(doc, { role: identity.role, language: identity.language, campus_applicability: "applicable",
+        provenance: source.identity_method });
+      verified.push({ ...identity, source_id: source.source_id, sha256: doc.digest });
+    }
+    if (doc.role === "unclassified") gaps.push(`Classify document role and campus (${doc.campus_applicability}): ${doc.source_id}`);
+    if (analysis.file_text_status[doc.digest]) doc.text_status = analysis.file_text_status[doc.digest];
   }
   const content = {};
   for (const s of input.sources) if (s.snapshot) {
@@ -222,61 +240,10 @@ async function real(db, job, collect) {
         decisions: adapted.provenance.decisions || [], blockers: adapted.blockers });
     } catch (error) { normalization.push({ producer_sha256: record.record_id, accepted: [], rejected: [error.message] }); }
   }
-  for (const m of rubric.measures) {
-    const originals = scoped.filter((s) => s.success?.measure_id === m.measure_id).map((s) => s.success);
-    const f = { ...contextOf(input), measure_id: m.measure_id, expected: expectedFor(m, job.year), result: "unclear", human_review: "pending", evidence: [], observed: [],
-      unresolved_evidence: originals.length ? [...new Set(originals.map((r) => `Source draft ${r.record_id}: ${r.finding.explanation}`))] : [`Collect and review ${m.evidence_requirement}`] };
-    for (const review of analysis.application_reviews) {
-      const draft = review.findings.find((finding) => finding.measure_id === m.measure_id);
-      for (const e of draft?.evidence || []) f.evidence.push({ ...e, source_id: review.source_id, sha256: review.snapshot.sha256 });
-    }
-    for (const r of originals) for (const e of r.finding.evidence) {
-      const s = input.sources.find((s) => s.source_id === e.url && s.snapshot?.sha256 === e.sha256 && m.roles.includes(s.role));
-      const segment = s && extracted[s.source_id]?.find((p) => p.locator === e.locator && p.text.includes(e.quote));
-      if (!segment) { f.unresolved_evidence.push(`Reverify missing, changed or unsupported citation: ${e.url} · ${e.locator}`); continue; }
-      if (!f.evidence.some((c) => c.sha256 === e.sha256 && c.locator === e.locator && c.quote === e.quote)) f.evidence.push({ source_id: s.source_id, snapshot_id: e.sha256, sha256: e.sha256, locator: e.locator, quote: e.quote });
-    }
-    if (m.evaluator === "posting") {
-      f.evidence = [];
-      const paths = postingPaths(input.sources, extracted, assistancePages.get(job.hospital), m.expected.any_accessible_role, verified, job.hospital, job.context.discovery_bounds?.depth || 3);
-      const links = [...new Set(paths.map((p) => p.target))];
-      f.evidence = [...new Map(paths.flatMap((p) => p.evidence).map((e) => [JSON.stringify(e), e])).values()];
-      if (links.length) {
-        f.result = "yes"; f.unresolved_evidence = [];
-        f.observed = [{ evidence_index: f.evidence.findIndex((e) => e.locator.startsWith("link ")), method: "posted_link", value: { links: [...new Set(links)], search_complete: false } }];
-      }
-    } else if (["fpl", "maximum", "installments"].includes(m.evaluator)) {
-      const numeric = [];
-      for (const s of input.sources.filter((s) => s.role === "application" && s.snapshot && s.status !== "unreadable")) {
-        const matches = extracted[s.source_id].map((p) => ({ p, value: parseProfile(m.evaluator, p.text, s.language) })).filter((v) => v.value);
-        if (matches.length !== 1) continue;
-        const { p, value } = matches[0];
-        const index = f.evidence.push({ source_id: s.source_id, snapshot_id: s.snapshot.sha256, sha256: s.snapshot.sha256, locator: p.locator, quote: p.text }) - 1;
-        f.observed.push({ evidence_index: index, method: "text_profile", value });
-        numeric.push(m.evaluator === "fpl" ? fplComparison(value, job.year).result : m.evaluator === "maximum" ? value.percent >= 400 ? "yes" : "unclear" : value.percent <= 5 ? "yes" : "no");
-      }
-      if (numeric.length && new Set(numeric).size === 1 && ["yes", "no"].includes(numeric[0])) {
-        f.result = numeric[0]; f.unresolved_evidence = [];
-      }
-    } else f.unresolved_evidence.push("The saved qualitative draft is not a verified structured observation or human approval. Review its exact evidence under the grading contract.");
-    for (const reused of normalization.flatMap((n) => n.accepted).filter((o) => o.measure_id === m.measure_id)) {
-      const same = f.observed.find((o) => f.evidence[o.evidence_index].source_id === reused.evidence.source_id);
-      if (same && fingerprint(same.value) !== fingerprint(reused.observation.value)) {
-        f.unresolved_evidence.push("Conflicting verified historical observation; reconcile the source-specific facts.");
-      } else if (!same) {
-        const index = f.evidence.push(reused.evidence) - 1;
-        f.observed.push({ ...reused.observation, evidence_index: index });
-      }
-    }
-    for (const n of normalization) {
-      const decision = n.decisions?.filter((d) => !d.measure_id || d.measure_id === m.measure_id) || [];
-      if (decision.some((d) => ["reject", "needs_changes"].includes(d.decision) || ["correct", "request_information"].includes(d.action))) {
-        f.unresolved_evidence.push("Reconcile the independent historical review before using these normalized observations.");
-      }
-    }
-    f.unresolved_evidence = [...new Set(f.unresolved_evidence)];
-    input.findings.push(f);
-  }
+  stage(db, job, "reconcile_evidence");
+  meterStage("reconcile_evidence");
+  reconcileFindings({ input, analysis, scoped, normalization, verified,
+    maxDepth: job.context.discovery_bounds?.depth || 3, collection });
   for (const review of analysis.application_reviews) {
     if (review.template_comparison?.result !== "yes") gaps.push(`Template equivalence requires review: ${review.source_id}`);
   }

@@ -198,6 +198,8 @@ export const spanish = {
   "Worker lease expired": "Venció el plazo del proceso",
   "Retry scheduled": "Reintento programado",
   "Cancelled by operator": "Cancelada por el operador",
+  "Review website and documents": "Revisar el sitio web y los documentos",
+  "Reconcile evidence by criterion": "Contrastar la evidencia por criterio",
   "Saved evidence": "Evidencia guardada",
   "Draft findings": "Hallazgos preliminares",
   "Yes": "Sí",

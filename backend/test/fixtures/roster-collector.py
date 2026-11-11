@@ -24,6 +24,31 @@ def document() -> bytes:
     return output.getvalue()
 
 
+def scoped_pdf(facility: str) -> bytes:
+    """Build a one-page, text-based synthetic policy for the selected roster entry."""
+    from pypdf import PdfWriter
+    from pypdf.generic import DecodedStreamObject, DictionaryObject, NameObject
+    writer = PdfWriter()
+    page = writer.add_blank_page(width=612, height=792)
+    font = DictionaryObject({NameObject('/Type'): NameObject('/Font'),
+                             NameObject('/Subtype'): NameObject('/Type1'),
+                             NameObject('/BaseFont'): NameObject('/Helvetica')})
+    page[NameObject('/Resources')] = DictionaryObject({
+        NameObject('/Font'): DictionaryObject({NameObject('/F1'): writer._add_object(font)})})
+    lines = ["Financial Assistance Policy Summary", f"Applies to {facility}.",
+             "Effective: 2026-01-01", "How to apply: submit the application to the billing office.",
+             "The primary service area includes the surrounding county."]
+    commands = [b"BT /F1 12 Tf 50 720 Td 16 TL"]
+    for line in lines:
+        commands.append(b"<" + line.encode("latin1").hex().encode() + b"> Tj T*")
+    stream = DecodedStreamObject()
+    stream.set_data(b"\n".join([*commands, b"ET"]))
+    page[NameObject('/Contents')] = writer._add_object(stream)
+    output = io.BytesIO()
+    writer.write(output)
+    return output.getvalue()
+
+
 def main() -> None:
     """Run the bounded collector against fixture pages for two real roster identities."""
     request = json.load(sys.stdin)
@@ -34,6 +59,17 @@ def main() -> None:
 
     def fetch(url: str, host: str) -> tuple[bytes, str, str]:
         """Return only predeclared synthetic responses and a pinned other-campus document."""
+        if request.get("scenario") == "public-files":
+            cdn = "https://files.example/" + key
+            if url == landing:
+                html = (f'<p>Hospital financial assistance publications for patients.</p>'
+                        f'<a href="{cdn}/download/summary" download="summary.pdf">Financial assistance policy summary</a>'
+                        f'<a href="{cdn}/missing.pdf">Financial assistance application</a>')
+                return html.encode(), url, 'text/html'
+            if url == cdn + "/download/summary":
+                name = next(f['properties']['name'] for f in features if f['id'] == key)
+                return scoped_pdf(name), url, 'application/pdf'
+            raise HTTPError(url, 404, 'SYN missing', {}, None)
         if url == landing:
             html = ('<p>SYN hospital financial assistance page.</p><a href="/resources">SYN resources</a>' if key in {'739', '1'} else
                     '<script></script><a href="/missing.pdf">SYN application</a>'

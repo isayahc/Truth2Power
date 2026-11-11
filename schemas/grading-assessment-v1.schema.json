@@ -101,6 +101,7 @@
         "type": "object",
         "additionalProperties": false,
         "properties": {
+          "identity_method": { "const": "explicit-scope-v1" },
           "classification_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
           "source_id": {
             "type": "string",

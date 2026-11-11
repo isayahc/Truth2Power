@@ -110,6 +110,21 @@ applicability. Ordinary external HTML links remain outside traversal scope.
 The audit status panel shows the last recorded task and worker event separately
 from the backend status-check time. See [redirect validation and live retests](docs/validation/elizabethtown-source-update.md).
 
+**Full audit** uses the same evidence workflow for every roster entry. The collector
+records document retrieval outcomes. A website reviewer reads the captured HTML
+and connects the original anchors to those outcomes. A document analyst reads
+PDFs and DOCX files, including unclassified files, and records located passages,
+possible roles, campus mentions, date passages and unreadable sections. Both
+reviewers run offline against immutable snapshots and make no model calls.
+
+Open **Findings** and expand a criterion to see its result, rationale and cited
+sources. Candidate passages are available for human review when applicability
+or interpretation is uncertain. The integrated assessment contains the full
+source reviews under `inventory.sources[].review`. The coordinator uses the
+versioned rubric, verified observations and remaining coverage gaps to publish
+17 findings. A link can be cited even when its target fails to download.
+A positive posting finding requires the applicable accessible document.
+
 Use **Download run log (JSON)** in the audit status panel or beside a selected
 run's details to export its complete recorded timeline (not just the visible
 page), attempts, run/hospital identifiers and resource/cost receipt. The endpoint

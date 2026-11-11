@@ -23,14 +23,24 @@ export function publishedRecords(root) {
   }
   const records = [];
   for (const b of selected.values()) {
+    const sourceReviews = b.inventory?.sources.filter(s => s.review) ?? [];
     const envelope = reviewEnvelope(b);
     records.push({ hospital_key: b.input.hospital_key, record_id: b.id, scope: "integrated-assessment", kind: "pipeline", synthetic: b.input.synthetic,
       scope_label: envelope.scope_label, guideline_year: b.input.guideline_year, review_date: b.input.review_date,
       checked_at: envelope.checked_at, status: "completed", report: b.report, audit_mode: b.mode || "replay",
       monitoring_at: b.input.sources.filter((s) => s.snapshot && !["uniform_reference", "psa_reference"].includes(s.role)).map((s) => s.snapshot.retrieved_at).sort((a, b) => Date.parse(a) - Date.parse(b))[0] ?? null,
       landing_page: b.input.sources.filter((s) => s.role === "landing_page" && s.snapshot).map((s) => s.snapshot),
-      findings: envelope.findings.map((f) => ({ ...f, evidence: f.evidence.map((e) => {
-        const s = envelope.snapshots.find((s) => s.snapshot_id === e.snapshot_id);
+      findings: envelope.findings.map((f, index) => ({ ...f,
+        candidate_passages: sourceReviews.flatMap(s => {
+          const passages = s.review.observations[f.measure_id] ?? [];
+          return passages.filter(p => !b.report.findings[index].evidence.some(e =>
+            e.source_id === s.source_id && e.locator === p.locator && e.quote === p.quote)).map(p => ({
+            ...p, source_url: s.source_id, sha256: s.digest, saved_url: `/api/pilot/snapshots/${s.digest}`,
+            worker: s.review.worker, role: s.role, language: s.language, campus: s.campus_applicability,
+          }));
+        }),
+        evidence: f.evidence.map((e, i) => {
+        const s = envelope.snapshots.find(s => s.url === b.report.findings[index].evidence[i].source_id && s.snapshot_id === e.snapshot_id);
         return { ...e, ...s, saved_url: `/api/pilot/snapshots/${s.sha256}` };
       }) })), affected_measures: envelope.findings.map((f) => f.measure_id) });
     for (const failure of failures.filter((f) => f.hospital === b.input.hospital_key && f.year === b.input.guideline_year && f.id > b.job)) {
