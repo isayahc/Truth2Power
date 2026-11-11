@@ -396,13 +396,24 @@ const retrievalReasons = {
   resource_limit: "The collection reached a resource limit.",
 };
 
+const limitLabels = {
+  depth: "Link depth limit", pages: "Page count limit", documents: "Document count limit",
+  seconds: "Collection time limit", bytes_per_resource: "File size limit", total_bytes: "Total download size limit",
+  network_bytes: "Run download quota", network_requests: "Run request quota",
+};
+
+function retrievalMessage(attempt, t) {
+  const label = limitLabels[attempt.limit] ?? retrievalReasons[attempt.reason] ?? retrievalReasons.collection_failed;
+  return t(label) + (attempt.http_status ? ` (HTTP ${attempt.http_status})` : "");
+}
+
 function DocumentResults({ documents }) {
   const { t } = useLocale();
   if (!documents) return null;
   const failures = documents.attempts.filter(d => d.status === "failed");
   const reasons = new Map();
   for (const d of failures) {
-    const message = t(retrievalReasons[d.reason] ?? retrievalReasons.collection_failed) + (d.http_status ? ` (HTTP ${d.http_status})` : "");
+    const message = retrievalMessage(d, t);
     reasons.set(message, (reasons.get(message) ?? 0) + 1);
   }
   const unreadable = documents.attempts.filter(d => d.text_status === "needs_review");
@@ -420,7 +431,7 @@ function DocumentResults({ documents }) {
       <summary>{t("Why document retrieval failed")} ({failures.length})</summary>
       <ul>{failures.map((d, i) => <li key={i}>
         {d.source_url && <><a href={d.source_url} target="_blank" rel="noreferrer">{d.source_url}</a>{" · "}</>}
-        {t(retrievalReasons[d.reason] ?? retrievalReasons.collection_failed)} {d.http_status && `(HTTP ${d.http_status})`}
+        {retrievalMessage(d, t)}
       </li>)}</ul>
     </details>}
   </section>;

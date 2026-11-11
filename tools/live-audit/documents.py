@@ -14,12 +14,13 @@ import http.client
 import time
 import threading
 import queue as queues
-from collections import deque
+from heapq import heappop, heappush
+from itertools import count
 from dataclasses import dataclass, asdict
 from datetime import datetime, timezone
 from html.parser import HTMLParser
 from pathlib import Path
-from urllib.parse import urldefrag, urljoin, urlsplit, urlunsplit
+from urllib.parse import unquote, urldefrag, urljoin, urlsplit, urlunsplit
 from urllib.error import HTTPError
 
 LIMIT = 12 * 1024 * 1024
@@ -106,6 +107,32 @@ def document_hint(url: str, labels: list[str]) -> bool:
     )
 
 
+# These terms order already-eligible links. They confer neither retrieval authority
+# nor document role or campus applicability. Other candidates remain in the queue.
+AID_TOPIC = re.compile(
+    r"\b(?:financial (?:assistance|aid|help)|charity care|fap|fpl|"
+    r"plain language summary|(?:federal )?poverty (?:level|guidelines?)|fa guidelines?|"
+    r"asistencia (?:financiera|económica)|ayuda (?:financiera|económica))\b", re.I
+)
+
+
+def crawl_priority(url: str, labels: list[str], file_hint: bool, depth: int, max_depth: int) -> tuple[bool, int, int, bool]:
+    """Visit explicit aid evidence and potential discovery pages before incidental files."""
+    path = unquote(urlsplit(url).path)
+    # Use the filename for a file. An aid directory can also contain unrelated PDFs.
+    name = path.rstrip("/").rsplit("/", 1)[-1] if file_hint else path
+    words = re.sub(r"(?<=[a-z])(?=[A-Z])", " ", " ".join([name, *labels]))
+    signal = re.sub(r"[\W_]+", " ", words)
+    aid = bool(AID_TOPIC.search(signal))
+    if file_hint and aid:
+        group = 0
+    elif not file_hint:
+        group = 1
+    else:
+        group = 2
+    return (depth > max_depth, group, depth, not aid)
+
+
 def document_suffix(data: bytes, expected: str) -> str:
     """Check the response bytes before recording a PDF or Word document capture."""
     if data.startswith(b"%PDF-") and expected != ".docx":
@@ -127,9 +154,12 @@ def public_ip(value):
 
 class SourceBoundaryError(ValueError):
     code = "source_host_blocked"
-    def __init__(self, message, code="source_host_blocked"):
+
+    def __init__(self, message: str, code: str = "source_host_blocked", *, limit: str | None = None) -> None:
+        """Keep the public failure category and the specific limit when known."""
         super().__init__(message)
         self.code = code
+        self.limit = limit
 
 
 def approved(url, host):
@@ -246,7 +276,7 @@ def download(url, host, bounds=None, trace=None):
                 measured("network_bytes", len(part))
                 size += len(part)
                 if size > bounds.bytes_per_resource:
-                    raise SourceBoundaryError("Resource byte limit reached", "resource_limit")
+                    raise SourceBoundaryError("Resource byte limit reached", "resource_limit", limit="bytes_per_resource")
             return b"".join(chunks), url, response.headers.get_content_type()
         finally:
             connection.close()
@@ -292,13 +322,15 @@ def collect(hospital_key, root, output, save, fetch=download, bounds=None):
         return dict(url=final_url, sha256=digest, artifact_path=path.as_posix(),
                     retrieved_at=now(), publisher_updated_at=None, content_type=mime, size_bytes=len(data))
 
-    queue, visited, total = deque([(url, [], 0, None, False)]), set(), 0
+    order = count()
+    queue = [(crawl_priority(url, [], False, 0, bounds.depth), next(order), (url, [], 0, None, False))]
+    visited, total = set(), 0
     counts = {"pages": 0, "documents": 0}
 
     def reserve(kind: str) -> None:
         """Bound requests before fetching and charge newly identified documents before saving."""
         if counts[kind] >= getattr(bounds, kind):
-            raise SourceBoundaryError("Resource count limit reached", "resource_limit")
+            raise SourceBoundaryError("Resource count limit reached", "resource_limit", limit=kind)
         if current.get():
             current.get().reserve(kind)
         counts[kind] += 1
@@ -306,7 +338,7 @@ def collect(hospital_key, root, output, save, fetch=download, bounds=None):
     landing_host = host
     started = time.monotonic()
     while queue:
-        source, labels, depth, parent, file_hint = queue.popleft()
+        _, _, (source, labels, depth, parent, file_hint) = heappop(queue)
         if source in visited:
             continue
         visited.add(source)
@@ -326,15 +358,21 @@ def collect(hospital_key, root, output, save, fetch=download, bounds=None):
             if is_external and (not parent or not file_hint):
                 raise SourceBoundaryError("External HTML is outside the hospital crawl")
             approved(source, source_host)
-            if depth > bounds.depth or time.monotonic() - started >= bounds.seconds or total >= bounds.total_bytes:
-                raise SourceBoundaryError("Traversal depth, time or byte limit reached", "resource_limit")
+            if depth > bounds.depth:
+                raise SourceBoundaryError("Traversal depth limit reached", "resource_limit", limit="depth")
+            if time.monotonic() - started >= bounds.seconds:
+                raise SourceBoundaryError("Traversal time limit reached", "resource_limit", limit="seconds")
+            if total >= bounds.total_bytes:
+                raise SourceBoundaryError("Traversal byte limit reached", "resource_limit", limit="total_bytes")
             reserve(kind)
             data, destination, mime = fetch(source, source_host, bounds, trace) if fetch is download else fetch(source, source_host)
             final_host = (urlsplit(destination).hostname or '').removeprefix('www.')
             approved(destination, final_host if fetch is download else source_host)
             total += len(data)
-            if len(data) > bounds.bytes_per_resource or total > bounds.total_bytes:
-                raise SourceBoundaryError("Traversal byte limit reached", "resource_limit")
+            if len(data) > bounds.bytes_per_resource:
+                raise SourceBoundaryError("Resource byte limit reached", "resource_limit", limit="bytes_per_resource")
+            if total > bounds.total_bytes:
+                raise SourceBoundaryError("Traversal byte limit reached", "resource_limit", limit="total_bytes")
             is_document = document_only or mime not in HTML_TYPES or data.startswith((b"%PDF-", b"PK"))
             received_kind = "documents" if is_document else "pages"
             if kind != received_kind and parent:
@@ -386,10 +424,12 @@ def collect(hospital_key, root, output, save, fetch=download, bounds=None):
                     disposition = "candidate" if relevant else "out_of_scope" if web_link else "non_retrieval"
                     attempt["links"].append({**edge, "labels": names, "disposition": disposition})
                     if relevant and target not in visited:
-                        queue.append((target, names, depth + 1, edge, file_hint))
+                        priority = crawl_priority(target, names, file_hint, depth + 1, bounds.depth)
+                        heappush(queue, (priority, next(order), (target, names, depth + 1, edge, file_hint)))
         except BudgetStop as error:
             attempt["budget_stop"] = str(error)
             record["reason"] = str(error)
+            record["limit"] = str(error)
             record["error_code"] = "resource_limit"
             attempt["limitations"].append("Run budget stopped collection: " + str(error))
             break
@@ -403,6 +443,8 @@ def collect(hospital_key, root, output, save, fetch=download, bounds=None):
                 record['error_code'] = 'tls_certificate_invalid'
             if isinstance(error, SourceBoundaryError):
                 record['error_code'] = error.code
+                if error.limit:
+                    record['limit'] = error.limit
             if isinstance(error, HTTPError):
                 record["http_status"] = error.code
                 if error.code == 403 and error.headers and error.headers.get('Cf-Mitigated', '').lower() == 'challenge':
