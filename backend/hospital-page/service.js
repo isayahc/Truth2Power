@@ -57,7 +57,8 @@ export function hospitalPage(key, { root, records, year = 2026, unavailable = []
     const results = new Set(versions.map((v) => v.finding?.result || "unclear"));
     const result = results.size === 1 ? [...results][0] : "unclear";
     const [question, section, plain_language] = explanations[m.css_column];
-    return { measure_id: m.measure_id, column: m.css_column, title: m.title, question,
+    const agentFinding = integrated?.agent_findings?.find(f => f.measure_id === m.measure_id);
+    return { ...(agentFinding && { agent_finding: agentFinding }), measure_id: m.measure_id, column: m.css_column, title: m.title, question,
       result, reason: !versions.length ? "No successful saved assessment for this measure. Review needed." :
         results.size > 1 ? "Document or language scopes have different results. Read each scope below." : versions[0].finding?.explanation || "The recheck failed before a successful assessment was saved.",
       law: { url: law, section, plain_language, interpretation_status: "Informational mapping; subject-matter review pending (#67)", revision: "2026-05-29" },

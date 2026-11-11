@@ -1,5 +1,6 @@
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
+import { verifyPublishedLinks } from "../grading/published-links.js";
 import { isIP } from "node:net";
 import { readArtifact, confirmedDocuments, fingerprint } from "../grading/data.js";
 import { sourceUrl, languageTag } from "../review/identity.js";
@@ -28,7 +29,7 @@ export function savedCollection(root, key) {
 }
 
 /** Build grading candidates and a separately inspectable inventory from the same capture. */
-export function sourceInventory(facility, collection, seeds = []) {
+export function sourceInventory(facility, collection, seeds = [], root) {
   const { hospital_key, landing_url } = facility;
   const expectedHost = new URL(landing_url).hostname.replace(/^www\./, "");
   const safe = (url) => {
@@ -87,7 +88,7 @@ export function sourceInventory(facility, collection, seeds = []) {
         continue;
       }
       const final = destination(s, id);
-      if (!trusted(id))
+      if (!trusted(id) && (!s.published_link || !/\.(pdf|docx)$/.test(s.artifact_path)))
         throw Error("Untrusted saved collection URL");
       if (!/^[a-f0-9]{64}$/.test(s.sha256) || !["html", "pdf", "docx"].some((ext) =>
         s.artifact_path === `snapshots/${s.sha256}.${ext}`) || !Number.isFinite(Date.parse(s.retrieved_at))) throw Error("Invalid saved resource");
@@ -96,9 +97,11 @@ export function sourceInventory(facility, collection, seeds = []) {
       const other = !known && (s.classification === "other_campus_requires_review" || confirmedDocuments.some((d) => d.sha256 === s.sha256));
       put(sourceUrl(id), { role: known?.role ?? (page && id === landing_url ? "landing_page" : "unclassified"),
         language: known ? languageTag(known.language) : "und", digest: s.sha256, retrieved_at: s.retrieved_at,
+        ...(s.published_link ? { published_link: s.published_link } : {}),
         artifact_path: s.artifact_path, final_url: final, redirects: s.redirects || [], provenance: known ? "pinned_campus_inventory" : "collection",
         capture_status: "saved", campus_applicability: known ? "applicable" : other ? "other_campus_requires_review" : "unknown" });
     }
+    verifyPublishedLinks(new Map([...rows].map(([url, row]) => [url, { ...row, sha256: row.digest }])), landing_url, root);
   }
   return { schema_version: "hospital-source-inventory-v1", ...facility, collection_sha256: collection ? fingerprint(collection) : null,
     sources: [...rows.values()], gaps: [...gaps] };

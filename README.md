@@ -110,6 +110,33 @@ applicability. Ordinary external HTML links remain outside traversal scope.
 The audit status panel shows the last recorded task and worker event separately
 from the backend status-check time. See [redirect validation and live retests](docs/validation/elizabethtown-source-update.md).
 
+**Full audit** uses one workflow for all 212 hospitals. It retrieves up to four
+sources at once, prioritizing financial-assistance documents. Website and file
+review workers start when each original is saved. Identical bytes share a text
+extraction within the run; every source URL retains its own provenance.
+The default collection limit is eight minutes and the default overall run limit
+is ten. See **Slowest document requests** in a run for measured download times.
+
+### Enable model reviewers for Full audit
+
+Start the app and worker with the same model settings. For a free OpenRouter
+review, provide `OPENROUTER_API_KEY` in both process environments. The default
+route is `openrouter/free`. Set `T2P_OPENROUTER_MODEL` to select another model.
+For local processing, start Ollama, install the model you intend to use, and
+set `T2P_OPENCODE_LOCAL_MODEL` to its installed name in both terminals.
+The local route uses the OpenCode V2 executable on PATH (or `T2P_OPENCODE_BIN`).
+The confirmation in **Audits and history → Full audit** identifies the selected
+model or rules-based review. A paid model also requires a rate card and run
+budget as described in [audit operations](docs/validation/pilot-operations.md).
+
+The website and document model reviewers work independently on bounded
+passages from saved sources. The coordinator receives their selections, the
+criteria and outstanding evidence gaps. Open a criterion in **Findings** for
+its draft model result, rationale and citations. In **Audits and history** the
+revision shows each reviewer's status. Every citation links to its captured
+original. The versioned rubric calculates the published assessment separately.
+Rules-based audits and saved-evidence replays also work offline.
+
 Use **Download run log (JSON)** in the audit status panel or beside a selected
 run's details to export its complete recorded timeline (not just the visible
 page), attempts, run/hospital identifiers and resource/cost receipt. The endpoint

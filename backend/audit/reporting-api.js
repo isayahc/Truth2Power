@@ -1,11 +1,12 @@
 import { budgetPolicy, preview } from "./budgets.js";
-import { failureDiagnostic } from './failure-diagnostic.js';
+import { documentAttempts, failureDiagnostic } from './failure-diagnostic.js';
 import { interventionRoute, interventionFor } from './interventions.js';
 import { DatabaseSync } from "node:sqlite";
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { directory, openStore } from "./store.js";
-import { enqueuePipeline, pipelineRoot } from "./pipeline-store.js";
+import { enqueuePipeline, fullAuditReview, pipelineRoot } from "./pipeline-store.js";
+import { publicAgentReview } from "./pipeline-views.js";
 import { roster } from "./roster-inventory.js";
 import { readReceipt } from "./usage-ledger.js";
 import { runId } from "./run-history.js";
@@ -50,6 +51,8 @@ const stages = new Set([
   "collection_saved",
   "collection_stopped",
   "extract_documents",
+  "model_review",
+  "reconcile_evidence",
   "restore_checkpoint",
   "grade",
 ]);
@@ -169,6 +172,8 @@ function publicReceipt(db, r) {
       "collect_sources",
       "load_saved_evidence",
       "extract_documents",
+      "model_review",
+      "reconcile_evidence",
       "grade",
       "publish",
     ].includes(name)
@@ -375,11 +380,12 @@ export function reportingRoute(event) {
               "review_date",
               "mode",
               "request_key",
-              "discovery_bounds", "budget",
+              "discovery_bounds", "budget", "allow_paid", "review_config",
             ].includes(k),
         )
       )
         reject(400, "invalid_request");
+      if (o.allow_paid !== undefined && (o.allow_paid !== true || o.mode !== "full_audit" || !o.review_config)) reject(400, "invalid_paid_confirmation");
       db = openStore();
       try {
         const id = enqueuePipeline(db, { ...o, hospital_key: facility[1] });
@@ -388,7 +394,7 @@ export function reportingRoute(event) {
           url: base + "/runs/" + runId(id),
         });
       } catch (err) {
-        if (/Idempotency key/.test(err.message))
+        if (/Idempotency key|Review configuration changed/.test(err.message))
           reject(409, "request_conflict");
         if (/Invalid/.test(err.message)) reject(400, "invalid_request");
         throw err;
@@ -400,7 +406,7 @@ export function reportingRoute(event) {
     const file = join(directory, "audit.sqlite");
     if (existsSync(file)) {
       db = new DatabaseSync(file, { readOnly: true });
-      db.exec("BEGIN");
+      db.exec("PRAGMA busy_timeout=5000; BEGIN");
       // Read-only reporting cannot migrate a historical database.
       if (
         !db
@@ -443,6 +449,7 @@ export function reportingRoute(event) {
           .all(pipelineRoot(), facility[1], cursor, limit + 1) ?? [];
       return json(200, {
         hospital: hospitals.get(facility[1]),
+        agent_review: fullAuditReview(),
         preflight: Object.fromEntries(modes.map(mode=>[mode,preview(budgetPolicy(),mode)])),
         clocks: clocks(db, facility[1]),
         ...page(rows.map(runRow), limit, "job_id"),
@@ -458,7 +465,7 @@ export function reportingRoute(event) {
       const events = db.prepare(`SELECT seq,attempt,state,at,json_extract(detail,'$.name') stage,
         json_extract(detail,'$.stop_code') stop_code,json_extract(detail,'$.error_code') error_code,
         json_extract(detail,'$.diagnostic') diagnostic,json_extract(detail,'$.retry_scheduled') retry_scheduled,
-        json_array_length(detail,'$.captures') capture_count FROM audit_run_events WHERE job=? ORDER BY seq`).all(id);
+        json_extract(detail,'$.document_attempts') document_attempts, json_array_length(detail,'$.captures') capture_count FROM audit_run_events WHERE job=? ORDER BY seq`).all(id);
       const attempts = db.prepare('SELECT token,started,status FROM attempts WHERE job=? ORDER BY started,rowid').all(id);
       const handoff = interventionFor(db, r);
       if (handoff) handoff.documents = handoff.documents.map(({artifact_path, ...d})=>d);
@@ -466,9 +473,13 @@ export function reportingRoute(event) {
       const response = json(200, {
         log_version: 'audit-run-log-v1', exported_at: new Date().toISOString(),
         hospital: hospitals.get(r.hospital), run: runRow(r),
+        documents: runDocuments(db, r),
         human_intervention: handoff, imported_evidence_origin: origin ?? null,
         attempts: attempts.map(a => ({ attempt_id: sha256(a.token), started_at: a.started, status: a.status })),
-        timeline: events.map(publicEvent), receipt: publicReceipt(db, r),
+        timeline: events.map(e => ({
+          ...publicEvent(e),
+          ...(e.document_attempts ? { document_attempts: documentAttempts({ documents: JSON.parse(e.document_attempts) }) } : {}),
+        })), receipt: publicReceipt(db, r),
         limitations: [
           'Point-in-time export; an active run may produce more events after download.',
           'Contains recorded task events, not a continuous worker heartbeat or model reasoning.',
@@ -533,6 +544,7 @@ export function reportingRoute(event) {
       .all(id);
     return json(200, {
       ...runRow(r),
+      documents: runDocuments(db, r),
       attempt_history: attempts.map((a) => ({
         attempt_id: sha256(a.token),
         started_at: a.started,
@@ -546,6 +558,35 @@ export function reportingRoute(event) {
   } finally {
     db?.close();
   }
+}
+
+/** Use the run's own publication for historical jobs and its recorded collection for stops. */
+function runDocuments(db, r) {
+  let collection, inventory;
+  if (r.assessment_id) {
+    const row = db.prepare("SELECT json_extract(output,'$.discovery.documents') docs, json_extract(output,'$.inventory.sources') sources FROM assessments WHERE job=?").get(r.id);
+    if (row.docs) collection = { documents: JSON.parse(row.docs) };
+    if (row.sources) inventory = JSON.parse(row.sources);
+  } else if (r.scan_id) {
+    const scan = JSON.parse(readArtifact(pipelineRoot(), `pipeline-scans/${r.scan_id}.json`));
+    collection = scan.discovery;
+    inventory = scan.inventory?.sources;
+  }
+  let attempts;
+  if (collection) attempts = documentAttempts(collection);
+  else {
+    const row = db.prepare(`SELECT json_extract(detail,'$.document_attempts') docs FROM audit_run_events
+      WHERE job=? AND attempt=(SELECT token FROM jobs WHERE id=?) AND json_type(detail,'$.document_attempts')='array'
+      ORDER BY seq DESC LIMIT 1`).get(r.id, r.id);
+    if (!row) return null;
+    attempts = documentAttempts({ documents: JSON.parse(row.docs) });
+  }
+  const captured = attempts.filter(d => d.status === 'saved').length;
+  const applicable = inventory?.filter(s => s.capture_status === 'saved' && /\.(pdf|docx)$/.test(s.artifact_path) &&
+    s.campus_applicability === 'applicable' && ['application','policy_summary','policy_statement','supplement'].includes(s.role)).length ?? null;
+  const byDigest = new Map(inventory?.filter(s => s.text_status).map(s => [s.digest, s.text_status]));
+  for (const doc of attempts) doc.text_status = byDigest.get(doc.sha256) ?? null;
+  return { candidates: attempts.length, captured, classified_assistance_documents: applicable, attempts };
 }
 
 function attachment(sources, digest) {
@@ -604,8 +645,12 @@ function revision(db, r, id, digest) {
         b.input.sources.map((s) => s.snapshot),
         digest,
       );
+    const review = b.agent_review;
+    if ((review || b.inventory?.agent_review_sha256) && (fingerprint(review ?? null) !== b.inventory?.agent_review_sha256 ||
+        fingerprint(b.inventory) !== b.input.scope.inventory_sha256)) reject(422, "review_integrity");
     return {
       revision: id,
+      ...(review && { agent_review: publicAgentReview(b, r.id) }),
       source_count:b.input.sources.filter(s=>s.snapshot).length, gap_types:gapTypes(b.report.coverage_gaps),
       findings: b.report.findings.map(({ measure_id, result }) => ({
         measure_id,

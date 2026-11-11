@@ -1,0 +1,76 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Truth2Power: app + browser",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceFolder}/backend/src/local-server.js",
+      "args": ["--dev"],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "skipFiles": ["<node_internals>/**"],
+      "env": {
+        "PORT": "5180",
+        "AUDIT_DIR": "${workspaceFolder}/.audit",
+        "T2P_PYTHON": "${workspaceFolder}/.venv/bin/python",
+        "SSL_CERT_FILE": "${env:SSL_CERT_FILE}"
+      },
+      "windows": {
+        "env": {
+          "PORT": "5180",
+          "AUDIT_DIR": "${workspaceFolder}/.audit",
+          "T2P_PYTHON": "${workspaceFolder}/.venv/Scripts/python.exe",
+          "SSL_CERT_FILE": "${workspaceFolder}/.venv/Lib/site-packages/certifi/cacert.pem"
+        }
+      },
+      "serverReadyAction": {
+        "pattern": "Truth2Power is running at (http://127\\.0\\.0\\.1:5180/)",
+        "uriFormat": "%s",
+        "action": "debugWithChrome",
+        "webRoot": "${workspaceFolder}/frontend",
+        "killOnServerStop": true
+      }
+    },
+    {
+      "name": "Truth2Power: audit worker",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceFolder}/backend/audit/worker.js",
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "skipFiles": ["<node_internals>/**"],
+      "env": {
+        "PORT": "5180",
+        "AUDIT_DIR": "${workspaceFolder}/.audit",
+        "T2P_PYTHON": "${workspaceFolder}/.venv/bin/python",
+        "SSL_CERT_FILE": "${env:SSL_CERT_FILE}"
+      },
+      "windows": {
+        "env": {
+          "PORT": "5180",
+          "AUDIT_DIR": "${workspaceFolder}/.audit",
+          "T2P_PYTHON": "${workspaceFolder}/.venv/Scripts/python.exe",
+          "SSL_CERT_FILE": "${workspaceFolder}/.venv/Lib/site-packages/certifi/cacert.pem"
+        }
+      }
+    },
+    {
+      "name": "Truth2Power: browser (existing server)",
+      "type": "chrome",
+      "request": "launch",
+      "url": "http://127.0.0.1:5180/",
+      "webRoot": "${workspaceFolder}/frontend"
+    }
+  ],
+  "compounds": [
+    {
+      "name": "Truth2Power: full stack",
+      "configurations": [
+        "Truth2Power: app + browser",
+        "Truth2Power: audit worker"
+      ],
+      "stopAll": true
+    }
+  ]
+}

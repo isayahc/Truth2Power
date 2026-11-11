@@ -103,7 +103,7 @@ try {
   await page.getByLabel("Status", { exact: true }).selectOption("resolved");
   await page.getByRole("button", { name: /Reviewed.*Ellenville/ }).click();
   await page.getByText("Decision history (2)", { exact: true }).waitFor();
-  await page.getByRole("button", { name: "View hospital on map" }).click();
+  await page.getByRole("button", { name: "View hospital record" }).click();
   await page.getByRole("button", { name: "Review notifications (6)" }).click();
   assert.equal(await page.getByLabel("Hospital", { exact: true }).inputValue(), "1002");
   await page.setViewportSize({ width: 390, height: 844 });
@@ -139,9 +139,9 @@ try {
   assert.equal(await page.getByRole("button",{name:"Save review decision"}).count(),0);
   const list = await (await page.request.get(base + "/api/reviews?hospital_key=1002&role=application")).json();
   for (const tag of ["en","es","pl","uk","ru"]) assert.ok(list.items.some((i) => i.documents[0].language === tag));
-  await page.getByRole("button", {name:"View hospital on map"}).click();
+  await page.getByRole("button", {name:"View hospital record"}).click();
   const historical = await page.locator(".detail .pill").innerText();
-  await page.getByRole("button", {name:"View saved 17-measure assessment"}).click();
+  await page.getByRole("button", {name:"Check for a saved 17-measure assessment"}).click();
   await page.getByRole("heading",{name:"Synthetic draft assessment"}).waitFor();
   await page.getByText(/Institutional grade pending/).waitFor();
   await page.getByText("Evidence and coverage",{exact:true}).click();

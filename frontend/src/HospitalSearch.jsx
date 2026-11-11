@@ -17,7 +17,6 @@ export default function HospitalSearch({ hospitals, onSelect }) {
       )
     : [];
   function choose(hospital) {
-    setQuery(hospital.properties.name);
     setOpen(false);
     onSelect(hospital);
   }

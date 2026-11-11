@@ -101,6 +101,7 @@
         "type": "object",
         "additionalProperties": false,
         "properties": {
+          "identity_method": { "const": "explicit-scope-v1" },
           "classification_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
           "source_id": {
             "type": "string",
@@ -174,6 +175,16 @@
                     "format": "uri",
                     "pattern": "^https?://",
                     "maxLength": 4096
+                  },
+                  "published_link": {
+                    "type": "object", "additionalProperties": false,
+                    "required": ["parent_url", "parent_sha256", "target_url", "anchor_label"],
+                    "properties": {
+                      "parent_url": {"type": "string", "format": "uri", "maxLength": 4096},
+                      "parent_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+                      "target_url": {"type": "string", "format": "uri", "maxLength": 4096},
+                      "anchor_label": {"type": "string"}
+                    }
                   },
                   "redirects": {
                     "type": "array", "maxItems": 8,

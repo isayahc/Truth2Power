@@ -9,6 +9,7 @@ import zipfile
 from xml.etree import ElementTree as ET
 from html.parser import HTMLParser
 from pathlib import Path
+from typing import Any, Callable
 
 from pypdf import PdfReader, __version__ as PDF_VERSION
 from documents import LIMIT, now
@@ -195,7 +196,47 @@ def _extract_bytes(data, suffix):
         logger.disabled = previous
 
 
-def extract_collection(hospital_key, collection_id, output, save):
+def snapshot_bytes(root: Path, snapshot: dict) -> bytes:
+    """Read the original only when its canonical path, byte limit and digest agree."""
+    digest = snapshot.get("sha256", "")
+    path = Path(snapshot["artifact_path"])
+    if (not re.fullmatch(r"[a-f0-9]{64}", digest) or path.suffix not in {".html", ".pdf", ".docx"}
+            or path.as_posix() != f"snapshots/{digest}{path.suffix}"):
+        raise ValueError("invalid_snapshot_path")
+    original = (root / path).resolve()
+    if not original.is_relative_to(root.resolve()) or original.stat().st_size > LIMIT:
+        raise ValueError("invalid_snapshot_path_or_size")
+    raw = original.read_bytes()
+    if hashlib.sha256(raw).hexdigest() != digest:
+        raise ValueError("snapshot_hash_mismatch")
+    return raw
+
+
+def prepared_path(root: Path, receipt: str) -> Path:
+    """Resolve a local extraction artifact by its content hash."""
+    if not isinstance(receipt, str) or not re.fullmatch(r"[a-f0-9]{64}", receipt):
+        raise ValueError("invalid_extraction_receipt")
+    path = root / "extractions" / "prepared" / (receipt + ".json")
+    if not path.resolve().is_relative_to(root.resolve()):
+        raise ValueError("invalid_extraction_path")
+    return path
+
+
+def read_prepared(root: Path, snapshot: dict, receipt: str) -> dict[str, Any]:
+    """Authenticate the worker's parser output against its receipt and exact input."""
+    encoded = prepared_path(root, receipt).read_bytes()
+    if hashlib.sha256(encoded).hexdigest() != receipt:
+        raise ValueError("extraction_receipt_hash_mismatch")
+    packet = json.loads(encoded)
+    if (packet["parser"] != PARSER or packet["pypdf_version"] != PDF_VERSION
+            or packet["snapshot_path"] != snapshot["artifact_path"] or packet["snapshot_sha256"] != snapshot["sha256"]):
+        raise ValueError("extraction_receipt_identity_mismatch")
+    return packet
+
+
+def extract_collection(hospital_key: str, collection_id: str, output: Path, save: Callable,
+                       prepared: dict[str, str] | None = None) -> dict:
+    """Write the per-URL extraction manifest, optionally reusing verified worker results."""
     if not re.fullmatch(r"(?:\d{1,8}|t2p-\d{1,8})", hospital_key) or not re.fullmatch(r"[0-9a-f]{32}", collection_id):
         raise ValueError("Use a hospital ID and saved collection ID")
     source = Path("collections") / hospital_key / (collection_id + ".json")
@@ -220,26 +261,27 @@ def extract_collection(hospital_key, collection_id, output, save):
         try:
             digest = record["sha256"]
             suffix = ".html" if index == 0 else Path(record["artifact_path"]).suffix
-            if suffix not in {".html", ".pdf", ".docx"} or (index and suffix == ".html"):
+            if suffix not in {".html", ".pdf", ".docx"} or (index == 0 and Path(record["artifact_path"]).suffix != ".html"):
                 raise ValueError("unsupported_snapshot_type")
             expected = Path("snapshots") / (digest + suffix)
-            if not re.fullmatch(r"[0-9a-f]{64}", digest) or record["artifact_path"] != expected.as_posix():
-                raise ValueError("invalid_snapshot_path")
-            path = output / expected
-            if not path.resolve().is_relative_to(output.resolve()) or path.stat().st_size > LIMIT:
-                raise ValueError("invalid_snapshot_size_or_path")
-            data = path.read_bytes()
-            if hashlib.sha256(data).hexdigest() != digest:
-                raise ValueError("snapshot_hash_mismatch")
-            segments = extract_bytes(data, suffix)
+            data = snapshot_bytes(output, record)
+            receipt = (prepared or {}).get(record["artifact_path"])
+            packet = read_prepared(output, record, receipt) if receipt else None
+            if packet and "error" in packet:
+                result.update(packet["error"])
+                continue
+            segments = packet["segments"] if packet else extract_bytes(data, suffix)
             if sum(len(s["text"]) for s in segments) > MAX_TEXT:
                 raise ValueError("text_limit_exceeded")
             review = [s["locator"] for s in segments if s["status"] == "needs_review"]
             status = "extracted" if segments and not review else "needs_review"
-            text_path = directory / f"{index}-{digest}.json"
-            payload = dict(parser=PARSER, pypdf_version=PDF_VERSION, source_url=result["source_url"],
-                           snapshot_sha256=digest, snapshot_path=expected.as_posix(), segments=segments)
-            save(output / text_path, json.dumps(payload, ensure_ascii=False, indent=2).encode("utf-8"))
+            if packet and packet["source_url"] == result["source_url"]:
+                text_path = prepared_path(output, receipt).relative_to(output)
+            else:
+                text_path = directory / f"{index}-{digest}.json"
+                payload = dict(parser=PARSER, pypdf_version=PDF_VERSION, source_url=result["source_url"],
+                               snapshot_sha256=digest, snapshot_path=expected.as_posix(), segments=segments)
+                save(output / text_path, json.dumps(payload, ensure_ascii=False, indent=2).encode("utf-8"))
             result.update(status=status, text_path=text_path.as_posix(), segment_count=len(segments),
                           character_count=sum(len(s["text"]) for s in segments), review_locators=review)
             if status == "needs_review":
@@ -260,4 +302,6 @@ def extract_collection(hospital_key, collection_id, output, save):
               "\nPDF locators preserve original page numbers. No OCR, translation or compliance findings. "
                "DOCX uses body locators, not rendered page numbers; extra content requires visual review. "
                "Sparse/blank pages are flagged conservatively; text presence does not prove completeness or correct table structure.")
-    return dict(report=report, manifest_file=str(output / manifest_path), document_count=len(results), review_count=review_count)
+    return dict(report=report, manifest_file=str(output / manifest_path), document_count=len(results), review_count=review_count,
+                file_text_status={r["snapshot_sha256"]: r["status"] for r, doc in zip(results, records)
+                                  if doc.get("status") == "saved" and doc.get("artifact_path", "").endswith((".pdf", ".docx"))})

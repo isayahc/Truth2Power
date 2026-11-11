@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
+import { AgentFinding } from "./AgentReview.jsx";
 
 const labels = { yes: "Yes", no: "No", unclear: "Unclear", n_a: "Not applicable" };
 const date = (value) => value ? new Date(value).toISOString().replace("T", " ").replace(/\.\d+Z$/, " UTC") : "Unknown";
 const safeUrl = (url) => typeof url === "string" && /^https:\/\//.test(url) ? url : undefined;
 
-export default function HospitalAssessment({ hospitalKey, hospitalName }) {
+export default function HospitalAssessment({ hospitalKey, hospitalName, publishedRevision }) {
   const [state, setState] = useState({ loading: true });
   const [reload, setReload] = useState(0);
   const revision = new URLSearchParams(window.location.search).get("revision");
@@ -19,7 +20,7 @@ export default function HospitalAssessment({ hospitalKey, hospitalName }) {
     }).then((next) => { if (!controller.signal.aborted) setState(next); })
       .catch(() => { if (!controller.signal.aborted) setState({ error: true }); });
     return () => controller.abort();
-  }, [hospitalKey, reload, revision]);
+  }, [hospitalKey, reload, revision, publishedRevision]);
   useEffect(() => {
     const hash = window.location.hash.slice(1);
     if (state.data && hash.startsWith("measure-" + hospitalKey + "-")) {
@@ -29,12 +30,12 @@ export default function HospitalAssessment({ hospitalKey, hospitalName }) {
   }, [state.data, hospitalKey]);
   if (state.changed) return <p role="alert">The assessment changed since this overview. <a href="?view=overview">Refresh the overview</a></p>;
   if (state.loading) return <p role="status">Loading hospital findings…</p>;
-  if (state.unavailable) return <p>Current measure-by-measure page: not yet assessed.</p>;
+  if (state.unavailable) return <p>The current review has no measure-by-measure findings yet.</p>;
   if (state.error) return <div role="alert">Hospital findings could not be loaded. <button onClick={() => setReload((n) => n + 1)}>Try again</button></div>;
   const report = state.data;
   return <section className="hospital-assessment" aria-label="Current hospital findings">
-    <details className="assessment-context"><summary>Current financial assistance findings</summary>
     {report.synthetic && <p role="status"><strong>SYNTHETIC DEMO — fabricated evidence, not hospital compliance findings.</strong></p>}
+    <details className="assessment-context"><summary>Current financial assistance findings</summary>
     {report.integrated_report_url && <p><a href={report.integrated_report_url}>Inspect immutable 17-measure assessment</a> · revision {report.revision.slice(0, 12)}</p>}
     {report.integrated_report_url && <p>Evidence coverage: {report.evidence_complete ? "complete for this scope" : "partial — see blockers"}. Source freshness clock: {date(report.monitoring_at)}. Replaying saved bytes does not reset their retrieval date.</p>}
     <p><strong>Current grade: pending</strong></p><p>{report.grade_note}</p>
@@ -55,6 +56,7 @@ export default function HospitalAssessment({ hospitalKey, hospitalName }) {
       <summary><span>{m.column} · {m.question}</span> <strong className={`measure-result result-${m.result}`}>{labels[m.result]}{m.versions.length ? " · draft" : " · not assessed"}</strong></summary>
       <div className="measure-body">
       <p>{m.reason}</p>
+      {m.agent_finding && <AgentFinding finding={m.agent_finding} revision={report.revision} heading />}
       {m.versions.filter((v) => v.finding?.result === "no" && v.finding.evidence.length > 0).map((v) => {
         const e = v.finding.evidence[0];
         return <details key={v.record_id + v.scope} className="correction-draft"><summary>Draft a correction request · {v.label}</summary>
@@ -81,6 +83,15 @@ export default function HospitalAssessment({ hospitalKey, hospitalName }) {
             <p>Snapshot SHA-256: <code>{e.sha256}</code></p>
             {e.export_verification === "original_snapshot_unavailable" && <p>Original snapshot is unavailable in this checkout. The saved assessment citation is retained; the live link may have changed.</p>}
           </details>)}
+          {!!v.finding?.candidate_passages?.length && <details>
+            <summary>Candidate passages for review ({v.finding.candidate_passages.length})</summary>
+            {v.finding.candidate_passages.map((p, i) => <div key={i}>
+              <p>{p.worker === "website_reviewer" ? "Website review" : "Document review"} · {p.locator}</p>
+              <blockquote>{p.quote}</blockquote>
+              <a href={p.saved_url} download>Download cited snapshot</a> · <a href={safeUrl(p.source_url)} target="_blank" rel="noreferrer">Original source ↗</a>
+              <p>Document role: {p.role} · Language: {p.language} · Campus: {p.campus.replaceAll("_", " ")}</p>
+            </div>)}
+          </details>}
           {!v.finding?.evidence.length && <p>No located evidence supplied; review needed.</p>}
         </section>)}
       </details>

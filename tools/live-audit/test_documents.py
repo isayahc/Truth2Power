@@ -63,13 +63,13 @@ class CollectionTests(unittest.TestCase):
             result = collect("1002", root, root / "out", save, fetch)
             output = result["output"]
             self.assertEqual(output["status"], "partial")
-            self.assertEqual([d["status"] for d in output["documents"]], ["saved", "saved", "failed", "failed"])
+            self.assertEqual([d["status"] for d in output["documents"]], ["saved", "saved", "failed", "saved"])
             self.assertEqual(calls.count("https://example.org/a.pdf"), 1)
             self.assertEqual(output["documents"][0]["labels"], ["English", "Again"])
             self.assertTrue(Path(result["manifest_file"]).is_file())
             for doc in output["documents"][:2]:
                 self.assertTrue((root / "out" / doc["artifact_path"]).is_file())
-            self.assertNotIn("https://other.example/b.pdf", calls)
+            self.assertIn("https://other.example/b.pdf", calls)
 
     def test_redirect_host_policy(self):
         for url in ["http://example.org/a.pdf", "https://localhost/a.pdf", "https://example.org:444/a.pdf", "https://user@example.org/a.pdf"]:

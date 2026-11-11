@@ -146,7 +146,7 @@ export default function ReviewInbox({ inbox, error, onRefresh, hospitalKey, hosp
         <p role="status">{message}</p>
         {item && <>
           <div className="section-tag">{reviewStatus(item.status)}</div><h2 tabIndex={-1} ref={detailHeading}>{item.hospital_name}</h2>
-          <button className="plain" onClick={() => onHospital(hospitals.find((h) => String(h.id) === item.hospital_key))}>View hospital on map</button>
+          <button className="plain" onClick={() => onHospital(hospitals.find((h) => String(h.id) === item.hospital_key))}>View hospital record</button>
           <h3>{item.title}</h3>
           <p className="review-meta">Scope: {item.scope_label}{item.guideline_year ? ` · Review guideline year: ${item.guideline_year}` : ""}</p>
           <details><summary>Source identity and revisions ({item.version_count})</summary>

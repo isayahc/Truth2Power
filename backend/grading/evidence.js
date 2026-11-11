@@ -8,6 +8,7 @@ import { sourceUrl, sha256, languageTag } from "../review/identity.js";
 import { readArtifact, requireValue, fingerprint, confirmedDocuments, assistancePages } from "./data.js";
 import { parseProfile } from "./profiles.js";
 import { readClassifications } from "./source-classification.js";
+import { verifyPublishedLinks } from "./published-links.js";
 import { postingPaths, isPostingPage } from "./posting-paths.js";
 
 /** Bind testimony to the exact observations, citations, inventory and completed assessment. */
@@ -76,6 +77,7 @@ export function evidenceStore(input, root, decisionDirectory) {
     } else requireValue(!["available", "reviewed"].includes(doc.status), "Reviewed source lacks snapshot bytes");
     registry.set(url, doc);
   }
+  verifyPublishedLinks(new Map(input.sources.map(s => [s.source_id, s.snapshot])), assistancePages.get(input.hospital_key), root);
   requireValue(input.scope.required_sources.length === registry.size &&
     input.scope.required_sources.every((id) => registry.has(id)), "Required inventory and sources differ");
   requireValue(input.scope.inventory_status !== "partial" || input.scope.gaps.length, "Describe the incomplete inventory");
@@ -102,6 +104,19 @@ export function evidenceStore(input, root, decisionDirectory) {
   }
 
   const verifiedDocuments = [...confirmedDocuments];
+  for (const doc of input.sources.filter(s => s.identity_method === "explicit-scope-v1")) {
+    const suffix = extname(doc.snapshot?.artifact_path ?? "");
+    requireValue([".pdf", ".docx"].includes(suffix) && doc.snapshot.published_link && !doc.classification_sha256 &&
+      !confirmedDocuments.some(d => d.sha256 === doc.snapshot.sha256), "Unexpected automatic classification");
+    const check = spawnSync(process.env.T2P_PYTHON || "python",
+      [fileURLToPath(new URL("extract.py", import.meta.url)), "--identity", suffix, input.hospital_key],
+      { input: byteCache.get(doc.source_id), encoding: "utf8", timeout: 30000 });
+    requireValue(check.status === 0, "Could not verify document identity");
+    const identity = JSON.parse(check.stdout);
+    requireValue(identity && identity.role === doc.role && identity.language === doc.language,
+      "Role or campus is unsupported by the original document");
+    verifiedDocuments.push({ ...identity, source_id: doc.source_id, sha256: doc.snapshot.sha256 });
+  }
   const classificationFiles = new Map();
   for (const doc of input.sources.filter((s) => s.classification_sha256)) {
     const hash = doc.classification_sha256;

@@ -6,7 +6,7 @@ import { join } from 'node:path';
 import { openStore, claim } from '../audit/store.js';
 import { enqueuePipeline, failPipeline } from '../audit/pipeline-store.js';
 import { sourceInventory } from '../audit/roster-inventory.js';
-import { failureDiagnostic } from '../audit/failure-diagnostic.js';
+import { documentAttempts, failureDiagnostic } from '../audit/failure-diagnostic.js';
 
 test('HTTP diagnostics preserve status, remove secrets and distinguish permanent and transient failures', (t) => {
   const root = mkdtempSync(join(tmpdir(), 'SYN-http-'));
@@ -67,4 +67,39 @@ test('blocked source host stops after one attempt and records a safe diagnostic'
   const events = db.prepare('SELECT state,detail FROM audit_run_events WHERE job=?').all(id);
   assert.equal(events.some(e => e.state === 'retrying'), false);
   assert.equal(JSON.parse(events.find(e => e.state === 'failed').detail).error_code, 'source_host_blocked');
+});
+
+test('historical CDN rejections retain the cause while removing query strings and raw exception text', () => {
+  const parent_url = 'https://hospital.example/aid';
+  const doc = {status:'failed', parent_url, source_url:'https://files.example/application.pdf?token=PRIVATE',
+    error_code:'source_host_blocked', reason:"Document or redirect is outside the roster site's HTTPS host", redirects:[]};
+  assert.deepEqual(documentAttempts({documents:[doc]}), [{source_url:'https://files.example/application.pdf',
+    parent_url, status:'failed', reason:'off_host_document_blocked', http_status:null, sha256:null}]);
+});
+
+test('document diagnostics retain known limits across manifest and run log projections', () => {
+  const failure = {status: 'failed', source_url: 'https://hospital.example/form.pdf', error_code: 'resource_limit'};
+  const attempts = documentAttempts({documents: [
+    {...failure, limit: 'seconds'}, {...failure, limit: 'documents'}, failure,
+    {...failure, limit: 'SYN-private-detail'}, {...failure, error_code: 'http_error', limit: 'seconds'},
+  ]});
+  assert.deepEqual(attempts.map(a => a.limit), ['seconds', 'documents', undefined, undefined, undefined]);
+  assert.deepEqual(documentAttempts({documents: attempts}), attempts);
+});
+
+test('document timings survive run log export and missing measurements stay unknown', () => {
+  const docs = [
+    {status: 'saved', source_url: 'https://hospital.example/fast.pdf?token=SYN', elapsed_ms: 0, size_bytes: 6},
+    {status: 'failed', error_code: 'retrieval_timeout', elapsed_ms: 19999, download_attempted: true},
+    {status: 'failed', error_code: 'resource_limit', limit: 'depth', download_attempted: false},
+    {status: 'saved', elapsed_ms: -1, size_bytes: -3},
+    {status: 'failed', elapsed_ms: '5000', size_bytes: 92},
+    {status: 'saved', elapsed_ms: 0.7, size_bytes: '44000'},
+  ];
+  const attempts = documentAttempts({documents: docs});
+  assert.deepEqual(attempts.map(d => d.elapsed_ms), [0, 19999, undefined, undefined, undefined, undefined]);
+  assert.deepEqual(attempts.map(d => d.download_attempted), [undefined, true, false, undefined, undefined, undefined]);
+  assert.deepEqual(attempts.map(d => d.size_bytes), [6, undefined, undefined, undefined, undefined, undefined]);
+  assert.equal(attempts[0].source_url, 'https://hospital.example/fast.pdf');
+  assert.deepEqual(documentAttempts({documents: attempts}), attempts);
 });

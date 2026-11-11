@@ -1,6 +1,7 @@
 """Deterministic traversal and SSRF tests. No network or browser dependency."""
 import hashlib
 import json
+import threading
 import tempfile
 import unittest
 from pathlib import Path
@@ -69,6 +70,136 @@ class MultihopTests(unittest.TestCase):
         shallow = self.run_collection(depth=1)
         self.assertEqual(shallow['status'], 'partial')
         self.assertEqual(shallow['documents'][0]['status'], 'failed')
+        self.assertEqual(shallow['documents'][0]['limit'], 'depth')
+
+    def test_financial_aid_sources_take_precedence_on_a_mixed_documents_page(self) -> None:
+        """Capture both applications, the notice and guidelines within four slots."""
+        other_files = ['/financial-assistance/board.pdf', '/transportation.pdf', '/volunteer.pdf']
+        applications = [
+            ('/NOTICE-OF-FINANCIAL-AID.pdf', 'Notice'),
+            ('https://files.example/01', 'Financial assistance application'),
+            ('/descarga.pdf', 'Solicitud de ayuda financiera'),
+            ('/FA_Guidelines.pdf', 'Read guidelines'),
+        ]
+        self.web['/financial-assistance'] = (
+            ''.join(f'<a href="{url}">Public records</a>' for url in other_files)
+            + '<a href="/resources">Patient resources</a>'
+        ).encode()
+        self.web['/resources'] = ''.join(
+            f'<a type="application/pdf" href="{url}">{label}</a>' for url, label in applications
+        ).encode()
+        for path in other_files + ['/NOTICE-OF-FINANCIAL-AID.pdf', '/descarga.pdf', '/FA_Guidelines.pdf']:
+            self.web[path] = b'%PDF-SYN ' + path.encode()
+        self.web['/01'] = (b'%PDF-SYN form', 'https://files.example/01', 'application/pdf')
+
+        result = self.run_collection(documents=4)
+        documents = result['documents']
+        saved = [doc for doc in documents if doc['status'] == 'saved']
+        self.assertEqual([doc['published_link']['anchor_label'] for doc in saved],
+                         [label for _, label in applications])
+        parent = result['pages'][1]
+        self.assertTrue(all(doc['published_link']['parent_sha256'] == parent['sha256'] for doc in saved))
+        self.assertTrue(all(doc['classification'] == 'unverified' for doc in saved))
+        failed = [doc for doc in documents if doc['status'] == 'failed']
+        self.assertEqual([doc['source_url'] for doc in failed], ['https://example.org' + p for p in other_files])
+        self.assertTrue(all(doc['error_code'] == 'resource_limit' and doc['limit'] == 'documents' for doc in failed))
+        self.assertEqual(len(self.calls), 6)
+        self.assertEqual(result['status'], 'partial')
+        self.assertEqual(self.run_collection()['status'], 'complete')
+
+    def test_concurrent_files_stream_ready_artifacts_with_stable_provenance(self) -> None:
+        """A quick download reaches analysis while an earlier download is still in flight."""
+        self.web['/financial-assistance'] = b'<a href="/en.pdf">English</a><a href="/es.pdf">Spanish</a>'
+        coordinator = threading.get_ident()
+        started = threading.Barrier(2)
+        reviewed = threading.Event()
+        captures = []
+
+        def fetch(url: str, host: str) -> tuple[bytes, str, str]:
+            """Force two overlapping file reads without relying on machine speed."""
+            if url.endswith('.pdf'):
+                started.wait(timeout=4)
+                if url.endswith('/en.pdf') and not reviewed.wait(timeout=4):
+                    raise AssertionError('Ready Spanish document was blocked behind English')
+            return self.fetch(url, host)
+
+        def on_capture(record: dict) -> None:
+            """The coordinator publishes only complete, digest-matched artifacts."""
+            self.assertEqual(threading.get_ident(), coordinator)
+            data = (self.root / 'out' / record['artifact_path']).read_bytes()
+            self.assertEqual(hashlib.sha256(data).hexdigest(), record['sha256'])
+            captures.append(record['source_url'])
+            if record['source_url'].endswith('/es.pdf'):
+                reviewed.set()
+
+        result = collect('362', self.root, self.root / 'out', save, fetch, on_capture=on_capture)['output']
+        self.assertEqual(result['status'], 'complete')
+        self.assertEqual([u.split('/')[-1] for u in captures], ['financial-assistance', 'es.pdf', 'en.pdf'])
+        self.assertEqual([d['labels'][0] for d in result['documents']], ['English', 'Spanish'])
+        for doc in result['documents']:
+            self.assertIs(doc['download_attempted'], True)
+            self.assertGreaterEqual(doc['elapsed_ms'], 0)
+            self.assertEqual(doc['published_link']['parent_sha256'], result['landing_page']['sha256'])
+
+    def test_root_navigation_keeps_low_priority_fallback_and_patient_discovery(self) -> None:
+        """An entire hospital sitemap should not consume the page budget before the patient portal."""
+        (self.root / 'data/maps/hospitals.geojson').write_text(json.dumps({'features': [
+            {'id': '362', 'properties': {'assistance_url': 'https://example.org/'}}]}))
+        self.web['/'] = (b'<a href="/news">News</a><a href="/visiting">Patients &amp; Visitors</a>'
+                         b'<a href="/unknown.pdf">Download</a>')
+        self.web['/news'] = b'SYN hospital news'
+        self.web['/visiting'] = b'<a href="/en.pdf">Financial Assistance Application</a>'
+        self.web['/unknown.pdf'] = b'%PDF-SYN document'
+        result = self.run_collection(pages=2)
+        self.assertEqual([doc['status'] for doc in result['documents']], ['saved', 'saved'])
+        self.assertEqual(self.calls[1:], ['https://example.org/visiting', 'https://example.org/en.pdf',
+                                          'https://example.org/unknown.pdf'])
+        self.assertEqual(result['pages'][-1]['limit'], 'pages')
+        self.assertIs(result['pages'][-1]['download_attempted'], False)
+        self.assertNotIn('elapsed_ms', result['pages'][-1])
+        self.assertEqual(self.run_collection()['status'], 'complete')
+        self.assertEqual(self.calls[-1], 'https://example.org/news')
+
+    def test_persistent_connection_is_keyed_by_validated_host_and_ip(self) -> None:
+        """Reuse same-origin TLS, reopen a stale idle socket once and repin changed DNS."""
+        from collections import Counter
+        from email.message import Message
+        from http.client import RemoteDisconnected
+        from unittest.mock import MagicMock
+        from documents import PinnedConnections
+        from usage import usage
+
+        counters = Counter()
+        self.addCleanup(usage.reset, usage.set(counters))
+        response = MagicMock(status=200, length=0, will_close=False)
+        response.headers = Message()
+        old, fresh, moved = MagicMock(), MagicMock(), MagicMock()
+        old.getresponse.side_effect = [response, response, RemoteDisconnected()]
+        fresh.getresponse.return_value = moved.getresponse.return_value = response
+        ips = [['8.8.8.8']] * 3 + [['1.1.1.1']]
+        with patch('documents.public_addresses', side_effect=ips) as dns, patch('documents.socket.create_connection') as connect, \
+                patch('documents.ssl.create_default_context') as tls, \
+                patch('documents.http.client.HTTPSConnection', side_effect=[old, fresh, moved]):
+            pool = PinnedConnections()
+            try:
+                for index in range(4):
+                    download(f'https://example.org/{index}', 'example.org', connections=pool)
+            finally:
+                pool.close()
+        self.assertEqual(dns.call_count, 4)
+        self.assertEqual([call.args[0][0] for call in connect.call_args_list], ['8.8.8.8', '8.8.8.8', '1.1.1.1'])
+        self.assertEqual(tls.call_count, 1)
+        self.assertEqual(counters['network_requests'], 5)
+        self.assertEqual([conn.close.call_count for conn in (old, fresh, moved)], [1, 1, 1])
+
+    def test_time_and_total_size_limits_remain_distinct(self) -> None:
+        """The audit can distinguish an expired crawl from exhausted download capacity."""
+        self.web['/financial-assistance'] = b'<a href="/en.pdf">Application</a>'
+        with patch('documents.time.monotonic', side_effect=[0, 0, 1]):
+            expired = self.run_collection(seconds=1)
+        self.assertEqual(expired['documents'][0]['limit'], 'seconds')
+        exhausted = self.run_collection(total_bytes=len(self.web['/financial-assistance']))
+        self.assertEqual(exhausted['documents'][0]['limit'], 'total_bytes')
 
     def test_broken_child_and_javascript_are_gaps_not_absence(self):
         self.web['/financial-assistance'] += b'<script>SYN no execution</script><a href="/missing">Financial help</a>'
@@ -100,19 +231,39 @@ class MultihopTests(unittest.TestCase):
                 with self.assertRaises(ValueError):
                     public_addresses('example.org')
 
-    def test_external_links_not_fetched_and_limits_are_explicit(self):
-        self.web['/financial-assistance'] += b'<a href="https://other.example/x.pdf">External</a>'
-        result = self.run_collection(pages=1)
-        self.assertEqual(result['status'], 'partial')
-        self.assertFalse(any('other.example' in c for c in self.calls))
-        self.assertTrue(any('outside' in d.get('reason', '') for d in result['documents']))
+    def test_external_files_are_terminal_and_contacts_do_not_consume_budget(self) -> None:
+        """File links may delegate retrieval, while external HTML and contact links never extend a crawl."""
+        self.web['/financial-assistance'] = (
+            b'<a href="https://files.example/get">Financial assistance application</a>'
+            b'<a href="https://files.example/bad.pdf">PDF</a>'
+            b'<a href="https://other.example/resources">Financial assistance resources</a>'
+            b'<a href="mailto:aid@example.org">Application</a><a href="tel:5550000">Billing</a>')
+        self.web['/get'] = (b'%PDF-SYN', 'https://files.example/get', 'application/octet-stream')
+        self.web['/bad.pdf'] = b'<a href="/secret.pdf">PDF</a>'
+        result = self.run_collection()
+        good, bad = result['documents']
+        self.assertEqual(good['status'], 'saved')
+        self.assertEqual(good['published_link']['parent_sha256'], result['landing_page']['sha256'])
+        self.assertEqual(good['published_link']['anchor_label'], 'Financial assistance application')
+        self.assertEqual(bad['error_code'], 'invalid_document')
+        self.assertEqual(len(self.calls), 3)
+        self.assertEqual(sum(e['disposition'] == 'non_retrieval' for e in result['links']), 2)
+        self.assertEqual(self.run_collection(documents=1)['documents'][1]['error_code'], 'resource_limit')
         self.assertEqual(self.run_collection(bytes_per_resource=10)['status'], 'failed')
         with self.assertRaises(ValueError):
             Bounds(pages=101)
-        self.web['/financial-assistance'] = b'<base href="https://outside.example/"><a href="form.pdf">Financial assistance</a>'
-        based = self.run_collection()
-        self.assertEqual(based['documents'][0]['source_url'], 'https://outside.example/form.pdf')
-        self.assertEqual(based['documents'][0]['status'], 'failed')
+
+    def test_typed_extensionless_document_and_same_host_content_detection(self) -> None:
+        """An explicit download anchor or a document response can identify a file without a suffix."""
+        self.web['/financial-assistance'] = (
+            b'<a type="application/pdf" href="https://files.example/id">English</a>'
+            b'<a href="/resources">Resources</a>')
+        self.web['/id'] = (b'%PDF-SYN typed', 'https://files.example/id', 'application/pdf')
+        self.web['/resources'] = (b'%PDF-SYN local', 'https://example.org/resources', 'application/pdf')
+        result = self.run_collection()
+        self.assertEqual(len(result['pages']), 1)
+        self.assertEqual([d['status'] for d in result['documents']], ['saved', 'saved'])
+        self.assertTrue(all(d['artifact_path'].endswith('.pdf') for d in result['documents']))
 
     def test_campus_classification_requires_pinned_content_not_link_label(self):
         path = self.root / 'docs/audit-format/wave-one-document-inventory.json'

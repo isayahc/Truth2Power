@@ -1,5 +1,5 @@
 import { budgetPolicy, BudgetStop } from "./budgets.js";
-import { pinPrices, measure } from "./usage-ledger.js";
+import { configuredPrices, pinPrices, measure } from "./usage-ledger.js";
 import { event, recordPublication } from "./run-history.js";
 import { DatabaseSync } from "node:sqlite";
 import { existsSync, readFileSync, mkdirSync, writeFileSync, linkSync, unlinkSync } from "node:fs";
@@ -11,6 +11,7 @@ import { sha256 } from "../review/identity.js";
 import { applicationProfileHash, applicationVisualHash } from "../grading/profiles.js";
 
 import { facilityFor } from "./roster-inventory.js";
+import { agentReviewConfig } from "./opencode-review.js";
 import { classificationFile } from "../grading/source-classification.js";
 export { roster } from "./roster-inventory.js";
 
@@ -26,8 +27,18 @@ export function immutable(root, path, bytes) {
   finally { unlinkSync(temporary); }
   return path;
 }
-export function enqueuePipeline(db, { hospital_key, year = 2026, review_date, mode = "replay", variant = "original", request_key, root = pipelineRoot(), evidence_root = root, discovery_bounds = {}, budget, allow_paid = false, classifications, manual_import }) {
-  const caps = { depth: 8, pages: 100, documents: 100, bytes_per_resource: 12582912, total_bytes: 134217728, timeout: 30, seconds: 150, redirects: 8 };
+/** Advertise only the review configuration the server can actually queue. */
+export function fullAuditReview() {
+  const config = agentReviewConfig();
+  const limits = budgetPolicy();
+  const rates = config.paid && configuredPrices().models?.['openrouter/global/' + config.model];
+  const available = !config.paid || (limits.paid_requests > 0 && limits.paid_tokens > 0 &&
+    limits.paid_usd_micros > 0 && Number.isFinite(rates?.input_tokens) && Number.isFinite(rates?.output_tokens));
+  return { ...config, available, config_id: fingerprint(config), max_paid_usd: available && config.paid ? limits.paid_usd_micros / 1e6 : 0 };
+}
+
+export function enqueuePipeline(db, { hospital_key, year = 2026, review_date, mode = "replay", variant = "original", request_key, root = pipelineRoot(), evidence_root = root, discovery_bounds = {}, budget, allow_paid = false, review_config, classifications, manual_import }) {
+  const caps = { depth: 8, pages: 100, documents: 100, bytes_per_resource: 12582912, total_bytes: 134217728, timeout: 30, seconds: 3600, redirects: 8 };
   if (!discovery_bounds || typeof discovery_bounds !== "object" || Array.isArray(discovery_bounds) || Object.entries(discovery_bounds).some(([k, v]) => !Object.hasOwn(caps, k) || !Number.isInteger(v) || v < 1 || v > caps[k])) throw Error("Invalid discovery bounds");
   const facility = facilityFor(hospital_key);
   if (![2025, 2026].includes(year) ||
@@ -49,6 +60,11 @@ export function enqueuePipeline(db, { hospital_key, year = 2026, review_date, mo
     context.classification_sha256 = sha256(classifications);
     immutable(context.root, `source-classifications/${context.classification_sha256}.json`, classifications);
   }
+  if (review_config !== undefined) {
+    if (mode !== "full_audit" || typeof review_config !== "string" || !/^[a-f0-9]{64}$/.test(review_config)) throw Error("Invalid reviewer configuration");
+    context.review_config = review_config;
+  }
+  if (typeof allow_paid !== "boolean") throw Error("Invalid paid setting");
   if (budget !== undefined) context.requested_budget = budget;
   if (allow_paid) context.allow_paid = true;
   const hash = fingerprint(context);
@@ -59,6 +75,11 @@ export function enqueuePipeline(db, { hospital_key, year = 2026, review_date, mo
       const { roster_sha256, ...legacy } = context;
       if (old.context_hash !== hash && old.context_hash !== fingerprint(legacy)) throw Error("Idempotency key already used with different context");
       return Number(old.job);
+    }
+    if (["live", "full_audit"].includes(mode)) {
+      const { runtime, model, paid } = agentReviewConfig();
+      if (review_config && review_config !== fingerprint({ runtime, model, paid })) throw Error("Review configuration changed before confirmation");
+      if (runtime !== "offline" && (!paid || allow_paid)) context.agent_review = { runtime, model, paid };
     }
     context.budget = budgetPolicy(budget,allow_paid);
     const id = Number(db.prepare("INSERT INTO jobs(hospital,year,rule,review_date,context) VALUES(?,?,?,?,?)")
@@ -140,10 +161,12 @@ export function publications(root = pipelineRoot(), { includeSynthetic = process
   if (!existsSync(path)) return { bundles: [], failures: [], events: [], jobs: [] };
   const db = new DatabaseSync(path, { readOnly: true });
   try {
+    db.exec("PRAGMA busy_timeout=5000");
     if (!db.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name='pipeline_events'").get()) return { bundles: [], failures: [], events: [], jobs: [] };
     const rows = db.prepare("SELECT a.output,a.job FROM assessments a JOIN jobs j ON j.id=a.job WHERE j.rule='css-17-v1' ORDER BY a.job DESC").all();
     const bundles = rows.map((r) => ({ ...JSON.parse(r.output), job: r.job })).filter((b) => b.root === resolve(root) && (includeSynthetic || !b.input.synthetic));
     if (bundles.some((b) => b.id !== fingerprint({ input: b.input, report: b.report }) ||
+      ((b.agent_review || b.inventory?.agent_review_sha256) && b.inventory?.agent_review_sha256 !== fingerprint(b.agent_review ?? null)) ||
       (b.input.scope.inventory_sha256 && b.input.scope.inventory_sha256 !== fingerprint(b.inventory)))) throw Error("Persisted assessment identity mismatch");
     const jobs = db.prepare("SELECT * FROM jobs WHERE rule='css-17-v1' ORDER BY id DESC").all()
       .map((j) => ({ ...j, context: JSON.parse(j.context) })).filter((j) => j.context.root === resolve(root) && (includeSynthetic || j.context.mode !== "synthetic"));

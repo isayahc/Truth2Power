@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useLocale } from "./locale.jsx";
 import { HumanIntervention } from './HumanIntervention.jsx';
+import AgentReview from "./AgentReview.jsx";
 
 const api = "/api/pilot/v1";
 const modes = {
@@ -33,7 +34,9 @@ const stageNames = {
   collect_sources: "Collect sources",
   collection_saved: "Collection saved",
   collection_stopped: "Collection stopped",
-  extract_documents: "Extract documents",
+  extract_documents: "Review website and documents",
+  reconcile_evidence: "Reconcile evidence by criterion",
+  model_review: "Specialist and coordinator model review",
   restore_checkpoint: "Restore checkpoint",
   grade: "Evaluate findings",
   publish: "Publish results",
@@ -378,11 +381,84 @@ function Receipt({ run, refresh }) {
     </section>
   );
 }
-function FailureDiagnostic({ event }) {
+const retrievalReasons = {
+  off_host_document_blocked: "The collector blocked a hospital-linked file because it was hosted on another domain.",
+  source_host_blocked: "Source URL is outside discovery scope or is not valid HTTPS.",
+  unsafe_destination: "Source resolves to a private or internal address. Retrieval blocked.",
+  redirect_loop: "Source redirect loop detected. Automatic retries stopped.",
+  redirect_limit: "Source exceeded the redirect limit. Automatic retries stopped.",
+  tls_certificate_invalid: "Certificate verification failed. Check the worker trust store and website certificate chain. Automatic retries stopped.",
+  http_error: "The website returned an HTTP error.",
+  website_verification_required: "Human intervention required: website verification.",
+  collection_failed: "Source collection failed. A specific cause was not recorded.",
+  dns_resolution_failed: "The worker could not resolve the website hostname. Check DNS from the worker.",
+  retrieval_timeout: "The website did not respond before the retrieval deadline.",
+  invalid_document: "The response did not contain a valid PDF or Word document.",
+  invalid_content: "The response did not contain the expected page.",
+  resource_limit: "The collection reached a resource limit.",
+};
+
+const limitLabels = {
+  depth: "Link depth limit", pages: "Page count limit", documents: "Document count limit",
+  seconds: "Collection time limit", bytes_per_resource: "File size limit", total_bytes: "Total download size limit",
+  network_bytes: "Run download quota", network_requests: "Run request quota",
+};
+
+function retrievalMessage(attempt, t) {
+  const label = limitLabels[attempt.limit] ?? retrievalReasons[attempt.reason] ?? retrievalReasons.collection_failed;
+  const prefix = attempt.download_attempted === false ? t("Skipped before download") + " · " : "";
+  return prefix + t(label) + (attempt.http_status ? ` (HTTP ${attempt.http_status})` : "");
+}
+
+function DocumentResults({ documents }) {
+  const { t, language } = useLocale();
+  if (!documents) return null;
+  const failures = documents.attempts.filter(d => d.status === "failed");
+  const reasons = new Map();
+  for (const d of failures) {
+    const message = retrievalMessage(d, t);
+    reasons.set(message, (reasons.get(message) ?? 0) + 1);
+  }
+  const unreadable = documents.attempts.filter(d => d.text_status === "needs_review");
+  const slowest = documents.attempts.filter(d => d.elapsed_ms != null)
+    .sort((a, b) => b.elapsed_ms - a.elapsed_ms).slice(0, 3);
+  const seconds = new Intl.NumberFormat(language, { style: "unit", unit: "second", maximumFractionDigits: 3 });
+  const bytes = new Intl.NumberFormat(language, { style: "unit", unit: "byte" });
+  return <section aria-label={t("Document retrieval")}>
+    <h4>{t("Document retrieval")}</h4>
+    {documents.captured === 0 ? <p><strong>{t("No PDF or Word documents were captured.")}</strong></p> :
+      documents.classified_assistance_documents === 0 && <p><strong>{t("No captured file has been verified as financial assistance material for this hospital.")}</strong></p>}
+    <p>{t("Documents captured")} · {documents.captured} / {documents.candidates}</p>
+    {reasons.size > 0 && <ul>{[...reasons].map(([reason, count]) => <li key={reason}>{count} × {reason}</li>)}</ul>}
+    {slowest.length > 0 && <details>
+      <summary>{t("Slowest document requests")}</summary>
+      <ol>{slowest.map((d, i) => <li key={i}>
+        <strong>{seconds.format(d.elapsed_ms / 1000)}</strong>{" · "}
+        {d.source_url ? <a href={d.source_url} target="_blank" rel="noreferrer">{d.source_url}</a> : t("Unknown")}
+        {" · "}{d.status === "saved" ? t("Captured") : retrievalMessage(d, t)}
+        {d.size_bytes != null && <>{" · "}{bytes.format(d.size_bytes)}</>}
+      </li>)}</ol>
+    </details>}
+    {unreadable.length > 0 && <details>
+      <summary>{t("Files needing text extraction review")} ({unreadable.length})</summary>
+      <ul>{unreadable.map((d, i) => <li key={i}>{d.source_url ?? t("Unknown")}</li>)}</ul>
+    </details>}
+    {failures.length > 0 && <details>
+      <summary>{t("Documents not captured")} ({failures.length})</summary>
+      <ul>{failures.map((d, i) => <li key={i}>
+        {d.source_url && <><a href={d.source_url} target="_blank" rel="noreferrer">{d.source_url}</a>{" · "}</>}
+        {retrievalMessage(d, t)}
+      </li>)}</ul>
+    </details>}
+  </section>;
+}
+
+function FailureDiagnostic({ event, showReason = false }) {
   const { t } = useLocale();
   if (!event?.diagnostic) return null;
   const d = event.diagnostic;
   return <div className="run-diagnostic">
+    {showReason && retrievalReasons[event.reason] && <p><strong>{t(retrievalReasons[event.reason])}</strong></p>}
     {d.http_status && <p>{t('HTTP status')}: <strong>{d.http_status}</strong>{d.http_status === 403 ? ` · ${t('The website refused the request.')}` : ''}</p>}
     {d.source_url && <p>{t('Failed source')}: <a href={d.source_url} target="_blank" rel="noreferrer">{d.source_url}</a></p>}
     {event.retry_scheduled != null && <p>{t(event.retry_scheduled ? 'Another attempt is scheduled.' : 'No automatic retry is scheduled.')}</p>}
@@ -405,6 +481,7 @@ function RunDetail({ path, refresh }) {
             {t(modes[run.mode])} · <strong>{t(statusNames[run.status])}</strong>{" "}
             · {t("Attempts")} {run.attempts}
           </p>
+          <DocumentResults documents={run.documents} />
           <h4>{t("Timeline")}</h4>
           <Paged url={run.timeline} refresh={refresh + tick}>
             {(events) => (
@@ -429,14 +506,11 @@ function RunDetail({ path, refresh }) {
                         ·{" "}
                         {t(
                           {
-                            audit_failed: "Audit failed", source_host_blocked: "Source URL is outside discovery scope or is not valid HTTPS.", unsafe_destination: "Source resolves to a private or internal address. Retrieval blocked.", redirect_loop: "Source redirect loop detected. Automatic retries stopped.", redirect_limit: "Source exceeded the redirect limit. Automatic retries stopped.", budget_exhausted:"Run budget exhausted", quota_exceeded:"Resource quota exceeded", unknown_price:"Provider price unknown",
-                            lease_expired: "Worker lease expired",
-                            retry_scheduled: "Retry scheduled",
-                            tls_certificate_invalid: "Certificate verification failed. Check the worker trust store and website certificate chain. Automatic retries stopped.",
+                            ...retrievalReasons,
+                            audit_failed: "Audit failed", budget_exhausted: "Run budget exhausted",
+                            quota_exceeded: "Resource quota exceeded", unknown_price: "Provider price unknown",
+                            lease_expired: "Worker lease expired", retry_scheduled: "Retry scheduled",
                             operator_cancelled: "Cancelled by operator",
-                            website_verification_required: 'Human intervention required: website verification.',
-                            http_error: "The website returned an HTTP error.",
-                            collection_failed: "Source collection failed. A specific cause was not recorded.",
                           }[e.reason],
                         )}
                       </>
@@ -459,6 +533,7 @@ function RunDetail({ path, refresh }) {
               <Paged field="sources" url={run.revision} refresh={refresh}>
                 {(sources, data) => (
                   <>
+                    <AgentReview review={data.agent_review} revision={data.revision} />
                     {data.findings && (
                       <details>
                         <summary>{t("Draft findings")}</summary>
@@ -531,7 +606,7 @@ const roleLabels = {
   unclassified: "Unclassified",
   supplement: "Supplement",
 };
-export function HospitalRuns({ hospitalKey }) {
+export function HospitalRuns({ hospitalKey, onAssessment }) {
   const { t, language } = useLocale(),
     url = api + "/hospitals/" + hospitalKey + "/runs";
   const storageKey = "audit-queue-intent-" + hospitalKey;
@@ -548,11 +623,13 @@ export function HospitalRuns({ hospitalKey }) {
     [busy, setBusy] = useState(false),
     [failed, setFailed] = useState(false);
   const lock = useRef(false),
-    alive = useRef(true),
-    polls = useRef(0);
+    alive = useRef(true);
   const r = useJson(url + "?limit=1", tick),
     latest = r.data?.items[0];
   const activity = useJson(latest ? `${api}/runs/${latest.audit_run_id}/timeline?limit=100` : null, tick);
+  useEffect(() => {
+    if (latest?.assessment_id) onAssessment?.(latest.assessment_id);
+  }, [latest?.assessment_id, onAssessment]);
   const lastActivity = activity.data?.items?.at(-1);
   const currentStage = activity.data?.items?.filter((event) => event.stage).at(-1)?.stage;
   useEffect(() => {
@@ -562,9 +639,8 @@ export function HospitalRuns({ hospitalKey }) {
     };
   }, []);
   useEffect(() => {
-    if (!active(latest?.status) || polls.current >= 120 || r.error) return;
+    if (!active(latest?.status) || r.error) return;
     const id = setTimeout(() => {
-      polls.current++;
       bump((n) => n + 1);
     }, 5000);
     return () => clearTimeout(id);
@@ -574,6 +650,12 @@ export function HospitalRuns({ hospitalKey }) {
     const day = new Date().toISOString().slice(0, 10);
     setIntent({
       mode,
+      ...(mode === "full_audit" && r.data?.agent_review && {
+        review_config: r.data.agent_review.config_id,
+        ...(r.data.agent_review.paid && r.data.agent_review.available && {
+          allow_paid: true, budget: { paid_usd_micros: Math.round(r.data.agent_review.max_paid_usd * 1e6) },
+        }),
+      }),
       review_date: day,
       year: Number(day.slice(0, 4)),
       request_key: crypto.randomUUID(),
@@ -606,7 +688,6 @@ export function HospitalRuns({ hospitalKey }) {
         setAcceptedJob(Number(data.audit_run_id.slice("audit-run-".length)));
         select(data.url);
         setIntent(null);
-        polls.current = 0;
         bump((n) => n + 1);
       }
     } catch {
@@ -640,12 +721,12 @@ export function HospitalRuns({ hospitalKey }) {
           cancelled: "Audit cancelled.",
           needs_human: 'Human intervention required: website verification.',
         }[latest.status] ?? "Check the run details below for the latest recorded state.")}</p>}
-        {!busy && active(latest?.status) && <p>{t(r.error ? "Status updates unavailable. Use Refresh to reconnect." : polls.current >= 120 ? "Automatic updates paused. Use Refresh to resume." : "Checking status every 5 seconds. Audit buttons are disabled while this run is pending.")}</p>}
+        {!busy && active(latest?.status) && <p>{t(r.error ? "Status updates unavailable. Use Refresh to reconnect." : "Checking status every 5 seconds. Audit buttons are disabled while this run is pending.")}</p>}
         {!busy && latest?.status === 'queued' && <p>{t("If it stays queued, the local audit worker may not be running.")}</p>}
         {r.receivedAt && <small>{t("Status checked")}: {new Date(r.receivedAt).toLocaleTimeString(language)}</small>}
         {currentStage && <p>{t("Last recorded task")}: {t(stageNames[currentStage] ?? "Unknown")}</p>}
         {lastActivity && <p>{t("Last worker event")}: {date(lastActivity.at, language, t)} · {t(statusNames[lastActivity.state] ?? "Unknown")}</p>}
-        <FailureDiagnostic event={lastActivity} />
+        <FailureDiagnostic event={lastActivity} showReason />
         {latest && <a href={`${api}/runs/${latest.audit_run_id}/log.json`} download={`${latest.audit_run_id}-log.json`}>{t("Download run log (JSON)")}</a>}
       </div>}
       <div className="ops-controls">
@@ -676,7 +757,16 @@ export function HospitalRuns({ hospitalKey }) {
           </p>
           {r.data?.preflight?.[intent.mode] && <p>{t("Maximum requests")} · {r.data.preflight[intent.mode].network_requests_max}
             <br/>{t("Maximum download bytes")} · {r.data.preflight[intent.mode].network_bytes_max}
-            <br/>{t("Paid services off. Local cost unknown.")}</p>}
+            {intent.allow_paid
+              ? <><br/>{t("Model spending limit for this run")} · {money(intent.budget.paid_usd_micros / 1e6, language, t)}</>
+              : <><br/>{t("Paid services off. Local cost unknown.")}</>}</p>}
+          {intent.mode === "full_audit" && r.data?.agent_review && <p>
+            {r.data.agent_review.runtime === "offline"
+              ? t("Rules-based review. Configure a model on the server to enable the website, document and coordinator agents.")
+              : r.data.agent_review.available
+                ? <>{t("Website, document and coordinator agents")} · {r.data.agent_review.model}</>
+                : t("Rules-based review. Paid model review needs a funded run budget and a model rate card.")}
+          </p>}
           <button disabled={busy} onClick={submit}>
             {t(failed ? "Retry same request" : "Confirm run")}
           </button>{" "}
@@ -694,7 +784,7 @@ export function HospitalRuns({ hospitalKey }) {
           </button>
         </div>
       )}
-      {latest?.status === 'needs_human' && <HumanIntervention key={latest.audit_run_id} runId={latest.audit_run_id} onResume={()=>{polls.current=0;bump(n=>n+1)}} />}
+      {latest?.status === 'needs_human' && <HumanIntervention key={latest.audit_run_id} runId={latest.audit_run_id} onResume={() => bump(n => n + 1)} />}
       {failed && (
         <p role="alert">
           {t(
@@ -720,10 +810,7 @@ export function HospitalRuns({ hospitalKey }) {
             ))}
           </dl>
           <button
-            onClick={() => {
-              polls.current = 0;
-              bump((n) => n + 1);
-            }}
+            onClick={() => bump((n) => n + 1)}
           >
             {t("Refresh")}
           </button>

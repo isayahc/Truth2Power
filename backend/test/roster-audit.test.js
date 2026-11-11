@@ -32,9 +32,9 @@ function offlineCollection(root, request) {
 const options = (mode, request_key) => ({ mode, request_key, year: 2026, review_date: "2026-11-09",
   discovery_bounds: { pages: 4, documents: 3, depth: 2 } });
 
-test("all 212 roster keys queue bounded scans and arbitrary PFI/URL/limits cannot enter the worker", () => {
+test("all 212 roster keys queue bounded full audits and arbitrary PFI/URL/limits cannot enter the worker", () => {
   for (const h of roster) {
-    const job = options("discovery_only", "SYN-validate-" + h.id);
+    const job = options("full_audit", "SYN-validate-" + h.id);
     assert.equal(route("hospitals/" + h.id, job).statusCode, 202);
     assert.equal(facilityFor(h.id).pfi, h.properties.pfi);
   }
@@ -53,7 +53,7 @@ test("a failed-resource scan and full audit work for the roster facility without
   assert.equal(scan.inventory.pfi, null);
   assert.equal(scan.inventory.schema_version, "hospital-source-inventory-v1");
   assert.match(scan.inventory.gaps.join(" "), /Scripts not executed/);
-  assert.match(scan.inventory.gaps.join(" "), /outside the roster/);
+  assert.ok(scan.inventory.gaps.some(g => g.includes("https://other.invalid/policy.pdf") && g.includes("404")));
   assert.match(scan.inventory.gaps.join(" "), /404/);
   assert.equal(scan.inventory.sources.find((s) => s.source_id.endsWith("/missing.pdf")).capture_status, "failed");
   assert.equal(scan.report, undefined);
@@ -65,10 +65,50 @@ test("a failed-resource scan and full audit work for the roster facility without
   assert.equal(new Set(b.report.findings.map((f) => f.measure_id)).size, 17);
   assert.ok(b.report.findings.every((f) => f.result === "unclear"));
   assert.equal(b.report.final_grade, null);
+  const { reportingRoute } = await import("../audit/reporting-api.js");
+  const log = JSON.parse(reportingRoute({rawPath: `/api/pilot/v1/runs/audit-run-${full}/log.json`, requestContext: {http: {method:"GET"}}}).body);
+  assert.equal(log.documents.captured, 0);
+  assert.equal(log.documents.candidates, 2);
+  assert.ok(log.documents.attempts.every(d => d.reason === "http_error" && d.http_status === 404));
+  assert.equal(log.timeline.find(e => e.stage === "collection_saved").document_attempts.length, 2);
   const next = enqueuePipeline(db, { ...options("discovery_only", "SYN-later-scan"), hospital_key: key });
   await runPipeline(db, claim(db, 600000, { id: next }), offlineCollection);
   assert.equal(JSON.parse(route(path).body).latest, b.id);
   assert.equal(publications().events.length, 0);
+});
+
+test("Full audit reconciles independently reviewed pages and CDN PDFs across roster entries", async () => {
+  for (const key of ["324", "85"]) {
+    const { id } = JSON.parse(route("hospitals/" + key, options("full_audit", "SYN-public-files-" + key)).body);
+    const bundle = await runPipeline(db, claim(db, 600000, { id }), (dir, req) =>
+      offlineCollection(dir, { ...req, scenario: "public-files" }));
+    const pdf = bundle.inventory.sources.find(s => s.source_id.endsWith("/download/summary"));
+    assert.equal(pdf.provenance, "explicit-scope-v1");
+    assert.equal(pdf.review.worker, "document_analyst");
+    const page = bundle.inventory.sources.find(s => s.role === "landing_page").review;
+    assert.equal(page.worker, "website_reviewer");
+    assert.ok(page.links.some(e => e.status === "saved" && e.sha256 === pdf.digest));
+    assert.ok(page.links.some(e => e.status === "failed" && e.http_status === 404));
+    assert.equal(pdf.review.date_passages[0].locator, "page 1");
+    assert.ok(pdf.review.campus_mentions[facilityFor(key).name]);
+    assert.equal(bundle.report.findings.length, 17);
+    const summary = bundle.report.findings.find(f => f.css_column === "S");
+    assert.equal(summary.result, "yes");
+    assert.equal(summary.human_review, "pending");
+    assert.ok(summary.evidence.some(e => e.locator === "page 1" && e.sha256 === pdf.digest));
+    assert.ok(summary.evidence.some(e => e.locator === "link " + pdf.source_id));
+    const application = bundle.report.findings.find(f => f.css_column === "R");
+    assert.equal(application.result, "unclear");
+    assert.match(application.reason, /Linked file unavailable/);
+    assert.ok(application.evidence.some(e => e.quote === "Financial assistance application"));
+    assert.ok(bundle.report.findings.find(f => f.css_column === "AM").evidence.some(e => e.quote.includes("billing office")));
+    const replay = await runPipeline(db, claim(db, 600000, { id: enqueuePipeline(db, {
+      ...options("replay", "SYN-replay-files-" + key), hospital_key: key }) }), () => assert.fail("Unexpected network request"));
+    assert.deepEqual(replay.report.findings, bundle.report.findings);
+    const tampered = structuredClone(bundle.input);
+    tampered.sources.find(s => s.source_id === pdf.source_id).role = "application";
+    assert.throws(() => grade(tampered, { root: bundle.root }), /unsupported by the original/);
+  }
 });
 
 test("reviewing exact campus and role citations resolves only the supported posting on offline replay", async () => {
@@ -77,6 +117,7 @@ test("reviewing exact campus and role citations resolves only the supported post
     ...options(mode, request), hospital_key: key, classifications }) });
   const scan = await runPipeline(db, queue("discovery_only", "SYN-shared-host"), offlineCollection);
   const captured = scan.inventory.sources.find((s) => s.source_id.endsWith("/unknown.docx"));
+  assert.equal(captured.published_link.target_url, "https://files.example/unknown.docx");
   assert.equal(captured.role, "unclassified");
   assert.equal(captured.language, "und");
   const other = scan.inventory.sources.find((s) => s.source_id.endsWith("/application.docx"));
@@ -106,6 +147,9 @@ test("reviewing exact campus and role citations resolves only the supported post
   assert.ok(items.every((item) => item.status === "pending"));
   assert.equal(b.report.final_grade, null);
   assert.deepEqual(grade(b.input, { root: b.root }), b.report);
+  const altered = structuredClone(b.input);
+  altered.sources.find(s => s.source_id === doc.source_id).snapshot.published_link.anchor_label = "SYN wrong label";
+  assert.throws(() => grade(altered, { root: b.root }), /label missing/);
   assert.equal(publications().events.length, 0, "Classifying unchanged bytes cannot create a material change");
   assert.throws(() => sourceInventory(facilityFor(key), { ...scan.discovery, landing_url: "https://other.invalid" }), /roster landing/);
   await assert.rejects(run("SYN-wrong-quote", record([{ ...doc, applicability: { locator, quote: "Another facility" } }])), /citation/);

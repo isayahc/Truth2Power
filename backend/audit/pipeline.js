@@ -1,21 +1,23 @@
 import { BudgetStop, deadline, defaults } from "./budgets.js";
 import { meterAttempt, meterStage, measure } from "./usage-ledger.js";
+import { documentAttempts, failureDiagnostic } from "./failure-diagnostic.js";
 import { stage } from "./run-history.js";
 import { readFileSync, existsSync } from "node:fs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { execFile } from "node:child_process";
-import { rubric, hhs, referenceHash, contextOf, expectedFor, readArtifact, fingerprint, validateSchema, confirmedDocuments, assistancePages } from "../grading/data.js";
+import { rubric, hhs, referenceHash, contextOf, expectedFor, readArtifact, fingerprint, validateSchema, confirmedDocuments } from "../grading/data.js";
 import { grade } from "../grading/grade.js";
-import { parseProfile, applicationProfileHash, applicationVisualHash } from "../grading/profiles.js";
-import { fplComparison } from "../grading/measures.js";
+import { applicationProfileHash, applicationVisualHash } from "../grading/profiles.js";
 import { sha256, languageTag } from "../review/identity.js";
 import { reportingContext } from "../reporting/context.js";
 import { localRecords, latestByScope, projectRecord } from "../hospital-page/records.js";
 import { immutable, publishPipeline, publishScan, failPipeline } from "./pipeline-store.js";
 import { facilityFor, sourceInventory, savedCollection } from "./roster-inventory.js";
 import { readClassifications } from "../grading/source-classification.js";
-import { postingPaths } from "../grading/posting-paths.js";
+import { reviewCapturedSources, attachWebsiteLinks } from "./evidence-workers.js";
+import { reviewWithAgents } from "./opencode-review.js";
+import { reconcileFindings } from "./assessment-coordinator.js";
 import { adaptArtifact } from "../grading/adapter.js";
 import { normalizeObservations } from "./normalize-observations.js";
 
@@ -26,7 +28,7 @@ async function bridge(root, request) {
   if (remaining <= 0) throw new BudgetStop("budget_exhausted","seconds");
   return new Promise((resolve, reject) => {
     const child = execFile(process.env.T2P_PYTHON || "python", [fileURLToPath(new URL("../../tools/live-audit/pipeline_bridge.py", import.meta.url)), "--root", root],
-      { timeout: Math.min(remaining, request.mode === "live" ? 180000 : 120000), maxBuffer: 32 * 1024 * 1024 }, (error, stdout) => {
+      { timeout: remaining, maxBuffer: 32 * 1024 * 1024 }, (error, stdout) => {
         try {
           if (error?.killed && error.code !== "ERR_CHILD_PROCESS_STDIO_MAXBUFFER") {
             measure({ telemetry_missing: 1 });
@@ -37,7 +39,7 @@ async function bridge(root, request) {
           measure(packet.usage);
            if (packet.failed) {
              const error = Error("Collection or extraction failed");
-             if (["source_host_blocked", "unsafe_destination", "redirect_loop", "redirect_limit", "tls_certificate_invalid", "http_error", "collection_failed", "website_verification_required"].includes(packet.error_code)) {
+             if (failureDiagnostic(packet.error_code, packet.diagnostic)) {
                error.code = packet.error_code;
                error.diagnostic = packet.diagnostic;
              }
@@ -90,16 +92,18 @@ function synthetic(job) {
   return { input, content, producer_records: [], extraction: { mode: "published-fields-v1", note: "Synthetic original structured publications; not a PDF transcription." } };
 }
 
-async function real(db, job, collect) {
+async function real(db, job, collect, invokeAgent) {
   const root = job.context.root, originalRoot = job.context.evidence_root;
   const display = reportingContext(job.hospital), gaps = ["Complete website/online-application discovery and governing interpretations require review; direct links do not prove absence."];
   const facility = facilityFor(job.hospital);
   if (job.context.roster_sha256 && fingerprint(facility) !== job.context.roster_sha256) throw Error("Roster changed; enqueue a new job");
   const curated = new URL(`../../docs/hospital-pages/${job.hospital}.json`, import.meta.url);
   const pinned = existsSync(curated) ? JSON.parse(readFileSync(curated)).records : [];
-  if (job.hospital === "362") {
-    const path = "docs/audit-format/changes/362-summary-posting.json";
-    pinned.push(projectRecord(readFileSync(new URL("../../" + path, import.meta.url)), path, "posting"));
+  const postingPath = `docs/audit-format/changes/${facility.hospital_key}-summary-posting.json`;
+  const postingFile = new URL("../../" + postingPath, import.meta.url);
+  if (existsSync(postingFile)) {
+    const prior = projectRecord(readFileSync(postingFile), postingPath, "posting");
+    if (prior?.hospital_key === facility.hospital_key) pinned.push(prior);
   }
   const local = localRecords(originalRoot);
   if (local.unavailable.length) gaps.push(`${local.unavailable.length} source-review artifacts could not be read.`);
@@ -131,15 +135,15 @@ async function real(db, job, collect) {
     mode: "live", hospital_key: job.hospital, bounds: job.context.discovery_bounds, discovery_only: scan,
   });
   if (collected?.budget_stop) {
-    stage(db,job,"collection_stopped",{manifest:collected.manifest, captures:[...(collected.collection.pages??[]),...collected.collection.documents]
+    stage(db,job,"collection_stopped",{manifest:collected.manifest, document_attempts:documentAttempts(collected.collection), captures:[...(collected.collection.pages??[]),...collected.collection.documents]
       .filter(s=>s.status==="saved").map(s=>({sha256:s.sha256,retrieved_at:s.retrieved_at}))});
     throw new BudgetStop(collected.budget_stop==="seconds"?"budget_exhausted":"quota_exceeded",collected.budget_stop);
   }
   const collection = job.context.manual_import ? null : replay ? savedCollection(originalRoot,job.hospital) : collected.collection;
-  const inventory = sourceInventory(facility, collection, seeds);
-  if (collection && !replay) stage(db, job, "collection_saved", { collection_sha256: inventory.collection_sha256,
-    captures: inventory.sources.filter((s) => s.capture_status === "saved").map((s) => ({
-      source_id: s.source_id, sha256: s.digest, retrieved_at: s.retrieved_at })) });
+  if (collection && !replay) stage(db, job, "collection_saved", { collection_sha256: fingerprint(collection), document_attempts: documentAttempts(collection),
+    captures: [...(collection.pages || []), ...collection.documents].filter(s => s.status === "saved").map(s => ({
+      source_id: s.source_url, sha256: s.sha256, retrieved_at: s.retrieved_at })) });
+  const inventory = sourceInventory(facility, collection, seeds, replay ? originalRoot : root);
   const documents = inventory.sources;
   gaps.push(...inventory.gaps);
   const classifications = readClassifications(root, job.context.classification_sha256, job.hospital);
@@ -153,8 +157,10 @@ async function real(db, job, collect) {
       const path = `snapshots/${d.digest}${suffix}`, raw = readArtifact(from, path);
       Object.assign(d, { artifact_path: path, capture_status: "saved" });
       if (sha256(raw) !== d.digest) throw Error("Source snapshot checksum mismatch");
-      immutable(root, path, raw);
+      if (from === root) measure({ artifact_reuses: 1 });
+      else immutable(root, path, raw);
       source.snapshot = { snapshot_id: d.digest, sha256: d.digest, artifact_path: path, url: d.source_id, retrieved_at: d.retrieved_at, publisher_updated_at: null };
+      if (d.published_link) source.snapshot.published_link = d.published_link;
       if (d.final_url && d.final_url !== d.source_id) {
         source.snapshot.final_url = d.final_url;
         source.snapshot.redirects = d.redirects;
@@ -169,7 +175,7 @@ async function real(db, job, collect) {
           provenance: "operator_classification", classification_sha256: source.classification_sha256 });
         verified.push(review);
       }
-      if (source.role === "unclassified") gaps.push(`Classify document role and campus (${d.campus_applicability}): ${d.source_id}`);
+      if (scan && source.role === "unclassified") gaps.push(`Classify document role and campus (${d.campus_applicability}): ${d.source_id}`);
       if (source.language === "und") gaps.push(`Unknown language: ${d.source_id}`);
     } else {
       if (d.digest) d.capture_status = "snapshot_unavailable";
@@ -186,8 +192,27 @@ async function real(db, job, collect) {
   input.scope.required_sources = input.sources.map((s) => s.source_id);
   meterStage("extract_documents");
   stage(db, job, "extract_documents");
-  const analysis = await bridge(root, { mode: "extract", deadline:deadline(db,job), sources: input.sources, application_review_date: job.review_date });
+  const analysis = await reviewCapturedSources(input.sources, documents, sources =>
+    bridge(root, { mode: "extract", deadline: end, sources, prepared_extractions: collected?.prepared_extractions, application_review_date: job.review_date }));
+  attachWebsiteLinks(analysis, collection);
   const extracted = analysis.sources;
+  for (const doc of documents) {
+    if (doc.capture_status !== "saved" || !doc.artifact_path) continue;
+    const review = analysis.reviews[doc.source_id];
+    if (review?.sha256 !== doc.digest || review.source_id !== doc.source_id) throw Error("Unbound specialist evidence");
+    review.campus_applicability = review.explicit_identity ? "applicable" : doc.campus_applicability;
+    doc.review = review;
+    if (review.explicit_identity) {
+      const identity = review.explicit_identity;
+      const source = input.sources.find(s => s.source_id === doc.source_id);
+      Object.assign(source, { role: identity.role, language: identity.language, identity_method: "explicit-scope-v1" });
+      Object.assign(doc, { role: identity.role, language: identity.language, campus_applicability: "applicable",
+        provenance: source.identity_method });
+      verified.push({ ...identity, source_id: source.source_id, sha256: doc.digest });
+    }
+    if (doc.role === "unclassified") gaps.push(`Classify document role and campus (${doc.campus_applicability}): ${doc.source_id}`);
+    if (analysis.file_text_status[doc.digest]) doc.text_status = analysis.file_text_status[doc.digest];
+  }
   const content = {};
   for (const s of input.sources) if (s.snapshot) {
     const segments = extracted[s.source_id];
@@ -197,7 +222,7 @@ async function real(db, job, collect) {
         p.status === "extracted" && p.locator === c.locator && p.text.includes(c.quote)))) throw Error("Unverified classification citation");
     }
     content[s.source_id] = !segments.length ? s.snapshot.sha256 : fingerprint(segments.map((p) => [p.locator, p.text]));
-    if (segments.some((p) => p.status !== "extracted")) { s.status = "unreadable"; gaps.push(`Review extraction gaps in ${s.source_id}`); }
+    if (analysis.file_text_status?.[s.snapshot.sha256] === "needs_review" || segments.some((p) => p.status !== "extracted")) { s.status = "unreadable"; gaps.push(`Review extraction gaps in ${s.source_id}`); }
     else if (s.language !== "en" && !(s.snapshot.artifact_path.endsWith(".html") && s.language === "und")) { s.status = "translation_needed"; gaps.push(`Qualified language/measure interpretation needed: ${s.source_id} [${s.language}]`); }
     else if (s.role === "application" && records.some((r) => r.kind === "application-reviews" && r.findings.some((f) => f.evidence.some((e) => e.url === s.source_id && e.sha256 === s.snapshot.sha256)))) s.status = "reviewed";
   }
@@ -217,77 +242,40 @@ async function real(db, job, collect) {
         decisions: adapted.provenance.decisions || [], blockers: adapted.blockers });
     } catch (error) { normalization.push({ producer_sha256: record.record_id, accepted: [], rejected: [error.message] }); }
   }
-  for (const m of rubric.measures) {
-    const originals = scoped.filter((s) => s.success?.measure_id === m.measure_id).map((s) => s.success);
-    const f = { ...contextOf(input), measure_id: m.measure_id, expected: expectedFor(m, job.year), result: "unclear", human_review: "pending", evidence: [], observed: [],
-      unresolved_evidence: originals.length ? [...new Set(originals.map((r) => `Source draft ${r.record_id}: ${r.finding.explanation}`))] : [`Collect and review ${m.evidence_requirement}`] };
-    for (const review of analysis.application_reviews) {
-      const draft = review.findings.find((finding) => finding.measure_id === m.measure_id);
-      for (const e of draft?.evidence || []) f.evidence.push({ ...e, source_id: review.source_id, sha256: review.snapshot.sha256 });
-    }
-    for (const r of originals) for (const e of r.finding.evidence) {
-      const s = input.sources.find((s) => s.source_id === e.url && s.snapshot?.sha256 === e.sha256 && m.roles.includes(s.role));
-      const segment = s && extracted[s.source_id]?.find((p) => p.locator === e.locator && p.text.includes(e.quote));
-      if (!segment) { f.unresolved_evidence.push(`Reverify missing, changed or unsupported citation: ${e.url} · ${e.locator}`); continue; }
-      if (!f.evidence.some((c) => c.sha256 === e.sha256 && c.locator === e.locator && c.quote === e.quote)) f.evidence.push({ source_id: s.source_id, snapshot_id: e.sha256, sha256: e.sha256, locator: e.locator, quote: e.quote });
-    }
-    if (m.evaluator === "posting") {
-      f.evidence = [];
-      const paths = postingPaths(input.sources, extracted, assistancePages.get(job.hospital), m.expected.any_accessible_role, verified, job.hospital, job.context.discovery_bounds?.depth || 3);
-      const links = [...new Set(paths.map((p) => p.target))];
-      f.evidence = [...new Map(paths.flatMap((p) => p.evidence).map((e) => [JSON.stringify(e), e])).values()];
-      if (links.length) {
-        f.result = "yes"; f.unresolved_evidence = [];
-        f.observed = [{ evidence_index: f.evidence.findIndex((e) => e.locator.startsWith("link ")), method: "posted_link", value: { links: [...new Set(links)], search_complete: false } }];
-      }
-    } else if (["fpl", "maximum", "installments"].includes(m.evaluator)) {
-      const numeric = [];
-      for (const s of input.sources.filter((s) => s.role === "application" && s.snapshot && s.status !== "unreadable")) {
-        const matches = extracted[s.source_id].map((p) => ({ p, value: parseProfile(m.evaluator, p.text, s.language) })).filter((v) => v.value);
-        if (matches.length !== 1) continue;
-        const { p, value } = matches[0];
-        const index = f.evidence.push({ source_id: s.source_id, snapshot_id: s.snapshot.sha256, sha256: s.snapshot.sha256, locator: p.locator, quote: p.text }) - 1;
-        f.observed.push({ evidence_index: index, method: "text_profile", value });
-        numeric.push(m.evaluator === "fpl" ? fplComparison(value, job.year).result : m.evaluator === "maximum" ? value.percent >= 400 ? "yes" : "unclear" : value.percent <= 5 ? "yes" : "no");
-      }
-      if (numeric.length && new Set(numeric).size === 1 && ["yes", "no"].includes(numeric[0])) {
-        f.result = numeric[0]; f.unresolved_evidence = [];
-      }
-    } else f.unresolved_evidence.push("The saved qualitative draft is not a verified structured observation or human approval. Review its exact evidence under the grading contract.");
-    for (const reused of normalization.flatMap((n) => n.accepted).filter((o) => o.measure_id === m.measure_id)) {
-      const same = f.observed.find((o) => f.evidence[o.evidence_index].source_id === reused.evidence.source_id);
-      if (same && fingerprint(same.value) !== fingerprint(reused.observation.value)) {
-        f.unresolved_evidence.push("Conflicting verified historical observation; reconcile the source-specific facts.");
-      } else if (!same) {
-        const index = f.evidence.push(reused.evidence) - 1;
-        f.observed.push({ ...reused.observation, evidence_index: index });
-      }
-    }
-    for (const n of normalization) {
-      const decision = n.decisions?.filter((d) => !d.measure_id || d.measure_id === m.measure_id) || [];
-      if (decision.some((d) => ["reject", "needs_changes"].includes(d.decision) || ["correct", "request_information"].includes(d.action))) {
-        f.unresolved_evidence.push("Reconcile the independent historical review before using these normalized observations.");
-      }
-    }
-    f.unresolved_evidence = [...new Set(f.unresolved_evidence)];
-    input.findings.push(f);
-  }
+  stage(db, job, "reconcile_evidence");
+  meterStage("reconcile_evidence");
+  reconcileFindings({ input, analysis, scoped, normalization, verified,
+    maxDepth: job.context.discovery_bounds?.depth || 3, collection });
   for (const review of analysis.application_reviews) {
     if (review.template_comparison?.result !== "yes") gaps.push(`Template equivalence requires review: ${review.source_id}`);
+  }
+  let agentReview;
+  if (!replay) {
+    if (job.context.agent_review) {
+      stage(db, job, "model_review");
+      meterStage("model_review");
+    }
+    // Leave time to persist the evidence and grade it if a model stalls.
+    const publishReserveMs = Math.min(15_000, (job.context.budget ?? defaults).seconds * 100);
+    agentReview = await reviewWithAgents({ db, job, analysis, input, deadline: end - publishReserveMs, invoke: invokeAgent });
+    if (job.context.agent_review && agentReview.status !== "completed") {
+      gaps.push("The requested model evidence review was incomplete. See the reviewers and citations for this run.");
+    }
+    inventory.agent_review_sha256 = fingerprint(agentReview);
   }
   input.scope.gaps = [...new Set(gaps)];
   inventory.gaps = input.scope.gaps;
   input.scope.inventory_sha256 = fingerprint(inventory);
-  return { input, content, inventory, producer_records: records, normalization, application_reviews: analysis.application_reviews, discovery: collection,
+  return { input, content, inventory, agent_review: agentReview, producer_records: records, normalization, application_reviews: analysis.application_reviews, discovery: collection,
     extraction: { parser: "document-text-v5", collection_status: collection?.status ?? "saved_evidence_replay" } };
 }
 
-export async function runPipeline(db, job, collect = bridge) {
+export async function runPipeline(db, job, collect = bridge, invokeAgent) {
   if (!db.prepare("SELECT id FROM jobs WHERE id=? AND token=? AND status='running'").get(job.id, job.token)) return null;
-  return meterAttempt(db, job, () => executePipeline(db, job, collect));
+  return meterAttempt(db, job, () => executePipeline(db, job, collect, invokeAgent));
 }
 
-async function executePipeline(db, job, collect) {
+async function executePipeline(db, job, collect, invokeAgent) {
   try {
     deadline(db,job);
     if (job.context.engine_version !== "multilingual-v1") throw Error("Pipeline engine changed; enqueue a new job");
@@ -307,7 +295,7 @@ async function executePipeline(db, job, collect) {
       }
     }
     if (!prepared) {
-      prepared = job.context.mode === "synthetic" ? synthetic(job) : await real(db, job, collect);
+      prepared = job.context.mode === "synthetic" ? synthetic(job) : await real(db, job, collect, invokeAgent);
       prepared.job_context_sha256 = fingerprint(job.context);
       const raw = Buffer.from(JSON.stringify(prepared)), digest = sha256(raw), path = `pipeline-checkpoints/${digest}.json`;
       immutable(job.context.root, path, raw);
@@ -338,7 +326,12 @@ async function executePipeline(db, job, collect) {
     return publishPipeline(db, job, bundle) ? bundle : null;
   } catch (error) {
     failPipeline(db, job, error);
-    console.error("pipeline_failed", job.id, error.name);
+    const diagnostic = failureDiagnostic(error.code, error.diagnostic);
+    const last = db.prepare("SELECT json_extract(detail,'$.name') stage FROM audit_run_events WHERE job=? AND attempt=? AND state='stage' ORDER BY seq DESC LIMIT 1").get(job.id, job.token);
+    console.error("pipeline_failed", JSON.stringify({
+      job_id: job.id, stage: last?.stage ?? "prepare", reason: diagnostic?.code ?? (error instanceof BudgetStop ? error.code : "audit_failed"),
+      source_url: diagnostic?.source_url, http_status: diagnostic?.http_status, manifest_id: diagnostic?.manifest_id,
+    }));
     throw error;
   }
 }
