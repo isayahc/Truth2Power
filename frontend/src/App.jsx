@@ -94,8 +94,6 @@ export default function App() {
   const [attempt, setAttempt] = useState(0);
   const [filter, setFilter] = useState(null);
   const [selected, setSelected] = useState(null);
-  const [mapKey, setMapKey] = useState(0);
-  const [searchKey, setSearchKey] = useState(0);
   const [reviewOpen, setReviewOpen] = useState(false);
   const [reviewHospital, setReviewHospital] = useState("");
   const [inbox, setInbox] = useState(null);
@@ -127,7 +125,6 @@ export default function App() {
     const restore = () => {
       const key = new URL(window.location.href).searchParams.get("hospital");
       setSelected(data.hospitals.find((h) => String(h.id) === key) || null);
-      setFilter(null);
       setReviewOpen(false);
     };
     restore();
@@ -146,14 +143,13 @@ export default function App() {
   }
 
   function selectHospital(hospital) {
-    if (filter !== null && filter !== hospital.properties.stars) setFilter(null);
     setSelected(hospital);
     hospitalUrl(hospital);
   }
   function closeDetail() {
     setSelected(null);
     hospitalUrl(null);
-    setSearchKey((value) => value + 1);
+    requestAnimationFrame(() => document.querySelector(".search-bar input")?.focus());
   }
   const visible = data?.hospitals.filter((h) => filter === null || h.properties.stars === filter);
   return (
@@ -161,16 +157,16 @@ export default function App() {
       <Header onReview={() => openReviews()} pending={reviewError ? "!" : inbox?.pending} />
       <main>
         {reviewOpen ? <>
+          <button className="back plain" onClick={() => setReviewOpen(false)}>{t(selected ? '← Back to hospital record' : '← Back to hospital map')}</button>
           <HumanInterventionInbox />
-          <button className="back plain" onClick={() => setReviewOpen(false)}>{t('← Back to hospital map')}</button>
           <div lang="en"><ReviewInbox key={reviewHospital} inbox={inbox} error={reviewError} onRefresh={refreshReviews}
             hospitalKey={reviewHospital} hospitals={data?.hospitals ?? []} onHospital={(hospital) => {
-              if (hospital) { selectHospital(hospital); setMapKey((n) => n + 1); setReviewOpen(false); }
+              if (hospital) { selectHospital(hospital); setReviewOpen(false); }
             }} /></div>
         </> : !selected && new URLSearchParams(window.location.search).get("view") === "operations" ? <AuditOperations /> : !selected && new URLSearchParams(window.location.search).get("view") === "changes" ? <div lang="en"><Changes /></div> : !selected && new URLSearchParams(window.location.search).get("view") === "overview" ?
           (data ? <div lang="en"><Overview features={data.hospitals} counties={data.counties} /></div> :
             <p role="status">{error ? <button onClick={() => setAttempt(attempt + 1)}>{t('Retry loading atlas')}</button> : t('Loading atlas…')}</p>) : <>
-        <div className="intro">
+        <div className="intro" hidden={!!selected}>
           <div>
             <div className="period">{t('September 2025 review')}</div>
             <h1>{t('New York hospital compliance')}</h1>
@@ -186,7 +182,8 @@ export default function App() {
           )}
         </div>
         {data ? (
-          <div className={`content${selected ? " hospital-selected" : ""}`}>
+          <>
+          <div className="content" hidden={!!selected}>
             <section className="map-block" aria-label={t('Hospital locations')}>
               <div className="toolbar">
                 <div className="geo-label">
@@ -196,16 +193,11 @@ export default function App() {
                   {t('Statewide map')}
                 </div>
                 <HospitalSearch
-                  key={searchKey}
                   hospitals={data.hospitals}
-                  onSelect={(hospital) => {
-                    selectHospital(hospital);
-                    setMapKey((value) => value + 1);
-                  }}
+                  onSelect={selectHospital}
                 />
               </div>
               <HospitalMap
-                key={mapKey}
                 hospitals={visible}
                 counties={data.counties}
                 selected={selected}
@@ -222,14 +214,12 @@ export default function App() {
               </div>
             </section>
             <aside>
-              {selected ? (
-                <HospitalDetail hospital={selected} onClose={closeDetail} onReview={() => openReviews(String(selected.id))}
-                  pendingReviews={inbox?.items.filter((r) => r.hospital_key === String(selected.id) && r.status !== "resolved").length} />
-              ) : (
-                <Ratings hospitals={data.hospitals} filter={filter} onFilter={setFilter} />
-              )}
+              <Ratings hospitals={data.hospitals} filter={filter} onFilter={setFilter} />
             </aside>
           </div>
+          {selected && <HospitalDetail key={selected.id} hospital={selected} onClose={closeDetail} onReview={() => openReviews(String(selected.id))}
+            pendingReviews={inbox?.items.filter((r) => r.hospital_key === String(selected.id) && r.status !== "resolved").length} />}
+          </>
         ) : (
           <p className="load-status" role="status">
             {error ? (

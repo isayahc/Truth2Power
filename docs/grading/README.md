@@ -79,7 +79,7 @@ cp docs/grading/examples/SYN-multilingual.json "$demo_dir/1002.json"
 T2P_GRADING_DIRECTORY="$demo_dir" npm run dev
 ```
 
-Select Ellenville and open **View saved 17-measure assessment**. The panel labels this record synthetic and shows the pending institutional grade. The September 2025 historical rating remains in the map.
+Open Ellenville’s hospital record and select **Check for a saved 17-measure assessment**. The panel labels this record synthetic and shows the pending institutional grade. The hospital header shows the September 2025 published rating.
 
 ## Verify from a clean checkout
 

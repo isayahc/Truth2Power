@@ -454,13 +454,12 @@ p {
   overflow: hidden;
 }
 .controls button {
-  padding: 0;
-  width: 31px;
-  height: 30px;
+  padding: 0 8px;
+  min-height: 32px;
   background: transparent;
   border: 0;
-  font-size: 18px;
-  line-height: 1;
+  font-size: 12px;
+  line-height: 1.2;
 }
 .controls button + button {
   border-left: 1px solid #d7dfd9;
@@ -471,9 +470,6 @@ p {
 }
 .controls button:hover:not(:disabled) {
   background: #daeee6;
-}
-.controls button:last-child {
-  font-size: 14px;
 }
 .map-footer {
   display: flex;
@@ -650,8 +646,6 @@ h2 {
   font-size: 13px;
   line-height: 1.4;
 }
-.content.hospital-selected { grid-template-columns: minmax(0, 1fr); }
-.hospital-selected aside { width: 100%; }
 .hospital-assessment { overflow-wrap: anywhere; }
 .hospital-assessment p, .hospital-assessment li { font-size: 14px; line-height: 1.6; }
 .hospital-assessment summary { cursor: pointer; font-size: 14px; font-weight: 600; }
@@ -986,16 +980,13 @@ h2 {
 .ops-totals div {flex:1 1 9rem;background:#f1f6f1;padding:.7rem 1rem}
 .ops .ops-totals dd {font-size:1.35rem;font-weight:650}
 
-/* Keep the atlas and hospital findings in one desktop workspace. */
+/* Hospital record tabs and audit operations. */
 .hospital-panel-nav { display: flex; gap: 6px; position: sticky; top: -2px; background: var(--paper, #fafbf7); padding: 4px 0 10px; z-index: 2; }
 .hospital-panel-nav button { padding: 7px 12px; border: 1px solid var(--line); border-radius: 4px; background: white; cursor: pointer; }
 .hospital-panel-nav button[aria-pressed="true"] { background: var(--ink); color: white; }
 .hospital-findings .hospital-runs { margin: 0; border: 0; padding: 0; }
 .hospital-findings .hospital-runs > dl { display: grid; grid-template-columns: minmax(130px, 1fr) 2fr; gap: 5px 12px; margin: 12px 0; }
 .hospital-findings .hospital-runs > dl dd { margin: 0; }
-.hospital-summary > a, .hospital-summary > p { display: block; margin: 10px 0; font-size: 12px; }
-.hospital-coordinates { margin: 10px 0; font-size: 12px; }
-.hospital-coordinates summary { cursor: pointer; }
 .audit-live-status { margin: 10px 0; padding: 10px 12px; border: 1px solid #9ebdb1; border-left: 4px solid #19776b; border-radius: 4px; background: #edf6f1; }
 .audit-live-status p { margin: 4px 0; font-size: 12px; }
 .audit-live-status small { color: #425f56; }
@@ -1013,7 +1004,6 @@ h2 {
 .ops.hospital-runs:has(.human-intervention) > .audit-live-status a[download] { display: block; margin-top: 4px; }
 .ops.hospital-runs:has(.human-intervention) > h3 { font-size: 18px; margin: 6px 0; }
 @media(max-width:600px) { .human-intervention form { grid-template-columns: 1fr; } }
-.hospital-summary .review-nav { margin: 12px 0; font-size: 12px; padding: 8px; }
 .ops-dashboard { margin: 12px 0; }
 .ops-dashboard h1 { font-size: 28px; margin: 8px 0; letter-spacing: -1px; }
 .ops-dashboard dl.ops-totals { margin: 8px 0; }
@@ -1034,28 +1024,18 @@ h2 {
   .ops-dashboard .ops-controls:last-child { margin-bottom: 0; }
 }
 @media (min-width: 1000px) {
-  .page:has(.content) { height: 100dvh; display: flex; flex-direction: column; padding-inline: 20px; max-width: none; }
-  .page:has(.content) > header { flex-shrink: 0; }
-  .page:has(.content) > main { flex: 1; min-height: 0; display: flex; flex-direction: column; }
-  .page:has(.content) .intro { margin: 10px 0; flex-shrink: 0; }
-  .page:has(.content) h1 { font-size: 28px; letter-spacing: -1px; }
-  .page:has(.content) .descr { margin-top: 5px; font-size: 13px; }
-  .page:has(.content) .period { margin-bottom: 5px; }
+  .page:has(.content:not([hidden])) { height: 100dvh; display: flex; flex-direction: column; padding-inline: 20px; max-width: none; }
+  .page:has(.content:not([hidden])) > header { flex-shrink: 0; }
+  .page:has(.content:not([hidden])) > main { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+  .page:has(.content:not([hidden])) .intro { margin: 10px 0; flex-shrink: 0; }
+  .page:has(.content:not([hidden])) h1 { font-size: 28px; letter-spacing: -1px; }
+  .page:has(.content:not([hidden])) .descr { margin-top: 5px; font-size: 13px; }
+  .page:has(.content:not([hidden])) .period { margin-bottom: 5px; }
   .content { flex: 1; min-height: 0; }
-  .content.hospital-selected { grid-template-columns: minmax(240px, 27%) minmax(0, 1fr); }
   .content .map-block { min-height: 0; }
   .content #map { height: 100%; min-height: 0; aspect-ratio: auto; }
   .content .viewport { flex: 1; min-height: 0; }
   .content aside { overflow: auto; min-height: 0; padding: 12px; }
-  .hospital-selected aside { overflow: hidden; }
-  .hospital-selected .toolbar { height: auto; padding: 8px; flex-wrap: wrap; }
-  .hospital-selected .search-box { width: 100%; }
-  .hospital-selected .detail { height: 100%; display: grid; grid-template-columns: minmax(160px, 27%) minmax(0, 1fr); gap: 14px; }
-  .hospital-summary, .hospital-findings { min-width: 0; min-height: 0; overflow: auto; padding: 2px 8px 8px 2px; }
-  .hospital-findings { border-left: 1px solid var(--line); padding-left: 12px; }
-  .hospital-summary h2 { font-size: 21px; margin: 8px 0; }
-  .hospital-summary dl { margin: 12px 0; }
-  .hospital-summary dd { margin-bottom: 8px; }
   .hospital-assessment > h4 { margin: 10px 0; }
   .assessment-context > summary { padding: 6px 0; }
   .measure-card { margin: 3px 0; border-radius: 3px; }
@@ -1064,5 +1044,22 @@ h2 {
   .measure-card[open] > summary::before { content: "▾"; }
   .measure-card > summary > span { width: auto; flex: 1; min-width: 0; }
   .measure-card > summary .measure-result { flex: none; font-size: 10px; padding: 2px 4px; margin-left: 4px; }
-  .page:has(.content) footer { flex-shrink: 0; margin: 8px 0; padding: 0; font-size: 10px; }
+  .page:has(.content:not([hidden])) footer { flex-shrink: 0; margin: 8px 0; padding: 0; font-size: 10px; }
 }
+
+.intro[hidden], .content[hidden] { display: none; }
+.detail {
+  max-width: 1080px;
+  margin: clamp(16px, 3vw, 44px) auto;
+  gap: 20px;
+  overflow-wrap: anywhere;
+}
+.hospital-summary h1 { margin: 0; font-size: clamp(26px, 4vw, 42px); }
+.hospital-summary p { margin: 8px 0; }
+.record-actions { display: flex; gap: 8px 20px; flex-wrap: wrap; margin-top: 10px; }
+.hospital-findings { border-block: 1px solid var(--line); padding-block: 18px; }
+.hospital-findings h2 { margin: 0 0 12px; }
+.hospital-findings p { margin-block: 8px; }
+.detail .hospital-runs { margin-block: 0; }
+.detail .review-nav { align-self: start; }
+.location-details summary { cursor: pointer; }

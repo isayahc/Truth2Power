@@ -23,6 +23,7 @@ try {
   page.on("pageerror", (e) => errors.push(e.message));
   await page.goto(`http://127.0.0.1:${port}/`);
   for (const [name, applications] of [["Ellenville", 5], ["Little Falls", 2]]) {
+    if (name === "Little Falls") await page.getByRole("button", { name: "← Back to statewide map and ratings" }).click();
     await page.getByRole("searchbox").fill(name);
     await page.locator(".results button").first().click();
     const panel = page.getByRole("region", { name: "Languages and service area — not graded" });
@@ -54,6 +55,7 @@ try {
   }
   // Context loading failure must not display a previous hospital's data.
   await page.route("**/api/hospitals/1002/reporting-context", (route) => route.fulfill({ status: 500, body: "{}" }));
+  await page.getByRole("button", { name: "← Back to statewide map and ratings" }).click();
   await page.getByRole("searchbox").fill("Ellenville");
   await page.locator(".results button").first().click();
   await page.getByRole("alert").filter({ hasText: "Languages and service-area context could not be loaded" }).waitFor();

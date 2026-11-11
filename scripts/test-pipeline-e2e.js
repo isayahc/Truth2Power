@@ -81,7 +81,9 @@ try {
   await verifyViews(correctedId);
   assert.equal((await get("/api/changes")).events.filter((e) => e.synthetic).length, 1);
   await page.goto(origin + "/?hospital=1002");
-  await page.locator(".measure-card .recheck-failed").first().waitFor();
+  const failedMeasure = page.locator(".measure-card").filter({ has: page.locator(".recheck-failed") }).first();
+  await failedMeasure.locator(":scope > summary").click();
+  await failedMeasure.locator(".recheck-failed").first().waitFor();
   for (const [label, width, height] of [["desktop",1440,1000], ["mobile",390,844]]) {
     await page.setViewportSize({ width, height });
     assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
@@ -113,6 +115,7 @@ try {
   const summaryCard = page.locator("#measure-362-S");
   try { await summaryCard.locator(".result-yes").waitFor(); }
   catch (error) { await page.screenshot({ path: join(artifacts, "little-falls-failure.png"), fullPage: true }); throw Error(`${error.message}\nBrowser errors: ${JSON.stringify(errors)}`); }
+  await summaryCard.locator(":scope > summary").click();
   await summaryCard.locator("details").evaluateAll((details) => details.forEach((d) => { d.open = true; }));
   const quoteCount = await summaryCard.locator("blockquote").count();
   await summaryCard.screenshot({ path: join(artifacts, "little-falls-summary-chain-desktop.png") });

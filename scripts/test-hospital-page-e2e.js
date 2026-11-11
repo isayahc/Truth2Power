@@ -26,14 +26,16 @@ try {
   for (const [key, name] of [["1002", "Ellenville"], ["362", "Little Falls"]]) {
     await page.goto(`http://127.0.0.1:8095/?hospital=${key}`);
     const panel = page.getByRole("region", { name: "Current hospital findings" });
+    await panel.locator(".assessment-context > summary").click();
     await panel.getByText("Current grade: pending", { exact: true }).waitFor();
     assert.equal(await panel.locator(".measure-card").count(), 17);
     assert.equal(await panel.locator('a[href="https://www.nysenate.gov/legislation/laws/PBH/2807-K"]').count(), 17);
-    assert.match(await page.locator(".detail h2").innerText(), new RegExp(name));
+    assert.match(await page.locator(".detail h1").innerText(), new RegExp(name));
     assert.match(await page.locator(".detail .pill").innerText(), /September 2025/);
     assert.equal(await panel.locator("dt").filter({ hasText: "Publisher’s page update date" }).locator("+ dd").innerText(), "Unknown");
     assert.match(await page.getByRole("link", { name: "Get hospital financial assistance (HFA)" }).getAttribute("href"), /^https:\/\//);
     const card = panel.locator(".measure-card").filter({ hasText: "Does the summary explain how to apply?" });
+    await card.locator(":scope > summary").click();
     await card.locator("details > summary").first().click();
     await card.locator(".measure-evidence > summary").first().click();
     assert.ok((await card.locator("blockquote").first().innerText()).length > 20);
@@ -48,13 +50,36 @@ try {
     await page.reload();
     await page.getByRole("region", { name: "Current hospital findings" }).waitFor();
   }
+  // Keep the map's zoom and filter while a hospital record is open.
+  await page.goto("http://127.0.0.1:8095/");
+  await page.getByRole("button", { name: "Zoom in" }).click();
+  await page.locator(".legend-item").nth(1).click();
+  const zoom = await page.locator("#state-view").getAttribute("transform");
+  await page.getByRole("searchbox").fill("A.O. Fox");
+  await page.locator(".results button").first().click();
+  await page.getByRole("heading", { level: 1, name: "A.O. Fox Memorial Hospital" }).waitFor();
+  await page.getByText("The current review has no measure-by-measure findings yet.").waitFor();
+  for (const width of [1440, 390]) {
+    await page.setViewportSize({ width, height: 900 });
+    assert.equal(await page.getByRole("searchbox").count(), 0);
+    assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
+    await page.screenshot({ path: join(artifacts, `Fox-record-${width}.png`) });
+  }
+  await page.getByRole("button", { name: "← Back to statewide map and ratings" }).click();
+  assert.equal(await page.locator("#state-view").getAttribute("transform"), zoom);
+  assert.equal(await page.locator(".legend-item").nth(1).getAttribute("aria-pressed"), "true");
+  await page.setViewportSize({ width: 1440, height: 1000 });
+  await page.goto("http://127.0.0.1:8095/?hospital=362");
   // Navigation and browser history restore the selected record.
+  await page.getByRole("button", { name: "← Back to statewide map and ratings" }).click();
   await page.getByRole("searchbox").fill("Ellenville");
   await page.locator(".results button").first().click();
   await page.waitForURL("**/?hospital=1002");
   await page.goBack();
+  await page.getByRole("searchbox").waitFor();
+  await page.goBack();
   await page.waitForURL("**/?hospital=362");
-  await page.locator(".detail h2").filter({ hasText: "Little Falls" }).waitFor();
+  await page.locator(".detail h1").filter({ hasText: "Little Falls" }).waitFor();
 
   await page.route("**/api/hospitals/362/page", async (route) => {
     const response = await route.fetch(), data = await response.json();
@@ -64,6 +89,7 @@ try {
   });
   await page.reload();
   const failed = page.locator("#measure-362-AH");
+  await failed.locator(":scope > summary").click();
   await failed.locator("details > summary").first().click();
   await failed.getByText(/Failed recheck/).first().waitFor();
   assert.match(await failed.innerText(), /Latest successful assessment: 2026-/);
@@ -71,6 +97,7 @@ try {
   await failed.screenshot({ path: join(artifacts, "SYN-failed-recheck-after.png") });
 
   await page.route("**/api/hospitals/1002/page", (route) => route.fulfill({ status: 500, json: {} }));
+  await page.getByRole("button", { name: "← Back to statewide map and ratings" }).click();
   await page.getByRole("searchbox").fill("Ellenville");
   await page.locator(".results button").first().click();
   await page.getByRole("alert").filter({ hasText: "Hospital findings could not be loaded" }).waitFor();

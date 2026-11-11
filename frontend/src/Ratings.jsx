@@ -81,66 +81,54 @@ export function HospitalDetail({ hospital, onClose, onReview, pendingReviews }) 
   const p = hospital.properties;
   const [longitude, latitude] = hospital.geometry.coordinates;
   return (
-    <div
-      className="detail"
-      aria-live="polite"
-      onKeyDown={(e) => {
-        if (e.key === "Escape") onClose();
-      }}
-    >
-      <div className="hospital-summary">
-      <button className="back plain" onClick={onClose}>
-        {t('← Statewide ratings')}
+    <article className="detail" onKeyDown={(event) => {
+      if (event.key === "Escape") onClose();
+    }}>
+      <button className="back plain" onClick={onClose} autoFocus={!window.location.hash}>
+        {t('← Back to statewide map and ratings')}
       </button>
-      <div className="section-tag">{t('Hospital record')}</div>
-      <h2>{p.name}</h2>
-      <span className="pill">
-        <span className="swatch" style={{ background: ratingByStars.get(p.stars).color }} />
-        {p.stars} ★ · {t('Grade')} {p.grade} · {t('September 2025')}
-      </span>
-      <dl>
-        <dt>{t('Address')}</dt>
-        <dd>
-          {p.address}, {p.city}
-        </dd>
-        <dt>{t('County')}</dt>
-        <dd>{p.county}</dd>
-      </dl>
-      <details className="hospital-coordinates"><summary>{t('Map coordinates')}</summary><dl>
-        <dt>{t('Latitude')}</dt>
-        <dd className="coords">{latitude}</dd>
-        <dt>{t('Longitude')}</dt>
-        <dd className="coords">{longitude}</dd>
-        <dt>{t('Coordinate source')}</dt>
-        <dd>
-          <a href={p.coordinate_source_url}>{p.coordinate_source}</a>
-        </dd>
-      </dl></details>
-      {p.assistance_url && <p><a href={p.assistance_url} target="_blank" rel="noreferrer">{t('Get hospital financial assistance (HFA) ↗')}</a></p>}
-      <a href={localHref(`?hospital=${encodeURIComponent(hospital.id)}`)}>{t('Permanent link to this hospital page')}</a>
+      <div className="hospital-summary">
+        <h1>{p.name}</h1>
+        <p>{p.address}, {p.city} · {t('County')}: {p.county}</p>
+        <p className="pill">
+          <span className="swatch" style={{ background: ratingByStars.get(p.stars).color }} />
+          {t('Published rating')} · {p.stars} ★ · {t('Grade')} {p.grade} · {t('September 2025')}
+        </p>
+        <div className="record-actions">
+          {p.assistance_url && <a href={p.assistance_url} target="_blank" rel="noreferrer">{t('Get hospital financial assistance (HFA) ↗')}</a>}
+          <a href={p.audit_url}>{t('Audit row ↗')}</a>
+        </div>
+      </div>
+      <section className="hospital-findings">
+        <nav className="hospital-panel-nav" aria-label={t('Hospital workspace')}>
+          <button aria-pressed={panel === 'findings'} onClick={() => setPanel('findings')}>{t('Findings')}</button>
+          <button aria-pressed={panel === 'audits'} onClick={() => setPanel('audits')}>{t('Audits and history')}</button>
+        </nav>
+        <div hidden={panel !== 'findings'}>
+          <h2>{t('Audit findings')}</h2>
+          {language === 'es' && <p className="translation-scope">{t('Detailed audit and review panels below are in English. Quotations retain the original document language.')}</p>}
+          <div lang="en">
+            <HospitalAssessment hospitalKey={hospital.id} hospitalName={p.name} publishedRevision={publishedRevision} />
+            <ReportingContext hospitalKey={hospital.id} />
+            <GradingPanel hospitalKey={hospital.id} />
+            <PilotAudit hospitalKey={hospital.id} />
+            {hospital.id === "362" && <AuditPanel />}
+          </div>
+        </div>
+        <div hidden={panel !== 'audits'}>
+          <HospitalRuns hospitalKey={hospital.id} onAssessment={setPublishedRevision} />
+        </div>
+      </section>
       <button className="review-nav" onClick={onReview}>{t('Review notifications')} ({pendingReviews ?? "…"})</button>
-      <div className="links">
-        <a href={p.audit_url}>{t('Audit row ↗')}</a>
-        {p.assistance_url && <a href={p.assistance_url}>{t('Financial assistance ↗')}</a>}
-      </div>
-      </div>
-      <div className="hospital-findings">
-      <nav className="hospital-panel-nav" aria-label={t('Hospital workspace')}>
-        <button aria-pressed={panel === 'findings'} onClick={() => setPanel('findings')}>{t('Findings')}</button>
-        <button aria-pressed={panel === 'audits'} onClick={() => setPanel('audits')}>{t('Audits and history')}</button>
-      </nav>
-      <div hidden={panel !== 'audits'}><HospitalRuns key={hospital.id} hospitalKey={hospital.id} onAssessment={setPublishedRevision} /></div>
-      <div hidden={panel !== 'findings'}>
-      {language === 'es' && <p className="translation-scope">{t('Detailed audit and review panels below are in English. Quotations retain the original document language.')}</p>}
-      <div lang="en">
-      <HospitalAssessment key={`assessment-${hospital.id}`} hospitalKey={hospital.id} hospitalName={p.name} publishedRevision={publishedRevision} />
-      <PilotAudit key={`pilot-${hospital.id}`} hospitalKey={hospital.id} />
-      <ReportingContext key={`reporting-${hospital.id}`} hospitalKey={hospital.id} />
-      <GradingPanel key={`grading-${hospital.id}`} hospitalKey={hospital.id} />
-      {hospital.id === "362" && <AuditPanel />}
-      </div>
-      </div>
-      </div>
-    </div>
+      <details className="location-details">
+        <summary>{t('Location details')}</summary>
+        <dl>
+          <dt>{t('Latitude')}</dt><dd className="coords">{latitude}</dd>
+          <dt>{t('Longitude')}</dt><dd className="coords">{longitude}</dd>
+          <dt>{t('Coordinate source')}</dt><dd><a href={p.coordinate_source_url}>{p.coordinate_source}</a></dd>
+        </dl>
+      </details>
+      <a href={localHref(`?hospital=${encodeURIComponent(hospital.id)}`)}>{t('Permanent link to this hospital page')}</a>
+    </article>
   );
 }

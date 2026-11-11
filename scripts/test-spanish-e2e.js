@@ -48,13 +48,13 @@ try {
     await search.fill('Ellenville');
     await search.press('ArrowDown');
     await page.keyboard.press('Enter');
-    await page.locator('.detail h2').filter({ hasText: 'Ellenville' }).waitFor();
+    await page.locator('.detail h1').filter({ hasText: 'Ellenville' }).waitFor();
     await page.getByRole('link', { name: 'Solicitar asistencia financiera del hospital ↗', exact: true }).waitFor();
     assert.match(page.url(), /lang=es/);
     await page.reload();
-    await page.getByRole('button', { name: '← Calificaciones estatales', exact: true }).waitFor();
+    await page.getByRole('button', { name: '← Volver al mapa y las calificaciones estatales', exact: true }).waitFor();
     await page.getByRole('button', { name: 'English', exact: true }).click();
-    await page.getByRole('button', { name: '← Statewide ratings', exact: true }).waitFor();
+    await page.getByRole('button', { name: '← Back to statewide map and ratings', exact: true }).waitFor();
     assert.equal(await page.locator('html').getAttribute('lang'), 'en');
     assert.match(page.url(), /hospital=1002/);
     await page.goto('http://127.0.0.1:8097/?lang=es');
