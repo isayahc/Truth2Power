@@ -34,14 +34,27 @@ try {
     assert.equal(await page.locator('.criterion-card').count(), 17);
     assert.equal(db.prepare('SELECT count(*) n FROM criterion_jobs').get().n, 0);
     assert.equal(await page.getByRole('button', {name: language==='en'?'Full audit':'Auditoría completa',exact:true}).count(),0);
+    const last = page.locator('.criterion-card').nth(16);
+    await last.getByRole('button').focus(); await page.keyboard.press('Enter');
+    await last.locator('.criterion-confirm').waitFor();
+    await page.waitForFunction(() => {
+      const box = document.querySelector('.criterion-confirm').getBoundingClientRect();
+      return box.top >= -1 && box.bottom <= innerHeight + 1;
+    });
+    assert.equal(await page.locator('.criterion-confirm').evaluate(node => node.closest('[data-criterion]').dataset.criterion), 'k17');
+    await page.screenshot({path:join(root,`inline-last-${language}-${width}.png`)});
+    await last.locator('.criterion-confirm button').nth(1).click();
+    await page.waitForFunction(() => document.activeElement?.getAttribute('aria-label')?.endsWith('K17'));
     const target = page.locator('.criterion-card').nth(11);
     await target.getByRole('button').focus(); await page.keyboard.press('Enter');
     await page.locator('.criterion-confirm').waitFor();
+    assert.equal(await target.locator('.criterion-confirm').count(),1);
     assert.match(await page.locator('.criterion-confirm').innerText(), /K1, K12/);
     assert.equal(db.prepare('SELECT count(*) n FROM criterion_jobs').get().n, 0);
     await page.locator('.criterion-confirm').screenshot({path:join(root,`confirm-${language}-${width}.png`)});
     await page.locator('.criterion-confirm button').first().evaluate(button => { button.click(); button.click(); });
     await page.locator('.criterion-progress').waitFor();
+    assert.equal(await target.locator('.criterion-progress').count(),1);
     assert.equal(db.prepare('SELECT count(*) n FROM criterion_jobs').get().n, 1);
     assert.equal(await target.getByRole('button').isDisabled(), true);
     await page.reload({waitUntil:'domcontentloaded'}); await page.locator('.criterion-progress').waitFor();
@@ -65,7 +78,7 @@ try {
     await target.locator('summary').click();
     await target.locator('blockquote').waitFor();
     assert.match(await target.innerText(), /SYNTHETIC <script> text stays text/);
-    assert.match(await target.innerText(), language==='en'?/Needs review/:/Requiere revisión/);
+    assert.match(await target.innerText(), language==='en'?/Unclear/:/Sin determinar/);
     assert.equal(await target.locator('script').count(),0);
     assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);
     await target.screenshot({path:join(root,`result-${language}-${width}.png`)});
@@ -81,6 +94,22 @@ try {
     await page.locator('.criterion-confirm').waitFor({state:'detached'});
     assert.equal(db.prepare('SELECT count(*) n FROM criterion_jobs').get().n,2);
     assert.deepEqual(errors,[]);
+    // Source verdicts, not execution completion, determine the colored dot.
+    await page.route('**/api/hospitals/1002/criteria', async route => {
+      const result = await (await route.fetch()).json();
+      const saved = value => ({value,completed:new Date().toISOString(),explanation:'SYNTHETIC status fixture',evidence:[],limitations:[]});
+      result.active={step:'k5',status:'running',progress:{k5:{status:'running'}}};
+      result.items=result.items.map((item,i)=>({...item,latest:i===3?{status:'failed'}:null,saved:i<4?saved([true,false,null,false][i]):null}));
+      await route.fulfill({json:result});
+    });
+    await page.reload({waitUntil:'domcontentloaded'});
+    for (const [index,state] of ['met','unmet','unclear','unclear','running','unrun'].entries()) {
+      await page.locator('.criterion-card').nth(index).locator(`.criterion-status--${state}`).waitFor();
+    }
+    const colors = await page.locator('.criterion-dot').evaluateAll(nodes=>nodes.slice(0,6).map(n=>getComputedStyle(n).backgroundColor));
+    assert.notEqual(colors[0],colors[1]); assert.equal(colors[2],colors[3]); assert.notEqual(colors[2],colors[5]);
+    await page.locator('.criterion-card').first().scrollIntoViewIfNeeded();
+    await page.screenshot({path:join(root,`status-dots-${language}-${width}.png`)});
     scenarios++; await context.close();
   }
   console.log(JSON.stringify({scenarios,modelCalls:0,screenshots:root,checks:'17 criteria, read-only viewing, explicit preparation, duplicate clicks, reload persistence, synthetic runner results, citations, bilingual mobile layout, lost-response idempotency, origin validation'}));

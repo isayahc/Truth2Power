@@ -3,6 +3,7 @@ import { useLocale } from './locale.jsx';
 
 const states = { queued: 'Queued', running: 'Running', completed: 'Completed', failed: 'Needs review' };
 const progressStates = { running: 'Running', succeeded: 'Completed', reused: 'Saved evidence reused', failed: 'Needs review' };
+const outcomeLabels = { met: 'Condition met', unmet: 'Condition not met', unclear: 'Unclear', unrun: 'Not run', running: 'Running', queued: 'Queued' };
 const safeLink = value => { try { const url = new URL(value); return url.protocol === 'https:' ? url.href : null; } catch { return null; } };
 
 export default function CriterionAudits({ hospitalKey }) {
@@ -11,10 +12,17 @@ export default function CriterionAudits({ hospitalKey }) {
   const storageKey = `criterion-request-${hospitalKey}`;
   const [data, setData] = useState(null), [error, setError] = useState(false);
   const [tick, refresh] = useState(0), [busy, setBusy] = useState(false), [submitError, setSubmitError] = useState(false);
+  const [chosenStep, setChosenStep] = useState(null);
   const [intent, setIntent] = useState(() => {
     try { return JSON.parse(sessionStorage.getItem(storageKey)); } catch { return null; }
   });
   const lock = useRef(false), alive = useRef(true);
+  const confirmation = useRef(null);
+  useEffect(() => {
+    if (!intent || !confirmation.current) return;
+    confirmation.current.focus({ preventScroll: true });
+    confirmation.current.scrollIntoView({ block: 'nearest' });
+  }, [intent?.step, !!data]);
   useEffect(() => { alive.current = true; return () => { alive.current = false; }; }, []);
   useEffect(() => {
     const controller = new AbortController();
@@ -32,7 +40,7 @@ export default function CriterionAudits({ hospitalKey }) {
   }, [data, tick]);
   async function choose(item) {
     if (lock.current) return;
-    lock.current = true; setBusy(true); setSubmitError(false);
+    lock.current = true; setBusy(true); setSubmitError(false); setChosenStep(item.id);
     try {
       const response = await fetch(`${url}/${item.id}/plan`);
       if (!response.ok) throw Error();
@@ -53,7 +61,10 @@ export default function CriterionAudits({ hospitalKey }) {
       });
       if (!response.ok) throw Error();
       sessionStorage.removeItem(storageKey);
-      if (alive.current) { setIntent(null); refresh(n => n + 1); }
+      if (alive.current) {
+        confirmation.current?.closest('.criterion-card').querySelector('h3').focus({ preventScroll: true });
+        setIntent(null); refresh(n => n + 1);
+      }
     } catch { if (alive.current) setSubmitError(true); }
     finally { lock.current = false; if (alive.current) setBusy(false); }
   }
@@ -65,13 +76,31 @@ export default function CriterionAudits({ hospitalKey }) {
     <button type="button" onClick={() => refresh(n => n + 1)}>{t('Refresh')}</button>
     {error && <p role="alert">{t('Unable to load criterion results. Refresh to try again.')}</p>}
     {!data && !error && <p role="status">{t('Loading criterion results…')}</p>}
-    {data?.active && <div className="criterion-progress" role="status">
+    <ol className="criterion-list">{data?.items.map(item => {
+      const progress = data.active?.progress[item.id];
+      const activeStatus = data.active?.step === item.id ? data.active.status : progress?.status === 'running' ? 'running' : null;
+      const outcome = activeStatus || (item.latest?.status === 'failed' ? 'unclear' :
+        item.saved ? (item.saved.value === true ? 'met' : item.saved.value === false ? 'unmet' : 'unclear') : 'unrun');
+      return <li key={item.id} className="criterion-card" data-criterion={item.id}>
+        <div className="criterion-card-heading">
+          <h3 tabIndex={-1}>{item.id.toUpperCase()} · {t(item.title)}</h3>
+          <span className={`criterion-status criterion-status--${outcome}`}>
+            <span className="criterion-dot" aria-hidden="true" />{t(outcomeLabels[outcome])}
+          </span>
+          <button type="button" disabled={busy || !!intent || !!data.active || error} onClick={() => choose(item)}
+            aria-expanded={intent?.step === item.id} aria-controls={`criterion-request-${item.id}`}
+            aria-label={`${t(item.saved || item.latest ? 'Run again' : 'Run criterion')} ${item.id.toUpperCase()}`}>
+            {t(item.saved || item.latest ? 'Run again' : 'Run criterion')}
+          </button>
+        </div>
+    {data.active?.step === item.id && <div className="criterion-progress" role="status">
       <strong>{data.active.step.toUpperCase()} · {t(states[data.active.status])}</strong>
       <p>{t('Only the criterion and prerequisites you approved will run. The job continues after you close the page.')}</p>
       {data.active.status === 'queued' && <p>{t('Waiting for a worker. The audit has not started yet.')}</p>}
       <ul>{Object.entries(data.active.progress).map(([id, entry]) => <li key={id}>{id.toUpperCase()} · {t(progressStates[entry.status] ?? 'Needs review')}</li>)}</ul>
     </div>}
-    {intent && <div className="criterion-confirm" role="region" aria-label={t('Review criterion run')}>
+    <div id={`criterion-request-${item.id}`}>
+    {intent?.step === item.id && <div ref={confirmation} tabIndex={-1} className="criterion-confirm" role="region" aria-label={`${t('Review criterion run')} ${item.id.toUpperCase()}`}>
       <h3>{t('Review criterion run')} · {intent.step.toUpperCase()}</h3>
       <p>{t('Criteria to execute, including missing prerequisites')}: {intent.plan.run.map(id => id.toUpperCase()).join(', ')}</p>
       <p>{t('Saved prerequisites to reuse')}: {intent.plan.reuse.map(id => id.toUpperCase()).join(', ') || t('None')}</p>
@@ -80,21 +109,13 @@ export default function CriterionAudits({ hospitalKey }) {
       <p>{t('A run may stop with gaps. Another attempt requires your click.')}</p>
       <button type="button" disabled={busy} onClick={submit}>{t(submitError ? 'Retry same request' : 'Confirm criterion run')}</button>{' '}
       <button type="button" disabled={busy} onClick={() => {
-        sessionStorage.removeItem(storageKey); setIntent(null); setSubmitError(false); refresh(n => n + 1);
+         const button = confirmation.current?.closest('.criterion-card').querySelector('.criterion-card-heading button');
+         sessionStorage.removeItem(storageKey); setIntent(null); setSubmitError(false); refresh(n => n + 1);
+         requestAnimationFrame(() => button?.focus({ preventScroll: true }));
       }}>{t('Close run request')}</button>
     </div>}
-    {submitError && <p role="alert">{t('Request could not be confirmed. Retry the same request safely, or close it and refresh before choosing again.')}</p>}
-    <ol className="criterion-list">{data?.items.map(item => {
-      const progress = data.active?.progress[item.id];
-      const activeStatus = data.active?.step === item.id ? data.active.status : progress?.status === 'running' ? 'running' : null;
-      const status = activeStatus ? states[activeStatus] : item.latest?.status === 'failed' ? 'Needs review' :
-        item.saved ? (item.saved.value === null ? 'Needs review' : 'Completed') : 'Not run';
-      return <li key={item.id} className="criterion-card">
-        <div className="criterion-card-heading"><h3>{item.id.toUpperCase()} · {t(item.title)}</h3><span>{t(status)}</span></div>
-        <button type="button" disabled={busy || !!intent || !!data.active || error} onClick={() => choose(item)}
-          aria-label={`${t(item.saved || item.latest ? 'Run again' : 'Run criterion')} ${item.id.toUpperCase()}`}>
-          {t(item.saved || item.latest ? 'Run again' : 'Run criterion')}
-        </button>
+    </div>
+    {submitError && (intent?.step ?? chosenStep) === item.id && <p role="alert">{t('Request could not be confirmed. Retry the same request safely, or close it and refresh before choosing again.')}</p>}
         {item.latest?.status === 'failed' && <p>{t('The last attempt stopped. Saved findings below remain available; no automatic retry will run.')}</p>}
         {item.saved && <details>
           <summary>{t('Saved result')} · {t(item.saved.value === true ? 'Condition met' : item.saved.value === false ? 'Condition not met' : 'Unresolved')}</summary>

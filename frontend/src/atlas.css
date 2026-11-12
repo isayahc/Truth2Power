@@ -261,11 +261,24 @@ p {
   border-radius: 6px;
 }
 .criterion-audits { margin: 20px 0; }
-.criterion-list { list-style: none; padding: 0; display: grid; gap: 12px; }
-.criterion-card { border: 1px solid var(--line); border-radius: 6px; padding: 14px; min-width: 0; }
-.criterion-card-heading { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
-.criterion-card-heading h3 { margin: 0 0 10px; font-size: 16px; }
-.criterion-card-heading span { font-size: 12px; font-weight: 650; }
+.criterion-list { list-style: none; padding: 0; display: grid; gap: 6px; }
+.criterion-card { border: 1px solid var(--line); border-radius: 6px; padding: 10px 12px; min-width: 0; }
+.criterion-card-heading { display: grid; grid-template-columns: minmax(0, 1fr) 155px 145px; align-items: center; gap: 8px 14px; }
+.criterion-audits .criterion-card-heading h3 { margin: 0; font-size: 14px; line-height: 1.4; }
+.criterion-audits .criterion-card-heading button { font-size: 12px; padding: 6px 9px; }
+.criterion-status { display: inline-flex; align-items: center; gap: 7px; font-size: 12px; font-weight: 650; }
+.criterion-dot { width: 11px; height: 11px; flex: 0 0 11px; border-radius: 50%; background: #69747c; border: 2px solid #69747c; }
+.criterion-status--met .criterion-dot { background: #15803d; border-color: #15803d; }
+.criterion-status--unmet .criterion-dot { background: #b91c1c; border-color: #b91c1c; }
+.criterion-status--unrun .criterion-dot, .criterion-status--queued .criterion-dot { background: transparent; }
+.criterion-status--running .criterion-dot { background: transparent; border-color: #bcc5c9; border-top-color: #385956; animation: criterion-spin .8s linear infinite; }
+@keyframes criterion-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .criterion-status--running .criterion-dot { animation: none; } }
+@media (max-width: 600px) {
+  .criterion-card-heading { grid-template-columns: minmax(0, 1fr) auto; gap: 8px; }
+  .criterion-card-heading h3 { grid-column: 1 / -1; }
+  .criterion-card-heading button { max-width: 150px; }
+}
 .criterion-audits button { min-height: 36px; white-space: normal; }
 .criterion-audits details { margin-top: 12px; }
 .criterion-audits summary { cursor: pointer; }
