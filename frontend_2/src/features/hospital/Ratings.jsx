@@ -1,6 +1,9 @@
 import GradingPanel from "./GradingPanel.jsx";
 import ReportingContext from "./ReportingContext.jsx";
 import HospitalAssessment from "./HospitalAssessment.jsx";
+import PilotAudit from "../audit/PilotAudit.jsx";
+import AuditPanel from "../audit/AuditPanel.jsx";
+import { HospitalRuns } from "../audit/AuditOperations.jsx";
 import React, { useEffect, useState } from "react";
 import { ratings, ratingByStars } from "../atlas/ratings.js";
 import { useLocale } from "../../i18n/locale.jsx";
@@ -67,9 +70,9 @@ export function Ratings({ hospitals, filter, onFilter }) {
 
 export function HospitalDetail({ hospital, onClose, onReview, pendingReviews }) {
   const { t, language, localHref } = useLocale();
-  // Phase 1: no audit-run source exists yet, so there is no published
-  // revision to report. The state stays null until Phase 3 wires it.
-  const [publishedRevision] = useState(null);
+  // The latest run's assessment id, reported by HospitalRuns so the
+  // findings tab can reload from the newest committed revision.
+  const [publishedRevision, setPublishedRevision] = useState(null);
   const [panel, setPanel] = useState(window.location.hash === '#audit-runs' ? 'audits' : 'findings');
   useEffect(() => {
     const sync = () => setPanel(window.location.hash === '#audit-runs' ? 'audits' : 'findings');
@@ -110,10 +113,12 @@ export function HospitalDetail({ hospital, onClose, onReview, pendingReviews }) 
             <HospitalAssessment hospitalKey={hospital.id} hospitalName={p.name} publishedRevision={publishedRevision} />
             <ReportingContext hospitalKey={hospital.id} />
             <GradingPanel hospitalKey={hospital.id} />
+            <PilotAudit hospitalKey={hospital.id} />
+            {hospital.id === "362" && <AuditPanel />}
           </div>
         </div>
         <div hidden={panel !== 'audits'}>
-          <p>{t('Audit operations arrive in Phase 3.')}</p>
+          <HospitalRuns hospitalKey={hospital.id} onAssessment={setPublishedRevision} />
         </div>
       </section>
       <button className="review-nav" onClick={onReview}>{t('Review notifications')} ({pendingReviews ?? "…"})</button>

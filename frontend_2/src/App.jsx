@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import Changes from "./features/changes/Changes.jsx";
 import Overview from "./features/audit/Overview.jsx";
+import { AuditOperations } from "./features/audit/AuditOperations.jsx";
+import { HumanInterventionInbox } from "./features/audit/HumanIntervention.jsx";
 import HospitalMap from "./features/atlas/HospitalMap.jsx";
 import HospitalSearch from "./features/atlas/HospitalSearch.jsx";
 import { HospitalDetail, Ratings } from "./features/hospital/Ratings.jsx";
@@ -146,12 +148,13 @@ export default function App() {
       <main>
         {reviewOpen ? <>
           <button className="back plain" onClick={() => setReviewOpen(false)}>{t(selected ? '← Back to hospital record' : '← Back to hospital map')}</button>
+          <HumanInterventionInbox />
           <ReviewInbox key={reviewHospital} inbox={inbox} error={reviewError} onRefresh={refreshReviews}
             hospitalKey={reviewHospital} hospitals={data?.hospitals ?? []} onHospital={(hospital) => {
               if (hospital) { selectHospital(hospital); setReviewOpen(false); }
             }} />
         </> : !selected && new URLSearchParams(window.location.search).get("view") === "operations" ?
-          <p role="status">{t('Audit operations arrive in Phase 3.')}</p> : !selected && new URLSearchParams(window.location.search).get("view") === "changes" ? <Changes /> : !selected && new URLSearchParams(window.location.search).get("view") === "overview" ?
+          <AuditOperations /> : !selected && new URLSearchParams(window.location.search).get("view") === "changes" ? <Changes /> : !selected && new URLSearchParams(window.location.search).get("view") === "overview" ?
           (data ? <div lang="en"><Overview features={data.hospitals} counties={data.counties} /></div> :
             <p role="status">{error ? <button onClick={() => setAttempt(attempt + 1)}>{t('Retry loading atlas')}</button> : t('Loading atlas…')}</p>) : <>
         <div className="intro" hidden={!!selected}>

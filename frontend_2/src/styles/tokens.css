@@ -37,6 +37,18 @@
   --color-form-bg: #eef5f1;
   --color-badge-bg: #d4eee1;
 
+  /* Audit operations surfaces (Phase 3, from old atlas.css). */
+  --color-border-strong: #839b90;
+  --color-confirm-bg: #fff5d8;
+  --color-confirm-border: #986700;
+  --color-totals-bg: #f1f6f1;
+  --color-live-bg: #edf6f1;
+  --color-live-border: #9ebdb1;
+  --color-live-accent: #19776b;
+  --color-live-muted: #425f56;
+  --color-human-bg: #fffaf0;
+  --color-human-border: #bfa362;
+
   --space-xs: 4px;
   --space-sm: 8px;
   --space-md: 12px;

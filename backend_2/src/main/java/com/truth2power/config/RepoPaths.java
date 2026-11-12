@@ -21,6 +21,7 @@ import java.nio.file.Path;
 @Component
 public class RepoPaths {
 
+    private final Path repoRoot;
     private final Path dataDir;
     private final Path auditLiveDir;
     private final Path auditDir;
@@ -30,6 +31,7 @@ public class RepoPaths {
             @Value("${t2p.audit-dir:${T2P_REVIEW_DIRECTORY:}}") String auditDirProp,
             @Value("${t2p.audit-base:${AUDIT_DIR:}}") String auditBaseProp) {
         Path repoRoot = findRepoRoot();
+        this.repoRoot = repoRoot;
         this.dataDir = dataDirProp.isBlank()
                 ? repoRoot.resolve("data")
                 : Path.of(dataDirProp).toAbsolutePath().normalize();
@@ -53,6 +55,16 @@ public class RepoPaths {
         }
         // Fall back to the working directory itself; reads will fail loudly there.
         return Path.of(System.getProperty("user.dir")).toAbsolutePath().normalize();
+    }
+
+    /** The repo root (found by walking up to data/maps/hospitals.geojson). */
+    public Path repoRoot() {
+        return repoRoot;
+    }
+
+    /** The repo {@code references/} directory (regions, HHS, rubric profiles). */
+    public Path referencesDir() {
+        return repoRoot.resolve("references");
     }
 
     /** The repo {@code data/} directory (hospitals.geojson, counties.geojson, hospital-coordinates.csv live under {@code maps/}). */

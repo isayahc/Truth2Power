@@ -59,7 +59,7 @@ public final class PipelineViews {
         if (!Files.exists(dbPath)) return new Publications(List.of(), List.of());
         List<ObjectNode> bundles = new ArrayList<>();
         List<ObjectNode> jobs = new ArrayList<>();
-        try (Connection db = DriverManager.getConnection("jdbc:sqlite:" + dbPath + "?mode=ro")) {
+        try (Connection db = DriverManager.getConnection("jdbc:sqlite:file:" + dbPath + "?mode=ro")) {
             try (PreparedStatement ps = db.prepareStatement(
                     "SELECT name FROM sqlite_master WHERE type='table' AND name='pipeline_events'")) {
                 ResultSet rs = ps.executeQuery();
@@ -166,7 +166,7 @@ public final class PipelineViews {
             return List.of();
         }
         List<ObjectNode> events = new ArrayList<>();
-        try (Connection db = DriverManager.getConnection("jdbc:sqlite:" + dbPath + "?mode=ro")) {
+        try (Connection db = DriverManager.getConnection("jdbc:sqlite:file:" + dbPath + "?mode=ro")) {
             try (PreparedStatement ps = db.prepareStatement(
                     "SELECT job,output FROM pipeline_events ORDER BY job DESC")) {
                 ResultSet rs = ps.executeQuery();
@@ -256,6 +256,11 @@ public final class PipelineViews {
         }
         env.set("findings", findings);
         return env;
+    }
+
+    /** Public view of a bundle's agent review, for the revision endpoint. */
+    public static ObjectNode agentReview(ObjectNode bundle, long jobId) {
+        return publicAgentReview(bundle, jobId);
     }
 
     private static ObjectNode publicAgentReview(ObjectNode bundle, long jobId) {

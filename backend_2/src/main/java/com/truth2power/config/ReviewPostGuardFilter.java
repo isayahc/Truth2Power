@@ -11,26 +11,32 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 /**
  * Layer A of the review POST guard — port of backend/src/local-server.js:54-71.
- * Applies to POST requests whose path starts with /api/reviews/ (the old server
- * also guarded /api/pilot/, which Phase 3 ports). All must hold, else a bare
- * 403 with an empty body:
+ * Applies to POST requests whose path starts with /api/reviews/ or /api/pilot/
+ * (the old server guarded both). All must hold, else a bare 403 with an empty
+ * body:
  * - Host is exactly 127.0.0.1:&lt;port&gt; or localhost:&lt;port&gt;;
  * - header x-review-request is exactly "1";
  * - if an Origin header is present, it is exactly http://127.0.0.1:&lt;port&gt;
  *   or http://localhost:&lt;port&gt;;
- * - body is at most 8192 bytes (413 if exceeded).
- * GET review routes have no guard. The server binds 127.0.0.1 only.
+ * - body is at most 8192 bytes (413 if exceeded), except the intervention
+ *   documents upload, which gets 6 MB.
+ * GET routes have no guard. The server binds 127.0.0.1 only. (The
+ * /api/audits/362 POST has its own inline guard and is not covered here.)
  */
 @Component
 @Order(1)
 public class ReviewPostGuardFilter extends OncePerRequestFilter {
 
     private static final int MAX_REVIEW_BODY_BYTES = 8192;
+    private static final int MAX_DOCUMENT_BODY_BYTES = 6 * 1024 * 1024;
+    private static final java.util.regex.Pattern INTERVENTION_DOCUMENTS =
+            java.util.regex.Pattern.compile("^/api/pilot/v1/runs/audit-run-[1-9]\\d*/intervention/documents$");
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
+        String uri = request.getRequestURI();
         return !"POST".equalsIgnoreCase(request.getMethod())
-                || !request.getRequestURI().startsWith("/api/reviews/");
+                || (!uri.startsWith("/api/reviews/") && !uri.startsWith("/api/pilot/"));
     }
 
     @Override
@@ -48,8 +54,10 @@ public class ReviewPostGuardFilter extends OncePerRequestFilter {
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             return;
         }
+        int limit = INTERVENTION_DOCUMENTS.matcher(request.getRequestURI()).matches()
+                ? MAX_DOCUMENT_BODY_BYTES : MAX_REVIEW_BODY_BYTES;
         int contentLength = request.getContentLength();
-        if (contentLength > MAX_REVIEW_BODY_BYTES) {
+        if (contentLength > limit) {
             response.setStatus(413);
             return;
         }

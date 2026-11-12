@@ -75,6 +75,59 @@ RFC 9110; no client distinguishes them.
   `api/client.js` `reviewRequest()`); without it the request is rejected
   with a bare 403.
 
+## Phase 3 — audit engine integration (done Nov 11)
+
+One-command startup: boot backend_2 and the audit engine comes with it.
+`AuditWorkerSupervisor` launches the existing Node worker
+(`backend/audit/worker.js`, untouched) as a child process with
+`PORT` = this server's port and `AUDIT_DIR` = the resolved audit directory,
+so the worker's demo audit fetches the fixture from backend_2 itself.
+The supervisor restarts the worker **once** if it crashes, then stops
+(the old app had no supervisor at all — a dead worker just left jobs
+`running` with expired leases). Disable it with
+`t2p.audit-worker.enabled=false`. The grading logic is **never** ported to
+Java: `GradingService` shells out to `node` running a bundled wrapper
+(`src/main/resources/grading/grade-wrapper.mjs`) that imports the repo's
+own `backend/grading/grade.js`.
+
+- `PilotReportingController` (`/api/pilot/v1/*`): run queue + history,
+  run detail / timeline / log.json / receipt / receipt.csv, revision +
+  snapshot downloads, summary, operations, and the human-intervention
+  inbox + document upload + resume. Same envelopes as the old app:
+  `schema_version: "audit-reporting-v1"` + machine error codes everywhere
+  except the intervention routes, which carry no schema_version and
+  default errors to 400.
+- `PilotPipelineController` (`/api/pilot/*` non-v1): queue, hospital
+  status, scan / assessment / snapshot reads. Plain `{"error": "<sentence>"}`.
+- `AuditsController` (`/api/audits/*`, `/audit-demo/*`): the 362 demo
+  surface, exposed here even though the old app only served it from its
+  local server — the demo worker needs it, and so does `AuditPanel`.
+  Demo enqueue needs the `x-audit-request: 1` header (not
+  `x-review-request`).
+- `GradingController` (`/api/grading/*`): hospital grading reads and the
+  `/demo` report, via the Node wrapper above.
+- Layer A guard (local loopback host + `x-review-request: 1` + 8 KB body
+  cap, 6 MB for intervention documents) now covers POSTs under
+  `/api/pilot/` as well as `/api/reviews/`. `/api/audits/` POSTs keep
+  their own inline guard, as in the old server.
+- Python default: every `T2P_PYTHON` spawn (worker bridge, grader
+  validation, intervention PDF check, changes feed) defaults to
+  `python3` when the variable is unset — `python` does not exist on
+  macOS or in the sandbox. An explicit `T2P_PYTHON` is always honoured.
+  The grader also needs `jsonschema>=4.18` + `referencing` in the
+  Python environment (the system jsonschema 4.10.3 predates the
+  `registry=` argument `validate.py` uses).
+
+Verified Nov 11 in the sandbox (see `parity_phase3.py`, kept outside the
+repo): **35/35 parity checks pass** against the old Node server on fresh
+empty stores, including the grading demo report byte-identical. End to
+end, the supervised worker completed the 362 demo audit (~4 s: fixture
+fetch → PDF extraction → published assessment) and a v1 replay run for
+hospital 1002 (published `partial`, 17 unresolved measures). What still
+needs the user's Mac: a real `live`/`full_audit` run against real
+`.audit/` state, an intervention round-trip against a genuinely
+Cloudflare-blocked run, and the Phase 2 TiDB import.
+
 ## Run
 
 ```bash

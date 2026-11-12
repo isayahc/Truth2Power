@@ -27,6 +27,15 @@ export function health(signal) {
   return request("/api/health", { signal });
 }
 
+// Audit-panel rechecks carry a different guard from review writes:
+// X-Audit-Request: 1 and NO body (see AuditController).
+export function auditRequest(path) {
+  return request(path, {
+    method: "POST",
+    headers: { "X-Audit-Request": "1" },
+  });
+}
+
 // Review-inbox writes carry the same guard as the old app:
 // same-origin POST plus the x-review-request header (see ReviewController).
 export function reviewRequest(path, body) {

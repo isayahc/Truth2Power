@@ -51,7 +51,7 @@ public class ChangesService {
     public ObjectNode feed() throws IOException {
         String python = System.getenv("T2P_PYTHON");
         if (python == null || python.isBlank()) {
-            python = "python";
+            python = "python3";
         }
         ProcessBuilder builder = new ProcessBuilder(python, script.toString(),
                 "--root", root.toString());
