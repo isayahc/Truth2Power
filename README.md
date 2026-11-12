@@ -349,6 +349,8 @@ python tools/live-audit/human_review.py <result-file> --decision needs_changes -
 
 This CLI is not an MCP tool. Its role label is self-attested, not authenticated. No agent should invoke it to manufacture human approval.
 
+**K5 disclosure rule:** In new SDK criterion runs, reviewed materials must explicitly identify primary-service counties or ZIP codes for non-emergency financial assistance. When all saved sources are readable and reviewed, including a policy statement, omission is **not met** in that reviewed scope. Emergency-only geography, broad regions, and mailing addresses do not satisfy disclosure. Missing or failed source reviews and ambiguous readings remain **unclear**. The bounded website-discovery caveat remains visible but does not prevent a scoped omission finding. Saved results are not retroactively reclassified; explicitly rerun K5 to apply this rule.
+
 **Service-area question remains open:** [NYS Public Health Law §2807-k(9-a)(f)](https://www.nysenate.gov/legislation/laws/PBH/2807-K), displayed revision May 29, 2026, distinguishes emergency coverage for New York residents from medically necessary services in the hospital's primary service area under commissioner criteria. We still need the applicable commissioner criteria, their effective date, and Ellenville's filed/approved boundaries for the review date. The statute and a county list alone do not establish boundary compliance. Rule approval and subject-matter review remain pending.
 
 Run regression checks with `python -m unittest discover -s tools/live-audit -p "test_*.py"`. Tests use synthetic fixtures and cover full-page delivery, coverage gaps, exclusions, context distinctions, conflicts, revisions, snapshot mutation and separate human decisions.

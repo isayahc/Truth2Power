@@ -10,7 +10,7 @@ import type { Model } from "../../shared/agent-runtime.ts"
 import type { Hospital } from "../../shared/run-posted-document.ts"
 import { loadReviewInventory, prepareReviewSource } from "../../shared/review-sources.ts"
 import type { ReviewSource } from "../../shared/review-sources.ts"
-import { serviceAreaInstructions } from "./instructions.ts"
+import { serviceAreaInstructions, explicitBoundaryInstructions } from "./instructions.ts"
 import { validateServiceArea } from "./validate.ts"
 import { loadServiceAreaReference } from "./reference.ts"
 import { criterion, determineServiceArea } from "./result.ts"
@@ -32,7 +32,7 @@ export async function checkServiceArea(hospital: Hospital, model: Model,
   const gaps = [...(inventory?.gaps ?? [])]
   const readings: GeographicReading[] = []
   const dependencies = ["load-inventory", "resolve-authority"]
-  await using runtime = await createAgentRuntime(project, model, { "website-and-policy": serviceAreaInstructions })
+  await using runtime = await createAgentRuntime(project, model, { "website-and-policy": serviceAreaInstructions + explicitBoundaryInstructions })
   for (const [i, item] of (inventory?.sources ?? []).entries()) {
     const id = `source-${i + 1}`
     graph.add(`${id}:prepare`, "website-and-policy", "code", item.snapshot.sourceUrl, ["load-inventory"])
@@ -59,7 +59,7 @@ export async function checkServiceArea(hospital: Hospital, model: Model,
   const determination = await graph.run("determine-k5", async () => determineServiceArea(readings, reference, gaps), true)
   if (!determination) throw new Error(`Service-area determination failed; inspect ${join(directory, "tasks.json")}`)
   const result = { runId, hospital, model, reviewDate: options.reviewDate, ...determination,
-    scope: "Saved hospital sources; geographic observations are not an approved boundary-compliance finding. No downloads.",
+    scope: "Saved hospital sources reviewed for explicit primary-service counties or ZIP codes. Omission is not met when source review is complete; listed boundaries still require applicability review. No downloads.",
     reuseFrom: options.reuseFrom, taskGraph: join(directory, "tasks.json") }
   const path = join(directory, "result.json")
   await writeFile(path, JSON.stringify(result, null, 2), { flag: "wx" })

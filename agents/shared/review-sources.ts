@@ -10,10 +10,12 @@ export type ReviewSource = {
   passages: { locator: string; text: string }[]
 }
 
+export const boundedDiscoveryGap = "Bounded website discovery: online applications and all applicable website pages have not been exhaustively reviewed."
+
 export async function loadReviewInventory(hospital: Hospital, paths: string[]) {
   if (!paths.length) throw new Error("Review requires prior source inventories")
   const byUrl = new Map<string, { snapshot: Snapshot; roles: Set<string> }>()
-  const gaps = new Set<string>(["Bounded website discovery: online applications and all applicable website pages have not been exhaustively reviewed."])
+  const gaps = new Set<string>([boundedDiscoveryGap])
   const roleByCriterion: Record<string, string> = {
     "posted_materials.application_posted": "application",
     "posted_materials.policy_summary_posted": "policy_summary",

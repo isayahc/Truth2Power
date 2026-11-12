@@ -2,6 +2,7 @@ import type { ReviewSource } from "../../shared/review-sources.ts"
 
 export type ServiceAreaReading = {
   observations: { serviceType: "emergency" | "medically_necessary" | "unspecified"; areas: string[];
+    geographyType: "county" | "zip_code" | "other";
     completeCountyList: boolean; evidence: { locator: string; quote: string }[] }[]
   limitations: string[]
 }
@@ -17,10 +18,11 @@ export function validateServiceArea(output: string, source: ReviewSource): Servi
       || Object.keys(result).some(k => !["observations", "limitations"].includes(k))) throw new Error("Invalid service-area reading")
   for (const observation of result.observations) {
     if (!observation || !["emergency", "medically_necessary", "unspecified"].includes(observation.serviceType)
+        || !["county", "zip_code", "other"].includes(observation.geographyType)
         || typeof observation.completeCountyList !== "boolean" || !Array.isArray(observation.areas) || !observation.areas.length
         || observation.areas.some((a: any) => typeof a !== "string" || !a.trim())
         || !Array.isArray(observation.evidence) || !observation.evidence.length
-        || Object.keys(observation).some(k => !["serviceType", "completeCountyList", "areas", "evidence"].includes(k))) {
+        || Object.keys(observation).some(k => !["serviceType", "geographyType", "completeCountyList", "areas", "evidence"].includes(k))) {
       throw new Error("Invalid geographic observation")
     }
     for (const citation of observation.evidence) {
