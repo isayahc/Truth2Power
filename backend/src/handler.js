@@ -9,6 +9,7 @@ import { changesRoute } from "../changes/routes.js";
 import { overview } from "../overview/service.js";
 import { hospitalPage } from "../hospital-page/service.js";
 import { pipelineRoute } from "../audit/pipeline-routes.js";
+import { criterionRoute } from "../audit/criterion-routes.js";
 
 let reviewService;
 async function reviewHandler(event) {
@@ -54,6 +55,7 @@ function errorResponse(statusCode, message) {
 
 /** Serve an API Gateway HTTP API v2 event with a response usable by Node or Lambda. */
 export async function handler(event) {
+  if (/^\/api\/hospitals\/[^/]+\/criteria(?:\/|$)/.test(event.rawPath)) return criterionRoute(event);
   if (event.rawPath.startsWith("/api/pilot/v1/")) return reportingRoute(event);
   if (event.rawPath.startsWith("/api/pilot/")) return pipelineRoute(event);
   if (event.rawPath === "/api/changes" || event.rawPath.startsWith("/api/changes/")) return changesRoute(event);

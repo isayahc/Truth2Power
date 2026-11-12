@@ -3,6 +3,7 @@ import { OpenCode } from "@opencode/sdk"
 
 export type Model = { providerID: string; id: string }
 export type AgentRuntime = Awaited<ReturnType<typeof createAgentRuntime>>
+let modelCalls = 0
 
 export async function createAgentRuntime(directory: string, model: Model, instructions: Record<string, string>) {
   const host = await OpenCode.create({ plugins: [Plugin.define({
@@ -29,6 +30,9 @@ export async function createAgentRuntime(directory: string, model: Model, instru
   return {
     async ask(agent: string, text: string, onSession: (id: string) => Promise<void>) {
       if (!instructions[agent]) throw new Error("Agent is not registered for this run")
+      const maximum = Number(process.env.T2P_AGENT_MAX_CALLS || Infinity)
+      if (!(maximum > 0) || modelCalls >= maximum) throw new Error("Model call limit reached; review saved progress before another run")
+      modelCalls++
       const session = await host.sessions.create({ agent, model, location: { directory } })
       await onSession(session.id)
       await host.sessions.prompt({ sessionID: session.id, text })

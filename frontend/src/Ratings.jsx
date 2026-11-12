@@ -1,4 +1,5 @@
 import { HospitalRuns } from "./AuditOperations.jsx";
+import CriterionAudits from './CriterionAudits.jsx';
 import GradingPanel from "./GradingPanel.jsx";
 import ReportingContext from "./ReportingContext.jsx";
 import HospitalAssessment from "./HospitalAssessment.jsx";
@@ -99,6 +100,7 @@ export function HospitalDetail({ hospital, onClose, onReview, pendingReviews }) 
           <a href={p.audit_url}>{t('Audit row ↗')}</a>
         </div>
       </div>
+      <CriterionAudits key={hospital.id} hospitalKey={hospital.id} />
       <section className="hospital-findings">
         <nav className="hospital-panel-nav" aria-label={t('Hospital workspace')}>
           <button aria-pressed={panel === 'findings'} onClick={() => setPanel('findings')}>{t('Findings')}</button>

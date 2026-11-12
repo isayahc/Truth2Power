@@ -260,6 +260,18 @@ p {
   overflow: hidden;
   border-radius: 6px;
 }
+.criterion-audits { margin: 20px 0; }
+.criterion-list { list-style: none; padding: 0; display: grid; gap: 12px; }
+.criterion-card { border: 1px solid var(--line); border-radius: 6px; padding: 14px; min-width: 0; }
+.criterion-card-heading { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.criterion-card-heading h3 { margin: 0 0 10px; font-size: 16px; }
+.criterion-card-heading span { font-size: 12px; font-weight: 650; }
+.criterion-audits button { min-height: 36px; white-space: normal; }
+.criterion-audits details { margin-top: 12px; }
+.criterion-audits summary { cursor: pointer; }
+.criterion-audits p, .criterion-audits a, .criterion-audits blockquote { overflow-wrap: anywhere; }
+.criterion-audits blockquote { margin: 8px 0; padding-left: 12px; border-left: 3px solid var(--line); }
+.criterion-confirm, .criterion-progress { margin: 12px 0; padding: 14px; background: #edf5f0; border: 1px solid var(--line); border-radius: 6px; }
 .map-block {
   min-width: 0;
   display: flex;

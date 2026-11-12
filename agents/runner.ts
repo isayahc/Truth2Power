@@ -1,11 +1,12 @@
 import { mkdir, writeFile, rename } from "node:fs/promises"
 import { randomUUID } from "node:crypto"
+import { setTimeout as pause } from "node:timers/promises"
 import { join } from "node:path"
-import { fileURLToPath } from "node:url"
 import { steps } from "./steps.ts"
 import type { StepId, Step, StepContext } from "./steps.ts"
 import { findArtifact } from "./artifacts.ts"
 import { languageScope } from "./shared/language-scope.ts"
+import { auditRoot } from "./shared/audit-root.ts"
 import type { Artifact } from "./artifacts.ts"
 import type { Hospital } from "./shared/run-posted-document.ts"
 import type { Model } from "./shared/agent-runtime.ts"
@@ -13,14 +14,15 @@ import type { Model } from "./shared/agent-runtime.ts"
 export const defaultModel = { providerID: "amazon-bedrock", id: "us.amazon.nova-micro-v1:0" }
 type Entry = { status: "running" | "succeeded" | "failed" | "reused"; path?: string;
   value?: boolean | null; evidenceCount?: number; retrievedAt?: string[]; error?: string }
-type Options = { requested: StepId[]; refresh?: boolean; model?: Model; auditRoot?: string }
-type Services = { registry?: Record<StepId, Step>; find?: typeof findArtifact; log?: (message: string) => void }
+type Options = { requested: StepId[]; refresh?: boolean; model?: Model; auditRoot?: string; approvedSteps?: StepId[] }
+type Services = { registry?: Record<StepId, Step>; find?: typeof findArtifact; log?: (message: string) => void;
+  checkpoint?: (manifest: any) => Promise<void> }
 
 export async function runAudit(hospital: Hospital, options: Options, services: Services = {}) {
   const registry = services.registry ?? steps
   if (!/^[a-z0-9][a-z0-9-]*$/.test(hospital.id)) throw new Error("Invalid hospital ID")
   if (!options.requested.length || options.requested.some(id => !registry[id])) throw new Error("Invalid requested steps")
-  const root = options.auditRoot ?? fileURLToPath(new URL("../.audit/", import.meta.url))
+  const root = options.auditRoot ?? auditRoot()
   const log = services.log ?? console.log
   const find = services.find ?? findArtifact
   const runId = randomUUID()
@@ -32,7 +34,15 @@ export async function runAudit(hospital: Hospital, options: Options, services: S
     status: "running", steps: {} as Partial<Record<StepId, Entry>> }
   const checkpoint = async () => {
     await writeFile(`${path}.tmp`, JSON.stringify(manifest, null, 2))
-    await rename(`${path}.tmp`, path)
+    for (let attempt = 0; ; attempt++) {
+      try { await rename(`${path}.tmp`, path); break }
+      catch (error: any) {
+        // Windows scanners can briefly lock the previous manifest during replacement.
+        if (process.platform !== "win32" || !["EPERM", "EACCES"].includes(error.code) || attempt === 3) throw error
+        await pause(50 * (attempt + 1))
+      }
+    }
+    await services.checkpoint?.(manifest)
   }
   const paths: StepContext["paths"] = {}
   const requested = new Set(options.requested)
@@ -50,6 +60,7 @@ export async function runAudit(hospital: Hospital, options: Options, services: S
       log(`Reusing ${id}: ${saved.path}\nSource retrieval dates: ${saved.retrievedAt.join(", ")}`)
       await checkpoint()
     } else {
+      if (options.approvedSteps && !options.approvedSteps.includes(id)) throw new Error("Preparation changed; approve a new criterion request")
       for (const dependency of step.dependencies) await ensure(dependency)
       manifest.steps[id] = { status: "running" }
       await checkpoint()

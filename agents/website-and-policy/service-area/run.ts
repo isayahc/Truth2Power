@@ -3,6 +3,7 @@ import { loadEnvFile } from "node:process"
 import { fileURLToPath } from "node:url"
 import { join } from "node:path"
 import { randomUUID } from "node:crypto"
+import { auditRoot } from "../../shared/audit-root.ts"
 import { TaskGraph } from "../../task-graph/index.ts"
 import { createAgentRuntime } from "../../shared/agent-runtime.ts"
 import type { Model } from "../../shared/agent-runtime.ts"
@@ -20,7 +21,7 @@ export async function checkServiceArea(hospital: Hospital, model: Model,
   const project = fileURLToPath(new URL("../../../", import.meta.url))
   try { loadEnvFile(join(project, ".env")) } catch (error: any) { if (error.code !== "ENOENT") throw error }
   const runId = randomUUID()
-  const directory = join(project, ".audit", "agents", "service-area", runId)
+  const directory = join(auditRoot(), "agents", "service-area", runId)
   await mkdir(directory, { recursive: true })
   const graph = new TaskGraph(hospital.id, directory)
   await writeFile(join(directory, "run.json"), JSON.stringify({ runId, hospital, model, criterion, ...options }, null, 2))

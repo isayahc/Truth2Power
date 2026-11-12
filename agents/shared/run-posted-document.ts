@@ -5,6 +5,7 @@ import { join } from "node:path"
 import { randomUUID } from "node:crypto"
 import { TaskGraph } from "../task-graph/index.ts"
 import { sourceStore } from "./source-reuse.ts"
+import { auditRoot } from "./audit-root.ts"
 import { saveSource } from "./snapshots.ts"
 import type { Snapshot } from "./snapshots.ts"
 import { extractPDF } from "./pdf-text.ts"
@@ -36,7 +37,7 @@ export async function runPostedDocument<R, D extends { value: boolean | null; ev
   const projectDirectory = fileURLToPath(new URL("../../", import.meta.url))
   try { loadEnvFile(join(projectDirectory, ".env")) } catch (error: any) { if (error.code !== "ENOENT") throw error }
   const runId = randomUUID()
-  const directory = join(projectDirectory, ".audit", "agents", check.key, runId)
+  const directory = join(auditRoot(), "agents", check.key, runId)
   await mkdir(directory, { recursive: true })
   const graph = new TaskGraph(hospital.id, directory)
   const documents: { taskId: string; snapshot: Snapshot; reading: R }[] = []

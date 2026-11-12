@@ -615,7 +615,8 @@ export function HospitalRuns({ hospitalKey, onAssessment }) {
     [acceptedJob, setAcceptedJob] = useState(0),
     [intent, setIntent] = useState(() => {
       try {
-        return JSON.parse(sessionStorage.getItem(storageKey));
+        const saved = JSON.parse(sessionStorage.getItem(storageKey));
+        return saved?.mode === 'full_audit' || saved?.mode === 'live' ? null : saved;
       } catch {
         return null;
       }
@@ -730,7 +731,7 @@ export function HospitalRuns({ hospitalKey, onAssessment }) {
         {latest && <a href={`${api}/runs/${latest.audit_run_id}/log.json`} download={`${latest.audit_run_id}-log.json`}>{t("Download run log (JSON)")}</a>}
       </div>}
       <div className="ops-controls">
-        {["discovery_only", "full_audit", "replay"].map((m) => (
+        {["discovery_only", "replay"].map((m) => (
           <button
             disabled={busy || !!intent || active(latest?.status) || latest?.status === 'needs_human' || !r.data || acceptedJob > (latest?.job_id ?? 0)}
             key={m}

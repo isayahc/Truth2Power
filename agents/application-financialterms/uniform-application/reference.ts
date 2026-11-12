@@ -2,6 +2,7 @@ import { readFile } from "node:fs/promises"
 import { createHash } from "node:crypto"
 import { join } from "node:path"
 import { extractPDF } from "../../shared/pdf-text.ts"
+import { auditRoot } from "../../shared/audit-root.ts"
 
 // Versioned source and derived render already captured by the project's whole-form
 // review. Hashes verify bytes, not template applicability or permission to customize.
@@ -17,8 +18,8 @@ export type UniformReference = {
   passages: { locator: string; text: string }[]
 }
 export async function loadUniformReference(project: string): Promise<UniformReference> {
-  const sourcePath = join(project, ".audit/live/snapshots", `${referenceConfig.sourceHash}.docx`)
-  const renderPath = join(project, ".audit/live/snapshots", `${referenceConfig.renderHash}.pdf`)
+  const sourcePath = join(auditRoot(), "live/snapshots", `${referenceConfig.sourceHash}.docx`)
+  const renderPath = join(auditRoot(), "live/snapshots", `${referenceConfig.renderHash}.pdf`)
   const original = await readFile(sourcePath)
   const render = await readFile(renderPath)
   if (createHash("sha256").update(original).digest("hex") !== referenceConfig.sourceHash

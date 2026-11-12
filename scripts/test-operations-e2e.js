@@ -86,9 +86,9 @@ try {
     );
     await refresh();
   }
-  await choose("Full audit");
+  await choose("Scan documents");
   await panel
-    .getByText(/Network, compute and storage costs may apply/)
+    .getByText(/This scan downloads public documents/)
     .waitFor();
   await panel.getByRole("button", { name: "Cancel", exact: true }).click();
   assert.equal(db.prepare("SELECT count(*) n FROM jobs").get().n, 0);
@@ -133,7 +133,7 @@ try {
     .first()
     .waitFor();
   assert.match(page.url(), /hospital=739/);
-  await choose("Full audit");
+  await choose("Replay saved evidence");
   await confirm();
   await panel
     .getByRole("heading", { name: "audit-run-3", exact: true })
@@ -206,12 +206,17 @@ try {
     .getByText(/Vencida/)
     .first()
     .waitFor();
-  // Run the CDN regression through the same button operators use for any roster entry.
+  // Retain legacy full-pipeline history coverage; new model runs use per-criterion buttons.
   await page.clock.setFixedTime(new Date("2026-11-10T17:00:00Z"));
   await page.goto(origin + "/?hospital=324&lang=en");
   await page.getByRole("button", { name: "Audits and history" }).click();
-  await choose("Full audit");
-  await confirm();
+  const legacy = await page.request.post(origin + '/api/pilot/v1/hospitals/324/runs', {
+    headers: {'X-Review-Request':'1'},
+    data: {mode:'full_audit',year:2026,review_date:'2026-11-10',request_key:'SYN-legacy-history'},
+  });
+  assert.equal(legacy.status(),202);
+  await refresh();
+  await panel.getByRole('button',{name:'audit-run-4',exact:true}).click();
   await panel.getByRole("heading", { name: "audit-run-4", exact: true }).waitFor();
   await work("public-files");
   await page.getByRole("button", { name: "Findings", exact: true }).click();

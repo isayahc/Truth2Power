@@ -3,6 +3,7 @@ import { loadEnvFile } from "node:process"
 import { fileURLToPath } from "node:url"
 import { join } from "node:path"
 import { randomUUID } from "node:crypto"
+import { auditRoot } from "../../shared/audit-root.ts"
 import { TaskGraph } from "../../task-graph/index.ts"
 import { createAgentRuntime } from "../../shared/agent-runtime.ts"
 import type { Model } from "../../shared/agent-runtime.ts"
@@ -19,7 +20,7 @@ export async function checkUniformApplication(hospital: Hospital, model: Model, 
   const project = fileURLToPath(new URL("../../../", import.meta.url))
   try { loadEnvFile(join(project, ".env")) } catch (error: any) { if (error.code !== "ENOENT") throw error }
   const runId = randomUUID()
-  const directory = join(project, ".audit", "agents", "uniform-application", runId)
+  const directory = join(auditRoot(), "agents", "uniform-application", runId)
   await mkdir(directory, { recursive: true })
   const graph = new TaskGraph(hospital.id, directory)
   const owner = "application-financialterms"

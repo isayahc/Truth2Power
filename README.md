@@ -1,5 +1,23 @@
 # Truth2Power
 
+## On-demand criterion agents
+
+Each hospital page now lists **K1–K17** with a **Run criterion** button. Opening a page or expanding a saved result makes no model calls. Before execution, the confirmation shows the requested criterion plus any missing prerequisites. For example, K12 requires K1; K16 requires K2, which may require K1. Intact prerequisite artifacts are reused rather than rerun. Choosing one criterion never queues the other unrelated criteria.
+
+The existing `npm run audit:worker` also processes these requests through the OpenCode SDK runner (`agents/runner.ts`). Both web and worker processes require **Node 26+** and the same `AUDIT_DIR`. Roster-verified hospital names and assistance URLs are supplied server-side; browsers cannot supply arbitrary source URLs or model choices. The default is Bedrock `us.amazon.nova-micro-v1:0`, using the server's existing AWS credential chain.
+
+- Requests are durable SQLite jobs, with one active criterion request per hospital and idempotent submission keys (including duplicate tabs and lost responses).
+- The UI polls active jobs and shows saved draft results, original source quotations, URLs, retrieval dates and unresolved findings. **Run again** is an explicit new request. Source reuse retains the original retrieval dates; rerunning does not certify that a saved PDF is still current.
+- Each hosted criterion job has a 20-minute timeout and a maximum of 40 model tasks across its requested criterion and prerequisites, with the existing 2048-output-token limit per task. These are work limits, **not a dollar spending guarantee**. Internal validation/repair tasks count toward the task limit.
+- Worker interruption or timeout never automatically retries a criterion job. Already saved results remain visible. Reapprove a new request to try again.
+- Results live in `criterion_jobs`, `criterion_requests` and `criterion_results` in `AUDIT_DIR/audit.sqlite`; full run manifests, task graphs, session IDs, PDFs and evidence remain under `AUDIT_DIR/hospitals` and `AUDIT_DIR/agents`.
+- These SDK findings are a separate draft view. They do not overwrite the published 2025 ratings or automatically publish into the legacy assessment/review-inbox/operations-cost ledger. Older CLI artifacts can supply prerequisites; historical CLI results are not automatically imported into the new UI result table.
+- Full-audit execution is no longer a hospital-page button. Legacy scan/replay/history tools and their APIs remain available. K9 still requires the verified uniform-application reference files under `AUDIT_DIR/live/snapshots`; missing reference material produces a review gap.
+
+Read-only endpoints: `GET /api/hospitals/:key/criteria` and `GET /api/hospitals/:key/criteria/:step/plan`. Explicit execution: `POST /api/hospitals/:key/criteria/:step` with `X-Review-Request: 1` and `{request_key, rerun, approved_steps}`. The worker rechecks scope and stops if missing prerequisites would require unapproved work.
+
+Run `npm run test:criteria` for offline synthetic queue, subprocess, and English/Spanish desktop/mobile browser checks. The tests do not invoke a paid model. UI translations are implementation drafts, not fluent-reader approval. Live model quality and provider access must be checked separately before relying on a hosted finding.
+
 ## Integrated 17-measure pilot
 
 The persistent audit worker now publishes one immutable assessment revision across hospital pages, grading, overview, review inbox and changes. See the [offline demo and operating guide](docs/validation/pilot-operations.md), [release-readiness report](docs/validation/pilot-readiness.md), and [reproducible Wave 1 results](docs/validation/wave-one-pilot-results.md). Run `npm run test:pilot` with the existing Python grading dependencies configured. Real Wave 1 evidence remains partial; institutional grades and subject-matter approval remain pending.
@@ -14,7 +32,7 @@ Truth2Power maps how 212 New York hospitals scored in the Community Service Soci
 
 ## Run the React app
 
-Install Git and Node.js 22.13 or newer with npm. Run these commands in a terminal (including WSL2 on Windows).
+Install Git and Node.js 26 or newer with npm. Run these commands in a terminal (including WSL2 on Windows).
 
 ```bash
 git clone https://github.com/isayahc/Truth2Power.git
@@ -206,7 +224,7 @@ The demo uses public hospital-level audit data and facility coordinates. It requ
 
 ### Replay the 17-measure compliance assessment
 
-Use Node 22.13+ and Python 3.10+ with the live-audit dependencies. These commands grade saved synthetic evidence offline. Set `T2P_PYTHON` if your interpreter is named `python3` or lives in a virtual environment.
+Use Node 26+ and Python 3.10+ with the live-audit dependencies. These commands grade saved synthetic evidence offline. Set `T2P_PYTHON` if your interpreter is named `python3` or lives in a virtual environment.
 
 ```bash
 python -m pip install -r tools/live-audit/requirements.txt

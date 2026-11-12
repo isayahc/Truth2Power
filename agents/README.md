@@ -1,5 +1,21 @@
 # Hospital audit CLI
 
+## Website integration
+
+Hospital pages can queue one criterion through `backend/audit/criterion-routes.js`.
+The existing worker starts `agents/criterion-job.ts` in a separate Node 26 process,
+calls this same runner with one requested step and an approved prerequisite list,
+and saves each checkpoint to the persistent criterion queue. No HTTP request runs
+the SDK directly. `AUDIT_DIR` controls both agent artifacts and the queue; it must
+match for the web and worker processes. Hosted jobs use a 40-model-task ceiling and
+a 20-minute worker timeout, with no automatic job retry after interruption.
+
+`services.checkpoint` in `runner.ts` is the inspectable handoff to the worker.
+`approvedSteps` fences execution if a prerequisite disappears after confirmation.
+The CLI remains able to use `--step`, `--through`, and `--refresh` independently.
+The new UI's **Run again** reruns the requested interpretation while reusing intact
+prerequisites; it does not mean `--refresh` or certify fresh availability of PDFs.
+
 K17: `npm run audit -- ellenville --step k17` reviews the saved English/Spanish
 summaries and live assistance landing page for explicit assistance income levels.
 One model call per source, no retries; source-matched thresholds and contextual
