@@ -75,11 +75,14 @@ function publicJob(row) {
     started: row.started, completed: row.completed, error: row.error, requested: requestedSteps(row),
     progress: Object.fromEntries(Object.entries(progress).map(([id, entry]) => [id, { status: entry.status }])) };
 }
-export function criterionStatus(db, hospital) {
-  expireCriteria(db);
-  const jobs = db.prepare("SELECT * FROM criterion_jobs WHERE hospital=? ORDER BY created DESC, rowid DESC").all(hospital);
+export function criterionStatus(db, hospital, {readOnly = false} = {}) {
+  if (!readOnly) expireCriteria(db);
+  const jobs = db.prepare("SELECT * FROM criterion_jobs WHERE hospital=? ORDER BY created DESC, rowid DESC").all(hospital)
+    .map(job => readOnly && job.status==='running' && job.lease != null && job.lease<=Date.now()
+      ? {...job,status:'failed',completed:new Date(job.lease).toISOString(),error:'interrupted'} : job);
   const results = db.prepare("SELECT * FROM criterion_results WHERE hospital=?").all(hospital);
-  const decisions = db.prepare('SELECT * FROM criterion_decisions WHERE hospital=? ORDER BY id DESC').all(hospital);
+  const decisions = db.prepare("SELECT 1 FROM sqlite_master WHERE name='criterion_decisions'").get()
+    ? db.prepare('SELECT * FROM criterion_decisions WHERE hospital=? ORDER BY id DESC').all(hospital) : [];
   const items = stepIds.map(id => {
       const saved = results.find(r => r.step === id);
       const latest = jobs.find(j => requestedSteps(j).includes(id) || ['running','failed','succeeded'].includes(JSON.parse(j.progress)[id]?.status));

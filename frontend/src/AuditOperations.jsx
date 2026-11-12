@@ -23,6 +23,7 @@ const statusNames = {
   completed: "Completed",
   cancelled: "Cancelled",
   unknown: "Unknown",
+  not_recorded: 'Not recorded',
   complete: "Complete",
   started: "Started",
   stage: "Stage",
@@ -143,6 +144,7 @@ export function AuditOperations() {
     [offset, setOffset] = useState(0);
   const r = useJson(api + "/operations", tick),
     totals = useJson(api + "/summary", tick);
+  useEffect(()=>{const timer=setInterval(()=>bump(n=>n+1),5000);return()=>clearInterval(timer);},[]);
   const rows = (r.data?.items ?? []).filter((h) =>
     (h.name + " " + h.hospital_key + " " + h.region)
       .toLowerCase()
@@ -164,11 +166,13 @@ export function AuditOperations() {
     <section className="ops ops-dashboard">
       <a href={localHref("?")}>{t("← Back to hospital map")}</a>
       <h1>{t("Audit operations")}</h1>
+      <p>{t('This table includes requirement checks and older audits. Requirement counts match the hospital page. Cost totals below cover older audits only; requirement-check costs are not recorded here.')}</p>
+      {r.data && <p>{t('Recorded requirement checks')}: {r.data.criterion_runs}</p>}
       <Notice resource={totals} retry={() => bump((n) => n + 1)} />
       {totals.data && (
         <dl className="ops-totals">
           {Object.entries({
-            runs: "Recorded runs",
+            runs: "Recorded older audits",
             known_billed_usd: "Known billed",
             estimated_local_usd: "Local estimate",
             calculated_provider_usd: "Provider estimate",
@@ -239,10 +243,11 @@ export function AuditOperations() {
                     "Run status",
                     "Last attempt",
                     "Last source fetch",
-                    "Last eligible assessment",
+                    "Last completed check",
                     "Next due",
-                    "Unresolved measures",
-                    "Coverage gaps",
+                    "Confirmed requirements",
+                    "Requirements needing review",
+                    "Not checked",
                     "Cost availability",
                   ].map((l) => (
                     <th key={l} scope="col">
@@ -265,24 +270,30 @@ export function AuditOperations() {
                     </th>
                     <td>
                       {t(statusNames[h.latest?.status] ?? "Not recorded")}
+                      {h.latest && <small className="ops-check-source">{t(h.latest.source==='criterion'?'Requirement check':'Older audit')}</small>}
+                      {h.legacy?.latest && <details><summary>{t('Older audit record')}</summary>
+                        <p>{t(statusNames[h.legacy.latest.status] ?? 'Not recorded')} · {date(h.legacy.latest.completed_at,language,t)}</p>
+                        <a href={h.legacy.latest.timeline}>{t('Technical history (JSON)')}</a>
+                      </details>}
                     </td>
                     {[
                       "last_attempted",
                       "last_successful_source_retrieval",
-                      "last_eligible_assessment",
+                      "last_completed_execution",
                       "next_due_at",
                     ].map((k) => (
                       <td key={k}>
-                        {date(h.clocks[k], language, t)}{" "}
+                        {k==='next_due_at'&&!h.clocks[k] ? t('Not scheduled') : date(h.clocks[k], language, t)}{" "}
                         {k === "next_due_at" &&
                           h.clocks[k] &&
                           Date.parse(h.clocks[k]) < Date.now() &&
                           t("Overdue")}
                       </td>
                     ))}
-                    <td>{h.latest?.unresolved_measures ?? t("Unknown")}</td>
-                    <td>{h.latest?.coverage_gaps ?? t("Unknown")}</td>
-                    <td>{t(statusNames[h.cost_status])}</td>
+                    <td>{h.criterion ? `${h.criterion.summary.confirmed}/17` : t('Not checked')}</td>
+                    <td>{h.criterion ? h.criterion.summary.unclear : t('Not checked')}</td>
+                    <td>{h.criterion ? h.criterion.summary.unrun : 17}</td>
+                    <td>{t(h.cost_status==='unknown' ? 'Not recorded' : statusNames[h.cost_status] ?? 'Not recorded')}</td>
                   </tr>
                 ))}
               </tbody>

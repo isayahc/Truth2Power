@@ -12,6 +12,7 @@ import { readReceipt } from "./usage-ledger.js";
 import { runId } from "./run-history.js";
 import { fingerprint, readArtifact } from "../grading/data.js";
 import { sha256 } from "../review/identity.js";
+import {criterionOperations, combineOperations} from './criterion-operations.js';
 
 const base = "/api/pilot/v1",
   version = "audit-reporting-v1";
@@ -427,10 +428,11 @@ export function reportingRoute(event) {
       params(q, []);
       const latest = new Map();
       if (db) for (const row of db.prepare(`SELECT * FROM (SELECT p.*, row_number() OVER (PARTITION BY hospital ORDER BY id DESC) AS rank FROM (${projection}) p) WHERE rank=1`).iterate(pipelineRoot())) latest.set(row.hospital,row);
-      return json(200,{items:[...hospitals.values()].map(h => {
+      const criteria=criterionOperations(db);
+      return json(200,{criterion_runs:[...criteria.values()].reduce((n,c)=>n+c.runs,0),items:[...hospitals.values()].map(h => {
         const r = latest.get(h.hospital_key);
-        return {...h,clocks:clocks(r ? db : null,h.hospital_key),latest:r ? runRow(r) : null,
-          cost_status:r ? publicReceipt(db,r).cost_status : "unknown"};
+        return combineOperations({...h,clocks:clocks(r ? db : null,h.hospital_key),latest:r ? runRow(r) : null,
+          cost_status:r ? publicReceipt(db,r).cost_status : "unknown"},criteria.get(h.hospital_key));
       })});
     }
     if (path === "/summary") return json(200, summary(db, q));

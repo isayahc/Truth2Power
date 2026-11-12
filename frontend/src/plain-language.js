@@ -1,6 +1,19 @@
 // Stable message keys keep data/API terminology separate from patient-facing copy.
 // These mappings apply only through t(); source quotations are never rewritten.
 export const plainLanguage = {
+  'This table includes requirement checks and older audits. Requirement counts match the hospital page. Cost totals below cover older audits only; requirement-check costs are not recorded here.': ['This table includes requirement checks and older audits. Requirement counts match the hospital page. Cost totals below cover older audits only; requirement-check costs are not recorded here.', 'Esta tabla incluye revisiones de requisitos y auditorías anteriores. Los recuentos de requisitos coinciden con la página del hospital. Los costos totales de abajo solo incluyen auditorías anteriores; aquí no se registran los costos de las revisiones de requisitos.'],
+  'Recorded requirement checks': ['Recorded requirement checks', 'Revisiones de requisitos registradas'],
+  'Recorded older audits': ['Recorded older audits', 'Auditorías anteriores registradas'],
+  'Last completed check': ['Last completed check', 'Última revisión completada'],
+  'Last completed execution': ['Last completed check', 'Última revisión completada'],
+  'Confirmed requirements': ['Requirements with a clear result', 'Requisitos con un resultado claro'],
+  'Requirements needing review': ['Requirements needing review', 'Requisitos que necesitan revisión'],
+  'Not checked': ['Not checked', 'Sin revisar'],
+  'Not scheduled': ['Not scheduled', 'Sin programar'],
+  'Requirement check': ['Requirement check', 'Revisión de requisitos'],
+  'Older audit': ['Older audit', 'Auditoría anterior'],
+  'Older audit record': ['Older audit record', 'Registro de auditoría anterior'],
+  'Technical history (JSON)': ['Technical history (JSON)', 'Historial técnico (JSON)'],
   'Primary service-area boundaries comply': ['The area served meets the rules for financial help', 'La zona atendida cumple las reglas de ayuda económica'],
   'No asset-based eligibility check': ['Savings and property do not decide who gets help', 'Los ahorros y las propiedades no determinan quién recibe ayuda'],
   'Entire NYS Uniform Application used': ['The full New York State standard application is used', 'Se usa la solicitud estándar completa del estado de Nueva York'],
