@@ -40,7 +40,7 @@ try {
     await page.locator('#criterion-audits-title').scrollIntoViewIfNeeded();
     assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);
     await page.screenshot({path:`.audit/ui/operations/criterion-destination-${language}.png`});
-    await page.getByRole('link',{name:language==='en'?'Audit operations':'Operaciones de auditoría',exact:true}).click();
+    await page.getByRole('link',{name:language==='en'?'Check history and costs':'Historial de revisiones y costos',exact:true}).click();
     await page.getByRole('searchbox').fill('739');await page.getByRole('link',{name:'A.O. Fox Memorial Hospital',exact:true}).waitFor();
     assert.deepEqual(posts,[]);assert.deepEqual(errors,[]);
     await page.close();

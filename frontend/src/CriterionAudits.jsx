@@ -126,7 +126,8 @@ export default function CriterionAudits({ hospitalKey }) {
       <p>{t('Criteria to execute, including missing prerequisites')}: {intent.plan.run.map(id => id.toUpperCase()).join(', ')}</p>
       <p>{t('Saved prerequisites to reuse')}: {intent.plan.reuse.map(id => id.toUpperCase()).join(', ') || t('None')}</p>
       <p>{t('Missing source documents may be downloaded. Model calls cost money; this is not a fixed-price quote.')}</p>
-      <p>{t('Model')}: {intent.plan.model} · {t('Maximum model tasks')}: {intent.plan.max_model_calls} · {t('Time limit (minutes)')}: {intent.plan.timeout_minutes}</p>
+       <p>{t('Maximum model tasks')}: {intent.plan.max_model_calls} · {t('Time limit (minutes)')}: {intent.plan.timeout_minutes}</p>
+       <details><summary>{t('Technical details')}</summary><p>{t('Model')}: {intent.plan.model}</p></details>
       <p>{t('A run may stop with gaps. Another attempt requires your click.')}</p>
       <button type="button" disabled={busy} onClick={submit}>{t(submitError ? 'Retry same request' : 'Confirm criterion run')}</button>{' '}
       <button type="button" disabled={busy} onClick={() => {
