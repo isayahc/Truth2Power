@@ -12,7 +12,7 @@ The existing `npm run audit:worker` also processes these requests through the Op
 - Worker interruption or timeout never automatically retries a criterion job. Already saved results remain visible. Reapprove a new request to try again.
 - Results live in `criterion_jobs`, `criterion_requests` and `criterion_results` in `AUDIT_DIR/audit.sqlite`; full run manifests, task graphs, session IDs, PDFs and evidence remain under `AUDIT_DIR/hospitals` and `AUDIT_DIR/agents`.
 - These SDK findings are a separate draft view. They do not overwrite the published 2025 ratings or automatically publish into the legacy assessment/review-inbox/operations-cost ledger. Older CLI artifacts can supply prerequisites; historical CLI results are not automatically imported into the new UI result table.
-- Full-audit execution is no longer a hospital-page button. Legacy scan/replay/history tools and their APIs remain available. K9 still requires the verified uniform-application reference files under `AUDIT_DIR/live/snapshots`; missing reference material produces a review gap.
+- The criterion panel is the only audit execution UI on hospital pages. The old hospital-runs panel, its tabs, and demo audit launchers are removed; saved assessment views and legacy records/APIs remain available. Existing `#audit-runs` links lead to the criterion panel. K9 still requires the verified uniform-application reference files under `AUDIT_DIR/live/snapshots`; missing reference material produces a review gap.
 
 Read-only endpoints: `GET /api/hospitals/:key/criteria` and `GET /api/hospitals/:key/criteria/:step/plan`. Explicit execution: `POST /api/hospitals/:key/criteria/:step` with `X-Review-Request: 1` and `{request_key, rerun, approved_steps}`. The worker rechecks scope and stops if missing prerequisites would require unapproved work.
 
@@ -81,7 +81,7 @@ Open http://127.0.0.1:5180/. On Linux/WSL, use `PORT=5180 npm run dev` and `PORT
 
 Both processes must use the same `AUDIT_DIR` (default: `.audit/`) and `PORT`. Starting the worker processes existing queued jobs; do not submit duplicate scans just because a job is waiting. Press **Ctrl+C** in the worker terminal to stop processing.
 
-In **Audits and history**, the status above the buttons distinguishes **Queued** (not started), **Running**, and finished runs. Active runs are checked every five seconds, for up to 120 checks; use **Refresh** to resume after polling pauses or a connection fails. Disabled audit buttons prevent another run while the current one is pending.
+The criterion panel distinguishes **Queued** (not started), **Running**, and saved findings. Active jobs are checked every three seconds; use **Refresh** if the connection fails. Disabled audit buttons prevent another criterion run while the current one is pending.
 
 If a run stays queued, check the worker terminal first. A successful page/API response only confirms the web server is running. Check for worker startup errors, matching `AUDIT_DIR` values, and missing Python dependencies. The UI's last status-check time confirms a response from the backend, not a worker heartbeat.
 

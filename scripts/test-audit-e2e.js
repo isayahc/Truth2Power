@@ -55,9 +55,10 @@ try {
   db = new DatabaseSync(join(directory, "audit.sqlite"));
   for (const year of ["2025", "2026"]) {
     let page = await openHospital();
-    await page.getByLabel("Guideline year").selectOption(year);
-    await page.getByRole("button", { name: "Recheck application" }).click();
-    await page.getByText("queued", { exact: true }).waitFor();
+    await page.locator('.criterion-card').nth(16).waitFor();
+    assert.equal(await page.getByRole('button', {name:'Recheck application'}).count(),0);
+    const queued = await fetch(`${base}/api/audits/362/${year}`, {method:'POST',headers:{'X-Audit-Request':'1'}});
+    assert.equal(queued.status,202);
     await page.close();
     if (year === "2025") {
       // End a worker process after it takes ownership. Advance its lease to simulate timeout.
@@ -87,9 +88,8 @@ try {
     assert.equal(dollars.document_results[0].result, year === "2025" ? "unclear" : "no");
     assert.equal(assessment.final_grade, null);
     page = await openHospital();
-    await page.getByText("Source evidence", { exact: true }).click();
-    const href = await page.getByText("Open saved PDF").getAttribute("href");
-    const pdf = await fetch(base + href);
+    const snapshot = latest.snapshots.find(s => s.document_type === 'application');
+    const pdf = await fetch(`${base}/api/audits/snapshots/${snapshot.sha256}`);
     assert.equal((await pdf.text()).slice(0, 5), "%PDF-");
     await page.close();
   }

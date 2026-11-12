@@ -29,12 +29,10 @@ try {
   let page = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
   await page.clock.install({ time: new Date("2026-11-09T12:00:00Z") });
   await page.goto(origin + "/?hospital=1002");
-  const controls = page.getByRole("region", { name: "Integrated audit job" });
-  await controls.getByRole("button", { name: "Queue 17-measure audit" }).waitFor();
+  await page.locator('.criterion-card').nth(16).waitFor();
+  assert.equal(await page.getByRole('region', {name:'Integrated audit job'}).count(),0);
   await page.screenshot({ path: join(artifacts, "before-desktop.png"), fullPage: true });
-  await controls.getByLabel("Evidence mode").selectOption("synthetic");
-  await controls.getByRole("button", { name: "Queue 17-measure audit" }).click();
-  await controls.getByText("queued", { exact: true }).waitFor();
+  assert.equal((await queue('SYN-initial')).status,202);
   await page.close(); // The audit has no dependency on a browser tab staying open.
   await worker();
   const firstStatus = await get("/api/pilot/hospitals/1002"), first = await get(`/api/pilot/assessments/${firstStatus.latest}`);

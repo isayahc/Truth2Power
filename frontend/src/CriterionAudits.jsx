@@ -69,7 +69,7 @@ export default function CriterionAudits({ hospitalKey }) {
     finally { lock.current = false; if (alive.current) setBusy(false); }
   }
   const formatDate = value => new Date(value).toLocaleString(language);
-  return <section className="criterion-audits ops" aria-labelledby="criterion-audits-title">
+  return <section id="audit-runs" className="criterion-audits ops" aria-labelledby="criterion-audits-title">
     <h2 id="criterion-audits-title">{t('Run one criterion at a time')}</h2>
     <p>{t('Viewing results is free of model calls. Run only the criterion you choose; saved documents and prerequisite results are reused.')}</p>
     <p>{t('These are draft findings, separate from the published rating. Unreadable sources or model errors require review, not a hospital failure.')}</p>
