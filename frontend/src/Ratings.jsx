@@ -10,7 +10,7 @@ import { useLocale } from './locale.jsx';
 export function Ratings({ hospitals, filter, onFilter }) {
   const { t } = useLocale();
   const counts = new Map(ratings.map((r) => [r.stars, 0]));
-  for (const h of hospitals) counts.set(h.properties.stars, counts.get(h.properties.stars) + 1);
+  for (const h of hospitals) {const key=h.properties.stars ?? 'unrated';counts.set(key, counts.get(key) + 1);}
   let stop = 0;
   const slices = ratings.map((r) => {
     const start = stop;
@@ -43,7 +43,7 @@ export function Ratings({ hospitals, filter, onFilter }) {
           onClick={() => onFilter(filter === r.stars ? null : r.stars)}
         >
           <span className="swatch" style={{ background: r.color }} />
-          <span className="stars">{r.stars} ★</span>
+          <span className="stars">{r.stars==='unrated' ? '—' : `${r.stars} ★`}</span>
           <span className="rating-label">{t(r.label)}</span>
           <span className="quantity">{counts.get(r.stars)}</span>
         </button>
@@ -53,7 +53,7 @@ export function Ratings({ hospitals, filter, onFilter }) {
           t('Select a rating to filter the map.')
         ) : (
           <>
-            {t('Showing')} {filter} {t(filter === 1 ? 'star' : 'stars')} ·{" "}
+            {t('Showing')} {filter==='unrated' ? t('Not rated') : `${filter} ${t(filter === 1 ? 'star' : 'stars')}`} ·{" "}
             <button className="plain" onClick={() => onFilter(null)}>
               {t('Show all')}
             </button>
@@ -81,15 +81,15 @@ export function HospitalDetail({ hospital, onClose, onReview, pendingReviews }) 
       </button>
       <div className="hospital-summary">
         <h1>{p.name}</h1>
+        {p.current_directory===false && <p>{t('Historical record; not listed separately in the current state directory.')}</p>}
         <p>{p.address}, {p.city} · {t('County')}: {p.county}</p>
         <p className="pill">
           <span className="swatch" style={{ background: ratingByStars.get(p.stars).color }} />
-           {t('Published rating')} · {p.stars} ★ · {t('Grade')} {p.grade} · {t('September 2025')}
-           <CriterionCoverage hospitalKey={hospital.id} historical />
+           {p.grade ? <>{t('Published rating')} · {p.stars} ★ · {t('Grade')} {p.grade} · {t('September 2025')}<CriterionCoverage hospitalKey={hospital.id} historical /></> : <>{t('Not rated')} · {t('September 2025')}</>}
         </p>
         <div className="record-actions">
           {p.assistance_url && <a href={p.assistance_url} target="_blank" rel="noreferrer">{t('Get hospital financial assistance (HFA) ↗')}</a>}
-          <a href={p.audit_url}>{t('Audit row ↗')}</a>
+          {p.audit_url && <a href={p.audit_url}>{t('Audit row ↗')}</a>}
         </div>
       </div>
       <CriterionAudits key={hospital.id} hospitalKey={hospital.id} />

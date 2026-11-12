@@ -16,13 +16,14 @@ const row = (r) => r.hospitals.find((h) => h.hospital_key === "362");
 
 test("all roster entries contribute once statewide and by region, including never assessed hospitals", () => {
   const r = overview({inputs:pageInputs("/SYN-empty-not-present"),asOf});
-  assert.equal(r.statewide.total,212);
-  assert.equal(new Set(r.hospitals.map((h) => h.hospital_key)).size,212);
-  assert.deepEqual(r.statewide.freshness,{current:2,overdue:0,never:210});
+  assert.equal(r.statewide.total,218);
+  assert.equal(new Set(r.hospitals.map((h) => h.hospital_key)).size,218);
+  assert.deepEqual(r.statewide.freshness,{current:2,overdue:0,never:216});
+  assert.equal(r.statewide.historical.unrated,7);
   assert.equal(r.statewide.current_grades.pending,2);
-  assert.equal(r.statewide.current_grades.unassessed,210);
+  assert.equal(r.statewide.current_grades.unassessed,216);
   assert.equal(r.regions.length,10);
-  assert.equal(r.regions.reduce((n,g) => n+g.total,0),212);
+  assert.equal(r.regions.reduce((n,g) => n+g.total,0),218);
   for (const g of r.regions) assert.deepEqual(summarize(r.hospitals.filter((h) => h.region===g.region)).freshness,g.freshness);
   assert.equal(row(r).region,"Mohawk Valley");
   assert.equal(r.hospitals.find((h) => h.hospital_key === "1002").region,"Mid-Hudson");
@@ -56,7 +57,7 @@ test("a revised institutional rating moves between grade buckets once without mo
   assert.equal(initial.current_grades.B,1);
   assert.equal(revised.current_grades.B,0);
   assert.equal(revised.current_grades.C,1);
-  assert.equal(revised.total,212);
+  assert.equal(revised.total,218);
   assert.deepEqual(initial.historical,revised.historical);
 });
 

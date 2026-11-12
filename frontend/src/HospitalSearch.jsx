@@ -65,7 +65,7 @@ export default function HospitalSearch({ hospitals, onSelect }) {
               <button key={h.id} onClick={() => choose(h)}>
                 {h.properties.name}
                 <small>
-                  {h.properties.city} · {h.properties.stars} ★
+                  {h.properties.city} · {h.properties.stars==null ? t('Not rated') : `${h.properties.stars} ★`}
                   <CriterionCoverage hospitalKey={h.id} historical />
                 </small>
               </button>

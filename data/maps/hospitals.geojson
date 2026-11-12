@@ -1,6 +1,6 @@
 {
   "type": "FeatureCollection",
-  "name": "New York hospital financial assistance review, September 2025",
+  "name": "New York hospital directory with September 2025 historical ratings",
   "attribution": "Audit: Community Service Society of New York. Coordinates: NYS DOH, HIFLD Hospitals and © OpenStreetMap contributors (https://www.openstreetmap.org/copyright).",
   "features": [
     {
@@ -29,7 +29,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=739",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "One Norton Avenue"
+        "coordinate_source_address": "One Norton Avenue",
+        "current_directory": true
       }
     },
     {
@@ -58,7 +59,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=8554",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "43 Pearl Street West"
+        "coordinate_source_address": "43 Pearl Street West",
+        "current_directory": true
       }
     },
     {
@@ -87,7 +89,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=306",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "203 Old Military Road"
+        "coordinate_source_address": "203 Old Military Road",
+        "current_directory": true
       }
     },
     {
@@ -116,7 +119,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=324",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "2233 State Route 86, P.O. Box 471"
+        "coordinate_source_address": "2233 State Route 86, P.O. Box 471",
+        "current_directory": true
       }
     },
     {
@@ -145,7 +149,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=2",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "25 Hackett Boulevard"
+        "coordinate_source_address": "25 Hackett Boulevard",
+        "current_directory": true
       }
     },
     {
@@ -174,7 +179,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=1",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "43 New Scotland Avenue"
+        "coordinate_source_address": "43 New Scotland Avenue",
+        "current_directory": true
       }
     },
     {
@@ -203,7 +209,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=116",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "600 Roe Avenue"
+        "coordinate_source_address": "600 Roe Avenue",
+        "current_directory": true
       }
     },
     {
@@ -232,7 +239,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=85",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "17 Lansing Street"
+        "coordinate_source_address": "17 Lansing Street",
+        "current_directory": true
       }
     },
     {
@@ -261,7 +269,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=1438",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "462 First Avenue"
+        "coordinate_source_address": "462 First Avenue",
+        "current_directory": true
       }
     },
     {
@@ -290,7 +299,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=280",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "224 East Main St"
+        "coordinate_source_address": "224 East Main St",
+        "current_directory": true
       }
     },
     {
@@ -319,7 +329,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=1138",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "95 Bradhurst Avenue"
+        "coordinate_source_address": "95 Bradhurst Avenue",
+        "current_directory": true
       }
     },
     {
@@ -348,7 +359,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=708",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "160 East Main Street"
+        "coordinate_source_address": "160 East Main Street",
+        "current_directory": true
       }
     },
     {
@@ -377,7 +389,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=1164",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "1276 Fulton Avenue"
+        "coordinate_source_address": "1276 Fulton Avenue",
+        "current_directory": true
       }
     },
     {
@@ -406,7 +419,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=1178",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "1650 Grand Concourse"
+        "coordinate_source_address": "1650 Grand Concourse",
+        "current_directory": true
       }
     },
     {
@@ -435,7 +449,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=1286",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "1 Brookdale Plaza"
+        "coordinate_source_address": "1 Brookdale Plaza",
+        "current_directory": true
       }
     },
     {
@@ -464,7 +479,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=1288",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "121 Dekalb Avenue"
+        "coordinate_source_address": "121 Dekalb Avenue",
+        "current_directory": true
       }
     },
     {
@@ -493,7 +509,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=98",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "529 Central Avenue"
+        "coordinate_source_address": "529 Central Avenue",
+        "current_directory": true
       }
     },
     {
@@ -522,7 +539,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=207",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "100 High Street"
+        "coordinate_source_address": "100 High Street",
+        "current_directory": true
       }
     },
     {
@@ -551,7 +569,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=10223",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "150 55th Street"
+        "coordinate_source_address": "150 55th Street",
+        "current_directory": true
       }
     },
     {
@@ -580,7 +599,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=1175",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "1740-70 Eastchester Road"
+        "coordinate_source_address": "1740-70 Eastchester Road",
+        "current_directory": true
       }
     },
     {
@@ -609,7 +629,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=815",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "50 Leroy Street"
+        "coordinate_source_address": "50 Leroy Street",
+        "current_directory": true
       }
     },
     {
@@ -638,7 +659,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=379",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "1001 West Street"
+        "coordinate_source_address": "1001 West Street",
+        "current_directory": true
       }
     },
     {
@@ -667,7 +689,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=977",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "101 Dates Drive"
+        "coordinate_source_address": "101 Dates Drive",
+        "current_directory": true
       }
     },
     {
@@ -696,7 +719,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=128",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "179 North Broad St"
+        "coordinate_source_address": "179 North Broad St",
+        "current_directory": true
       }
     },
     {
@@ -725,7 +749,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=15684",
         "coordinate_match": "same_campus_address",
-        "coordinate_source_address": "214 King Street"
+        "coordinate_source_address": "214 King Street",
+        "current_directory": true
       }
     },
     {
@@ -754,7 +779,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=676",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "2 Coulter Road"
+        "coordinate_source_address": "2 Coulter Road",
+        "current_directory": true
       }
     },
     {
@@ -783,7 +809,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=817",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "1014 Oswegatchie Trail PO Box 10"
+        "coordinate_source_address": "1014 Oswegatchie Trail PO Box 10",
+        "current_directory": true
       }
     },
     {
@@ -812,7 +839,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=10216",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "178 Grandview Drive"
+        "coordinate_source_address": "178 Grandview Drive",
+        "current_directory": true
       }
     },
     {
@@ -841,7 +869,8 @@
         "coordinate_source": "OpenStreetMap contributors",
         "coordinate_source_url": "https://www.openstreetmap.org/node/357616936",
         "coordinate_match": "named_hospital_site",
-        "coordinate_source_address": "269-01 76th Avenue"
+        "coordinate_source_address": "269-01 76th Avenue",
+        "current_directory": false
       }
     },
     {
@@ -870,7 +899,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=146",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "71 Prospect Ave"
+        "coordinate_source_address": "71 Prospect Ave",
+        "current_directory": true
       }
     },
     {
@@ -899,7 +929,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=401",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "150 Broad St"
+        "coordinate_source_address": "150 Broad St",
+        "current_directory": true
       }
     },
     {
@@ -928,7 +959,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=866",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "1 Guthrie Drive"
+        "coordinate_source_address": "1 Guthrie Drive",
+        "current_directory": true
       }
     },
     {
@@ -957,7 +989,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=636",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "736 Irving Avenue"
+        "coordinate_source_address": "736 Irving Avenue",
+        "current_directory": true
       }
     },
     {
@@ -986,7 +1019,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=9059",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "6010 East Malloy Road"
+        "coordinate_source_address": "6010 East Malloy Road",
+        "current_directory": true
       }
     },
     {
@@ -1015,7 +1049,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=37",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "140 West Main Street"
+        "coordinate_source_address": "140 West Main Street",
+        "current_directory": true
       }
     },
     {
@@ -1044,7 +1079,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=10355",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "530 East 74th Street"
+        "coordinate_source_address": "530 East 74th Street",
+        "current_directory": true
       }
     },
     {
@@ -1073,7 +1109,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=174",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "1 Titus Place"
+        "coordinate_source_address": "1 Titus Place",
+        "current_directory": true
       }
     },
     {
@@ -1102,7 +1139,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=1002",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "10 Healthy Way"
+        "coordinate_source_address": "10 Healthy Way",
+        "current_directory": true
       }
     },
     {
@@ -1131,7 +1169,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=829",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "1101 Nott Street"
+        "coordinate_source_address": "1101 Nott Street",
+        "current_directory": true
       }
     },
     {
@@ -1160,7 +1199,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=848",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "2210 Troy Road"
+        "coordinate_source_address": "2210 Troy Road",
+        "current_directory": true
       }
     },
     {
@@ -1189,7 +1229,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=1626",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "79-01 Broadway"
+        "coordinate_source_address": "79-01 Broadway",
+        "current_directory": true
       }
     },
     {
@@ -1218,7 +1259,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=210",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "462 Grider Street"
+        "coordinate_source_address": "462 Grider Street",
+        "current_directory": true
       }
     },
     {
@@ -1247,7 +1289,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=678",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "350 Parrish Street"
+        "coordinate_source_address": "350 Parrish Street",
+        "current_directory": true
       }
     },
     {
@@ -1276,7 +1319,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=599",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "1650 Champlin  Avenue"
+        "coordinate_source_address": "1650 Champlin  Avenue",
+        "current_directory": true
       }
     },
     {
@@ -1305,7 +1349,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=1628",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "45th Avenue & Parsons Blvd"
+        "coordinate_source_address": "45th Avenue & Parsons Blvd",
+        "current_directory": true
       }
     },
     {
@@ -1334,7 +1379,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=699",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "707 East Main Street"
+        "coordinate_source_address": "707 East Main Street",
+        "current_directory": true
       }
     },
     {
@@ -1363,7 +1409,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=971",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "68 Harris-Bushville Road P.O. Box 800"
+        "coordinate_source_address": "68 Harris-Bushville Road P.O. Box 800",
+        "current_directory": true
       }
     },
     {
@@ -1392,7 +1439,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=968",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "8881 State Route 97"
+        "coordinate_source_address": "8881 State Route 97",
+        "current_directory": true
       }
     },
     {
@@ -1421,7 +1469,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=671",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "196-198 North Street"
+        "coordinate_source_address": "196-198 North Street",
+        "current_directory": true
       }
     },
     {
@@ -1450,7 +1499,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=490",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "101 St Andrews Lane"
+        "coordinate_source_address": "101 St Andrews Lane",
+        "current_directory": true
       }
     },
     {
@@ -1479,7 +1529,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=1005",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "100 Park Street"
+        "coordinate_source_address": "100 Park Street",
+        "current_directory": true
       }
     },
     {
@@ -1508,7 +1559,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=925",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "1000 Montauk Highway"
+        "coordinate_source_address": "1000 Montauk Highway",
+        "current_directory": true
       }
     },
     {
@@ -1537,7 +1589,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=779",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "255 Lafayette Avenue"
+        "coordinate_source_address": "255 Lafayette Avenue",
+        "current_directory": true
       }
     },
     {
@@ -1566,7 +1619,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=812",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "77 West Barney Street"
+        "coordinate_source_address": "77 West Barney Street",
+        "current_directory": true
       }
     },
     {
@@ -1595,7 +1649,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=158",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "134 Homer Avenue"
+        "coordinate_source_address": "134 Homer Avenue",
+        "current_directory": true
       }
     },
     {
@@ -1624,7 +1679,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=1445",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "506 Lenox Avenue"
+        "coordinate_source_address": "506 Lenox Avenue",
+        "current_directory": true
       }
     },
     {
@@ -1653,7 +1709,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=989",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "105 Marys Avenue"
+        "coordinate_source_address": "105 Marys Avenue",
+        "current_directory": true
       }
     },
     {
@@ -1682,7 +1739,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=775",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "51 N Route 9W"
+        "coordinate_source_address": "51 N Route 9W",
+        "current_directory": true
       }
     },
     {
@@ -1711,7 +1769,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=1486",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "1752 Park Avenue"
+        "coordinate_source_address": "1752 Park Avenue",
+        "current_directory": true
       }
     },
     {
@@ -1740,7 +1799,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=409",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "1000 South Avenue"
+        "coordinate_source_address": "1000 South Avenue",
+        "current_directory": true
       }
     },
     {
@@ -1769,7 +1829,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=1447",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "535 E 70th Street"
+        "coordinate_source_address": "535 E 70th Street",
+        "current_directory": true
       }
     },
     {
@@ -1798,7 +1859,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=913",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "270 Park Avenue"
+        "coordinate_source_address": "270 Park Avenue",
+        "current_directory": true
       }
     },
     {
@@ -1827,7 +1889,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=1309",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "1545 Atlantic Avenue"
+        "coordinate_source_address": "1545 Atlantic Avenue",
+        "current_directory": true
       }
     },
     {
@@ -1856,7 +1919,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=873",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "7571 State Route 54"
+        "coordinate_source_address": "7571 State Route 54",
+        "current_directory": true
       }
     },
     {
@@ -1885,7 +1949,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=1165",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "1400 Pelham Parkway"
+        "coordinate_source_address": "1400 Pelham Parkway",
+        "current_directory": true
       }
     },
     {
@@ -1914,7 +1979,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=1629",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "89th Avenue & Van Wyck Expressway"
+        "coordinate_source_address": "89th Avenue & Van Wyck Expressway",
+        "current_directory": true
       }
     },
     {
@@ -1943,7 +2009,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=208",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "818 Ellicott Street"
+        "coordinate_source_address": "818 Ellicott Street",
+        "current_directory": true
       }
     },
     {
@@ -1972,7 +2039,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=895",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "75 North Country Road"
+        "coordinate_source_address": "75 North Country Road",
+        "current_directory": true
       }
     },
     {
@@ -2001,7 +2069,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=267",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "2950 Elmwood Avenue"
+        "coordinate_source_address": "2950 Elmwood Avenue",
+        "current_directory": true
       }
     },
     {
@@ -2030,7 +2099,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=1301",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "451 Clarkson Avenue"
+        "coordinate_source_address": "451 Clarkson Avenue",
+        "current_directory": true
       }
     },
     {
@@ -2059,7 +2129,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=12",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "29 East Cayuga Street"
+        "coordinate_source_address": "29 East Cayuga Street",
+        "current_directory": true
       }
     },
     {
@@ -2088,7 +2159,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=9700",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "30 Seventh Avenue"
+        "coordinate_source_address": "30 Seventh Avenue",
+        "current_directory": true
       }
     },
     {
@@ -2117,7 +2189,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=1450",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "100 East 77th Street"
+        "coordinate_source_address": "100 East 77th Street",
+        "current_directory": true
       }
     },
     {
@@ -2146,7 +2219,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=383",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "7785 North State Street"
+        "coordinate_source_address": "7785 North State Street",
+        "current_directory": true
       }
     },
     {
@@ -2175,7 +2249,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=1172",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "234 East 149th Street"
+        "coordinate_source_address": "234 East 149th Street",
+        "current_directory": true
       }
     },
     {
@@ -2204,7 +2279,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=362",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "140 Burwell Street"
+        "coordinate_source_address": "140 Burwell Street",
+        "current_directory": true
       }
     },
     {
@@ -2233,7 +2309,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=15464",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "6001 Shimer Drive"
+        "coordinate_source_address": "6001 Shimer Drive",
+        "current_directory": true
       }
     },
     {
@@ -2262,7 +2339,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=1638",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "102-01 66th Road"
+        "coordinate_source_address": "102-01 66th Road",
+        "current_directory": true
       }
     },
     {
@@ -2291,7 +2369,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=1630",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "270-05 76th Avenue"
+        "coordinate_source_address": "270-05 76th Avenue",
+        "current_directory": true
       }
     },
     {
@@ -2320,7 +2399,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=518",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "900 Franklin Avenue"
+        "coordinate_source_address": "900 Franklin Avenue",
+        "current_directory": true
       }
     },
     {
@@ -2349,7 +2429,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=1305",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "4802 Tenth Avenue"
+        "coordinate_source_address": "4802 Tenth Avenue",
+        "current_directory": true
       }
     },
     {
@@ -2378,7 +2459,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=1293",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "2525 Kings Highway"
+        "coordinate_source_address": "2525 Kings Highway",
+        "current_directory": true
       }
     },
     {
@@ -2407,7 +2489,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=170",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "42084 State Highway 28"
+        "coordinate_source_address": "42084 State Highway 28",
+        "current_directory": true
       }
     },
     {
@@ -2436,7 +2519,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=746",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "One Atwell Road"
+        "coordinate_source_address": "One Atwell Road",
+        "current_directory": true
       }
     },
     {
@@ -2465,7 +2549,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=804",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "1 Hospital Drive"
+        "coordinate_source_address": "1 Hospital Drive",
+        "current_directory": true
       }
     },
     {
@@ -2494,7 +2579,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=718",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "200 Ohio Street"
+        "coordinate_source_address": "200 Ohio Street",
+        "current_directory": true
       }
     },
     {
@@ -2523,7 +2609,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=39",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "191 North Main Street"
+        "coordinate_source_address": "191 North Main Street",
+        "current_directory": true
       }
     },
     {
@@ -2552,7 +2639,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=1453",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "1275 York Avenue"
+        "coordinate_source_address": "1275 York Avenue",
+        "current_directory": true
       }
     },
     {
@@ -2581,7 +2669,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=513",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "1000 North Village Avenue"
+        "coordinate_source_address": "1000 North Village Avenue",
+        "current_directory": true
       }
     },
     {
@@ -2610,7 +2699,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=213",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "565 Abbott Road"
+        "coordinate_source_address": "565 Abbott Road",
+        "current_directory": true
       }
     },
     {
@@ -2639,7 +2729,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=1454",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "1901 First Avenue"
+        "coordinate_source_address": "1901 First Avenue",
+        "current_directory": true
       }
     },
     {
@@ -2668,7 +2759,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=180",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "241 North Road"
+        "coordinate_source_address": "241 North Road",
+        "current_directory": true
       }
     },
     {
@@ -2697,7 +2789,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=3067",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "1540 Maple Road"
+        "coordinate_source_address": "1540 Maple Road",
+        "current_directory": true
       }
     },
     {
@@ -2726,7 +2819,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=3058",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "1825 Eastchester Road"
+        "coordinate_source_address": "1825 Eastchester Road",
+        "current_directory": true
       }
     },
     {
@@ -2755,7 +2849,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=1169",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "111 East 210th Street"
+        "coordinate_source_address": "111 East 210th Street",
+        "current_directory": true
       }
     },
     {
@@ -2784,7 +2879,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=1185",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "2475 St. Raymond Avenue"
+        "coordinate_source_address": "2475 St. Raymond Avenue",
+        "current_directory": true
       }
     },
     {
@@ -2813,7 +2909,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=1168",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "600 East 233rd Street"
+        "coordinate_source_address": "600 East 233rd Street",
+        "current_directory": true
       }
     },
     {
@@ -2842,7 +2939,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=1061",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "12 North 7th Avenue"
+        "coordinate_source_address": "12 North 7th Avenue",
+        "current_directory": true
       }
     },
     {
@@ -2871,7 +2969,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=1072",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "16 Guion Place"
+        "coordinate_source_address": "16 Guion Place",
+        "current_directory": true
       }
     },
     {
@@ -2900,7 +2999,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=776",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "160 North Midland Avenue"
+        "coordinate_source_address": "160 North Midland Avenue",
+        "current_directory": true
       }
     },
     {
@@ -2929,7 +3029,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=15437",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "45 Rivington Street"
+        "coordinate_source_address": "45 Rivington Street",
+        "current_directory": true
       }
     },
     {
@@ -2958,7 +3059,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=1324",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "3201 Kings Highway"
+        "coordinate_source_address": "3201 Kings Highway",
+        "current_directory": true
       }
     },
     {
@@ -2987,7 +3089,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=1456",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "One Gustave L Levy Place"
+        "coordinate_source_address": "One Gustave L Levy Place",
+        "current_directory": true
       }
     },
     {
@@ -3016,7 +3119,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=1639",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "25-10 30th Avenue"
+        "coordinate_source_address": "25-10 30th Avenue",
+        "current_directory": true
       }
     },
     {
@@ -3045,7 +3149,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=1469",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "1111 Amsterdam Avenue"
+        "coordinate_source_address": "1111 Amsterdam Avenue",
+        "current_directory": true
       }
     },
     {
@@ -3074,7 +3179,8 @@
         "coordinate_source": "HIFLD Hospitals",
         "coordinate_source_url": "https://services2.arcgis.com/FiaPA4ga0iQKduv3/ArcGIS/rest/services/Extract_Data_Hospitals_HIFLD/FeatureServer/0/query?where=ID%3D%27897%27&outFields=*&f=pjson",
         "coordinate_match": "hospital_address",
-        "coordinate_source_address": "1 HEALTHY WAY"
+        "coordinate_source_address": "1 HEALTHY WAY",
+        "current_directory": true
       }
     },
     {
@@ -3103,7 +3209,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=1466",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "1000 10th Avenue"
+        "coordinate_source_address": "1000 10th Avenue",
+        "current_directory": true
       }
     },
     {
@@ -3132,7 +3239,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=583",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "5300 Military Road"
+        "coordinate_source_address": "5300 Military Road",
+        "current_directory": true
       }
     },
     {
@@ -3161,7 +3269,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=528",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "2201 Hempstead Turnpike"
+        "coordinate_source_address": "2201 Hempstead Turnpike",
+        "current_directory": true
       }
     },
     {
@@ -3190,7 +3299,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=330",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "99 East State Street"
+        "coordinate_source_address": "99 East State Street",
+        "current_directory": true
       }
     },
     {
@@ -3219,7 +3329,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=1460",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "310 East 14th Street"
+        "coordinate_source_address": "310 East 14th Street",
+        "current_directory": true
       }
     },
     {
@@ -3248,7 +3359,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=1306",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "506 Sixth Street"
+        "coordinate_source_address": "506 Sixth Street",
+        "current_directory": true
       }
     },
     {
@@ -3277,7 +3389,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=10139",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "1283 York Avenue"
+        "coordinate_source_address": "1283 York Avenue",
+        "current_directory": true
       }
     },
     {
@@ -3306,7 +3419,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=3975",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "5141 Broadway"
+        "coordinate_source_address": "5141 Broadway",
+        "current_directory": true
       }
     },
     {
@@ -3335,7 +3449,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=1464",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "622 West 168th Street"
+        "coordinate_source_address": "622 West 168th Street",
+        "current_directory": true
       }
     },
     {
@@ -3364,7 +3479,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=1458",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "525 East 68th Street"
+        "coordinate_source_address": "525 East 68th Street",
+        "current_directory": true
       }
     },
     {
@@ -3393,7 +3509,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=1122",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "55 Palmer Avenue"
+        "coordinate_source_address": "55 Palmer Avenue",
+        "current_directory": true
       }
     },
     {
@@ -3422,7 +3539,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=1047",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "21 Bloomingdale Road"
+        "coordinate_source_address": "21 Bloomingdale Road",
+        "current_directory": true
       }
     },
     {
@@ -3451,7 +3569,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=1039",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "1980 Crompond Road"
+        "coordinate_source_address": "1980 Crompond Road",
+        "current_directory": true
       }
     },
     {
@@ -3480,7 +3599,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=1437",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "170 William Street"
+        "coordinate_source_address": "170 William Street",
+        "current_directory": true
       }
     },
     {
@@ -3509,7 +3629,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=1637",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "56-45 Main Street"
+        "coordinate_source_address": "56-45 Main Street",
+        "current_directory": true
       }
     },
     {
@@ -3538,7 +3659,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=1028",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "1200 Driving Park Avenue, Box 111"
+        "coordinate_source_address": "1200 Driving Park Avenue, Box 111",
+        "current_directory": true
       }
     },
     {
@@ -3567,7 +3689,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=574",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "621 Tenth Street"
+        "coordinate_source_address": "621 Tenth Street",
+        "current_directory": true
       }
     },
     {
@@ -3596,7 +3719,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=393",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "111 Clara Barton Street"
+        "coordinate_source_address": "111 Clara Barton Street",
+        "current_directory": true
       }
     },
     {
@@ -3625,7 +3749,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=1186",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "3424 Kossuth Avenue & 210th Street"
+        "coordinate_source_address": "3424 Kossuth Avenue & 210th Street",
+        "current_directory": true
       }
     },
     {
@@ -3654,7 +3779,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=541",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "300 Community Drive"
+        "coordinate_source_address": "300 Community Drive",
+        "current_directory": true
       }
     },
     {
@@ -3683,7 +3809,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=192",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "6511 Springbrook Avenue"
+        "coordinate_source_address": "6511 Springbrook Avenue",
+        "current_directory": true
       }
     },
     {
@@ -3712,7 +3839,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=1117",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "400 East Main Street"
+        "coordinate_source_address": "400 East Main Street",
+        "current_directory": true
       }
     },
     {
@@ -3741,7 +3869,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=9753",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "70 Atlantic Avenue"
+        "coordinate_source_address": "70 Atlantic Avenue",
+        "current_directory": true
       }
     },
     {
@@ -3770,7 +3899,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=1304",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "150 55th Street"
+        "coordinate_source_address": "150 55th Street",
+        "current_directory": true
       }
     },
     {
@@ -3799,7 +3929,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=511",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "259 First Street"
+        "coordinate_source_address": "259 First Street",
+        "current_directory": true
       }
     },
     {
@@ -3828,7 +3959,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=1463",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "550 First Avenue"
+        "coordinate_source_address": "550 First Avenue",
+        "current_directory": true
       }
     },
     {
@@ -3857,7 +3989,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=1446",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "301 East 17th Street"
+        "coordinate_source_address": "301 East 17th Street",
+        "current_directory": true
       }
     },
     {
@@ -3886,7 +4019,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=885",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "101 Hospital Road"
+        "coordinate_source_address": "101 Hospital Road",
+        "current_directory": true
       }
     },
     {
@@ -3915,7 +4049,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=165",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "460 Andes Road"
+        "coordinate_source_address": "460 Andes Road",
+        "current_directory": true
       }
     },
     {
@@ -3944,7 +4079,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=66",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "515 Main Street"
+        "coordinate_source_address": "515 Main Street",
+        "current_directory": true
       }
     },
     {
@@ -3973,7 +4109,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=397",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "321 Genesee Street"
+        "coordinate_source_address": "321 Genesee Street",
+        "current_directory": true
       }
     },
     {
@@ -4002,7 +4139,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=727",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "110 W Sixth Street"
+        "coordinate_source_address": "110 W Sixth Street",
+        "current_directory": true
       }
     },
     {
@@ -4031,7 +4169,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=43",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "169 Riverside Drive"
+        "coordinate_source_address": "169 Riverside Drive",
+        "current_directory": true
       }
     },
     {
@@ -4060,7 +4199,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=938",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "1 Heroes Way"
+        "coordinate_source_address": "1 Heroes Way",
+        "current_directory": true
       }
     },
     {
@@ -4089,7 +4229,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=1129",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "701 North Broadway"
+        "coordinate_source_address": "701 North Broadway",
+        "current_directory": true
       }
     },
     {
@@ -4118,7 +4259,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=552",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "888 Old Country Road"
+        "coordinate_source_address": "888 Old Country Road",
+        "current_directory": true
       }
     },
     {
@@ -4147,7 +4289,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=752",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "670 Stoneleigh Avenue"
+        "coordinate_source_address": "670 Stoneleigh Avenue",
+        "current_directory": true
       }
     },
     {
@@ -4176,7 +4319,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=1633",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "82-68 164th Street"
+        "coordinate_source_address": "82-68 164th Street",
+        "current_directory": true
       }
     },
     {
@@ -4205,7 +4349,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=1738",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "355 Bard Avenue"
+        "coordinate_source_address": "355 Bard Avenue",
+        "current_directory": true
       }
     },
     {
@@ -4234,7 +4379,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=377",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "4 Fuller Street"
+        "coordinate_source_address": "4 Fuller Street",
+        "current_directory": true
       }
     },
     {
@@ -4263,7 +4409,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=411",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "1425 Portland Avenue"
+        "coordinate_source_address": "1425 Portland Avenue",
+        "current_directory": true
       }
     },
     {
@@ -4292,7 +4439,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=589",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "1500 N James St"
+        "coordinate_source_address": "1500 N James St",
+        "current_directory": true
       }
     },
     {
@@ -4321,7 +4469,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=216",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "Elm and Carlton Streets"
+        "coordinate_source_address": "Elm and Carlton Streets",
+        "current_directory": true
       }
     },
     {
@@ -4350,7 +4499,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=756",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "2215 Burdett Avenue"
+        "coordinate_source_address": "2215 Burdett Avenue",
+        "current_directory": true
       }
     },
     {
@@ -4379,7 +4529,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=4",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "600 Northern Boulevard"
+        "coordinate_source_address": "600 Northern Boulevard",
+        "current_directory": true
       }
     },
     {
@@ -4408,7 +4559,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=367",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "830 Washington Street"
+        "coordinate_source_address": "830 Washington Street",
+        "current_directory": true
       }
     },
     {
@@ -4437,7 +4589,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=818",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "211 Church Street"
+        "coordinate_source_address": "211 Church Street",
+        "current_directory": true
       }
     },
     {
@@ -4466,7 +4619,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=1176",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "4422 Third Avenue"
+        "coordinate_source_address": "4422 Third Avenue",
+        "current_directory": true
       }
     },
     {
@@ -4495,7 +4649,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=858",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "220 Steuben Street"
+        "coordinate_source_address": "220 Steuben Street",
+        "current_directory": true
       }
     },
     {
@@ -4524,7 +4679,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=218",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "2157 Main Street"
+        "coordinate_source_address": "2157 Main Street",
+        "current_directory": true
       }
     },
     {
@@ -4553,7 +4709,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=292",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "2605 Harlem Road"
+        "coordinate_source_address": "2605 Harlem Road",
+        "current_directory": true
       }
     },
     {
@@ -4582,7 +4739,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=1124",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "128 Ashford Avenue"
+        "coordinate_source_address": "128 Ashford Avenue",
+        "current_directory": true
       }
     },
     {
@@ -4611,7 +4769,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=1099",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "Two Park Avenue"
+        "coordinate_source_address": "Two Park Avenue",
+        "current_directory": true
       }
     },
     {
@@ -4640,7 +4799,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=1097",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "967 North Broadway"
+        "coordinate_source_address": "967 North Broadway",
+        "current_directory": true
       }
     },
     {
@@ -4669,7 +4829,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=1158",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "418 North Main Street"
+        "coordinate_source_address": "418 North Main Street",
+        "current_directory": true
       }
     },
     {
@@ -4698,7 +4859,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=1294",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "2601 Ocean Parkway"
+        "coordinate_source_address": "2601 Ocean Parkway",
+        "current_directory": true
       }
     },
     {
@@ -4727,7 +4889,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=9691",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "325 East Bay Drive"
+        "coordinate_source_address": "325 East Bay Drive",
+        "current_directory": true
       }
     },
     {
@@ -4756,7 +4919,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=924",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "301 East Main Street"
+        "coordinate_source_address": "301 East Main Street",
+        "current_directory": true
       }
     },
     {
@@ -4785,7 +4949,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=704",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "15 Maple Avenue"
+        "coordinate_source_address": "15 Maple Avenue",
+        "current_directory": true
       }
     },
     {
@@ -4814,7 +4979,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=943",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "50 Route 25A"
+        "coordinate_source_address": "50 Route 25A",
+        "current_directory": true
       }
     },
     {
@@ -4843,7 +5009,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=1635",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "327 Beach 19th Street"
+        "coordinate_source_address": "327 Beach 19th Street",
+        "current_directory": true
       }
     },
     {
@@ -4872,7 +5039,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=694",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "70 Dubois Street"
+        "coordinate_source_address": "70 Dubois Street",
+        "current_directory": true
       }
     },
     {
@@ -4901,7 +5069,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=896",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "200 Belle Terre Road"
+        "coordinate_source_address": "200 Belle Terre Road",
+        "current_directory": true
       }
     },
     {
@@ -4930,7 +5099,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=563",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "100 Port Washington Boulevard"
+        "coordinate_source_address": "100 Port Washington Boulevard",
+        "current_directory": true
       }
     },
     {
@@ -4959,7 +5129,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=870",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "7329 Seneca Road North"
+        "coordinate_source_address": "7329 Seneca Road North",
+        "current_directory": true
       }
     },
     {
@@ -4988,7 +5159,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=551",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "4295 Hempstead Turnpike"
+        "coordinate_source_address": "4295 Hempstead Turnpike",
+        "current_directory": true
       }
     },
     {
@@ -5017,7 +5189,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=118",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "555 St. Joseph's Boulevard"
+        "coordinate_source_address": "555 St. Joseph's Boulevard",
+        "current_directory": true
       }
     },
     {
@@ -5046,7 +5219,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=630",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "301 Prospect Avenue"
+        "coordinate_source_address": "301 Prospect Avenue",
+        "current_directory": true
       }
     },
     {
@@ -5075,7 +5249,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=1133",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "275 North Street"
+        "coordinate_source_address": "275 North Street",
+        "current_directory": true
       }
     },
     {
@@ -5104,7 +5279,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=1098",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "127 South Broadway"
+        "coordinate_source_address": "127 South Broadway",
+        "current_directory": true
       }
     },
     {
@@ -5133,7 +5309,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=484",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "427 Guy Park Avenue"
+        "coordinate_source_address": "427 Guy Park Avenue",
+        "current_directory": true
       }
     },
     {
@@ -5162,7 +5339,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=482",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "4988 Sthwy 30"
+        "coordinate_source_address": "4988 Sthwy 30",
+        "current_directory": true
       }
     },
     {
@@ -5191,7 +5369,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=9431",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "3 Mercycare Lane"
+        "coordinate_source_address": "3 Mercycare Lane",
+        "current_directory": true
       }
     },
     {
@@ -5220,7 +5399,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=5",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "315 South Manning Boulevard"
+        "coordinate_source_address": "315 South Manning Boulevard",
+        "current_directory": true
       }
     },
     {
@@ -5249,7 +5429,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=15417",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "1300 Massachusetts Avenue"
+        "coordinate_source_address": "1300 Massachusetts Avenue",
+        "current_directory": true
       }
     },
     {
@@ -5278,7 +5459,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=1737",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "375 Seguine Avenue"
+        "coordinate_source_address": "375 Seguine Avenue",
+        "current_directory": true
       }
     },
     {
@@ -5307,7 +5489,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=1740",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "475 Seaview Avenue"
+        "coordinate_source_address": "475 Seaview Avenue",
+        "current_directory": true
       }
     },
     {
@@ -5336,7 +5519,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=891",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "201 Manor Place"
+        "coordinate_source_address": "201 Manor Place",
+        "current_directory": true
       }
     },
     {
@@ -5365,7 +5549,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=889",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "240 Meeting House Lane"
+        "coordinate_source_address": "240 Meeting House Lane",
+        "current_directory": true
       }
     },
     {
@@ -5394,7 +5579,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=245",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "Health Sciences Center SUNY"
+        "coordinate_source_address": "Health Sciences Center SUNY",
+        "current_directory": true
       }
     },
     {
@@ -5423,7 +5609,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=413",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "601 Elmwood Avenue"
+        "coordinate_source_address": "601 Elmwood Avenue",
+        "current_directory": true
       }
     },
     {
@@ -5452,7 +5639,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=831",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "1270 Belmont Avenue"
+        "coordinate_source_address": "1270 Belmont Avenue",
+        "current_directory": true
       }
     },
     {
@@ -5481,7 +5669,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=550",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "221 Jericho Turnpike"
+        "coordinate_source_address": "221 Jericho Turnpike",
+        "current_directory": true
       }
     },
     {
@@ -5510,7 +5699,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=471",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "1555 Long Pond Road"
+        "coordinate_source_address": "1555 Long Pond Road",
+        "current_directory": true
       }
     },
     {
@@ -5539,7 +5729,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=15485",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "133 Park Street"
+        "coordinate_source_address": "133 Park Street",
+        "current_directory": true
       }
     },
     {
@@ -5568,7 +5759,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=135",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "75 Beekman St"
+        "coordinate_source_address": "75 Beekman St",
+        "current_directory": true
       }
     },
     {
@@ -5597,7 +5789,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=303",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "75 Park Street"
+        "coordinate_source_address": "75 Park Street",
+        "current_directory": true
       }
     },
     {
@@ -5626,7 +5819,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=42",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "10-42 Mitchell Avenue"
+        "coordinate_source_address": "10-42 Mitchell Avenue",
+        "current_directory": true
       }
     },
     {
@@ -5655,7 +5849,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=58",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "33-57 Harrison Street"
+        "coordinate_source_address": "33-57 Harrison Street",
+        "current_directory": true
       }
     },
     {
@@ -5684,7 +5879,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=340",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "16 Bank Street"
+        "coordinate_source_address": "16 Bank Street",
+        "current_directory": true
       }
     },
     {
@@ -5713,7 +5909,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=339",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "127 North St"
+        "coordinate_source_address": "127 North St",
+        "current_directory": true
       }
     },
     {
@@ -5742,7 +5939,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=412",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "89 Genesee Street"
+        "coordinate_source_address": "89 Genesee Street",
+        "current_directory": true
       }
     },
     {
@@ -5771,7 +5969,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=1320",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "445 Lenox Road"
+        "coordinate_source_address": "445 Lenox Road",
+        "current_directory": true
       }
     },
     {
@@ -5800,7 +5999,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=635",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "750 East Adams Street"
+        "coordinate_source_address": "750 East Adams Street",
+        "current_directory": true
       }
     },
     {
@@ -5829,7 +6029,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=103",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "207 Foote Avenue"
+        "coordinate_source_address": "207 Foote Avenue",
+        "current_directory": true
       }
     },
     {
@@ -5858,7 +6059,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=628",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "4900 Broad Road"
+        "coordinate_source_address": "4900 Broad Road",
+        "current_directory": true
       }
     },
     {
@@ -5887,7 +6089,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=9531",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "156 West Avenue"
+        "coordinate_source_address": "156 West Avenue",
+        "current_directory": true
       }
     },
     {
@@ -5916,7 +6119,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=181",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "45 Reade Place"
+        "coordinate_source_address": "45 Reade Place",
+        "current_directory": true
       }
     },
     {
@@ -5945,7 +6149,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=1139",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "100 Woods Road"
+        "coordinate_source_address": "100 Woods Road",
+        "current_directory": true
       }
     },
     {
@@ -5974,7 +6179,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=111",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "189 E Main Street"
+        "coordinate_source_address": "189 E Main Street",
+        "current_directory": true
       }
     },
     {
@@ -6003,7 +6209,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=1045",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "41 East Post Road"
+        "coordinate_source_address": "41 East Post Road",
+        "current_directory": true
       }
     },
     {
@@ -6032,7 +6239,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=1046",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "785 Mamaroneck Avenue"
+        "coordinate_source_address": "785 Mamaroneck Avenue",
+        "current_directory": true
       }
     },
     {
@@ -6061,7 +6269,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=1692",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "760 Broadway"
+        "coordinate_source_address": "760 Broadway",
+        "current_directory": true
       }
     },
     {
@@ -6090,7 +6299,8 @@
         "coordinate_source": "HIFLD Hospitals",
         "coordinate_source_url": "https://services2.arcgis.com/FiaPA4ga0iQKduv3/ArcGIS/rest/services/Extract_Data_Hospitals_HIFLD/FeatureServer/0/query?where=ID%3D%2769%27&outFields=*&f=pjson",
         "coordinate_match": "hospital_address",
-        "coordinate_source_address": "374 STOCKHOLM ST"
+        "coordinate_source_address": "374 STOCKHOLM ST",
+        "current_directory": true
       }
     },
     {
@@ -6119,7 +6329,8 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=15478",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "111 Hospital Drive"
+        "coordinate_source_address": "111 Hospital Drive",
+        "current_directory": true
       }
     },
     {
@@ -6148,8 +6359,228 @@
         "coordinate_source": "NYS DOH",
         "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=15620",
         "coordinate_match": "facility_id",
-        "coordinate_source_address": "400 North Main Street"
+        "coordinate_source_address": "400 North Main Street",
+        "current_directory": true
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "15709",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.13838,
+          43.04574
+        ]
+      },
+      "properties": {
+        "name": "Children's Pavilion Upstate Medical University",
+        "pfi": "15709",
+        "county": "Onondaga",
+        "address": "655 Madison Street",
+        "city": "Syracuse",
+        "grade": null,
+        "stars": null,
+        "application_posted": null,
+        "review_month": null,
+        "record_path": null,
+        "audit_url": null,
+        "assistance_url": "https://www.upstate.edu/hospital/patients-families/billing/financial-resources.php",
+        "assistance_parent_pfi": "635",
+        "assistance_url_basis": "Parent hospital assistance page; campus applicability requires review",
+        "coordinate_source": "NYS DOH",
+        "coordinate_match": "facility_id",
+        "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=15709",
+        "current_directory": true
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "1315",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.934036,
+          40.659435
+        ]
+      },
+      "properties": {
+        "name": "Kingsbrook Jewish Medical Village",
+        "pfi": "1315",
+        "county": "Kings",
+        "address": "585 Schenectady Avenue",
+        "city": "Brooklyn",
+        "grade": null,
+        "stars": null,
+        "application_posted": null,
+        "review_month": null,
+        "record_path": null,
+        "audit_url": null,
+        "assistance_url": "https://onebrooklynhealth.org/financial-assistance",
+        "assistance_parent_pfi": "1286",
+        "assistance_url_basis": "Parent hospital assistance page; campus applicability requires review",
+        "coordinate_source": "NYS DOH",
+        "coordinate_match": "facility_id",
+        "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=1315",
+        "current_directory": true
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "1723",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -78.77224,
+          42.781742
+        ]
+      },
+      "properties": {
+        "name": "Mercy Hospital - Mercy Hospital Orchard Park Division",
+        "pfi": "1723",
+        "county": "Erie",
+        "address": "3669 Southwestern Blvd",
+        "city": "Orchard Park",
+        "grade": null,
+        "stars": null,
+        "application_posted": null,
+        "review_month": null,
+        "record_path": null,
+        "audit_url": null,
+        "assistance_url": "https://www.chsbuffalo.org/billing-insurance/financial-assistance/",
+        "assistance_parent_pfi": "213",
+        "assistance_url_basis": "Parent hospital assistance page; campus applicability requires review",
+        "coordinate_source": "NYS DOH",
+        "coordinate_match": "facility_id",
+        "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=1723",
+        "current_directory": true
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "15897",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.83847,
+          40.84608
+        ]
+      },
+      "properties": {
+        "name": "Montefiore Einstein Children's Center for Mental Health of the Children's Hospital at Montefiore Einstein",
+        "pfi": "15897",
+        "county": "Bronx",
+        "address": "1300 Waters Place",
+        "city": "Bronx",
+        "grade": null,
+        "stars": null,
+        "application_posted": null,
+        "review_month": null,
+        "record_path": null,
+        "audit_url": null,
+        "assistance_url": "https://montefioreeinstein.org/patient-care/patients-visitors/billing-insurance/aid-policy",
+        "assistance_parent_pfi": "1169",
+        "assistance_url_basis": "Parent hospital assistance page; campus applicability requires review",
+        "coordinate_source": "NYS DOH",
+        "coordinate_match": "facility_id",
+        "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=15897",
+        "current_directory": true
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "1473",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -74.07476,
+          40.621376
+        ]
+      },
+      "properties": {
+        "name": "RUMC-Bayley Seton",
+        "pfi": "1473",
+        "county": "Richmond",
+        "address": "75 Vanderbilt Avenue",
+        "city": "Staten Island",
+        "grade": null,
+        "stars": null,
+        "application_posted": null,
+        "review_month": null,
+        "record_path": null,
+        "audit_url": null,
+        "assistance_url": "https://www.rumcsi.org/patients-visitors/billing-and-insurance/financial-assistance-summary/",
+        "assistance_parent_pfi": "1738",
+        "assistance_url_basis": "Parent hospital assistance page; campus applicability requires review",
+        "coordinate_source": "NYS DOH",
+        "coordinate_match": "facility_id",
+        "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=1473",
+        "current_directory": true
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "309",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.435593,
+          43.849476
+        ]
+      },
+      "properties": {
+        "name": "The University of Vermont Health Network - Elizabethtown Community Hospital Moses Ludington",
+        "pfi": "309",
+        "county": "Essex",
+        "address": "101 Adirondack Drive, Suite 1",
+        "city": "Ticonderoga",
+        "grade": null,
+        "stars": null,
+        "application_posted": null,
+        "review_month": null,
+        "record_path": null,
+        "audit_url": null,
+        "assistance_url": "https://www.ech.org/About-Us/financial-assistance",
+        "assistance_parent_pfi": "303",
+        "assistance_url_basis": "Parent hospital assistance page; campus applicability requires review",
+        "coordinate_source": "NYS DOH",
+        "coordinate_match": "facility_id",
+        "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=309",
+        "current_directory": true
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "102",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -79.245094,
+          42.091541
+        ]
+      },
+      "properties": {
+        "name": "UPMC Chautauqua at WCA",
+        "pfi": "102",
+        "county": "Chautauqua",
+        "address": "51 Glasgow Avenue",
+        "city": "Jamestown",
+        "grade": null,
+        "stars": null,
+        "application_posted": null,
+        "review_month": null,
+        "record_path": null,
+        "audit_url": null,
+        "assistance_url": "https://www.upmc.com/patients-visitors/paying-bill/services/apply",
+        "assistance_parent_pfi": "103",
+        "assistance_url_basis": "Parent hospital assistance page; campus applicability requires review",
+        "coordinate_source": "NYS DOH",
+        "coordinate_match": "facility_id",
+        "coordinate_source_url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=102",
+        "current_directory": true
       }
     }
-  ]
+  ],
+  "directory_source": "https://profiles.health.ny.gov/directory/hospitals",
+  "directory_checked_at": "2026-11-12T23:47:09.729Z"
 }

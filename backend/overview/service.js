@@ -2,7 +2,7 @@ import { readFileSync } from "node:fs";
 import { hospitalPage, pageInputs } from "../hospital-page/service.js";
 
 const load = (file) => JSON.parse(readFileSync(new URL(file, import.meta.url)));
-const roster = load("../../data/maps/hospitals.geojson").features;
+const roster = load("../../data/maps/hospitals.geojson").features.filter(f=>f.properties.current_directory!==false);
 const { regions } = load("../../references/ny-economic-regions-v1.json");
 const countyKey = (name) => name.replaceAll(".", "").toLowerCase();
 const regionByCounty = new Map(Object.entries(regions).flatMap(([name, counties]) =>
@@ -15,10 +15,11 @@ export function summarize(rows) {
   const freshness = { current: 0, overdue: 0, never: 0 };
   const historical = Object.fromEntries(grades.map((g) => [g, 0]));
   const currentGrades = { ...historical, pending: 0, unassessed: 0 };
+  historical.unrated=0;
   const findings = { flagged: 0, no_recorded_failure: 0, unassessed: 0 };
   for (const row of rows) {
     freshness[row.freshness]++;
-    historical[row.historical_grade]++;
+    historical[row.historical_grade ?? 'unrated']++;
     currentGrades[row.grade_bucket]++;
     findings[row.finding_bucket]++;
   }
