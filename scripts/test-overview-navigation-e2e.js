@@ -18,7 +18,7 @@ try {
     page.on('pageerror',error=>errors.push(error.message));
     page.on('request',request=>{if(request.method()==='POST')posts.push(request.url());});
     await page.goto(`${base}/?view=overview&lang=${language}`,{waitUntil:'domcontentloaded'});
-    const table=page.getByRole('table',{name:'Hospital directory',exact:true});
+    const table=page.getByRole('table',{name:language==='en'?'Hospital directory':'Directorio de hospitales',exact:true});
     await table.locator('tbody tr').nth(9).waitFor();
     assert.equal(await page.locator('header a[href*="view=changes"]').count(),0);
     assert.equal(await table.locator('tbody tr').count(),10);
@@ -46,12 +46,12 @@ try {
     assert.match(await pagination.innerText(),/1–/);
     await findings.click();
     assert.ok((await page.locator('#overview-panel-findings h2').innerText()).includes(selected));
-    await page.getByRole('button',{name:'Clear filters',exact:true}).click();
-    await page.getByRole('button',{name:'Show coverage map',exact:true}).click();
+    await page.getByRole('button',{name:language==='en'?'Clear filters':'Quitar filtros',exact:true}).click();
+    await page.getByRole('button',{name:language==='en'?'Show checked hospitals on map':'Mostrar hospitales revisados en el mapa',exact:true}).click();
     const mapPoints=await page.locator('circle.dot').count();
     assert.ok(mapPoints>=212); // Statewide plus the metro inset share some hospitals.
     await next.click();assert.equal(await page.locator('circle.dot').count(),mapPoints);
-    await page.getByRole('button',{name:'Hide coverage map',exact:true}).click();
+    await page.getByRole('button',{name:language==='en'?'Hide map':'Ocultar mapa',exact:true}).click();
     // Last page and empty filtered results keep navigation bounded.
     while(!await next.isDisabled())await next.click();
     assert.equal(await table.locator('tbody tr').count(),2);
@@ -62,11 +62,11 @@ try {
       data.hospitals=[];
       await route.fulfill({json:data});
     },{times:1});
-    await page.getByRole('button',{name:'Refresh overview',exact:true}).click();
+    await page.getByRole('button',{name:language==='en'?'Refresh overview':'Actualizar resumen',exact:true}).click();
     await page.waitForFunction(()=>document.querySelector('.overview-pagination [role=status]').textContent.includes('0–0'));
     assert.equal(await previous.isDisabled(),true);assert.equal(await next.isDisabled(),true);
-    await page.getByRole('button',{name:'Refresh overview',exact:true}).click();
-    await page.getByRole('button',{name:'Clear filters',exact:true}).click();
+    await page.getByRole('button',{name:language==='en'?'Refresh overview':'Actualizar resumen',exact:true}).click();
+    await page.getByRole('button',{name:language==='en'?'Clear filters':'Quitar filtros',exact:true}).click();
     await table.locator('tbody tr').nth(9).waitFor();
     assert.equal(await table.locator('tbody tr').count(),10);
     assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);

@@ -83,16 +83,16 @@ try {
     headers: { "X-Review-Request": "1", Origin: "https://example.org" }, data: {},
   })).status(), 403);
   await page.getByLabel("Decision", { exact: true }).selectOption("request_information");
-  await page.getByLabel("Reviewer role").fill("Synthetic browser tester");
-  await page.getByLabel("Reason / information needed").fill("SYN: please clarify the collection timing language.");
-  await page.getByRole("button", { name: "Save review decision" }).click();
+  await page.getByLabel("Your role in this review").fill("Synthetic browser tester");
+  await page.getByLabel("Reason or information needed").fill("SYN: please clarify the collection timing language.");
+  await page.getByRole("button", { name: "Save decision", exact:true }).click();
   await page.getByRole("status").filter({ hasText: "Decision saved" }).waitFor();
   await page.getByRole("button", { name: /Review inbox 7/ }).waitFor();
   await page.getByLabel("Decision", { exact: true }).selectOption("correct");
   await page.getByLabel("Corrected result").selectOption("yes");
-  await page.getByLabel("Reviewer role").fill("Synthetic browser tester");
-  await page.getByLabel("Reason / information needed").fill("SYN: cited policy allows applications at any time.");
-  await page.getByRole("button", { name: "Save review decision" }).click();
+  await page.getByLabel("Your role in this review").fill("Synthetic browser tester");
+  await page.getByLabel("Reason or information needed").fill("SYN: cited policy allows applications at any time.");
+  await page.getByRole("button", { name: "Save decision", exact:true }).click();
   await page.getByRole("button", { name: /Review inbox 6/ }).waitFor();
   assert.match(await page.locator(".review-detail").innerText(), /Reviewed result: yes/);
   assert.match(await page.locator(".review-detail").innerText(), /Original draft: unclear/);
@@ -114,6 +114,12 @@ try {
   assert.equal(await page.locator(".review-form").evaluate((form) => [...form.querySelectorAll("input, select, textarea")]
     .every((control) => control.getBoundingClientRect().right <= form.getBoundingClientRect().right)), true);
   await page.screenshot({ path: join(artifacts, "27-mobile.png"), fullPage: true });
+  await page.getByRole('button',{name:'Español',exact:true}).click();
+  await page.getByRole('button',{name:'Guardar decisión',exact:true}).waitFor();
+  assert.equal(await page.locator('.review-form').getAttribute('lang'),'es');
+  assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);
+  await page.screenshot({path:join(artifacts,'plain-language-review-es-mobile.png'),fullPage:true});
+  await page.getByRole('button',{name:'English',exact:true}).click();
   // Create five independent source reviews in the isolated test directory. Select only the
   // English result for grading so other inbox records cannot silently supply its coverage.
   const languages = ["English", "Spanish", "Polish", "Ukrainian", "Russian"];
@@ -136,16 +142,16 @@ try {
   if (!await page.getByRole("button", {name:/View revision/}).isVisible()) await page.getByText("Source identity and revisions (2)").click();
   await page.getByRole("button", {name:/View revision/}).click();
   await page.getByText("Historical revision · read only").waitFor();
-  assert.equal(await page.getByRole("button",{name:"Save review decision"}).count(),0);
+   assert.equal(await page.getByRole("button",{name:"Save decision",exact:true}).count(),0);
   const list = await (await page.request.get(base + "/api/reviews?hospital_key=1002&role=application")).json();
   for (const tag of ["en","es","pl","uk","ru"]) assert.ok(list.items.some((i) => i.documents[0].language === tag));
   await page.getByRole("button", {name:"View hospital record"}).click();
   const historical = await page.locator(".detail .pill").innerText();
-  await page.getByRole("button", {name:"Check for a saved 17-measure assessment"}).click();
-  await page.getByRole("heading",{name:"Synthetic draft assessment"}).waitFor();
-  await page.getByText(/Institutional grade pending/).waitFor();
-  await page.getByText("Evidence and coverage",{exact:true}).click();
-  assert.match(await page.getByRole("region",{name:"Saved compliance assessment"}).innerText(),/SYN-Spanish/);
+   await page.getByRole("button", {name:"Look for a saved review of all 17 requirements"}).click();
+   await page.getByRole("heading",{name:"Practice review using made-up data"}).waitFor();
+   await page.getByText('Hospital grade is awaiting review.',{exact:true}).waitFor();
+   await page.getByText("Supporting information and missing details",{exact:true}).click();
+   assert.match(await page.getByRole("region",{name:"Saved hospital review"}).innerText(),/SYN-Spanish/);
   assert.equal(await page.locator(".detail .pill").innerText(),historical);
   const report = await (await page.request.get(base + "/api/grading/hospitals/1002")).json();
   assert.equal(report.origin.artifact_sha256, adapted.provenance.artifact_sha256);

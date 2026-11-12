@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import {CriterionCoverage} from './CriterionCoverage.jsx';
+import {useLocale} from './locale.jsx';
 
 export default function GradingPanel({ hospitalKey }) {
+  const {t,language}=useLocale();
   const [report, setReport] = useState(null);
   const [status, setStatus] = useState("");
   async function load() {
@@ -13,20 +15,24 @@ export default function GradingPanel({ hospitalKey }) {
       setStatus("");
     } catch (error) { setStatus(error.message); }
   }
-  return <section aria-label="Saved compliance assessment">
-    <button className="plain" onClick={load}>Check for a saved 17-measure assessment</button>
-    {status && <p role="status">{status}</p>}
+  return <section aria-label={t('Saved compliance assessment')} lang={language}>
+    <button className="plain" onClick={load}>{t('Check for a saved 17-measure assessment')}</button>
+    {status && <p role="status">{t(status)}</p>}
     {report && <>
-      <h3>{report.synthetic ? "Synthetic draft assessment" : "Draft assessment"}</h3>
-      <p>Assessment date {report.review_date} · Guideline year {report.guideline_year}</p>
-      <p>Institutional grade pending · Human review {report.human_review_status}</p>
+      <h3>{t(report.synthetic ? 'Synthetic draft assessment' : 'Draft assessment')}</h3>
+      <p>{t('Assessment date')}: {report.review_date} · {t('Guideline year')}: {report.guideline_year}</p>
+      <p>{t('Hospital grade is awaiting review.')}</p>
+      <p>{t('Review status')}: {t({complete:'Review complete',partial:'Some results reviewed',pending:'Awaiting review'}[report.human_review_status] ?? 'Awaiting review')}</p>
       <CriterionCoverage hospitalKey={hospitalKey} />
-      <p>{report.verified_errors} verified errors · {report.unresolved_measures.length} unresolved measures</p>
-      <p>{report.calculated_grade ? "Calculated grade " + report.calculated_grade : "Possible grades " + report.possible_grades.join(", ")}</p>
-      <details><summary>Evidence and coverage</summary>
+      <p>{report.verified_errors} {t('confirmed problems')} · {report.unresolved_measures.length} {t('requirements needing review')}</p>
+      <p>{report.calculated_grade ? t('Calculated grade') + ' ' + report.calculated_grade : t('Possible grades') + ' ' + report.possible_grades.join(', ')}</p>
+      <details><summary>{t('Supporting information and missing details')}</summary>
+        {language==='es' && <p>{t('Detailed explanations below are in English.')}</p>}
+        <div lang="en">
         {report.coverage_gaps.map((g) => <p key={g}>{g}</p>)}
         {report.findings.map((f) => <p key={f.measure_id}><strong>{f.css_column} · {f.result}</strong> {f.reason}</p>)}
         {report.reasons.map((r) => <p key={r}>{r}</p>)}
+        </div>
       </details>
     </>}
   </section>;

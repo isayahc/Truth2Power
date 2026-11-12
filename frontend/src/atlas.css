@@ -1013,7 +1013,9 @@ h2 {
 .overview th, .overview td { padding:8px 12px; text-align:left; border-bottom:1px solid var(--line); }
 .overview thead { background:#edf3ef; }
 .overview-controls { display:flex; flex-wrap:wrap; align-items:end; gap:12px; }
-.overview-controls label { display:grid; gap:5px; }
+.overview-controls label { display:grid; gap:5px; min-width:0; max-width:100%; }
+.overview-controls select { min-width:0; max-width:100%; }
+.overview button { white-space:normal; overflow-wrap:anywhere; max-width:100%; }
 .overview button, .overview select { cursor:pointer; }
 @media (max-width:600px) { header { flex-wrap:wrap; gap:8px; } .overview-link { margin-right:0; } .overview td,.overview th {padding:6px;} }
 .correction-draft label { display:grid; gap:6px; margin:8px 0; }

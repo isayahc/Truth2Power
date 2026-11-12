@@ -81,7 +81,7 @@ try {
     await target.locator(':scope > details:not(.criterion-human-review) > summary').click();
     await target.locator(':scope > details:not(.criterion-human-review) blockquote').waitFor();
     assert.match(await target.innerText(), /SYNTHETIC <script> text stays text/);
-    assert.match(await target.innerText(), language==='en'?/Unclear/:/Sin determinar/);
+    assert.match(await target.innerText(), language==='en'?/Needs review/:/Necesita revisión/);
     assert.equal(await target.locator('script').count(),0);
     assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);
     await target.screenshot({path:join(root,`result-${language}-${width}.png`)});
@@ -114,7 +114,7 @@ try {
     assert.deepEqual(errors,[]);
     finishCriterion(db,claimCriterion(db),'execution_failed');
     await page.reload({waitUntil:'domcontentloaded'});
-    const all=page.getByRole('button',{name:language==='en'?'Run all missing':'Ejecutar todos los pendientes',exact:true});
+    const all=page.getByRole('button',{name:language==='en'?'Check all unchecked requirements':'Revisar todos los requisitos pendientes',exact:true});
     await all.click();await page.locator('.criterion-confirm').waitFor();
     await page.locator('.criterion-confirm button').first().click();
     await page.locator('.criterion-confirm').waitFor({state:'detached'});

@@ -1,4 +1,5 @@
 // Main-page translation draft for #45. Fluent-reader approval is tracked separately.
+import {plainLanguage} from './plain-language.js';
 export const spanish = {
   'Overview sections': 'Secciones del resumen',
   'Coverage by region': 'Cobertura por región',
@@ -385,4 +386,5 @@ export const spanish = {
   "Maximum requests":"Máximo de solicitudes",
   "Maximum download bytes":"Máximo de bytes de descarga",
   "Paid services off. Local cost unknown.":"Servicios de pago desactivados. Costo local desconocido.",
+  ...Object.fromEntries(Object.entries(plainLanguage).map(([key,translations])=>[key,translations[1]])),
 };

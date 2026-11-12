@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { spanish } from './spanish.js';
+import { plainLanguage } from './plain-language.js';
 
 const Locale = createContext({ language: 'en', t: (text) => text, localHref: (href) => href });
 function initialLanguage() {
@@ -28,7 +29,7 @@ export function LocaleProvider({ children }) {
     url.searchParams.set('lang', next);
     window.history.replaceState(null, '', url);
   }
-  const t = (text) => language === 'es' ? spanish[text] ?? text : text;
+  const t = (text) => language === 'es' ? spanish[text] ?? text : plainLanguage[text]?.[0] ?? text;
   const localHref = (href) => {
     if (language !== 'es') return href;
     const url = new URL(href, window.location.href);
