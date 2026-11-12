@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import HospitalMap from "./HospitalMap.jsx";
+import {useLocale} from './locale.jsx';
 
 const statuses = { current: "Current", overdue: "Overdue", never: "Never checked" };
 const colors = { current: "#087652", overdue: "#b35b16", never: "#747b81" };
@@ -19,6 +20,9 @@ const impacts = {
 const urlFor = (h, column) => `?hospital=${encodeURIComponent(h.hospital_key)}&revision=${encodeURIComponent(h.revision)}${column ? "#measure-"+h.hospital_key+"-"+column : ""}`;
 
 export default function Overview({ features, counties }) {
+  const {t,language,localHref}=useLocale();
+  const [tab,setTab]=useState('coverage');
+  const [page,setPage]=useState(0);
   const [report, setReport] = useState(null);
   const [error, setError] = useState(false);
   const [request, setRequest] = useState(0);
@@ -28,6 +32,7 @@ export default function Overview({ features, counties }) {
   const [draft, setDraft] = useState("");
   const [bucket, setBucket] = useState("");
   const [map, setMap] = useState(false);
+  useEffect(()=>setPage(0),[region,status,measure,draft,bucket]);
   useEffect(() => {
     const controller = new AbortController();
     setError(false);
@@ -48,6 +53,10 @@ export default function Overview({ features, counties }) {
     (!measure || h.failed.some((m) => m.column === measure)) &&
     (!bucket || bucket === "historical-"+h.historical_grade || bucket === "current-"+h.grade_bucket));
   const byKey = new Map(visible.map((h) => [h.hospital_key, h]));
+  const pages=Math.max(1,Math.ceil(visible.length/10));
+  const currentPage=Math.min(page,pages-1);
+  const start=currentPage*10;
+  const pageRows=visible.slice(start,start+10);
   const points = features.filter((f) => byKey.has(String(f.id))).map((f) => {
     const row = byKey.get(String(f.id));
     return {...f, markerLabel: statuses[row.freshness], markerColor: colors[row.freshness]};
@@ -61,21 +70,34 @@ export default function Overview({ features, counties }) {
   function select(r, s = "") { setRegion(r); setStatus(s); setMeasure(""); setBucket(""); setDraft(""); }
   const filterCount = (r, s, count) => <button className="plain" aria-label={`${r || "Statewide"} · ${statuses[s] || "All"} · ${count}`} onClick={() => select(r,s)}>{count}</button>;
   return <section className="overview" aria-labelledby="overview-title">
-    <a href="?">← Hospital atlas</a>
+    <a href={localHref('?')}>← Hospital atlas</a>
     <div className="overview-heading"><h1 id="overview-title">Audit overview</h1><button onClick={() => setRequest(request + 1)}>Refresh overview</button></div>
     <p>{report.guideline_year} audit · {report.statewide.total} hospitals · As of {new Date(report.as_of).toLocaleDateString()}</p>
     <p>Current means at least one measure was successfully checked within the last {report.window_days} days. Each finding has its own date and scope.</p>
     {!!report.unavailable_records && <p role="alert">{report.unavailable_records} review records could not be read. Coverage may be incomplete.</p>}
-    <h2>Coverage by region</h2>
+    <div className="overview-tabs" role="tablist" aria-label={t('Overview sections')} lang={language}>
+      {['coverage','findings'].map((id,index)=><button key={id} id={`overview-tab-${id}`} role="tab" aria-selected={tab===id} aria-controls={`overview-panel-${id}`} tabIndex={tab===id?0:-1}
+        onClick={()=>setTab(id)} onKeyDown={event=>{
+          if(!['ArrowLeft','ArrowRight','Home','End'].includes(event.key))return;
+          event.preventDefault();
+          const next=event.key==='Home'?'coverage':event.key==='End'?'findings':['coverage','findings'][1-index];
+          setTab(next);document.getElementById(`overview-tab-${next}`)?.focus();
+        }}>{t(id==='coverage'?'Coverage by region':'Findings')}</button>)}
+    </div>
+    <section id="overview-panel-coverage" role="tabpanel" aria-labelledby="overview-tab-coverage" hidden={tab!=='coverage'} tabIndex={0}>
+    <h2 lang={language}>{t('Coverage by region')}</h2>
     <div className="overview-scroll"><table><thead><tr><th>Economic region</th><th>Hospitals</th>{Object.values(statuses).map((label) => <th key={label}>{label}</th>)}</tr></thead>
       <tbody>{areas.map((a) => <tr key={a.region}><th scope="row">{a.region || "Statewide"}</th><td>{filterCount(a.region,"",a.total)}</td>
         {Object.keys(statuses).map((s) => <td key={s}>{filterCount(a.region,s,a.freshness[s])}</td>)}</tr>)}</tbody></table></div>
-    <h2>{region || "Statewide"} findings</h2>
+    </section>
+    <section id="overview-panel-findings" role="tabpanel" aria-labelledby="overview-tab-findings" hidden={tab!=='findings'} tabIndex={0}>
+    <h2 lang={language}>{region || t('Statewide')} · {t('Findings')}</h2>
     <p>Hospitals with a draft “No” in any reviewed scope. Each hospital counts once per measure.</p>
     {[...frequent.values()].sort((a,b) => b.count-a.count || a.column.localeCompare(b.column)).map((m) => <p key={m.column}>
       <button className="plain" onClick={() => {setMeasure(m.column);setStatus("");setBucket("");setDraft("");}}>{m.column} · {m.title} ({m.count})</button> — {impacts[m.column]}</p>)}
     {!frequent.size && <p>No draft failures recorded in this region.</p>}
-    <h2>Hospital directory</h2>
+    </section>
+    <h2 lang={language}>{t('Hospital directory')}</h2>
     <div className="overview-controls">
       <label>Region<select value={region} onChange={(e) => select(e.target.value)}>{areas.map((a) => <option key={a.region} value={a.region}>{a.region || "Statewide"}</option>)}</select></label>
       <label>Check status<select value={status} onChange={(e) => setStatus(e.target.value)}><option value="">All</option>{Object.entries(statuses).map(([s,label]) => <option key={s} value={s}>{label}</option>)}</select></label>
@@ -91,8 +113,13 @@ export default function Overview({ features, counties }) {
     <p aria-live="polite">{visible.length} of {area.total} hospitals{measure && ` · ${measure} draft No`}</p>
     {map && <><p>Green · Current　 Orange · Overdue　 Grey · Never checked</p><HospitalMap hospitals={points} counties={counties} onSelect={(f) => window.location.assign(urlFor(byKey.get(String(f.id)),measure))} /></>}
     <div className="overview-scroll"><table aria-label="Hospital directory"><thead><tr><th>Hospital</th><th>September 2025 grade</th><th>Current institutional grade</th><th>Check status</th><th>Last successful check (UTC)</th></tr></thead>
-      <tbody>{visible.map((h) => <tr key={h.hospital_key}><th scope="row"><a href={urlFor(h,measure)}>{h.name}</a></th><td>{h.historical_grade}</td>
+       <tbody>{pageRows.map((h) => <tr key={h.hospital_key}><th scope="row"><a href={localHref(urlFor(h,measure))}>{h.name}</a></th><td>{h.historical_grade}</td>
         <td>{h.current_grade ?? (h.last_successful_assessment_at ? "Pending" : "Unassessed")}<CriterionCoverage hospitalKey={h.hospital_key} historical /></td><td>{statuses[h.freshness]}</td>
         <td>{h.last_successful_assessment_at ? new Date(h.last_successful_assessment_at).toISOString().slice(0,10) : "—"}</td></tr>)}</tbody></table></div>
-  </section>;
+    <nav className="overview-pagination" aria-label={t('Hospital directory pages')} lang={language}>
+      <p role="status">{t('Showing')} {visible.length?start+1:0}–{Math.min(start+10,visible.length)} {t('of')} {visible.length} · {t('Page')} {currentPage+1} {t('of')} {pages}</p>
+      <button disabled={currentPage===0} onClick={()=>setPage(currentPage-1)}>{t('Previous page')}</button>
+      <button disabled={currentPage===pages-1} onClick={()=>setPage(currentPage+1)}>{t('Next page')}</button>
+    </nav>
+   </section>;
 }

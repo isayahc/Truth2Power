@@ -1151,3 +1151,6 @@ h2 {
 .criterion-human-review blockquote, .criterion-review-inbox li { overflow-wrap: anywhere; }
 .criterion-updated { font-size: .78rem; }
 .criterion-card { scroll-margin-top: 1rem; }
+.overview-tabs, .overview-pagination { display: flex; flex-wrap: wrap; gap: .6rem; align-items: center; margin: 1rem 0; }
+.overview-tabs [aria-selected="true"] { background: #123e3b; color: white; }
+.overview-pagination p { flex-basis: 100%; }

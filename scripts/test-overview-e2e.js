@@ -32,12 +32,13 @@ try {
   const detail = await list.getByRole("link").getAttribute("href");
   assert.ok(detail.includes(h.revision));
   await page.getByRole("button",{name:"Show coverage map"}).click();
-  await page.getByRole("button",{name:`${h.name} · ${label}`,exact:true}).first().click();
+   await page.getByRole("button",{name:new RegExp(`^${h.name} · ${label}`)}).first().click();
   await page.getByRole("region",{name:"Current hospital findings"}).waitFor();
   assert.ok(page.url().includes(h.revision));
   await page.goBack();
   await page.getByRole("heading",{name:"Audit overview"}).waitFor();
-  await page.getByRole("button",{name:/^AH ·/}).click();
+   await page.getByRole('tab',{name:'Findings',exact:true}).click();
+   await page.getByRole("button",{name:/^AH ·/}).click();
   await list.getByRole("link",{name:"Ellenville Regional Hospital"}).click();
   await page.getByRole("region",{name:"Current hospital findings"}).waitFor();
   assert.equal(new URL(page.url()).hash,"#measure-1002-AH");
