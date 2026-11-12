@@ -1,5 +1,6 @@
 import React, { useRef, useState } from "react";
 import { useLocale } from './locale.jsx';
+import {CriterionCoverage} from './CriterionCoverage.jsx';
 
 export default function HospitalSearch({ hospitals, onSelect }) {
   const { t } = useLocale();
@@ -65,6 +66,7 @@ export default function HospitalSearch({ hospitals, onSelect }) {
                 {h.properties.name}
                 <small>
                   {h.properties.city} · {h.properties.stars} ★
+                  <CriterionCoverage hospitalKey={h.id} historical />
                 </small>
               </button>
             ))

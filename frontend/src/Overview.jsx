@@ -3,6 +3,7 @@ import HospitalMap from "./HospitalMap.jsx";
 
 const statuses = { current: "Current", overdue: "Overdue", never: "Never checked" };
 const colors = { current: "#087652", overdue: "#b35b16", never: "#747b81" };
+import {CriterionCoverage} from './CriterionCoverage.jsx';
 const grades = ["A","B","C","D","F"];
 const impacts = {
   R: "Patients may have difficulty finding the application.", S: "Patients may lack a short explanation of their options.",
@@ -91,7 +92,7 @@ export default function Overview({ features, counties }) {
     {map && <><p>Green · Current　 Orange · Overdue　 Grey · Never checked</p><HospitalMap hospitals={points} counties={counties} onSelect={(f) => window.location.assign(urlFor(byKey.get(String(f.id)),measure))} /></>}
     <div className="overview-scroll"><table aria-label="Hospital directory"><thead><tr><th>Hospital</th><th>September 2025 grade</th><th>Current institutional grade</th><th>Check status</th><th>Last successful check (UTC)</th></tr></thead>
       <tbody>{visible.map((h) => <tr key={h.hospital_key}><th scope="row"><a href={urlFor(h,measure)}>{h.name}</a></th><td>{h.historical_grade}</td>
-        <td>{h.current_grade ?? (h.last_successful_assessment_at ? "Pending" : "Unassessed")}</td><td>{statuses[h.freshness]}</td>
+        <td>{h.current_grade ?? (h.last_successful_assessment_at ? "Pending" : "Unassessed")}<CriterionCoverage hospitalKey={h.hospital_key} historical /></td><td>{statuses[h.freshness]}</td>
         <td>{h.last_successful_assessment_at ? new Date(h.last_successful_assessment_at).toISOString().slice(0,10) : "—"}</td></tr>)}</tbody></table></div>
   </section>;
 }

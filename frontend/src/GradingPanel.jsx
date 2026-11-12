@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import {CriterionCoverage} from './CriterionCoverage.jsx';
 
 export default function GradingPanel({ hospitalKey }) {
   const [report, setReport] = useState(null);
@@ -19,6 +20,7 @@ export default function GradingPanel({ hospitalKey }) {
       <h3>{report.synthetic ? "Synthetic draft assessment" : "Draft assessment"}</h3>
       <p>Assessment date {report.review_date} · Guideline year {report.guideline_year}</p>
       <p>Institutional grade pending · Human review {report.human_review_status}</p>
+      <CriterionCoverage hospitalKey={hospitalKey} />
       <p>{report.verified_errors} verified errors · {report.unresolved_measures.length} unresolved measures</p>
       <p>{report.calculated_grade ? "Calculated grade " + report.calculated_grade : "Possible grades " + report.possible_grades.join(", ")}</p>
       <details><summary>Evidence and coverage</summary>

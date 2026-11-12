@@ -12,7 +12,7 @@ process.once('message', async input => {
         value:true, explanation:'SYNTHETIC worker result', evidence:[] };
       await writeFile(path, JSON.stringify(result)); return {...result,path};
     } };
-    await runAudit(input.hospital, {requested:[input.step],approvedSteps:input.approvedSteps}, {
+    await runAudit(input.hospital, {requested:input.requested ?? [input.step],approvedSteps:input.approvedSteps}, {
       registry, find:async()=>undefined, log:()=>{},
       checkpoint:manifest=>new Promise((resolve,reject)=>process.send({type:'checkpoint',manifest},error=>error?reject(error):resolve())),
     });
