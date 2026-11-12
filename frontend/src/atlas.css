@@ -368,6 +368,48 @@ p {
   padding: 10px;
   font-size: 12px;
 }
+.map-panel {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  min-width: 0;
+}
+.map-view-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  flex-shrink: 0;
+  gap: 8px 12px;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--line);
+  background: #f8faf7;
+}
+.map-view-switch {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.map-view-switch button {
+  min-height: 36px;
+  padding: 7px 12px;
+  border: 1px solid #b3c9c1;
+  border-radius: 4px;
+  background: #fffefa;
+  color: #385956;
+  font-size: 12px;
+  font-weight: 650;
+}
+.map-view-switch button[aria-pressed="true"] {
+  background: #173c39;
+  border-color: #173c39;
+  color: white;
+}
+.map-view-count {
+  font-size: 11px;
+  color: var(--muted);
+}
 .viewport {
   position: relative;
   flex: auto;
@@ -852,10 +894,14 @@ h2 {
   .controls {
     top: 7px;
     left: 7px;
+    max-width: calc(100% - 14px);
   }
   .controls button {
-    width: 24px;
-    height: 24px;
+    width: auto;
+    height: auto;
+    min-height: 32px;
+    padding: 5px 7px;
+    font-size: 11px;
   }
   .map-footer {
     padding: 7px 10px;

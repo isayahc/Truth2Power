@@ -19,7 +19,7 @@ async function getFeatures(path, signal) {
   return data.features;
 }
 
-function Header({ onReview, pending }) {
+function Header({ onReview, reviewOpen, pending }) {
   const { t, localHref } = useLocale();
   const [humanTasks,setHumanTasks]=useState(0);
   useEffect(()=>{let live=true;const load=()=>fetch('/api/pilot/v1/interventions').then(r=>r.ok?r.json():null).then(x=>{if(live&&x)setHumanTasks(x.items.length)}).catch(()=>{});load();const timer=setInterval(load,10000);return()=>{live=false;clearInterval(timer)}},[]);
@@ -44,7 +44,7 @@ function Header({ onReview, pending }) {
       <a className="overview-link" href={localHref('?view=overview')}>{t('Audit overview')}</a>
       <a className="changes-link" href={localHref('?view=operations')}>{t('Audit operations')}</a>
       <a className="changes-link" href={localHref('?view=changes')}>{t('Recent changes')}</a>
-      <button className="review-nav" onClick={onReview}>{t('Review inbox')} <span>{typeof pending==='number' ? pending+humanTasks : pending ?? "…"}</span></button>
+      <button className="review-nav" onClick={onReview} aria-pressed={reviewOpen}>{t('Review inbox')} <span>{typeof pending==='number' ? pending+humanTasks : pending ?? "…"}</span></button>
       <LanguageSwitch />
       </div>
     </header>
@@ -154,7 +154,7 @@ export default function App() {
   const visible = data?.hospitals.filter((h) => filter === null || h.properties.stars === filter);
   return (
     <div className="page">
-      <Header onReview={() => openReviews()} pending={reviewError ? "!" : inbox?.pending} />
+      <Header onReview={() => reviewOpen ? setReviewOpen(false) : openReviews()} reviewOpen={reviewOpen} pending={reviewError ? "!" : inbox?.pending} />
       <main>
         {reviewOpen ? <>
           <button className="back plain" onClick={() => setReviewOpen(false)}>{t(selected ? '← Back to hospital record' : '← Back to hospital map')}</button>
@@ -190,7 +190,7 @@ export default function App() {
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
                     <path d="m3 6 6-2 6 3 6-2v14l-6 2-6-3-6 2zM9 4v14m6-11v14" />
                   </svg>
-                  {t('Statewide map')}
+                  {t('Hospital map')}
                 </div>
                 <HospitalSearch
                   hospitals={data.hospitals}
