@@ -35,7 +35,7 @@ test("reporting API queues, pages, scopes, reconciles totals and redacts private
       review_date: "2026-11-09",
       request_key: "private-key",
     };
-  assert.equal((await get("/summary")).eligible_facilities, 212);
+  assert.equal((await get("/summary")).eligible_facilities, 218);
   assert.equal((await get(path)).clocks.last_attempted, null);
   assert.equal(existsSync(join(root, "audit.sqlite")), false);
   assert.equal((await call("/hospitals/999999/runs")).statusCode, 404);

@@ -4,6 +4,14 @@
 
 The main screens call criteria **requirements**, runs **checks**, and unclear results **Needs review**. Viewing results is free; starting AI checks may incur charges. These wording changes do not change verdicts, job behavior or published grades. Technical API names and message keys remain stable. `frontend/src/plain-language.js` keeps paired English/Spanish wording; `locale.jsx` and the Spanish catalog use it for UI labels only, never source quotations. Remaining older English-only report content is labeled as such. Spanish wording is a translation draft, not fluent-reader approved.
 
+### Current hospital directory
+
+The web directory is reconciled one-to-one against the [NYS directory of 218 hospitals](https://profiles.health.ny.gov/directory/hospitals). `data/maps/directory-reconciliation.json` records the retrieval date, all matches, and state facility records for the seven additions. `node scripts/reconcile-hospital-directory.js` reproduces the reconciliation, stopping on ambiguous matches or a changed directory count.
+
+The seven new campuses have no September 2025 grade, star count, application-posting finding, or audit row. They display **Not rated / Sin calificación**, independently of current requirement checks. Their assistance starting URLs are inherited from the state-identified parent hospital; campus applicability still needs evidence review. No parent rating or saved finding is copied.
+
+Cohen Children's (`t2p-0001`) is retained as a historical-only record, with its original link, grade and saved history. The canonical GeoJSON contains 219 identities: 218 current and one historical-only. `/api/hospitals` returns 218 `features` and one `historical_features` entry. The CSV, current map, Overview and Operations directory use the current 218. All 212 published historical ratings remain intact; the standalone `maps/index.html` remains the September 2025 historical atlas.
+
 ### Connected check history
 
 The Operations table reads both older audit records and `criterion_jobs` / `criterion_results` / human decisions from SQLite. It refreshes every five seconds. Requirement counts use the same calculation as hospital pages; dates come from recorded starts, completions and source retrievals, not the time the dashboard was opened. Requirement checks have no automatic schedule or recorded cost ledger, so those fields show **Not scheduled** and **Not recorded**. Cost totals are explicitly labeled as older-audit totals. Older records and their technical history remain available. Reporting is read-only and tolerates databases created before requirement checks were introduced.

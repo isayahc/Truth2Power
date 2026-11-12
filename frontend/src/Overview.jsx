@@ -51,7 +51,7 @@ export default function Overview({ features, counties }) {
   const visible = regional.filter((h) => (!status || h.freshness === status) &&
     (!draft || h.finding_bucket === draft) &&
     (!measure || h.failed.some((m) => m.column === measure)) &&
-    (!bucket || bucket === "historical-"+h.historical_grade || bucket === "current-"+h.grade_bucket));
+    (!bucket || bucket === "historical-"+(h.historical_grade ?? 'unrated') || bucket === "current-"+h.grade_bucket));
   const byKey = new Map(visible.map((h) => [h.hospital_key, h]));
   const pages=Math.max(1,Math.ceil(visible.length/10));
   const currentPage=Math.min(page,pages-1);
@@ -106,14 +106,14 @@ export default function Overview({ features, counties }) {
         <option value="no_recorded_failure">{t('Checked; none marked not met')} ({area.findings.no_recorded_failure})</option>
         <option value="unassessed">{t('Unassessed')} ({area.findings.unassessed})</option></select></label>
       <label>{t('Grade')}<select value={bucket} onChange={(e) => setBucket(e.target.value)}><option value="">{t('All grades')}</option>
-        <optgroup label={t('September 2025 published')}>{grades.map((g) => <option key={g} value={"historical-"+g}>2025 · {g} ({area.historical[g]})</option>)}</optgroup>
+        <optgroup label={t('September 2025 published')}>{[...grades,'unrated'].map((g) => <option key={g} value={"historical-"+g}>2025 · {g==='unrated'?t('Not rated'):g} ({area.historical[g]})</option>)}</optgroup>
         <optgroup label={t('Current institutional')}>{Object.entries(area.current_grades).map(([g,n]) => <option key={g} value={"current-"+g}>{t(g)} ({n})</option>)}</optgroup></select></label>
       <button onClick={() => select("")}>{t('Clear filters')}</button><button aria-pressed={map} onClick={() => setMap(!map)}>{t(map ? 'Hide coverage map' : 'Show coverage map')}</button>
     </div>
     <p aria-live="polite">{visible.length} {t('of')} {area.total} {t('hospitals')}{measure && ` · ${measure} · ${t('Condition not met')}`}</p>
     {map && <><p>{t('Green: recently checked. Orange: check overdue. Gray: never checked.')}</p><HospitalMap hospitals={points} counties={counties} onSelect={(f) => window.location.assign(localHref(urlFor(byKey.get(String(f.id)),measure)))} /></>}
     <div className="overview-scroll"><table aria-label={t('Hospital directory')}><thead><tr>{['Hospital','September 2025 grade','Current institutional grade','Check status','Last successful check (UTC)'].map(label=><th key={label}>{t(label)}</th>)}</tr></thead>
-       <tbody>{pageRows.map((h) => <tr key={h.hospital_key}><th scope="row"><a href={localHref(urlFor(h,measure))}>{h.name}</a></th><td>{h.historical_grade}</td>
+       <tbody>{pageRows.map((h) => <tr key={h.hospital_key}><th scope="row"><a href={localHref(urlFor(h,measure))}>{h.name}</a></th><td>{h.historical_grade ?? t('Not rated')}</td>
         <td>{h.current_grade ?? t(h.last_successful_assessment_at ? 'Pending' : 'Unassessed')}<CriterionCoverage hospitalKey={h.hospital_key} historical /></td><td>{t(statuses[h.freshness])}</td>
         <td>{h.last_successful_assessment_at ? new Date(h.last_successful_assessment_at).toISOString().slice(0,10) : "—"}</td></tr>)}</tbody></table></div>
     <nav className="overview-pagination" aria-label={t('Hospital directory pages')} lang={language}>

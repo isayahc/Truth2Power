@@ -17,7 +17,7 @@ async function getFeatures(path, signal) {
   if (data.type !== "FeatureCollection" || !Array.isArray(data.features) || !data.features.length) {
     throw new Error("Empty or invalid map data.");
   }
-  return data.features;
+  return [...data.features,...(data.historical_features ?? [])];
 }
 
 function Header({ onReview, reviewOpen, pending }) {
@@ -155,7 +155,8 @@ function Atlas() {
     hospitalUrl(null);
     requestAnimationFrame(() => document.querySelector(".search-bar input")?.focus());
   }
-  const visible = data?.hospitals.filter((h) => filter === null || h.properties.stars === filter);
+  const current = data?.hospitals.filter(h=>h.properties.current_directory!==false);
+  const visible = current?.filter((h) => filter === null || (h.properties.stars ?? 'unrated') === filter);
   return (
     <div className="page">
       <Header onReview={() => reviewOpen ? setReviewOpen(false) : openReviews()} reviewOpen={reviewOpen} pending={reviewError ? "!" : inbox?.pending} />
@@ -181,7 +182,7 @@ function Atlas() {
           </div>
           {data && (
             <div className="intro-stat">
-              <strong>{data.hospitals.length}</strong>
+              <strong>{current.length}</strong>
                <span>{t('Hospitals mapped')}</span>
             </div>
           )}
@@ -198,7 +199,7 @@ function Atlas() {
                   {t('Hospital map')}
                 </div>
                 <HospitalSearch
-                  hospitals={data.hospitals}
+                  hospitals={current}
                   onSelect={selectHospital}
                 />
               </div>
@@ -211,15 +212,15 @@ function Atlas() {
               <div className="map-footer">
                 <strong aria-live="polite">
                   {filter === null
-                    ? data.hospitals.length
-                    : visible.length + ' ' + t('of') + ' ' + data.hospitals.length}{" "}
+                    ? current.length
+                    : visible.length + ' ' + t('of') + ' ' + current.length}{" "}
                   {t('hospital locations')}
                 </strong>
                 <span className="hint">{t('Select a hospital for its coordinates and audit record.')}</span>
               </div>
             </section>
             <aside>
-              <Ratings hospitals={data.hospitals} filter={filter} onFilter={setFilter} />
+              <Ratings hospitals={current} filter={filter} onFilter={setFilter} />
             </aside>
           </div>
           {selected && <HospitalDetail key={selected.id} hospital={selected} onClose={closeDetail} onReview={() => openReviews(String(selected.id))}

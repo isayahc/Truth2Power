@@ -24,11 +24,11 @@ try {
     assert.equal(await table.locator('tbody tr').count(),10);
     const first=await table.locator('tbody tr').first().innerText();
     const pagination=page.locator('.overview-pagination');
-    assert.match(await pagination.innerText(),/1–10 .* 212/);
+    assert.match(await pagination.innerText(),/1–10 .* 218/);
     const previous=pagination.locator('button').nth(0),next=pagination.locator('button').nth(1);
     assert.equal(await previous.isDisabled(),true);
     await next.click();
-    assert.match(await pagination.innerText(),/11–20 .* 212/);
+    assert.match(await pagination.innerText(),/11–20 .* 218/);
     assert.notEqual(await table.locator('tbody tr').first().innerText(),first);
     await previous.click();
     assert.equal(await table.locator('tbody tr').first().innerText(),first);
@@ -49,13 +49,13 @@ try {
     await page.getByRole('button',{name:language==='en'?'Clear filters':'Quitar filtros',exact:true}).click();
     await page.getByRole('button',{name:language==='en'?'Show checked hospitals on map':'Mostrar hospitales revisados en el mapa',exact:true}).click();
     const mapPoints=await page.locator('circle.dot').count();
-    assert.ok(mapPoints>=212); // Statewide plus the metro inset share some hospitals.
+    assert.ok(mapPoints>=218); // Statewide plus the metro inset share some hospitals.
     await next.click();assert.equal(await page.locator('circle.dot').count(),mapPoints);
     await page.getByRole('button',{name:language==='en'?'Hide map':'Ocultar mapa',exact:true}).click();
     // Last page and empty filtered results keep navigation bounded.
     while(!await next.isDisabled())await next.click();
-    assert.equal(await table.locator('tbody tr').count(),2);
-    assert.match(await pagination.innerText(),/211–212/);
+    assert.equal(await table.locator('tbody tr').count(),8);
+    assert.match(await pagination.innerText(),/211–218/);
     await page.locator('.overview-controls select').nth(1).selectOption('current');
     await page.route('**/api/overview',async route=>{
       const data=await (await route.fetch()).json();

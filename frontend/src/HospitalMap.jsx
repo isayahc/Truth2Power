@@ -54,7 +54,7 @@ function Points({ hospitals, project, zoom = 1, selected, onSelect, setHover }) 
     const [cx, cy] = project(hospital.geometry.coordinates);
     const { stars, name } = hospital.properties;
     const active = selected?.id === hospital.id;
-    const label = name + " · " + (hospital.markerLabel ?? stars + ' ' + t(stars === 1 ? 'star' : 'stars')) + ' · ' + t('Published September 2025; confirmed-criterion count not recorded.') + ' · ' + (error ? t('Criterion coverage unavailable.') : data ? coverageText(data.hospitals[hospital.id] ?? emptyCoverage,t,language) : t('Loading criterion coverage…'));
+    const label = name + " · " + (hospital.markerLabel ?? (stars==null ? t('Not rated') : stars + ' ' + t(stars === 1 ? 'star' : 'stars'))) + ' · ' + (stars==null ? t('Not rated in September 2025.') : t('Published September 2025; confirmed-criterion count not recorded.')) + ' · ' + (error ? t('Criterion coverage unavailable.') : data ? coverageText(data.hospitals[hospital.id] ?? emptyCoverage,t,language) : t('Loading criterion coverage…'));
     return (
       <circle
         key={hospital.id}

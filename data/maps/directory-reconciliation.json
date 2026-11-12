@@ -1,0 +1,1602 @@
+{
+  "source": "https://profiles.health.ny.gov/directory/hospitals",
+  "retrieved_at": "2026-11-12T23:47:09.729Z",
+  "current_count": 218,
+  "historical_only": [
+    "t2p-0001"
+  ],
+  "added_ids": [
+    "15709",
+    "1315",
+    "1723",
+    "15897",
+    "1473",
+    "309",
+    "102"
+  ],
+  "entries": [
+    {
+      "name": "A.O. Fox Memorial Hospital",
+      "address": "One Norton Avenue",
+      "locality": "Oneonta, NY 13820",
+      "hospital_key": "739"
+    },
+    {
+      "name": "A.O. Fox Memorial Hospital - Tri-Town Campus",
+      "address": "43 Pearl Street West",
+      "locality": "Sidney, NY 13838",
+      "hospital_key": "8554"
+    },
+    {
+      "name": "Adirondack Medical Center-Lake Placid Site",
+      "address": "203 Old Military Road",
+      "locality": "Lake Placid, NY 12946",
+      "hospital_key": "306"
+    },
+    {
+      "name": "Adirondack Medical Center-Saranac Lake Site",
+      "address": "2233 State Route 86, P.O. Box 471",
+      "locality": "Saranac Lake, NY 12983",
+      "hospital_key": "324"
+    },
+    {
+      "name": "Albany Medical Center - South Clinical Campus",
+      "address": "25 Hackett Boulevard",
+      "locality": "Albany, NY 12208",
+      "hospital_key": "2"
+    },
+    {
+      "name": "Albany Medical Center Hospital",
+      "address": "43 New Scotland Avenue",
+      "locality": "Albany, NY 12208",
+      "hospital_key": "1"
+    },
+    {
+      "name": "Arnot Ogden Medical Center",
+      "address": "600 Roe Avenue",
+      "locality": "Elmira, NY 14905",
+      "hospital_key": "116"
+    },
+    {
+      "name": "Auburn Community Hospital",
+      "address": "17 Lansing Street",
+      "locality": "Auburn, NY 13021",
+      "hospital_key": "85"
+    },
+    {
+      "name": "Bellevue Hospital Center",
+      "address": "462 First Avenue",
+      "locality": "New York, NY 10016",
+      "hospital_key": "1438"
+    },
+    {
+      "name": "Bertrand Chaffee Hospital",
+      "address": "224 East Main St",
+      "locality": "Springville, NY 14141",
+      "hospital_key": "280"
+    },
+    {
+      "name": "Blythedale Children's Hospital",
+      "address": "95 Bradhurst Avenue",
+      "locality": "Valhalla, NY 10595",
+      "hospital_key": "1138"
+    },
+    {
+      "name": "BronxCare Hospital Center",
+      "address": "1276 Fulton Avenue",
+      "locality": "Bronx, NY 10456",
+      "hospital_key": "1164"
+    },
+    {
+      "name": "BronxCare Hospital Center",
+      "address": "1650 Grand Concourse",
+      "locality": "Bronx, NY 10457",
+      "hospital_key": "1178"
+    },
+    {
+      "name": "Brookdale Hospital Medical Center",
+      "address": "1 Brookdale Plaza",
+      "locality": "Brooklyn, NY 11212",
+      "hospital_key": "1286"
+    },
+    {
+      "name": "Brooklyn Hospital Center - Downtown Campus",
+      "address": "121 DEKALB AVENUE",
+      "locality": "Brooklyn, NY 11201",
+      "hospital_key": "1288"
+    },
+    {
+      "name": "Brooks-TLC Hospital System, Inc.",
+      "address": "529 Central Avenue",
+      "locality": "Dunkirk, NY 14048",
+      "hospital_key": "98"
+    },
+    {
+      "name": "Buffalo General Medical Center",
+      "address": "100 High Street",
+      "locality": "Buffalo, NY 14203",
+      "hospital_key": "207"
+    },
+    {
+      "name": "Calvary Hospital",
+      "address": "150 55th Street",
+      "locality": "Brooklyn, NY 11220",
+      "hospital_key": "10223"
+    },
+    {
+      "name": "Calvary Hospital Inc",
+      "address": "1740-70 Eastchester Road",
+      "locality": "Bronx, NY 10461",
+      "hospital_key": "1175"
+    },
+    {
+      "name": "Canton-Potsdam Hospital",
+      "address": "50 Leroy Street",
+      "locality": "Potsdam, NY 13676",
+      "hospital_key": "815"
+    },
+    {
+      "name": "Carthage Area Hospital Inc",
+      "address": "1001 WEST STREET",
+      "locality": "Carthage, NY 13619",
+      "hospital_key": "379"
+    },
+    {
+      "name": "Cayuga Medical Center at Ithaca",
+      "address": "101 Dates Drive",
+      "locality": "Ithaca, NY 14850",
+      "hospital_key": "977"
+    },
+    {
+      "name": "Chenango Memorial Hospital Inc",
+      "address": "179 North Broad St",
+      "locality": "Norwich, NY 13815",
+      "hospital_key": "128"
+    },
+    {
+      "name": "Children's Pavilion Upstate Medical University",
+      "address": "655 Madison Street",
+      "locality": "Syracuse, NY 13210",
+      "hospital_key": "15709"
+    },
+    {
+      "name": "Claxton-Hepburn Medical Campus",
+      "address": "214 King Street",
+      "locality": "Ogdensburg, NY 13669",
+      "hospital_key": "798"
+    },
+    {
+      "name": "Clifton Springs Hospital and Clinic",
+      "address": "2 Coulter Road",
+      "locality": "Clifton Springs, NY 14432",
+      "hospital_key": "676"
+    },
+    {
+      "name": "Clifton-Fine Hospital",
+      "address": "1014 Oswegatchie Trail PO Box 10",
+      "locality": "Star Lake, NY 13690",
+      "hospital_key": "817"
+    },
+    {
+      "name": "Cobleskill Regional Hospital",
+      "address": "178 Grandview Drive",
+      "locality": "Cobleskill, NY 12043",
+      "hospital_key": "10216"
+    },
+    {
+      "name": "Columbia Memorial Hospital",
+      "address": "71 Prospect Ave",
+      "locality": "Hudson, NY 12534",
+      "hospital_key": "146"
+    },
+    {
+      "name": "Community Memorial Hospital Inc",
+      "address": "150 Broad St",
+      "locality": "Hamilton, NY 13346",
+      "hospital_key": "401"
+    },
+    {
+      "name": "Corning Hospital",
+      "address": "1 Guthrie Drive",
+      "locality": "Corning, NY 14830",
+      "hospital_key": "866"
+    },
+    {
+      "name": "Crouse Hospital",
+      "address": "736 Irving Avenue",
+      "locality": "Syracuse, NY 13210",
+      "hospital_key": "636"
+    },
+    {
+      "name": "Crouse Hospital - Commonwealth Division",
+      "address": "6010 East Malloy Road",
+      "locality": "Syracuse, NY 13211",
+      "hospital_key": "9059"
+    },
+    {
+      "name": "Cuba Memorial Hospital Inc",
+      "address": "140 West Main Street",
+      "locality": "Cuba, NY 14727",
+      "hospital_key": "37"
+    },
+    {
+      "name": "David H. Koch Center For Cancer Care",
+      "address": "530 East 74th Street",
+      "locality": "New York, NY 10021",
+      "hospital_key": "10355"
+    },
+    {
+      "name": "Delaware Valley Hospital Inc",
+      "address": "1 Titus Place",
+      "locality": "Walton, NY 13856",
+      "hospital_key": "174"
+    },
+    {
+      "name": "Ellenville Regional Hospital",
+      "address": "10 HEALTHY WAY",
+      "locality": "Ellenville, NY 12428",
+      "hospital_key": "1002"
+    },
+    {
+      "name": "Ellis Hospital",
+      "address": "1101 Nott Street",
+      "locality": "Schenectady, NY 12308",
+      "hospital_key": "829"
+    },
+    {
+      "name": "Ellis Hospital - Bellevue Woman's Care Center Division",
+      "address": "2210 Troy Road",
+      "locality": "Niskayuna, NY 12309",
+      "hospital_key": "848"
+    },
+    {
+      "name": "Elmhurst Hospital Center",
+      "address": "79-01 Broadway",
+      "locality": "Elmhurst, NY 11373",
+      "hospital_key": "1626"
+    },
+    {
+      "name": "Erie County Medical Center",
+      "address": "462 Grider Street",
+      "locality": "Buffalo, NY 14215",
+      "hospital_key": "210"
+    },
+    {
+      "name": "F.F. Thompson Hospital",
+      "address": "350 Parrish Street",
+      "locality": "Canandaigua, NY 14424",
+      "hospital_key": "678"
+    },
+    {
+      "name": "Faxton St Luke's Healthcare Campus",
+      "address": "1650 Champlin  Avenue",
+      "locality": "Utica, NY 13502",
+      "hospital_key": "599"
+    },
+    {
+      "name": "Flushing Hospital Medical Center",
+      "address": "45th Avenue & Parsons Blvd",
+      "locality": "Flushing, NY 11355",
+      "hospital_key": "1628"
+    },
+    {
+      "name": "Garnet Health Medical Center",
+      "address": "707 East Main Street",
+      "locality": "Middletown, NY 10940",
+      "hospital_key": "699"
+    },
+    {
+      "name": "Garnet Health Medical Center - Catskills",
+      "address": "68 Harris-Bushville Road P.O. Box 800",
+      "locality": "Harris, NY 12742",
+      "hospital_key": "971"
+    },
+    {
+      "name": "Garnet Health Medical Center - Catskills - G. Hermann Site",
+      "address": "8881 State Route 97",
+      "locality": "Callicoon, NY 12723",
+      "hospital_key": "968"
+    },
+    {
+      "name": "Geneva General Hospital",
+      "address": "196-198 North Street",
+      "locality": "Geneva, NY 14456",
+      "hospital_key": "671"
+    },
+    {
+      "name": "Glen Cove Hospital",
+      "address": "101 St Andrews Lane",
+      "locality": "Glen Cove, NY 11542",
+      "hospital_key": "490"
+    },
+    {
+      "name": "Glens Falls Hospital",
+      "address": "100 PARK STREET",
+      "locality": "Glens Falls, NY 12801",
+      "hospital_key": "1005"
+    },
+    {
+      "name": "Golisano Children's Hospital of Buffalo",
+      "address": "818 Ellicott Street",
+      "locality": "Buffalo, NY 14203",
+      "hospital_key": "208"
+    },
+    {
+      "name": "Good Samaritan Hospital, a member of WMCHealth",
+      "address": "255 Lafayette Avenue",
+      "locality": "Suffern, NY 10901",
+      "hospital_key": "779"
+    },
+    {
+      "name": "Good Samaritan University Hospital",
+      "address": "1000 Montauk Highway",
+      "locality": "West Islip, NY 11795",
+      "hospital_key": "925"
+    },
+    {
+      "name": "Good Samaritan University Hospital St. Charles Campus",
+      "address": "200 Belle Terre Road",
+      "locality": "Port Jefferson, NY 11777",
+      "hospital_key": "896"
+    },
+    {
+      "name": "Gouverneur Hospital",
+      "address": "77 West Barney Street",
+      "locality": "Gouverneur, NY 13642",
+      "hospital_key": "812"
+    },
+    {
+      "name": "Guthrie Cortland Medical Center",
+      "address": "134 Homer Avenue",
+      "locality": "Cortland, NY 13045",
+      "hospital_key": "158"
+    },
+    {
+      "name": "Guthrie Lourdes Hospital",
+      "address": "169 Riverside Drive",
+      "locality": "Binghamton, NY 13905",
+      "hospital_key": "43"
+    },
+    {
+      "name": "Harlem Hospital Center",
+      "address": "506 Lenox Avenue",
+      "locality": "New York, NY 10037",
+      "hospital_key": "1445"
+    },
+    {
+      "name": "HealthAlliance Hospital, a member of WMCHealth",
+      "address": "105 Marys Avenue",
+      "locality": "Kingston, NY 12401",
+      "hospital_key": "989"
+    },
+    {
+      "name": "Helen Hayes Hospital",
+      "address": "51 N Route 9W",
+      "locality": "West Haverstraw, NY 10993",
+      "hospital_key": "775"
+    },
+    {
+      "name": "Henry J. Carter Specialty Hospital",
+      "address": "1752 Park Avenue",
+      "locality": "New York, NY 10035",
+      "hospital_key": "1486"
+    },
+    {
+      "name": "Highland Hospital",
+      "address": "1000 SOUTH AVENUE",
+      "locality": "Rochester, NY 14620",
+      "hospital_key": "409"
+    },
+    {
+      "name": "Hospital for Special Surgery",
+      "address": "535 E 70th Street",
+      "locality": "New York, NY 10021",
+      "hospital_key": "1447"
+    },
+    {
+      "name": "Huntington Hospital",
+      "address": "270 Park Avenue",
+      "locality": "Huntington, NY 11743",
+      "hospital_key": "913"
+    },
+    {
+      "name": "Interfaith Medical Center",
+      "address": "1545 Atlantic Avenue",
+      "locality": "Brooklyn, NY 11213",
+      "hospital_key": "1309"
+    },
+    {
+      "name": "Ira Davenport Memorial Hospital",
+      "address": "7571 State Route 54",
+      "locality": "Bath, NY 14810",
+      "hospital_key": "873"
+    },
+    {
+      "name": "Jacobi Medical Center",
+      "address": "1400 Pelham Parkway",
+      "locality": "Bronx, NY 10461",
+      "hospital_key": "1165"
+    },
+    {
+      "name": "Jamaica Hospital Medical Center",
+      "address": "89th Avenue & Van Wyck Expressway",
+      "locality": "Jamaica, NY 11418",
+      "hospital_key": "1629"
+    },
+    {
+      "name": "John T Mather Memorial Hospital of Port Jefferson New York Inc",
+      "address": "75 NORTH COUNTRY ROAD",
+      "locality": "Port Jefferson, NY 11777",
+      "hospital_key": "895"
+    },
+    {
+      "name": "Kenmore Mercy Hospital",
+      "address": "2950 ELMWOOD AVENUE",
+      "locality": "Kenmore, NY 14217",
+      "hospital_key": "267"
+    },
+    {
+      "name": "Kings County Hospital Center",
+      "address": "451 Clarkson Avenue",
+      "locality": "Brooklyn, NY 11203",
+      "hospital_key": "1301"
+    },
+    {
+      "name": "Kingsbrook Jewish Medical Village",
+      "address": "585 Schenectady Avenue",
+      "locality": "Brooklyn, NY 11203",
+      "hospital_key": "1315"
+    },
+    {
+      "name": "Lakeview Center for Mental Health and Wellness",
+      "address": "29 East Cayuga Street",
+      "locality": "Oswego, NY 13126",
+      "hospital_key": "12"
+    },
+    {
+      "name": "Lenox Hill Hospital",
+      "address": "100 East 77th Street",
+      "locality": "New York, NY 10021",
+      "hospital_key": "1450"
+    },
+    {
+      "name": "Lewis County General Hospital",
+      "address": "7785 North State Street",
+      "locality": "Lowville, NY 13367",
+      "hospital_key": "383"
+    },
+    {
+      "name": "Lincoln Medical & Mental Health Center",
+      "address": "234 East 149th Street",
+      "locality": "Bronx, NY 10451",
+      "hospital_key": "1172"
+    },
+    {
+      "name": "Little Falls Hospital",
+      "address": "140 Burwell Street",
+      "locality": "Little Falls, NY 13365",
+      "hospital_key": "362"
+    },
+    {
+      "name": "Lockport Memorial Hospital, a Campus of Mount St Mary's",
+      "address": "6001 Shimer Drive",
+      "locality": "Lockport, NY 14094",
+      "hospital_key": "15464"
+    },
+    {
+      "name": "Long Island Jewish Forest Hills",
+      "address": "102-01 66th Road",
+      "locality": "Forest Hills, NY 11375",
+      "hospital_key": "1638"
+    },
+    {
+      "name": "Long Island Jewish Medical Center",
+      "address": "270-05 76th Avenue",
+      "locality": "New Hyde Park, NY 11040",
+      "hospital_key": "1630"
+    },
+    {
+      "name": "Long Island Jewish Valley Stream",
+      "address": "900 Franklin Avenue",
+      "locality": "Valley Stream, NY 11580",
+      "hospital_key": "518"
+    },
+    {
+      "name": "Maimonides Medical Center",
+      "address": "4802 TENTH AVENUE",
+      "locality": "Brooklyn, NY 11219",
+      "hospital_key": "1305"
+    },
+    {
+      "name": "Maimonides Midwood Community Hospital",
+      "address": "2525 Kings Highway",
+      "locality": "Brooklyn, NY 11229",
+      "hospital_key": "1293"
+    },
+    {
+      "name": "Margaretville Hospital",
+      "address": "42084 State Highway 28",
+      "locality": "Margaretville, NY 12455",
+      "hospital_key": "170"
+    },
+    {
+      "name": "Mary Imogene Bassett Hospital",
+      "address": "ONE ATWELL ROAD",
+      "locality": "Cooperstown, NY 13326",
+      "hospital_key": "746"
+    },
+    {
+      "name": "Massena Hospital",
+      "address": "1 Hospital Drive",
+      "locality": "Massena, NY 13662",
+      "hospital_key": "804"
+    },
+    {
+      "name": "Medina Memorial Hospital",
+      "address": "200 Ohio Street",
+      "locality": "Medina, NY 14103",
+      "hospital_key": "718"
+    },
+    {
+      "name": "Memorial Hosp of Wm F & Gertrude F Jones A/K/A Jones Memorial Hosp",
+      "address": "191 North Main Street",
+      "locality": "Wellsville, NY 14895",
+      "hospital_key": "39"
+    },
+    {
+      "name": "Memorial Hospital for Cancer and Allied Diseases",
+      "address": "1275 York Avenue",
+      "locality": "New York, NY 10065",
+      "hospital_key": "1453"
+    },
+    {
+      "name": "Mercy Hospital",
+      "address": "1000 North Village Avenue",
+      "locality": "Rockville Centre, NY 11570",
+      "hospital_key": "513"
+    },
+    {
+      "name": "Mercy Hospital - Mercy Hospital Orchard Park Division",
+      "address": "3669 Southwestern Blvd",
+      "locality": "Orchard Park, NY 14127",
+      "hospital_key": "1723"
+    },
+    {
+      "name": "Mercy Hospital of Buffalo",
+      "address": "565 Abbott Road",
+      "locality": "Buffalo, NY 14220",
+      "hospital_key": "213"
+    },
+    {
+      "name": "Metropolitan Hospital Center",
+      "address": "1901 First Avenue",
+      "locality": "New York, NY 10029",
+      "hospital_key": "1454"
+    },
+    {
+      "name": "Mid-Hudson Valley Division of Westchester Medical Center",
+      "address": "241 North Road",
+      "locality": "Poughkeepsie, NY 12601",
+      "hospital_key": "180"
+    },
+    {
+      "name": "Millard Fillmore Suburban Hospital",
+      "address": "1540 Maple Road",
+      "locality": "Amherst, NY 14221",
+      "hospital_key": "3067"
+    },
+    {
+      "name": "Montefiore Einstein Children's Center for Mental Health of the Children's Hospital at Montefiore Einstein",
+      "address": "1300 Waters Place",
+      "locality": "Bronx, NY 10461",
+      "hospital_key": "15897"
+    },
+    {
+      "name": "Montefiore Med Center - Jack D Weiler Hosp of A Einstein College Div",
+      "address": "1825 Eastchester Road",
+      "locality": "Bronx, NY 10461",
+      "hospital_key": "3058"
+    },
+    {
+      "name": "Montefiore Medical Center - Henry & Lucy Moses Div",
+      "address": "111 East 210th Street",
+      "locality": "Bronx, NY 10467",
+      "hospital_key": "1169"
+    },
+    {
+      "name": "Montefiore Medical Center - Montefiore Westchester Square",
+      "address": "2475 St. Raymond Avenue",
+      "locality": "Bronx, NY 10461",
+      "hospital_key": "1185"
+    },
+    {
+      "name": "Montefiore Medical Center-Wakefield Hospital",
+      "address": "600 East 233rd Street",
+      "locality": "Bronx, NY 10466",
+      "hospital_key": "1168"
+    },
+    {
+      "name": "Montefiore Mount Vernon Hospital",
+      "address": "12 North 7th Avenue",
+      "locality": "Mount Vernon, NY 10550",
+      "hospital_key": "1061"
+    },
+    {
+      "name": "Montefiore New Rochelle Hospital",
+      "address": "16 Guion Place",
+      "locality": "New Rochelle, NY 10802",
+      "hospital_key": "1072"
+    },
+    {
+      "name": "Montefiore Nyack",
+      "address": "160 North Midland Avenue",
+      "locality": "Nyack, NY 10960",
+      "hospital_key": "776"
+    },
+    {
+      "name": "Mount Sinai - Behavioral Health Center",
+      "address": "45 Rivington Street",
+      "locality": "New York, NY 10002",
+      "hospital_key": "15437"
+    },
+    {
+      "name": "Mount Sinai Brooklyn",
+      "address": "3201 Kings Highway",
+      "locality": "Brooklyn, NY 11234",
+      "hospital_key": "1324"
+    },
+    {
+      "name": "Mount Sinai Hospital",
+      "address": "One Gustave L Levy Place",
+      "locality": "New York, NY 10029",
+      "hospital_key": "1456"
+    },
+    {
+      "name": "Mount Sinai Hospital - Mount Sinai Hospital of Queens",
+      "address": "25-10 30th Avenue",
+      "locality": "Long Island City, NY 11102",
+      "hospital_key": "1639"
+    },
+    {
+      "name": "Mount Sinai Morningside",
+      "address": "1111 Amsterdam Avenue",
+      "locality": "New York, NY 10025",
+      "hospital_key": "1469"
+    },
+    {
+      "name": "Mount Sinai South Nassau",
+      "address": "One Healthy Way",
+      "locality": "Oceanside, NY 11572",
+      "hospital_key": "527"
+    },
+    {
+      "name": "Mount Sinai West",
+      "address": "1000 10th Avenue",
+      "locality": "New York, NY 10019",
+      "hospital_key": "1466"
+    },
+    {
+      "name": "Mount St. Mary's Hospital and Health Center",
+      "address": "5300 Military Road",
+      "locality": "Lewiston, NY 14092",
+      "hospital_key": "583"
+    },
+    {
+      "name": "Nassau University Medical Center",
+      "address": "2201 HEMPSTEAD TURNPIKE",
+      "locality": "East Meadow, NY 11554",
+      "hospital_key": "528"
+    },
+    {
+      "name": "Nathan Littauer Hospital",
+      "address": "99 EAST STATE STREET",
+      "locality": "Gloversville, NY 12078",
+      "hospital_key": "330"
+    },
+    {
+      "name": "New York Eye and Ear Infirmary of Mount Sinai",
+      "address": "310 East 14th Street",
+      "locality": "New York, NY 10003",
+      "hospital_key": "1460"
+    },
+    {
+      "name": "New York-Presbyterian Brooklyn Methodist Hospital",
+      "address": "506 Sixth Street",
+      "locality": "Brooklyn, NY 11215",
+      "hospital_key": "1306"
+    },
+    {
+      "name": "New York-Presbyterian David H. Koch Center",
+      "address": "1283 York Avenue",
+      "locality": "New York, NY 10065",
+      "hospital_key": "10139"
+    },
+    {
+      "name": "New York-Presbyterian Hospital - Allen Hospital",
+      "address": "5141 Broadway",
+      "locality": "New York, NY 10034",
+      "hospital_key": "3975"
+    },
+    {
+      "name": "New York-Presbyterian Hospital - Columbia Presbyterian Center",
+      "address": "622 West 168th Street",
+      "locality": "New York, NY 10032",
+      "hospital_key": "1464"
+    },
+    {
+      "name": "New York-Presbyterian Hospital - New York Weill Cornell Center",
+      "address": "525 East 68th Street",
+      "locality": "New York, NY 10021",
+      "hospital_key": "1458"
+    },
+    {
+      "name": "New York-Presbyterian Westchester",
+      "address": "55 Palmer Avenue",
+      "locality": "Bronxville, NY 10708",
+      "hospital_key": "1122"
+    },
+    {
+      "name": "New York-Presbyterian Westchester Behavioral Health Center",
+      "address": "21 Bloomingdale Road",
+      "locality": "White Plains, NY 10605",
+      "hospital_key": "1047"
+    },
+    {
+      "name": "New York-Presbyterian/Hudson Valley Hospital",
+      "address": "1980 Crompond Road",
+      "locality": "Cortlandt Manor, NY 10567",
+      "hospital_key": "1039"
+    },
+    {
+      "name": "New York-Presbyterian/Lower Manhattan Hospital",
+      "address": "170 William Street",
+      "locality": "New York, NY 10038",
+      "hospital_key": "1437"
+    },
+    {
+      "name": "New York-Presbyterian/Queens",
+      "address": "56-45 Main Street",
+      "locality": "Flushing, NY 11355",
+      "hospital_key": "1637"
+    },
+    {
+      "name": "Newark-Wayne Community Hospital",
+      "address": "1200 Driving Park Avenue, Box 111",
+      "locality": "Newark, NY 14513",
+      "hospital_key": "1028"
+    },
+    {
+      "name": "Niagara Falls Memorial Medical Center",
+      "address": "621 TENTH STREET",
+      "locality": "Niagara Falls, NY 14302",
+      "hospital_key": "574"
+    },
+    {
+      "name": "Nicholas H. Noyes Memorial Hospital",
+      "address": "111 Clara Barton Street",
+      "locality": "Dansville, NY 14437",
+      "hospital_key": "393"
+    },
+    {
+      "name": "North Central Bronx Hospital",
+      "address": "3424 Kossuth Avenue & 210th Street",
+      "locality": "Bronx, NY 10467",
+      "hospital_key": "1186"
+    },
+    {
+      "name": "North Shore University Hospital",
+      "address": "300 Community Drive",
+      "locality": "Manhasset, NY 11030",
+      "hospital_key": "541"
+    },
+    {
+      "name": "Northern Dutchess Hospital",
+      "address": "6511 Springbrook Avenue",
+      "locality": "Rhinebeck, NY 12572",
+      "hospital_key": "192"
+    },
+    {
+      "name": "Northern Westchester Hospital",
+      "address": "400 East Main Street",
+      "locality": "Mount Kisco, NY 10549",
+      "hospital_key": "1117"
+    },
+    {
+      "name": "Northwell Greenwich Village Hospital",
+      "address": "30 Seventh Avenue",
+      "locality": "New York, NY 10011",
+      "hospital_key": "9700"
+    },
+    {
+      "name": "NYU Langone Hospital - Joseph S. and Diane H. Steinberg Ambulatory Care Center",
+      "address": "70 Atlantic Avenue",
+      "locality": "Brooklyn, NY 11201",
+      "hospital_key": "9753"
+    },
+    {
+      "name": "NYU Langone Hospital - Suffolk",
+      "address": "101 Hospital Road",
+      "locality": "Patchogue, NY 11772",
+      "hospital_key": "885"
+    },
+    {
+      "name": "NYU Langone Hospital-Brooklyn",
+      "address": "150 55th Street",
+      "locality": "Brooklyn, NY 11220",
+      "hospital_key": "1304"
+    },
+    {
+      "name": "NYU Langone Hospital-Long Island",
+      "address": "259 First Street",
+      "locality": "Mineola, NY 11501",
+      "hospital_key": "511"
+    },
+    {
+      "name": "NYU Langone Hospitals",
+      "address": "550 First Avenue",
+      "locality": "New York, NY 10016",
+      "hospital_key": "1463"
+    },
+    {
+      "name": "NYU Langone Orthopedic Hospital",
+      "address": "301 East 17th Street",
+      "locality": "New York, NY 10003",
+      "hospital_key": "1446"
+    },
+    {
+      "name": "O'Connor Hospital",
+      "address": "460 Andes Road",
+      "locality": "Delhi, NY 13753",
+      "hospital_key": "165"
+    },
+    {
+      "name": "Olean General Hospital",
+      "address": "515 Main Street",
+      "locality": "Olean, NY 14760",
+      "hospital_key": "66"
+    },
+    {
+      "name": "Oneida Health Hospital",
+      "address": "321 Genesee Street",
+      "locality": "Oneida, NY 13421",
+      "hospital_key": "397"
+    },
+    {
+      "name": "Oswego Hospital",
+      "address": "110 W Sixth Street",
+      "locality": "Oswego, NY 13126",
+      "hospital_key": "727"
+    },
+    {
+      "name": "Peconic Bay Medical Center",
+      "address": "1 Heroes Way",
+      "locality": "Riverhead, NY 11901",
+      "hospital_key": "938"
+    },
+    {
+      "name": "Phelps Hospital",
+      "address": "701 North Broadway",
+      "locality": "Sleepy Hollow, NY 10591",
+      "hospital_key": "1129"
+    },
+    {
+      "name": "Plainview Hospital",
+      "address": "888 OLD COUNTRY ROAD",
+      "locality": "Plainview, NY 11803",
+      "hospital_key": "552"
+    },
+    {
+      "name": "Port Jervis Community Hospital, a member of WMCHealth",
+      "address": "160 East Main Street",
+      "locality": "Port Jervis, NY 12771",
+      "hospital_key": "708"
+    },
+    {
+      "name": "Putnam Hospital",
+      "address": "670 Stoneleigh Avenue",
+      "locality": "Carmel, NY 10512",
+      "hospital_key": "752"
+    },
+    {
+      "name": "Queens Hospital Center",
+      "address": "82-68 164th Street",
+      "locality": "Jamaica, NY 11432",
+      "hospital_key": "1633"
+    },
+    {
+      "name": "Richmond University Medical Center",
+      "address": "355 Bard Avenue",
+      "locality": "Staten Island, NY 10310",
+      "hospital_key": "1738"
+    },
+    {
+      "name": "River Hospital, Inc.",
+      "address": "4 Fuller Street",
+      "locality": "Alexandria Bay, NY 13607",
+      "hospital_key": "377"
+    },
+    {
+      "name": "Rochester General Hospital",
+      "address": "1425 PORTLAND AVENUE",
+      "locality": "Rochester, NY 14621",
+      "hospital_key": "411"
+    },
+    {
+      "name": "Rome Memorial Hospital, Inc",
+      "address": "1500 N James St",
+      "locality": "Rome, NY 13440",
+      "hospital_key": "589"
+    },
+    {
+      "name": "Roswell Park Cancer Institute",
+      "address": "Elm and Carlton Streets",
+      "locality": "Buffalo, NY 14263",
+      "hospital_key": "216"
+    },
+    {
+      "name": "RUMC-Bayley Seton",
+      "address": "75 Vanderbilt Avenue",
+      "locality": "Staten Island, NY 10304",
+      "hospital_key": "1473"
+    },
+    {
+      "name": "Samaritan Hospital",
+      "address": "2215 Burdett Avenue",
+      "locality": "Troy, NY 12180",
+      "hospital_key": "756"
+    },
+    {
+      "name": "Samaritan Hospital - Albany Memorial Campus",
+      "address": "600 Northern Boulevard",
+      "locality": "Albany, NY 12204",
+      "hospital_key": "4"
+    },
+    {
+      "name": "Samaritan Medical Center",
+      "address": "830 Washington Street",
+      "locality": "Watertown, NY 13601",
+      "hospital_key": "367"
+    },
+    {
+      "name": "Saratoga Hospital",
+      "address": "211 CHURCH STREET",
+      "locality": "Saratoga Springs, NY 12866",
+      "hospital_key": "818"
+    },
+    {
+      "name": "SBH Health System",
+      "address": "4422 Third Avenue",
+      "locality": "Bronx, NY 10457",
+      "hospital_key": "1176"
+    },
+    {
+      "name": "Schuyler Hospital",
+      "address": "220 Steuben Street",
+      "locality": "Montour Falls, NY 14865",
+      "hospital_key": "858"
+    },
+    {
+      "name": "Sisters of Charity Hospital",
+      "address": "2157 MAIN STREET",
+      "locality": "Buffalo, NY 14214",
+      "hospital_key": "218"
+    },
+    {
+      "name": "Sisters of Charity Hospital - St. Joseph Campus",
+      "address": "2605 Harlem Road",
+      "locality": "Cheektowaga, NY 14225",
+      "hospital_key": "292"
+    },
+    {
+      "name": "SJRH - Dobbs Ferry Pavillion",
+      "address": "128 Ashford Avenue",
+      "locality": "Dobbs Ferry, NY 10522",
+      "hospital_key": "1124"
+    },
+    {
+      "name": "SJRH - Park Care Pavilion",
+      "address": "Two Park Avenue",
+      "locality": "Yonkers, NY 10703",
+      "hospital_key": "1099"
+    },
+    {
+      "name": "SJRH - St Johns Division",
+      "address": "967 North Broadway",
+      "locality": "Yonkers, NY 10701",
+      "hospital_key": "1097"
+    },
+    {
+      "name": "Soldiers and Sailors Memorial Hospital of Yates County",
+      "address": "418 North Main Street",
+      "locality": "Penn Yan, NY 14527",
+      "hospital_key": "1158"
+    },
+    {
+      "name": "South Brooklyn Health",
+      "address": "2601 Ocean Parkway",
+      "locality": "Brooklyn, NY 11235",
+      "hospital_key": "1294"
+    },
+    {
+      "name": "South Nassau Communities Hospital Off-Campus Emergency Department",
+      "address": "325 East Bay Drive",
+      "locality": "Long Beach, NY 11561",
+      "hospital_key": "9691"
+    },
+    {
+      "name": "South Shore University Hospital",
+      "address": "301 East Main Street",
+      "locality": "Bay Shore, NY 11706",
+      "hospital_key": "924"
+    },
+    {
+      "name": "St Catherine of Siena Hospital",
+      "address": "50 Route 25A",
+      "locality": "Smithtown, NY 11787",
+      "hospital_key": "943"
+    },
+    {
+      "name": "St Johns Episcopal Hospital So Shore",
+      "address": "327 Beach 19th Street",
+      "locality": "Far Rockaway, NY 11691",
+      "hospital_key": "1635"
+    },
+    {
+      "name": "St Luke's Cornwall Hospital/Newburgh",
+      "address": "70 Dubois Street",
+      "locality": "Newburgh, NY 12550",
+      "hospital_key": "694"
+    },
+    {
+      "name": "St. Anthony Community Hospital, a member of WMCHealth",
+      "address": "15 Maple Avenue",
+      "locality": "Warwick, NY 10990",
+      "hospital_key": "704"
+    },
+    {
+      "name": "St. Francis Hospital & Heart Center",
+      "address": "100 Port Washington Boulevard",
+      "locality": "Roslyn, NY 11576",
+      "hospital_key": "563"
+    },
+    {
+      "name": "St. James Hospital",
+      "address": "7329 Seneca Road North",
+      "locality": "Hornell, NY 14843",
+      "hospital_key": "870"
+    },
+    {
+      "name": "St. Joseph Hospital",
+      "address": "4295 HEMPSTEAD TURNPIKE",
+      "locality": "Bethpage, NY 11714",
+      "hospital_key": "551"
+    },
+    {
+      "name": "St. Joseph's Hospital",
+      "address": "555 St. Joseph's Boulevard",
+      "locality": "Elmira, NY 14901",
+      "hospital_key": "118"
+    },
+    {
+      "name": "St. Joseph's Hospital Health Center",
+      "address": "301 Prospect Avenue",
+      "locality": "Syracuse, NY 13203",
+      "hospital_key": "630"
+    },
+    {
+      "name": "St. Joseph's MC-St. Vincent's Westchester Division",
+      "address": "275 North Street",
+      "locality": "Harrison, NY 10528",
+      "hospital_key": "1133"
+    },
+    {
+      "name": "St. Joseph's Medical Center",
+      "address": "127 South Broadway",
+      "locality": "Yonkers, NY 10701",
+      "hospital_key": "1098"
+    },
+    {
+      "name": "St. Mary's Healthcare",
+      "address": "427 Guy Park Avenue",
+      "locality": "Amsterdam, NY 12010",
+      "hospital_key": "484"
+    },
+    {
+      "name": "St. Mary's Healthcare - Amsterdam Memorial Campus",
+      "address": "4988 Sthwy 30",
+      "locality": "Amsterdam, NY 12010",
+      "hospital_key": "482"
+    },
+    {
+      "name": "St. Peter's Addiction Recovery Center",
+      "address": "3 Mercycare Lane",
+      "locality": "Guilderland, NY 12084",
+      "hospital_key": "9431"
+    },
+    {
+      "name": "St. Peter's Hospital",
+      "address": "315 South Manning Boulevard",
+      "locality": "Albany, NY 12208",
+      "hospital_key": "5"
+    },
+    {
+      "name": "St. Peter's Hospital - SPARC",
+      "address": "1300 Massachusetts Avenue",
+      "locality": "Troy, NY 12180",
+      "hospital_key": "15417"
+    },
+    {
+      "name": "Staten Island University Hosp-North",
+      "address": "475 Seaview Avenue",
+      "locality": "Staten Island, NY 10305",
+      "hospital_key": "1740"
+    },
+    {
+      "name": "Staten Island University Hospital Prince's Bay",
+      "address": "375 Seguine Avenue",
+      "locality": "Staten Island, NY 10309",
+      "hospital_key": "1737"
+    },
+    {
+      "name": "Stony Brook Eastern Long Island Hospital",
+      "address": "201 Manor Place",
+      "locality": "Greenport, NY 11944",
+      "hospital_key": "891"
+    },
+    {
+      "name": "Stony Brook Southampton Hospital",
+      "address": "240 Meeting House Lane",
+      "locality": "Southampton, NY 11968",
+      "hospital_key": "889"
+    },
+    {
+      "name": "Stony Brook University Hospital",
+      "address": "Health Sciences Center SUNY",
+      "locality": "Stony Brook, NY 11794",
+      "hospital_key": "245"
+    },
+    {
+      "name": "Strong Memorial Hospital",
+      "address": "601 Elmwood Avenue",
+      "locality": "Rochester, NY 14642",
+      "hospital_key": "413"
+    },
+    {
+      "name": "Sunnyview Hospital and Rehabilitation Center",
+      "address": "1270 Belmont Avenue",
+      "locality": "Schenectady, NY 12308",
+      "hospital_key": "831"
+    },
+    {
+      "name": "Syosset Hospital",
+      "address": "221 Jericho Turnpike",
+      "locality": "Syosset, NY 11791",
+      "hospital_key": "550"
+    },
+    {
+      "name": "The Unity Hospital of Rochester",
+      "address": "1555 Long Pond Road",
+      "locality": "Rochester, NY 14626",
+      "hospital_key": "471"
+    },
+    {
+      "name": "The University of Vermont Health Network - Alice Hyde Medical Center",
+      "address": "133 Park Street",
+      "locality": "Malone, NY 12953",
+      "hospital_key": "15485"
+    },
+    {
+      "name": "The University of Vermont Health Network - Champlain Valley Physicians Hospital",
+      "address": "75 Beekman St",
+      "locality": "Plattsburgh, NY 12901",
+      "hospital_key": "135"
+    },
+    {
+      "name": "The University of Vermont Health Network - Elizabethtown Community Hospital",
+      "address": "75 Park Street",
+      "locality": "Elizabethtown, NY 12932",
+      "hospital_key": "303"
+    },
+    {
+      "name": "The University of Vermont Health Network - Elizabethtown Community Hospital Moses Ludington",
+      "address": "101 Adirondack Drive, Suite 1",
+      "locality": "Ticonderoga, NY 12883",
+      "hospital_key": "309"
+    },
+    {
+      "name": "United Health Services Hospitals Inc. - Binghamton General Hospital",
+      "address": "10-42 Mitchell Avenue",
+      "locality": "Binghamton, NY 13903",
+      "hospital_key": "42"
+    },
+    {
+      "name": "United Health Services Hospitals Inc. - Wilson Medical Center",
+      "address": "33-57 Harrison Street",
+      "locality": "Johnson City, NY 13790",
+      "hospital_key": "58"
+    },
+    {
+      "name": "United Memorial Medical Center Bank Street Campus",
+      "address": "16 Bank Street",
+      "locality": "Batavia, NY 14020",
+      "hospital_key": "340"
+    },
+    {
+      "name": "United Memorial Medical Center North Street Campus",
+      "address": "127 North St",
+      "locality": "Batavia, NY 14020",
+      "hospital_key": "339"
+    },
+    {
+      "name": "Unity Specialty Hospital",
+      "address": "89 Genesee Street",
+      "locality": "Rochester, NY 14611",
+      "hospital_key": "412"
+    },
+    {
+      "name": "University Hospital of Brooklyn",
+      "address": "445 Lenox Road",
+      "locality": "Brooklyn, NY 11203",
+      "hospital_key": "1320"
+    },
+    {
+      "name": "University Hospital SUNY Health Science Center",
+      "address": "750 East Adams Street",
+      "locality": "Syracuse, NY 13210",
+      "hospital_key": "635"
+    },
+    {
+      "name": "UPMC Chautauqua at WCA",
+      "address": "207 Foote Avenue",
+      "locality": "Jamestown, NY 14701",
+      "hospital_key": "103"
+    },
+    {
+      "name": "UPMC Chautauqua at WCA",
+      "address": "51 Glasgow Avenue",
+      "locality": "Jamestown, NY 14701",
+      "hospital_key": "102"
+    },
+    {
+      "name": "UPSTATE University Hospital at Community General",
+      "address": "4900 Broad Road",
+      "locality": "Syracuse, NY 13215",
+      "hospital_key": "628"
+    },
+    {
+      "name": "URMC Strong West",
+      "address": "156 West Avenue",
+      "locality": "Brockport, NY 14420",
+      "hospital_key": "9531"
+    },
+    {
+      "name": "Vassar Brothers Medical Center",
+      "address": "45 READE PLACE",
+      "locality": "Poughkeepsie, NY 12601",
+      "hospital_key": "181"
+    },
+    {
+      "name": "Westchester Medical Center",
+      "address": "100 Woods Road",
+      "locality": "Valhalla, NY 10595",
+      "hospital_key": "1139"
+    },
+    {
+      "name": "Westfield Memorial Hospital Inc",
+      "address": "189 E Main Street",
+      "locality": "Westfield, NY 14787",
+      "hospital_key": "111"
+    },
+    {
+      "name": "White Plains Hospital Center",
+      "address": "41 East Post Road",
+      "locality": "White Plains, NY 10601",
+      "hospital_key": "1045"
+    },
+    {
+      "name": "Winifred Masterson Burke Rehabilitation Hospital",
+      "address": "785 Mamaroneck Avenue",
+      "locality": "White Plains, NY 10605",
+      "hospital_key": "1046"
+    },
+    {
+      "name": "Woodhull Medical & Mental Health Center",
+      "address": "760 Broadway",
+      "locality": "Brooklyn, NY 11206",
+      "hospital_key": "1692"
+    },
+    {
+      "name": "Wyckoff Heights Medical Center",
+      "address": "374 Stockholm Street",
+      "locality": "Brooklyn, NY 11237",
+      "hospital_key": "1318"
+    },
+    {
+      "name": "Wynn Hospital",
+      "address": "111 Hospital Drive",
+      "locality": "Utica, NY 13502",
+      "hospital_key": "15478"
+    },
+    {
+      "name": "Wyoming County Community Hospital",
+      "address": "400 North Main Street",
+      "locality": "Warsaw, NY 14569",
+      "hospital_key": "15620"
+    }
+  ],
+  "facility_sources": [
+    {
+      "url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=15709",
+      "retrieved_at": "2026-11-12T23:47:09.729Z",
+      "record": {
+        "fac_id": "15709",
+        "facility_name": "Children's Pavilion Upstate Medical University",
+        "fac_desc_short": "HOSP",
+        "description": "Hospital",
+        "fac_opn_dat": "2024-11-25T00:00:00.000",
+        "address1": "655 Madison Street",
+        "city": "Syracuse",
+        "state": "New York",
+        "fac_zip": "13210",
+        "fac_phone": "3154649681",
+        "cnty_cd": "33",
+        "county": "Onondaga",
+        "ro_id": "3",
+        "region_office": "Central New York Regional Office",
+        "main_site_name": "University Hospital SUNY Health Science Center",
+        "main_site_facid": "635",
+        "opcert_num": "3301007H",
+        "operator_name": "State University of New York",
+        "operator_address1": "178-50 Linden Blvd",
+        "operator_city": "Jamaica",
+        "operator_state": "New York",
+        "operator_zip": "11434",
+        "cooperator_state": "New York",
+        "ownership_type": "State",
+        "latitude": "43.04574",
+        "longitude": "-76.13838",
+        "facility_location": {
+          "latitude": "43.04574",
+          "longitude": "-76.13838"
+        }
+      }
+    },
+    {
+      "url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=1315",
+      "retrieved_at": "2026-11-12T23:47:09.729Z",
+      "record": {
+        "fac_id": "1315",
+        "facility_name": "Kingsbrook Jewish Medical Village",
+        "fac_desc_short": "HOSP",
+        "description": "Hospital",
+        "fac_opn_dat": "1901-01-01T00:00:00.000",
+        "address1": "585 Schenectady Avenue",
+        "city": "Brooklyn",
+        "state": "New York",
+        "fac_zip": "11203",
+        "fac_phone": "7186045000",
+        "cnty_cd": "7095",
+        "county": "Kings",
+        "ro_id": "5",
+        "region_office": "Metropolitan Area Regional Office - New York City",
+        "main_site_name": "Brookdale Hospital Medical Center",
+        "main_site_facid": "1286",
+        "opcert_num": "7001002H",
+        "operator_name": "The Brookdale Hospital Medical Center",
+        "operator_address1": "One Brookdale Plaza",
+        "operator_city": "Brooklyn",
+        "operator_state": "New York",
+        "operator_zip": "11212",
+        "cooperator_name": "One Brooklyn Health System, Inc.",
+        "cooperator_address1": "1 Brookdale Plaza",
+        "cooperator_address_2": "Care of Alex Rovt Chairman of the Board",
+        "cooperator_city": "Brooklyn",
+        "cooperator_state": "New York",
+        "cooperator_zip": "11212",
+        "ownership_type": "Not for Profit Corporation",
+        "latitude": "40.659435",
+        "longitude": "-73.934036",
+        "facility_location": {
+          "latitude": "40.659435",
+          "longitude": "-73.934036"
+        }
+      }
+    },
+    {
+      "url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=1723",
+      "retrieved_at": "2026-11-12T23:47:09.729Z",
+      "record": {
+        "fac_id": "1723",
+        "facility_name": "Mercy Hospital - Mercy Hospital Orchard Park Division",
+        "fac_desc_short": "HOSP",
+        "description": "Hospital",
+        "fac_opn_dat": "2007-02-02T00:00:00.000",
+        "address1": "3669 Southwestern Blvd",
+        "city": "Orchard Park",
+        "state": "New York",
+        "fac_zip": "14127",
+        "fac_phone": "7166620500",
+        "cnty_cd": "14",
+        "county": "Erie",
+        "ro_id": "1",
+        "region_office": "Western Regional Office - Buffalo",
+        "main_site_name": "Mercy Hospital of Buffalo",
+        "main_site_facid": "213",
+        "opcert_num": "1401008H",
+        "operator_name": "Mercy Hospital of Buffalo Inc",
+        "operator_address1": "565 Abbott Road",
+        "operator_city": "Buffalo",
+        "operator_state": "New York",
+        "operator_zip": "14220",
+        "cooperator_name": "Catholic Health System, Inc.",
+        "cooperator_address1": "144 Genesee Street",
+        "cooperator_city": "Buffalo",
+        "cooperator_state": "New York",
+        "cooperator_zip": "14203",
+        "ownership_type": "Not for Profit Corporation",
+        "latitude": "42.781742",
+        "longitude": "-78.77224",
+        "facility_location": {
+          "latitude": "42.781742",
+          "longitude": "-78.77224"
+        }
+      }
+    },
+    {
+      "url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=15897",
+      "retrieved_at": "2026-11-12T23:47:09.729Z",
+      "record": {
+        "fac_id": "15897",
+        "facility_name": "Montefiore Einstein Children's Center for Mental Health of the Children's Hospital at Montefiore Einstein",
+        "fac_desc_short": "HOSP",
+        "description": "Hospital",
+        "fac_opn_dat": "2025-12-18T00:00:00.000",
+        "address1": "1300 Waters Place",
+        "city": "Bronx",
+        "state": "New York",
+        "fac_zip": "10461",
+        "fac_phone": "7189204813",
+        "cnty_cd": "7094",
+        "county": "Bronx",
+        "ro_id": "5",
+        "region_office": "Metropolitan Area Regional Office - New York City",
+        "main_site_name": "Montefiore Medical Center - Henry & Lucy Moses Div",
+        "main_site_facid": "1169",
+        "opcert_num": "7000006H",
+        "operator_name": "Montefiore Medical Center",
+        "operator_address1": "111 East 210th Street",
+        "operator_city": "Bronx",
+        "operator_state": "New York",
+        "operator_zip": "10467",
+        "cooperator_name": "Montefiore Health System, Inc",
+        "cooperator_address1": "111 East 210th Street",
+        "cooperator_city": "Bronx",
+        "cooperator_state": "New York",
+        "cooperator_zip": "10467",
+        "ownership_type": "Not for Profit Corporation",
+        "latitude": "40.84608",
+        "longitude": "-73.83847",
+        "facility_location": {
+          "latitude": "40.84608",
+          "longitude": "-73.83847"
+        }
+      }
+    },
+    {
+      "url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=1473",
+      "retrieved_at": "2026-11-12T23:47:09.729Z",
+      "record": {
+        "fac_id": "1473",
+        "facility_name": "RUMC-Bayley Seton",
+        "fac_desc_short": "HOSP",
+        "description": "Hospital",
+        "fac_opn_dat": "1981-11-20T00:00:00.000",
+        "address1": "75 Vanderbilt Avenue",
+        "city": "Staten Island",
+        "state": "New York",
+        "fac_zip": "10304",
+        "fac_phone": "7183906000",
+        "cnty_cd": "7097",
+        "county": "Richmond",
+        "ro_id": "5",
+        "region_office": "Metropolitan Area Regional Office - New York City",
+        "main_site_name": "Richmond University Medical Center",
+        "main_site_facid": "1738",
+        "opcert_num": "7004010H",
+        "operator_name": "Richmond University Medical Center",
+        "operator_address1": "355 Bard Avenue",
+        "operator_city": "Staten Island",
+        "operator_state": "New York",
+        "operator_zip": "10310",
+        "cooperator_state": "New York",
+        "ownership_type": "Not for Profit Corporation",
+        "latitude": "40.621376",
+        "longitude": "-74.07476",
+        "facility_location": {
+          "latitude": "40.621376",
+          "longitude": "-74.07476"
+        }
+      }
+    },
+    {
+      "url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=309",
+      "retrieved_at": "2026-11-12T23:47:09.729Z",
+      "record": {
+        "fac_id": "309",
+        "facility_name": "The University of Vermont Health Network - Elizabethtown Community Hospital Moses Ludington",
+        "description": "Primary Care Hospital - Critical Access Hospital",
+        "fac_opn_dat": "2000-06-28T00:00:00.000",
+        "address1": "101 Adirondack Drive, Suite 1",
+        "city": "Ticonderoga",
+        "state": "New York",
+        "fac_zip": "12883",
+        "fac_phone": "5185852831",
+        "cnty_cd": "15",
+        "county": "Essex",
+        "ro_id": "4",
+        "region_office": "Capital District Regional Office",
+        "main_site_name": "The University of Vermont Health Network - Elizabethtown Community Hospital",
+        "main_site_facid": "303",
+        "opcert_num": "1552701C",
+        "operator_name": "Elizabethtown Community Hospital",
+        "operator_address1": "Park Street",
+        "operator_city": "Elizabeth",
+        "operator_state": "New York",
+        "operator_zip": "12932",
+        "cooperator_name": "The University of Vermont Health Network, Inc.",
+        "cooperator_address1": "111 Colchester Avenue",
+        "cooperator_city": "Burlington",
+        "cooperator_state": "New York",
+        "cooperator_zip": "05401",
+        "ownership_type": "Not for Profit Corporation",
+        "latitude": "43.849476",
+        "longitude": "-73.435593",
+        "facility_location": {
+          "latitude": "43.849476",
+          "longitude": "-73.435593"
+        }
+      }
+    },
+    {
+      "url": "https://health.data.ny.gov/resource/vn5v-hh5r.json?fac_id=102",
+      "retrieved_at": "2026-11-12T23:47:09.729Z",
+      "record": {
+        "fac_id": "102",
+        "facility_name": "UPMC Chautauqua at WCA",
+        "fac_desc_short": "HOSP",
+        "description": "Hospital",
+        "fac_opn_dat": "1990-08-17T00:00:00.000",
+        "address1": "51 Glasgow Avenue",
+        "city": "Jamestown",
+        "state": "New York",
+        "fac_zip": "14701",
+        "fac_phone": "7164870141",
+        "fac_fax": "7166648336",
+        "cnty_cd": "6",
+        "county": "Chautauqua",
+        "ro_id": "1",
+        "region_office": "Western Regional Office - Buffalo",
+        "main_site_name": "UPMC Chautauqua at WCA",
+        "main_site_facid": "103",
+        "opcert_num": "0602001H",
+        "operator_name": "UPMC Chautauqua at WCA",
+        "operator_address1": "207 Foote Avenue",
+        "operator_city": "Jamestown",
+        "operator_state": "New York",
+        "operator_zip": "14701",
+        "cooperator_name": "UPMC Chautauqua Services, Inc.",
+        "cooperator_address1": "207 Foote Avenue",
+        "cooperator_city": "Jamestown",
+        "cooperator_state": "New York",
+        "cooperator_zip": "14701",
+        "ownership_type": "Not for Profit Corporation",
+        "latitude": "42.091541",
+        "longitude": "-79.245094",
+        "facility_location": {
+          "latitude": "42.091541",
+          "longitude": "-79.245094"
+        }
+      }
+    }
+  ]
+}

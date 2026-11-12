@@ -107,7 +107,13 @@ export async function handler(event) {
 
   const [filename, type] = dataset;
   try {
-    const body = await readFile(new URL(filename, dataDirectory), "utf8");
+    let body = await readFile(new URL(filename, dataDirectory), "utf8");
+    if(filename==='hospitals.geojson') {
+      const collection=JSON.parse(body);
+      collection.historical_features=collection.features.filter(f=>f.properties.current_directory===false);
+      collection.features=collection.features.filter(f=>f.properties.current_directory!==false);
+      body=JSON.stringify(collection);
+    }
     return {
       statusCode: 200,
       headers: { "Content-Type": type + "; charset=utf-8" },

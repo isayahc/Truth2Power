@@ -1,6 +1,9 @@
 // Stable message keys keep data/API terminology separate from patient-facing copy.
 // These mappings apply only through t(); source quotations are never rewritten.
 export const plainLanguage = {
+  'Not rated': ['Not rated', 'Sin calificación'],
+  'Not rated in September 2025.': ['Not rated in September 2025.', 'Sin calificación en septiembre de 2025.'],
+  'Historical record; not listed separately in the current state directory.': ['Historical record; not listed separately in the current state directory.', 'Registro histórico; no aparece por separado en el directorio estatal actual.'],
   'This table includes requirement checks and older audits. Requirement counts match the hospital page. Cost totals below cover older audits only; requirement-check costs are not recorded here.': ['This table includes requirement checks and older audits. Requirement counts match the hospital page. Cost totals below cover older audits only; requirement-check costs are not recorded here.', 'Esta tabla incluye revisiones de requisitos y auditorías anteriores. Los recuentos de requisitos coinciden con la página del hospital. Los costos totales de abajo solo incluyen auditorías anteriores; aquí no se registran los costos de las revisiones de requisitos.'],
   'Recorded requirement checks': ['Recorded requirement checks', 'Revisiones de requisitos registradas'],
   'Recorded older audits': ['Recorded older audits', 'Auditorías anteriores registradas'],

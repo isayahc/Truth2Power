@@ -28,6 +28,7 @@ const hospitals = new Map(
     {
       hospital_key: id,
       pfi: p.pfi,
+      current_directory: p.current_directory!==false,
       name: p.name,
       region: Object.keys(regions).find((region) =>
         regions[region].some((c) => countyKey(c) === countyKey(p.county)),
@@ -293,13 +294,14 @@ function summary(db, q) {
   if (q.from && q.to && q.from > q.to) reject(400, "invalid_date");
   const facilities = [...hospitals.values()].filter(
     (h) =>
+      (h.current_directory || q.pfi===h.hospital_key) &&
       (!q.region || h.region === q.region) &&
       (!q.pfi || h.hospital_key === q.pfi),
   );
   const selected = new Set(facilities.map((h) => h.hospital_key)),
     covered = new Set();
   const result = {
-    roster_total: hospitals.size,
+    roster_total: [...hospitals.values()].filter(h=>h.current_directory).length,
     eligible_facilities: selected.size,
     facilities_with_runs: 0,
     runs: 0,
@@ -429,7 +431,7 @@ export function reportingRoute(event) {
       const latest = new Map();
       if (db) for (const row of db.prepare(`SELECT * FROM (SELECT p.*, row_number() OVER (PARTITION BY hospital ORDER BY id DESC) AS rank FROM (${projection}) p) WHERE rank=1`).iterate(pipelineRoot())) latest.set(row.hospital,row);
       const criteria=criterionOperations(db);
-      return json(200,{criterion_runs:[...criteria.values()].reduce((n,c)=>n+c.runs,0),items:[...hospitals.values()].map(h => {
+      return json(200,{criterion_runs:[...criteria.values()].reduce((n,c)=>n+c.runs,0),items:[...hospitals.values()].filter(h=>h.current_directory).map(h => {
         const r = latest.get(h.hospital_key);
         return combineOperations({...h,clocks:clocks(r ? db : null,h.hospital_key),latest:r ? runRow(r) : null,
           cost_status:r ? publicReceipt(db,r).cost_status : "unknown"},criteria.get(h.hospital_key));
