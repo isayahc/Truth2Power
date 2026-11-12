@@ -2,6 +2,7 @@ import React, { memo, useRef, useState } from "react";
 import { countyPath, metro, metroFull, metroCounties, statewide } from "./geometry.js";
 import { ratingByStars } from "./ratings.js";
 import { useLocale } from './locale.jsx';
+import {useCriterionCoverage, coverageText, emptyCoverage} from './CriterionCoverage.jsx';
 
 const regions = [
   ["Western NY", -78.75, 42.46],
@@ -47,12 +48,13 @@ function Labels({ items, className, project = statewide }) {
 }
 
 function Points({ hospitals, project, zoom = 1, selected, onSelect, setHover }) {
-  const { t } = useLocale();
+  const { t, language } = useLocale();
+  const {data,error}=useCriterionCoverage();
   return hospitals.map((hospital) => {
     const [cx, cy] = project(hospital.geometry.coordinates);
     const { stars, name } = hospital.properties;
     const active = selected?.id === hospital.id;
-    const label = name + " · " + (hospital.markerLabel ?? stars + ' ' + t(stars === 1 ? 'star' : 'stars'));
+    const label = name + " · " + (hospital.markerLabel ?? stars + ' ' + t(stars === 1 ? 'star' : 'stars')) + ' · ' + t('Published September 2025; confirmed-criterion count not recorded.') + ' · ' + (error ? t('Criterion coverage unavailable.') : data ? coverageText(data.hospitals[hospital.id] ?? emptyCoverage,t,language) : t('Loading criterion coverage…'));
     return (
       <circle
         key={hospital.id}

@@ -8,6 +8,7 @@ import { HospitalDetail, Ratings } from "./Ratings.jsx";
 import ReviewInbox, { reviewRequest } from "./ReviewInbox.jsx";
 import { LanguageSwitch, useLocale } from './locale.jsx';
 import { HumanInterventionInbox } from './HumanIntervention.jsx';
+import {CriterionCoverageProvider, CriterionReviewNotifications, useCriterionCoverage} from './CriterionCoverage.jsx';
 
 async function getFeatures(path, signal) {
   const response = await fetch(path, { signal });
@@ -20,6 +21,7 @@ async function getFeatures(path, signal) {
 }
 
 function Header({ onReview, reviewOpen, pending }) {
+  const {data:coverage}=useCriterionCoverage();
   const { t, localHref } = useLocale();
   const [humanTasks,setHumanTasks]=useState(0);
   useEffect(()=>{let live=true;const load=()=>fetch('/api/pilot/v1/interventions').then(r=>r.ok?r.json():null).then(x=>{if(live&&x)setHumanTasks(x.items.length)}).catch(()=>{});load();const timer=setInterval(load,10000);return()=>{live=false;clearInterval(timer)}},[]);
@@ -44,7 +46,7 @@ function Header({ onReview, reviewOpen, pending }) {
       <a className="overview-link" href={localHref('?view=overview')}>{t('Audit overview')}</a>
       <a className="changes-link" href={localHref('?view=operations')}>{t('Audit operations')}</a>
       <a className="changes-link" href={localHref('?view=changes')}>{t('Recent changes')}</a>
-      <button className="review-nav" onClick={onReview} aria-pressed={reviewOpen}>{t('Review inbox')} <span>{typeof pending==='number' ? pending+humanTasks : pending ?? "…"}</span></button>
+       <button className="review-nav" onClick={onReview} aria-pressed={reviewOpen}>{t('Review inbox')} <span>{typeof pending==='number' ? pending+humanTasks+(coverage?.pending ?? 0) : pending ?? "…"}</span></button>
       <LanguageSwitch />
       </div>
     </header>
@@ -88,6 +90,9 @@ function Footer() {
 
 /** Load the public atlas from the Node API and coordinate filters, search and map selection. */
 export default function App() {
+  return <CriterionCoverageProvider><Atlas /></CriterionCoverageProvider>;
+}
+function Atlas() {
   const { t } = useLocale();
   const [data, setData] = useState(null);
   const [error, setError] = useState(false);
@@ -159,6 +164,7 @@ export default function App() {
         {reviewOpen ? <>
           <button className="back plain" onClick={() => setReviewOpen(false)}>{t(selected ? '← Back to hospital record' : '← Back to hospital map')}</button>
           <HumanInterventionInbox />
+          <CriterionReviewNotifications hospitalKey={reviewHospital} />
           <div lang="en"><ReviewInbox key={reviewHospital} inbox={inbox} error={reviewError} onRefresh={refreshReviews}
             hospitalKey={reviewHospital} hospitals={data?.hospitals ?? []} onHospital={(hospital) => {
               if (hospital) { selectHospital(hospital); setReviewOpen(false); }

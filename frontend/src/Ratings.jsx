@@ -1,4 +1,5 @@
 import CriterionAudits from './CriterionAudits.jsx';
+import {CriterionCoverage, useCriterionCoverage} from './CriterionCoverage.jsx';
 import GradingPanel from "./GradingPanel.jsx";
 import ReportingContext from "./ReportingContext.jsx";
 import HospitalAssessment from "./HospitalAssessment.jsx";
@@ -67,6 +68,7 @@ export function Ratings({ hospitals, filter, onFilter }) {
 }
 
 export function HospitalDetail({ hospital, onClose, onReview, pendingReviews }) {
+  const {data:coverage}=useCriterionCoverage();
   const { t, language, localHref } = useLocale();
   const p = hospital.properties;
   const [longitude, latitude] = hospital.geometry.coordinates;
@@ -82,7 +84,8 @@ export function HospitalDetail({ hospital, onClose, onReview, pendingReviews }) 
         <p>{p.address}, {p.city} · {t('County')}: {p.county}</p>
         <p className="pill">
           <span className="swatch" style={{ background: ratingByStars.get(p.stars).color }} />
-          {t('Published rating')} · {p.stars} ★ · {t('Grade')} {p.grade} · {t('September 2025')}
+           {t('Published rating')} · {p.stars} ★ · {t('Grade')} {p.grade} · {t('September 2025')}
+           <CriterionCoverage hospitalKey={hospital.id} historical />
         </p>
         <div className="record-actions">
           {p.assistance_url && <a href={p.assistance_url} target="_blank" rel="noreferrer">{t('Get hospital financial assistance (HFA) ↗')}</a>}
@@ -99,7 +102,7 @@ export function HospitalDetail({ hospital, onClose, onReview, pendingReviews }) 
             <GradingPanel hospitalKey={hospital.id} />
           </div>
       </section>
-      <button className="review-nav" onClick={onReview}>{t('Review notifications')} ({pendingReviews ?? "…"})</button>
+       <button className="review-nav" onClick={onReview}>{t('Review notifications')} ({typeof pendingReviews==='number' ? pendingReviews+(coverage?.hospitals[hospital.id]?.unclear ?? 0) : '…'})</button>
       <details className="location-details">
         <summary>{t('Location details')}</summary>
         <dl>

@@ -76,18 +76,33 @@ try {
       registry, find:async()=>undefined, log:()=>{}, checkpoint:m=>saveCriterionProgress(db,job,m,root),
     });
     finishCriterion(db,job);
-    await page.locator('.criterion-audits > button').click();
+    await page.locator('.criterion-audits > button').first().click();
     await page.locator('.criterion-progress').waitFor({state:'detached'});
-    await target.locator('summary').click();
-    await target.locator('blockquote').waitFor();
+    await target.locator(':scope > details:not(.criterion-human-review) > summary').click();
+    await target.locator(':scope > details:not(.criterion-human-review) blockquote').waitFor();
     assert.match(await target.innerText(), /SYNTHETIC <script> text stays text/);
     assert.match(await target.innerText(), language==='en'?/Unclear/:/Sin determinar/);
     assert.equal(await target.locator('script').count(),0);
     assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);
     await target.screenshot({path:join(root,`result-${language}-${width}.png`)});
+    await page.waitForFunction(()=>document.querySelector('.criterion-coverage')?.textContent.includes('1/17'));
+    await page.locator('header .review-nav').click();
+    await page.locator('.criterion-review-inbox li a').waitFor();
+    assert.equal(await page.locator('.criterion-review-inbox li').count(),1);
+    await page.locator('.criterion-review-inbox li a').click();
+    await target.locator('.criterion-human-review > summary').click();
+    await target.locator('select').selectOption('met');
+    await target.locator('textarea').nth(0).fill('SYNTHETIC human review reason');
+    await target.locator('textarea').nth(1).fill('https://example.org/SYN.pdf page 1 SYNTHETIC evidence');
+    await target.locator('button[type="submit"]').click();
+    await target.locator('.criterion-status--met').waitFor();
+    await page.waitForFunction(()=>document.querySelector('.criterion-coverage')?.textContent.includes('2/17'));
+    assert.equal(db.prepare('SELECT count(*) n FROM criterion_decisions').get().n,scenarios+1);
+    assert.equal((await (await fetch(base+'/api/criteria/summary')).json()).pending,0);
+    await target.screenshot({path:join(root,`human-decision-${language}-${width}.png`)});
 
     // Lost response after acceptance must reuse the exact key, even after reload.
-    await target.getByRole('button').click(); await page.locator('.criterion-confirm').waitFor();
+    await target.locator('.criterion-card-heading button').click(); await page.locator('.criterion-confirm').waitFor();
     await page.route('**/criteria/k12', async route => { await route.fetch(); await route.abort(); }, {times:1});
     await page.locator('.criterion-confirm button').first().click();
     await page.locator('.criterion-audits [role="alert"]').waitFor();
@@ -97,12 +112,22 @@ try {
     await page.locator('.criterion-confirm').waitFor({state:'detached'});
     assert.equal(db.prepare('SELECT count(*) n FROM criterion_jobs').get().n,2);
     assert.deepEqual(errors,[]);
+    finishCriterion(db,claimCriterion(db),'execution_failed');
+    await page.reload({waitUntil:'domcontentloaded'});
+    const all=page.getByRole('button',{name:language==='en'?'Run all missing':'Ejecutar todos los pendientes',exact:true});
+    await all.click();await page.locator('.criterion-confirm').waitFor();
+    await page.locator('.criterion-confirm button').first().click();
+    await page.locator('.criterion-confirm').waitFor({state:'detached'});
+    const batch=db.prepare("SELECT * FROM criterion_jobs WHERE step='all'").get();
+    assert.equal(JSON.parse(batch.requested).length,15);
+    assert.ok(!JSON.parse(batch.requested).includes('k12'));
+    await page.screenshot({path:join(root,`batch-${language}-${width}.png`)});
     // Source verdicts, not execution completion, determine the colored dot.
     await page.route('**/api/hospitals/1002/criteria', async route => {
       const result = await (await route.fetch()).json();
       const saved = value => ({value,completed:new Date().toISOString(),explanation:'SYNTHETIC status fixture',evidence:[],limitations:[]});
       result.active={step:'k5',status:'running',progress:{k5:{status:'running'}}};
-      result.items=result.items.map((item,i)=>({...item,latest:i===3?{status:'failed'}:null,saved:i<4?saved([true,false,null,false][i]):null}));
+      result.items=result.items.map((item,i)=>({...item,effective:['met','unmet','unclear','unclear','unrun'][i] ?? 'unrun',latest:i===3?{status:'failed'}:null,saved:i<4?saved([true,false,null,false][i]):null}));
       await route.fulfill({json:result});
     });
     await page.reload({waitUntil:'domcontentloaded'});

@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import { readFile } from "node:fs/promises";
 import { resolve, relative, isAbsolute } from "node:path";
-import { randomUUID } from "node:crypto";
+import { randomUUID, createHash } from "node:crypto";
 import { transaction, now } from "./store.js";
 import { facilityFor } from "./roster-inventory.js";
 import { steps, stepIds } from "../../agents/steps.ts";
@@ -22,8 +22,20 @@ export function installCriteria(db) {
       request_key TEXT PRIMARY KEY, job TEXT NOT NULL);
     CREATE TABLE IF NOT EXISTS criterion_results (
       hospital TEXT NOT NULL, step TEXT NOT NULL, job TEXT NOT NULL, completed TEXT NOT NULL,
-      output TEXT NOT NULL, PRIMARY KEY(hospital,step));`);
+      output TEXT NOT NULL, PRIMARY KEY(hospital,step));
+    CREATE TABLE IF NOT EXISTS criterion_decisions (
+      id INTEGER PRIMARY KEY, request_key TEXT UNIQUE NOT NULL, hospital TEXT NOT NULL, step TEXT NOT NULL,
+      revision TEXT NOT NULL, decision TEXT NOT NULL, reason TEXT NOT NULL, evidence TEXT NOT NULL,
+      decided_at TEXT NOT NULL, snapshot TEXT NOT NULL);
+    CREATE INDEX IF NOT EXISTS criterion_decision_history ON criterion_decisions(hospital,step,id);
+    CREATE TRIGGER IF NOT EXISTS criterion_decisions_no_update BEFORE UPDATE ON criterion_decisions
+      BEGIN SELECT RAISE(ABORT,'immutable decision'); END;
+    CREATE TRIGGER IF NOT EXISTS criterion_decisions_no_delete BEFORE DELETE ON criterion_decisions
+      BEGIN SELECT RAISE(ABORT,'immutable decision'); END;`);
+  if (!db.prepare('PRAGMA table_info(criterion_jobs)').all().some(c => c.name === 'requested'))
+    db.exec('ALTER TABLE criterion_jobs ADD COLUMN requested TEXT');
 }
+export const requestedSteps = job => job.requested ? JSON.parse(job.requested) : [job.step];
 export function criterionHospital(key) {
   const f = facilityFor(key);
   const known = Object.values(hospitals).find(h => h.name === f.name && h.financialAssistanceUrl === f.landing_url);
@@ -34,17 +46,22 @@ export function validateStep(step) {
   if (!stepIds.includes(step)) fail(400, "Invalid criterion.");
 }
 export async function criterionPlan(root, hospital, requested, find = findArtifact) {
-  validateStep(requested);
+  const selected = Array.isArray(requested) ? requested : [requested];
+  selected.forEach(validateStep);
   const run = [], reuse = [], seen = new Set();
   async function visit(id) {
     if (seen.has(id)) return;
     seen.add(id);
-    if (id !== requested && await find(root, hospital, steps[id])) { reuse.push(id); return; }
+    if (!selected.includes(id) && await find(root, hospital, steps[id])) { reuse.push(id); return; }
     for (const dependency of steps[id].dependencies) await visit(dependency);
     run.push(id);
   }
-  await visit(requested);
+  for (const id of selected) await visit(id);
   return { requested, run, reuse, model: "us.amazon.nova-micro-v1:0", max_model_calls: 40, timeout_minutes: 20 };
+}
+export async function missingCriteriaPlan(db, root, hospital, key) {
+  const saved = new Set(db.prepare('SELECT step FROM criterion_results WHERE hospital=?').all(key).map(r => r.step));
+  return criterionPlan(root, hospital, stepIds.filter(id => !saved.has(id)));
 }
 export function expireCriteria(db) {
   // Never replay an interrupted paid run automatically: a click must authorize another attempt.
@@ -55,23 +72,40 @@ function publicJob(row) {
   if (!row) return null;
   const progress = JSON.parse(row.progress);
   return { id: row.id, step: row.step, status: row.status, created: row.created,
-    started: row.started, completed: row.completed, error: row.error,
+    started: row.started, completed: row.completed, error: row.error, requested: requestedSteps(row),
     progress: Object.fromEntries(Object.entries(progress).map(([id, entry]) => [id, { status: entry.status }])) };
 }
 export function criterionStatus(db, hospital) {
   expireCriteria(db);
   const jobs = db.prepare("SELECT * FROM criterion_jobs WHERE hospital=? ORDER BY created DESC, rowid DESC").all(hospital);
   const results = db.prepare("SELECT * FROM criterion_results WHERE hospital=?").all(hospital);
-  return { hospital_key: hospital, active: publicJob(jobs.find(j => ['queued','running'].includes(j.status))),
-    items: stepIds.map(id => {
+  const decisions = db.prepare('SELECT * FROM criterion_decisions WHERE hospital=? ORDER BY id DESC').all(hospital);
+  const items = stepIds.map(id => {
       const saved = results.find(r => r.step === id);
-      const latest = jobs.find(j => j.step === id);
+      const latest = jobs.find(j => requestedSteps(j).includes(id) || ['running','failed','succeeded'].includes(JSON.parse(j.progress)[id]?.status));
+      const result = saved ? { job: saved.job, completed: saved.completed, ...JSON.parse(saved.output) } : null;
+      const failed = latest?.status === 'failed' && JSON.parse(latest.progress)[id]?.status !== 'succeeded' &&
+        (!saved || latest.created >= saved.completed || latest.id === saved.job);
+      const revision = saved || failed ? createHash('sha256').update(JSON.stringify([saved?.job, saved?.output, failed ? latest.id : null])).digest('hex') : null;
+      const currentId = decisions.find(d => d.step === id && d.revision === revision)?.id;
+      const history = decisions.filter(d => d.step === id).map(d => ({ id:d.id, decision:d.decision, reason:d.reason, evidence:d.evidence,
+        decided_at:d.decided_at, current:d.id === currentId, reviewed_result:JSON.parse(d.snapshot) }));
+      const decision = history.find(d => d.current) ?? null;
+      const effective = decision?.decision ?? (failed ? 'unclear' : result ? (result.value === true ? 'met' : result.value === false ? 'unmet' : 'unclear') : 'unrun');
+      const updated_at = decision?.decided_at ?? (failed ? latest.completed : saved?.completed) ?? null;
       return { id, title: titles.get(steps[id].criterion), criterion: steps[id].criterion,
-        latest: publicJob(latest), saved: saved ? { job: saved.job, completed: saved.completed, ...JSON.parse(saved.output) } : null };
-    }) };
+        latest: publicJob(latest), saved:result, revision, effective, updated_at, decision, history };
+    });
+  const summary = { met:0, unmet:0, unclear:0, unrun:0, confirmed:0, total:17, updated_at:null };
+  for (const item of items) {
+    summary[item.effective]++;
+    if (item.updated_at && (!summary.updated_at || item.updated_at > summary.updated_at)) summary.updated_at = item.updated_at;
+  }
+  summary.confirmed = summary.met + summary.unmet;
+  return { hospital_key:hospital, active:publicJob(jobs.find(j => ['queued','running'].includes(j.status))), items, summary };
 }
 export function enqueueCriterion(db, hospital, step, input, plan) {
-  validateStep(step);
+  if (step !== 'all') validateStep(step);
   if (!input || typeof input.request_key !== 'string' || !/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/.test(input.request_key) || typeof input.rerun !== 'boolean' ||
       !Array.isArray(input.approved_steps) || input.approved_steps.length > 17 || input.approved_steps.some(s => !stepIds.includes(s)))
     fail(400, "Invalid criterion request.");
@@ -91,12 +125,13 @@ export function enqueueCriterion(db, hospital, step, input, plan) {
     }
     if (db.prepare("SELECT id FROM jobs WHERE hospital=? AND status IN ('queued','running')").get(hospital))
       fail(409, "Another audit is already running for this hospital.");
+    if (step === 'all' && !plan.requested.length) fail(409, 'No missing criteria remain.');
     if (!input.rerun && db.prepare("SELECT job FROM criterion_results WHERE hospital=? AND step=?").get(hospital, step))
       fail(409, "A saved result exists. Choose Run again explicitly.");
     if (plan.run.some(id => !input.approved_steps.includes(id))) fail(409, "Preparation changed. Review the new run plan.");
     const id = randomUUID();
-    db.prepare("INSERT INTO criterion_jobs(id,request_key,hospital,step,approved,status,created) VALUES(?,?,?,?,?,'queued',?)")
-      .run(id, input.request_key, hospital, step, JSON.stringify(plan.run), now());
+    db.prepare("INSERT INTO criterion_jobs(id,request_key,hospital,step,approved,status,created,requested) VALUES(?,?,?,?,?,'queued',?,?)")
+      .run(id, input.request_key, hospital, step, JSON.stringify(plan.run), now(), JSON.stringify(step === 'all' ? plan.requested : [step]));
     db.prepare('INSERT INTO criterion_requests VALUES(?,?)').run(input.request_key, id);
     return publicJob(db.prepare("SELECT * FROM criterion_jobs WHERE id=?").get(id));
   });
@@ -118,7 +153,7 @@ export function finishCriterion(db, job, error = null) {
 }
 export async function saveCriterionProgress(db, job, manifest, root) {
   const hospital = criterionHospital(job.hospital);
-  if (manifest.hospital?.id !== hospital.id || manifest.requested?.length !== 1 || manifest.requested[0] !== job.step)
+  if (manifest.hospital?.id !== hospital.id || JSON.stringify(manifest.requested) !== JSON.stringify(requestedSteps(job)))
     throw Error("Criterion identity mismatch");
   const outputs = [];
   for (const [id, entry] of Object.entries(manifest.steps)) {
@@ -139,10 +174,50 @@ export async function saveCriterionProgress(db, job, manifest, root) {
       .run(JSON.stringify(manifest.steps), job.id, job.token);
     if (!update.changes) return;
     for (const { id, output, reused } of outputs) {
-      if (reused && db.prepare("SELECT job FROM criterion_results WHERE hospital=? AND step=?").get(job.hospital, id)) continue;
+      const previous = db.prepare("SELECT job,output FROM criterion_results WHERE hospital=? AND step=?").get(job.hospital, id);
+      if (previous && (reused || (previous.job === job.id && previous.output === JSON.stringify(output)))) continue;
       db.prepare(`INSERT INTO criterion_results VALUES(?,?,?,?,?) ON CONFLICT(hospital,step)
         DO UPDATE SET job=excluded.job,completed=excluded.completed,output=excluded.output`)
         .run(job.hospital, id, job.id, now(), JSON.stringify(output));
     }
   });
+}
+
+export function decideCriterion(db, hospital, step, input) {
+  validateStep(step);
+  if (!input || !/^[a-f0-9-]{36}$/.test(input.request_key ?? '') || !/^[a-f0-9]{64}$/.test(input.revision ?? '') ||
+      !['met','unmet','unclear'].includes(input.decision) || typeof input.reason !== 'string' || !input.reason.trim() || input.reason.length > 2000 ||
+      typeof input.evidence !== 'string' || input.evidence.length > 4000 || (input.decision !== 'unclear' && !input.evidence.trim()))
+    fail(400, 'A decision, reason and supporting evidence are required.');
+  return transaction(db, () => {
+    const existing = db.prepare('SELECT * FROM criterion_decisions WHERE request_key=?').get(input.request_key);
+    if (existing) {
+      if (existing.hospital !== hospital || existing.step !== step || existing.revision !== input.revision || existing.decision !== input.decision || existing.reason !== input.reason.trim() || existing.evidence !== input.evidence.trim())
+        fail(409,'Decision request key already used.');
+      return {id:existing.id, decided_at:existing.decided_at};
+    }
+    const status = criterionStatus(db, hospital), item = status.items.find(i => i.id === step);
+    if (status.active) fail(409,'Wait for the active audit before deciding.');
+    if (!item.revision || item.revision !== input.revision) fail(409,'Evidence changed. Refresh and review it again.');
+    const decided_at = now();
+    const row = db.prepare('INSERT INTO criterion_decisions(request_key,hospital,step,revision,decision,reason,evidence,decided_at,snapshot) VALUES(?,?,?,?,?,?,?,?,?)')
+      .run(input.request_key,hospital,step,item.revision,input.decision,input.reason.trim(),input.evidence.trim(),decided_at,
+        JSON.stringify({saved:item.saved, failure:item.latest?.error ?? null}));
+    return {id:Number(row.lastInsertRowid), decided_at};
+  });
+}
+
+export function criterionOverview(db) {
+  expireCriteria(db);
+  const keys = db.prepare('SELECT hospital FROM criterion_jobs UNION SELECT hospital FROM criterion_results').all();
+  const hospitals = {}, reviews = [];
+  for (const {hospital} of keys) {
+    const status = criterionStatus(db,hospital);
+    hospitals[hospital] = status.summary;
+    for (const item of status.items.filter(i => i.effective === 'unclear')) reviews.push({
+      hospital_key:hospital, hospital_name:criterionHospital(hospital).name, step:item.id, title:item.title,
+      updated_at:item.updated_at, revision:item.revision,
+    });
+  }
+  return {hospitals, reviews, pending:reviews.length};
 }

@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useLocale } from './locale.jsx';
+import CriterionDecision from './CriterionDecision.jsx';
+import {coverageText, notifyCriterionChange} from './CriterionCoverage.jsx';
 
 const states = { queued: 'Queued', running: 'Running', completed: 'Completed', failed: 'Needs review' };
 const progressStates = { running: 'Running', succeeded: 'Completed', reused: 'Saved evidence reused', failed: 'Needs review' };
@@ -18,6 +20,9 @@ export default function CriterionAudits({ hospitalKey }) {
   });
   const lock = useRef(false), alive = useRef(true);
   const confirmation = useRef(null);
+  useEffect(() => {
+    if (data && /^#criterion-k\d+$/.test(window.location.hash)) document.getElementById(window.location.hash.slice(1))?.scrollIntoView({block:'start'});
+  }, [!!data]);
   useEffect(() => {
     if (!intent || !confirmation.current) return;
     confirmation.current.focus({ preventScroll: true });
@@ -62,7 +67,8 @@ export default function CriterionAudits({ hospitalKey }) {
       if (!response.ok) throw Error();
       sessionStorage.removeItem(storageKey);
       if (alive.current) {
-        confirmation.current?.closest('.criterion-card').querySelector('h3').focus({ preventScroll: true });
+        confirmation.current?.closest('.criterion-card')?.querySelector('h3').focus({ preventScroll: true });
+        notifyCriterionChange();
         setIntent(null); refresh(n => n + 1);
       }
     } catch { if (alive.current) setSubmitError(true); }
@@ -70,18 +76,33 @@ export default function CriterionAudits({ hospitalKey }) {
   }
   const formatDate = value => new Date(value).toLocaleString(language);
   return <section id="audit-runs" className="criterion-audits ops" aria-labelledby="criterion-audits-title">
-    <h2 id="criterion-audits-title">{t('Run one criterion at a time')}</h2>
-    <p>{t('Viewing results is free of model calls. Run only the criterion you choose; saved documents and prerequisite results are reused.')}</p>
+    <h2 id="criterion-audits-title">{t('Criterion audits')}</h2>
+    <p>{t('Run one criterion or all missing criteria. Viewing results makes no model calls. Saved documents and prerequisites are reused when available.')}</p>
     <p>{t('These are draft findings, separate from the published rating. Unreadable sources or model errors require review, not a hospital failure.')}</p>
     <button type="button" onClick={() => refresh(n => n + 1)}>{t('Refresh')}</button>
+    <button type="button" disabled={!data || busy || !!intent || !!data.active || error || !data.items.some(item=>!item.saved)} onClick={() => choose({id:'all'})}>{t('Run all missing')}</button>
+    {data?.summary && <div className="criterion-summary">
+      <p>{coverageText(data.summary,t,language)}</p>
+      <p>{data.summary.met}/17 {t('Condition met')} · {data.summary.unmet}/17 {t('Condition not met')} · {data.summary.unclear}/17 {t('Unclear')} · {data.summary.unrun}/17 {t('Not run')}</p>
+    </div>}
+    {intent?.step === 'all' && <div ref={confirmation} tabIndex={-1} className="criterion-confirm">
+      <h3>{t('Run all missing')}</h3>
+      <p>{t('Criteria to execute, including missing prerequisites')}: {intent.plan.run.join(', ')}</p>
+      <p>{t('Saved prerequisites to reuse')}: {intent.plan.reuse.join(', ') || t('None')}</p>
+      <p>{t('Missing source documents may be downloaded. Model calls cost money; this is not a fixed-price quote.')}</p>
+      <p>{t('Maximum model tasks')}: {intent.plan.max_model_calls} · {t('Time limit (minutes)')}: {intent.plan.timeout_minutes}</p>
+      <button disabled={busy || !intent.plan.run.length} onClick={submit}>{t(submitError ? 'Retry same request' : 'Confirm criterion run')}</button>
+      <button disabled={busy} onClick={()=>{sessionStorage.removeItem(storageKey);setIntent(null);setSubmitError(false);}}>{t('Close run request')}</button>
+    </div>}
+    {submitError && (intent?.step ?? chosenStep)==='all' && <p role="alert">{t('Request could not be confirmed. Retry the same request safely, or close it and refresh before choosing again.')}</p>}
+    {data?.active?.step==='all' && <div role="status"><strong>{t('Run all missing')} · {t(states[data.active.status])}</strong><ul>{Object.entries(data.active.progress).map(([id,entry])=><li key={id}>{id.toUpperCase()} · {t(progressStates[entry.status] ?? 'Needs review')}</li>)}</ul></div>}
     {error && <p role="alert">{t('Unable to load criterion results. Refresh to try again.')}</p>}
     {!data && !error && <p role="status">{t('Loading criterion results…')}</p>}
     <ol className="criterion-list">{data?.items.map(item => {
       const progress = data.active?.progress[item.id];
-      const activeStatus = data.active?.step === item.id ? data.active.status : progress?.status === 'running' ? 'running' : null;
-      const outcome = activeStatus || (item.latest?.status === 'failed' ? 'unclear' :
-        item.saved ? (item.saved.value === true ? 'met' : item.saved.value === false ? 'unmet' : 'unclear') : 'unrun');
-      return <li key={item.id} className="criterion-card" data-criterion={item.id}>
+      const activeStatus = progress?.status === 'running' ? 'running' : data.active?.requested?.includes(item.id) && !['succeeded','reused'].includes(progress?.status) ? data.active.status : null;
+      const outcome = activeStatus || item.effective;
+      return <li key={item.id} id={`criterion-${item.id}`} className="criterion-card" data-criterion={item.id}>
         <div className="criterion-card-heading">
           <h3 tabIndex={-1}>{item.id.toUpperCase()} · {t(item.title)}</h3>
           <span className={`criterion-status criterion-status--${outcome}`}>
@@ -117,7 +138,9 @@ export default function CriterionAudits({ hospitalKey }) {
     </div>
     {submitError && (intent?.step ?? chosenStep) === item.id && <p role="alert">{t('Request could not be confirmed. Retry the same request safely, or close it and refresh before choosing again.')}</p>}
         {item.latest?.status === 'failed' && <p>{t('The last attempt stopped. Saved findings below remain available; no automatic retry will run.')}</p>}
-        {item.saved && <details>
+         {item.updated_at && <p className="criterion-updated">{t('Last updated')}: {formatDate(item.updated_at)}{item.decision && <> · {t('Decision recorded')}: {formatDate(item.decision.decided_at)}</>}</p>}
+         {item.revision && <CriterionDecision key={item.revision} item={item} hospitalKey={hospitalKey} disabled={!!data.active} onSaved={()=>refresh(n=>n+1)} />}
+         {item.saved && <details>
           <summary>{t('Saved result')} · {t(item.saved.value === true ? 'Condition met' : item.saved.value === false ? 'Condition not met' : 'Unresolved')}</summary>
           <p>{t('Saved at')}: {formatDate(item.saved.completed)}</p>
           <p>{t('Agent explanation is in English. Source quotations keep their original language.')}</p>

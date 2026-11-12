@@ -1,6 +1,6 @@
 import { fork } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
-import { criterionHospital, claimCriterion, finishCriterion, saveCriterionProgress } from './criterion-service.js';
+import { criterionHospital, claimCriterion, finishCriterion, saveCriterionProgress, requestedSteps } from './criterion-service.js';
 
 export async function workCriterion(db, root, { launch = fork } = {}) {
   const job = claimCriterion(db);
@@ -29,11 +29,11 @@ export async function workCriterion(db, root, { launch = fork } = {}) {
       child.once('error', reject);
       child.once('exit', code => resolve(code));
     });
-    child.send({ hospital, step: job.step, approvedSteps: JSON.parse(job.approved) });
+    child.send({ hospital, step: job.step, requested:requestedSteps(job), approvedSteps: JSON.parse(job.approved) });
     const code = await done;
     await writes;
     const progress = JSON.parse(db.prepare('SELECT progress FROM criterion_jobs WHERE id=?').get(job.id).progress);
-    finishCriterion(db, job, timedOut ? 'timeout' : code !== 0 || writeFailed || progress[job.step]?.status !== 'succeeded' ? 'execution_failed' : null);
+    finishCriterion(db, job, timedOut ? 'timeout' : code !== 0 || writeFailed || requestedSteps(job).some(id => progress[id]?.status !== 'succeeded') ? 'execution_failed' : null);
   } catch {
     child?.kill();
     await writes;
