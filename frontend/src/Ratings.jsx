@@ -1,11 +1,8 @@
-import { HospitalRuns } from "./AuditOperations.jsx";
 import CriterionAudits from './CriterionAudits.jsx';
 import GradingPanel from "./GradingPanel.jsx";
 import ReportingContext from "./ReportingContext.jsx";
 import HospitalAssessment from "./HospitalAssessment.jsx";
-import PilotAudit from "./PilotAudit.jsx";
-import AuditPanel from "./AuditPanel.jsx";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { ratings, ratingByStars } from "./ratings.js";
 import { useLocale } from './locale.jsx';
 
@@ -71,14 +68,6 @@ export function Ratings({ hospitals, filter, onFilter }) {
 
 export function HospitalDetail({ hospital, onClose, onReview, pendingReviews }) {
   const { t, language, localHref } = useLocale();
-  const [publishedRevision, setPublishedRevision] = useState(null);
-  const [panel, setPanel] = useState(window.location.hash === '#audit-runs' ? 'audits' : 'findings');
-  useEffect(() => {
-    const sync = () => setPanel(window.location.hash === '#audit-runs' ? 'audits' : 'findings');
-    sync();
-    window.addEventListener('hashchange', sync);
-    return () => window.removeEventListener('hashchange', sync);
-  }, [hospital.id]);
   const p = hospital.properties;
   const [longitude, latitude] = hospital.geometry.coordinates;
   return (
@@ -102,24 +91,13 @@ export function HospitalDetail({ hospital, onClose, onReview, pendingReviews }) 
       </div>
       <CriterionAudits key={hospital.id} hospitalKey={hospital.id} />
       <section className="hospital-findings">
-        <nav className="hospital-panel-nav" aria-label={t('Hospital workspace')}>
-          <button aria-pressed={panel === 'findings'} onClick={() => setPanel('findings')}>{t('Findings')}</button>
-          <button aria-pressed={panel === 'audits'} onClick={() => setPanel('audits')}>{t('Audits and history')}</button>
-        </nav>
-        <div hidden={panel !== 'findings'}>
           <h2>{t('Audit findings')}</h2>
           {language === 'es' && <p className="translation-scope">{t('Detailed audit and review panels below are in English. Quotations retain the original document language.')}</p>}
           <div lang="en">
-            <HospitalAssessment hospitalKey={hospital.id} hospitalName={p.name} publishedRevision={publishedRevision} />
+            <HospitalAssessment hospitalKey={hospital.id} hospitalName={p.name} />
             <ReportingContext hospitalKey={hospital.id} />
             <GradingPanel hospitalKey={hospital.id} />
-            <PilotAudit hospitalKey={hospital.id} />
-            {hospital.id === "362" && <AuditPanel />}
           </div>
-        </div>
-        <div hidden={panel !== 'audits'}>
-          <HospitalRuns hospitalKey={hospital.id} onAssessment={setPublishedRevision} />
-        </div>
       </section>
       <button className="review-nav" onClick={onReview}>{t('Review notifications')} ({pendingReviews ?? "…"})</button>
       <details className="location-details">

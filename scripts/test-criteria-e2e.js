@@ -29,9 +29,12 @@ try {
     const context = await browser.newContext({viewport:{width,height:1000}});
     const page = await context.newPage(), errors = [];
     page.on('pageerror', e => errors.push(e.message));
-    await page.goto(`${base}/?hospital=1002&lang=${language}`, {waitUntil:'domcontentloaded'});
+    await page.goto(`${base}/?hospital=1002&lang=${language}#audit-runs`, {waitUntil:'domcontentloaded'});
     await page.locator('.criterion-card').nth(16).waitFor();
     assert.equal(await page.locator('.criterion-card').count(), 17);
+    assert.equal(await page.locator('.hospital-runs, .hospital-panel-nav').count(), 0);
+    assert.equal(await page.locator('#audit-runs.criterion-audits').count(), 1);
+    assert.equal(await page.locator('.hospital-findings').isVisible(), true);
     assert.equal(db.prepare('SELECT count(*) n FROM criterion_jobs').get().n, 0);
     assert.equal(await page.getByRole('button', {name: language==='en'?'Full audit':'Auditoría completa',exact:true}).count(),0);
     const last = page.locator('.criterion-card').nth(16);
