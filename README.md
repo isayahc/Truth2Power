@@ -4,6 +4,10 @@
 
 The main screens call criteria **requirements**, runs **checks**, and unclear results **Needs review**. Viewing results is free; starting AI checks may incur charges. These wording changes do not change verdicts, job behavior or published grades. Technical API names and message keys remain stable. `frontend/src/plain-language.js` keeps paired English/Spanish wording; `locale.jsx` and the Spanish catalog use it for UI labels only, never source quotations. Remaining older English-only report content is labeled as such. Spanish wording is a translation draft, not fluent-reader approved.
 
+### Connected check history
+
+The Operations table reads both older audit records and `criterion_jobs` / `criterion_results` / human decisions from SQLite. It refreshes every five seconds. Requirement counts use the same calculation as hospital pages; dates come from recorded starts, completions and source retrievals, not the time the dashboard was opened. Requirement checks have no automatic schedule or recorded cost ledger, so those fields show **Not scheduled** and **Not recorded**. Cost totals are explicitly labeled as older-audit totals. Older records and their technical history remain available. Reporting is read-only and tolerates databases created before requirement checks were introduced.
+
 ## On-demand criterion agents
 
 Each hospital page now lists **K1–K17** with a **Run criterion** button. Opening a page or expanding a saved result makes no model calls. Before execution, the confirmation shows the requested criterion plus any missing prerequisites. For example, K12 requires K1; K16 requires K2, which may require K1. Intact prerequisite artifacts are reused rather than rerun. Choosing one criterion never queues the other unrelated criteria.
