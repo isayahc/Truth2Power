@@ -45,7 +45,6 @@ function Header({ onReview, reviewOpen, pending }) {
       <div className="header-actions">
       <a className="overview-link" href={localHref('?view=overview')}>{t('Audit overview')}</a>
       <a className="changes-link" href={localHref('?view=operations')}>{t('Audit operations')}</a>
-      <a className="changes-link" href={localHref('?view=changes')}>{t('Recent changes')}</a>
        <button className="review-nav" onClick={onReview} aria-pressed={reviewOpen}>{t('Review inbox')} <span>{typeof pending==='number' ? pending+humanTasks+(coverage?.pending ?? 0) : pending ?? "…"}</span></button>
       <LanguageSwitch />
       </div>

@@ -1,5 +1,10 @@
 // Main-page translation draft for #45. Fluent-reader approval is tracked separately.
 export const spanish = {
+  'Overview sections': 'Secciones del resumen',
+  'Coverage by region': 'Cobertura por región',
+  'Hospital directory': 'Directorio de hospitales',
+  'Hospital directory pages': 'Páginas del directorio de hospitales',
+  'Page': 'Página',
   'Criterion audits': 'Auditorías de criterios',
   'Run one criterion or all missing criteria. Viewing results makes no model calls. Saved documents and prerequisites are reused when available.': 'Ejecute un criterio o todos los pendientes. Ver resultados no genera llamadas al modelo. Se reutilizan los documentos y resultados previos disponibles.',
   'Run all missing': 'Ejecutar todos los pendientes',
