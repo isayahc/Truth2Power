@@ -20,7 +20,7 @@ try {
   const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
   const errors = [];
   page.on('pageerror', (error) => errors.push(error.message));
-  await page.goto('http://127.0.0.1:8097/');
+  await page.goto('http://127.0.0.1:8097/?year=2025');
   await page.locator('.legend-item').first().waitFor();
   if (process.env.CAPTURE_BEFORE) {
     await page.screenshot({ path: `${artifacts}/before-desktop.png`, fullPage: true });

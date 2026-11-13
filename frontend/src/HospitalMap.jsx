@@ -48,7 +48,7 @@ function Points({ hospitals, project, zoom = 1, markerScale = 1, selected, onSel
     const active = selected?.id === hospital.id;
     const activity=hospital.markerStatus ?? (error ? null : data?.activity?.[hospital.id]?.status);
     const activityLabel={queued:'Queued',running:'Running',completed:'Completed',attention:'Needs evidence review',error:'Technical error — not assessed',cancelled:'Cancelled'}[activity];
-    const label = name + " · " + (hospital.markerLabel ?? (stars==null ? t('Not rated') : stars + ' ' + t(stars === 1 ? 'star' : 'stars'))) + ' · ' + (stars==null ? t('Not rated in September 2025.') : t('Published September 2025; confirmed-criterion count not recorded.')) + ' · ' + (error ? t('Criterion coverage unavailable.') : data ? coverageText(data.hospitals[hospital.id] ?? emptyCoverage,t,language) : t('Loading criterion coverage…'));
+    const label = name + " · " + (hospital.markerLabel ?? (stars==null ? t('Not rated') : stars + ' ' + t(stars === 1 ? 'star' : 'stars'))) + (hospital.markerStatus ? '' : ' · ' + (stars==null ? t('Not rated in September 2025.') : t('Published September 2025; confirmed-criterion count not recorded.'))) + ' · ' + (hospital.markerDetail ?? (error ? t('Criterion coverage unavailable.') : data ? coverageText(data.hospitals[hospital.id] ?? emptyCoverage,t,language) : t('Loading criterion coverage…'))) + (hospital.markerError&&activity!=='error'?' · '+t('Latest attempt failed; previous finding retained'):'');
     return (
       <g key={hospital.id} data-audit-status={activity??'idle'}>
       <circle cx={cx} cy={cy} r={16*size} fill="transparent" aria-hidden="true" onClick={()=>onSelect(hospital)} style={{cursor:'pointer'}}/>
@@ -79,6 +79,7 @@ function Points({ hospitals, project, zoom = 1, markerScale = 1, selected, onSel
       </circle>
       {activity==='running'&&<circle className="hospital-audit-spinner" cx={cx} cy={cy} r={14*size} fill="none" stroke="#7e22ce" strokeWidth={2*size} strokeDasharray={`${16*size} ${9*size}`} pointerEvents="none" aria-hidden="true"/>}
       {activity==='error'&&<path className="hospital-error-cross" d={`M${cx-8*size},${cy-8*size}l${16*size},${16*size}m0,${-16*size}l${-16*size},${16*size}`} stroke="#b91c1c" strokeWidth={4*size} fill="none" pointerEvents="none" aria-hidden="true"/>}
+      {hospital.markerError&&activity!=='error'&&<path className="hospital-error-badge" d={`M${cx+6*size},${cy-12*size}l${6*size},${6*size}m0,${-6*size}l${-6*size},${6*size}`} stroke="#b91c1c" strokeWidth={2*size} fill="none" pointerEvents="none" aria-hidden="true"/>}
       {!hospital.markerStatus&&['queued','completed','attention'].includes(activity)&&<circle cx={cx+11*size} cy={cy-10*size} r={4*size} fill={activity==='attention'?'#2563eb':activity==='completed'?'#15803d':'#6b7280'} pointerEvents="none" aria-hidden="true"/>}
       </g>
     );
@@ -95,7 +96,7 @@ export default function HospitalMap({ hospitals, counties, selected, onSelect })
   const [markerScale,setMarkerScale]=useState(1);
   useEffect(()=>{
     // SVG viewBox scaling otherwise shrinks the dots to a few pixels on phones.
-    const resize=()=>{const {width,height}=svg.current.getBoundingClientRect();if(width&&height)setMarkerScale(1/Math.min(width/900,height/555));};
+    const resize=()=>{if(!svg.current)return;const {width,height}=svg.current.getBoundingClientRect();if(width&&height)setMarkerScale(1/Math.min(width/900,height/555));};
     resize();const observer=new ResizeObserver(resize);observer.observe(svg.current);
     return()=>observer.disconnect();
   },[]);

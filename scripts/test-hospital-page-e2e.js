@@ -51,7 +51,7 @@ try {
     await page.getByRole("region", { name: "Current hospital findings" }).waitFor();
   }
   // Keep the map's zoom and filter while a hospital record is open.
-  await page.goto("http://127.0.0.1:8095/");
+  await page.goto("http://127.0.0.1:8095/?year=2025");
   await page.getByRole("button", { name: "Zoom in" }).click();
   await page.locator(".legend-item").nth(1).click();
   const zoom = await page.locator("#state-view").getAttribute("transform");

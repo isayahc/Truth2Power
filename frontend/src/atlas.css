@@ -1235,3 +1235,17 @@ h2 {
 .regional-preview button { max-width:100%; white-space:normal; }
 .regional-history-nav { display:grid; grid-template-columns:minmax(0,1fr) auto minmax(0,1fr); align-items:center; gap:8px; margin:12px 0; }
 .regional-history-nav button { white-space:normal; min-width:0; }
+.map-year-switch { display:flex; flex-wrap:wrap; gap:8px; margin:8px 0; flex-shrink:0; }
+.map-year-switch button { padding:10px 14px; border:1px solid #57756d; border-radius:5px; background:white; color:#173e3a; cursor:pointer; }
+.map-year-switch button[aria-pressed="true"] { background:#173e3a; color:white; }
+.current-criteria-map #map-requirement { min-width:0; max-width:100%; width:100%; }
+.current-criteria-map .map-region-filter { min-width:0; }
+.current-criteria-summary { overflow-wrap:anywhere; }
+.current-criteria-summary p { margin:12px 0; line-height:1.5; }
+.current-criteria-summary .criteria-percent strong { font-size:32px; }
+.current-criteria-summary dl>div { display:flex; justify-content:space-between; gap:10px; margin:8px 0; }
+.current-criteria-summary dd { margin:0; font-weight:bold; }
+.criteria-status-filters { display:grid; gap:6px; }
+.criteria-status-filters button { text-align:left; border:1px solid #b7c8c1; background:white; padding:8px; border-radius:4px; cursor:pointer; }
+.criteria-status-filters button[aria-pressed="true"] { outline:2px solid #173e3a; background:#e9f2ee; }
+.current-map-legend { display:flex; flex-wrap:wrap; align-items:center; gap:8px 14px; padding:10px 16px; background:#fff; border-block:1px solid #cbd5e1; }

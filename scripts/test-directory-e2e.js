@@ -20,7 +20,7 @@ try{
     const page=await browser.newPage({viewport:{width,height:960}}),errors=[],posts=[];
     page.on('pageerror',e=>errors.push(e.message));page.on('request',r=>{if(r.method()==='POST')posts.push(r.url());});
     const unrated=language==='en'?'Not rated':'Sin calificación';
-    await page.goto(`${origin}/?lang=${language}`);
+    await page.goto(`${origin}/?year=2025&lang=${language}`);
     await page.locator('.intro-stat strong').waitFor({state:'attached'});assert.equal(await page.locator('.intro-stat strong').innerText(),'218');
     const regionSelect=page.locator('#map-region');
     assert.equal(await regionSelect.locator('option').count(),10);
