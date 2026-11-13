@@ -10,6 +10,7 @@ import { LanguageSwitch, useLocale } from './locale.jsx';
 import { HumanInterventionInbox } from './HumanIntervention.jsx';
 import {CriterionCoverageProvider, CriterionReviewNotifications, useCriterionCoverage} from './CriterionCoverage.jsx';
 import ratingRegions from '../../references/ny-rating-regions-v1.json';
+import RegionalAudits from './RegionalAudits.jsx';
 
 async function getFeatures(path, signal) {
   const response = await fetch(path, { signal });
@@ -47,6 +48,7 @@ function Header({ onReview, reviewOpen, pending }) {
       <a className="overview-link" href={localHref('?view=overview')}>{t('Audit overview')}</a>
       <a className="changes-link" href={localHref('?view=operations')}>{t('Audit operations')}</a>
        <button className="review-nav" onClick={onReview} aria-pressed={reviewOpen}>{t('Review inbox')} <span>{typeof pending==='number' ? pending+humanTasks+(coverage?.pending ?? 0) : pending ?? "…"}</span></button>
+       <a href={localHref('?view=regional')}>{t('Compare two regions')}</a>
       <LanguageSwitch />
       </div>
     </header>
@@ -177,7 +179,7 @@ function Atlas() {
             hospitalKey={reviewHospital} hospitals={data?.hospitals ?? []} onHospital={(hospital) => {
               if (hospital) { selectHospital(hospital); setReviewOpen(false); }
             }} /></div>
-        </> : !selected && new URLSearchParams(window.location.search).get("view") === "operations" ? <AuditOperations /> : !selected && new URLSearchParams(window.location.search).get("view") === "changes" ? <div lang="en"><Changes /></div> : !selected && new URLSearchParams(window.location.search).get("view") === "overview" ?
+        </> : !selected && new URLSearchParams(window.location.search).get('view')==='regional' ? (data ? <RegionalAudits features={current} counties={data.counties}/> : <p role="status">{t('Loading hospital locations…')}</p>) : !selected && new URLSearchParams(window.location.search).get("view") === "operations" ? <AuditOperations /> : !selected && new URLSearchParams(window.location.search).get("view") === "changes" ? <div lang="en"><Changes /></div> : !selected && new URLSearchParams(window.location.search).get("view") === "overview" ?
           (data ? <div lang="en"><Overview features={data.hospitals} counties={data.counties} /></div> :
             <p role="status">{error ? <button onClick={() => setAttempt(attempt + 1)}>{t('Retry loading atlas')}</button> : t('Loading atlas…')}</p>) : <>
         <div className="intro" hidden={!!selected}>

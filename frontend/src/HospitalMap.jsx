@@ -45,21 +45,25 @@ function Points({ hospitals, project, zoom = 1, selected, onSelect, setHover }) 
     const [cx, cy] = project(hospital.geometry.coordinates);
     const { stars, name } = hospital.properties;
     const active = selected?.id === hospital.id;
+    const activity=error ? null : data?.activity?.[hospital.id]?.status;
+    const activityLabel={queued:'Queued',running:'Running',completed:'Completed',attention:'Needs review',cancelled:'Cancelled'}[activity];
     const label = name + " · " + (hospital.markerLabel ?? (stars==null ? t('Not rated') : stars + ' ' + t(stars === 1 ? 'star' : 'stars'))) + ' · ' + (stars==null ? t('Not rated in September 2025.') : t('Published September 2025; confirmed-criterion count not recorded.')) + ' · ' + (error ? t('Criterion coverage unavailable.') : data ? coverageText(data.hospitals[hospital.id] ?? emptyCoverage,t,language) : t('Loading criterion coverage…'));
     return (
+      <g key={hospital.id} data-audit-status={activity??'idle'}>
+      <circle cx={cx} cy={cy} r={9/zoom} fill="transparent" aria-hidden="true" onClick={()=>onSelect(hospital)} style={{cursor:'pointer'}}/>
       <circle
         key={hospital.id}
         cx={cx}
         cy={cy}
-        r={(active ? 5.4 : 3.65) / zoom}
+        r={(active ? 6.5 : 5.2) / zoom}
         className={active ? "dot active" : "dot"}
         fill={hospital.markerColor ?? ratingByStars.get(stars).color}
         role="button"
-        aria-label={label}
+        aria-label={label+(activityLabel?' · '+t(activityLabel):'')}
         tabIndex={0}
-        onMouseEnter={() => setHover(label)}
+        onMouseEnter={() => setHover(label+(activityLabel?' · '+t(activityLabel):''))}
         onMouseLeave={() => setHover(null)}
-        onFocus={() => setHover(label)}
+        onFocus={() => setHover(label+(activityLabel?' · '+t(activityLabel):''))}
         onBlur={() => setHover(null)}
         onClick={() => onSelect(hospital)}
         onKeyDown={(event) => {
@@ -71,6 +75,9 @@ function Points({ hospitals, project, zoom = 1, selected, onSelect, setHover }) 
       >
         <title>{label}</title>
       </circle>
+      {activity==='running'&&<circle className="hospital-audit-spinner" cx={cx} cy={cy} r={8/zoom} fill="none" stroke="#135b94" strokeWidth={2/zoom} strokeDasharray={`${12/zoom} ${7/zoom}`} pointerEvents="none" aria-hidden="true"/>}
+      {['queued','completed','attention'].includes(activity)&&<text x={cx+7/zoom} y={cy-6/zoom} className="hospital-audit-symbol" fontSize={12/zoom} pointerEvents="none" aria-hidden="true">{activity==='queued'?'◷':activity==='completed'?'✓':'!'}</text>}
+      </g>
     );
   });
 }

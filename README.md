@@ -4,13 +4,25 @@
 
 The main screens call criteria **requirements**, runs **checks**, and unclear results **Needs review**. Viewing results is free; starting AI checks may incur charges. These wording changes do not change verdicts, job behavior or published grades. Technical API names and message keys remain stable. `frontend/src/plain-language.js` keeps paired English/Spanish wording; `locale.jsx` and the Spanish catalog use it for UI labels only, never source quotations. Remaining older English-only report content is labeled as such. Spanish wording is a translation draft, not fluent-reader approved.
 
+### Two-region requirement checks
+
+Open **Compare two regions** (`?view=regional`) to choose two Attachment G regions, select any K1–K17 requirements, and view current per-requirement outcomes side by side. Counts cover each entire region and distinguish met, unmet, needs review and not checked, with coverage and last-result/decision dates. They do not replace September 2025 grades.
+
+Each paid batch is limited to **10 explicitly selected hospitals**. “Select next batch” alternates eligible hospitals between the two regions. Selected requirements with stored results are skipped; missing prerequisites may also run, and intact prerequisites are reused. A saved preview lists every hospital's requested steps, execution steps, reusable prerequisites and upper task limits. Reading statistics and preparing previews make no model calls. Starting requires a separate explicit approval. The existing worker enforces 40 model tasks and 20 minutes per hospital (up to 400 tasks for a full batch), not a dollar guarantee.
+
+`criterion_batches` and `criterion_batch_jobs` retain approvals and job associations in SQLite. Preview IDs are idempotency keys: retrying a lost approval response returns the same jobs. Conflicting hospital jobs or changed plans/results reject the whole submission before any jobs are inserted. Previews expire after 15 minutes. Cancellation only stops queued hospitals; already-running jobs finish within their existing limits. Cancelling a queued retry preserves the preceding finding/revision.
+
+Map dots are larger, with enlarged pointer targets and keyboard labels. Queue clocks, running rings, completion checks and attention marks come from database job states; stale activity is hidden if refreshing fails. Historical rating colors remain intact. Running rings stop animating under reduced-motion preferences. Use map zoom or hospital search to distinguish dense NYC locations.
+
+Verification: `node --test backend/test/regional-criteria.test.js backend/test/criteria.test.js` and `node scripts/test-regional-audits-e2e.js`. Tests use synthetic checkpoints or a local queue with **no live audit worker**, never paid model calls.
+
 ### County and rating regions
 
 All current and historical hospital identities carry `county`, `region`, `region_number` and `region_scheme`. The nine-region mapping in `references/ny-rating-regions-v1.json` is transcribed from the user-provided **Revised Attachment G — New York Standardized Rating Regions — Basic Health Plan** image. No publication date or source URL was supplied. These are rating regions, replacing economic-development regions in the current web directory and reporting; assignments follow the hospital's location county, not its service area.
 
 Run `node scripts/assign-hospital-regions.js` to validate the 62-county mapping and regenerate GeoJSON/CSV assignments. Roster reconciliation also runs this step. The map's region dropdown filters markers and search; star filters further narrow both, while rating totals describe the selected region. The selected region is retained in the URL across reloads and language changes. Overview and Operations use the same nine-region mapping, and hospital pages show county and region.
 
-**Next deliverable: NYC Metro (Region 1) vs. Central (Region 7)** comparison. This change prepares the group assignments and filtering; comparative analysis is a later deliverable.
+**NYC Metro (Region 1) vs. Central (Region 7)** is the default pair on Compare two regions. Its current saved requirement statistics are available without running new checks; regional results should be interpreted alongside their coverage.
 
 ### Current hospital directory
 
