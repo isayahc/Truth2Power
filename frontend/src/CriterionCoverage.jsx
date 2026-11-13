@@ -36,14 +36,21 @@ export function CriterionCoverage({hospitalKey, historical=false}) {
 export function CriterionReviewNotifications({hospitalKey=''}) {
   const {data,error}=useCriterionCoverage(), {t,language,localHref}=useLocale();
   const reviews=(data?.reviews ?? []).filter(item=>!hospitalKey || item.hospital_key===hospitalKey);
+  const groups=Map.groupBy(reviews,item=>item.hospital_key);
   return <section className="criterion-review-inbox" lang={language} aria-labelledby="criterion-review-heading">
-    <h2 id="criterion-review-heading">{t('Criteria needing human review')} ({reviews.length})</h2>
+    <div className="criterion-review-heading"><h2 id="criterion-review-heading">{t('Requirements needing review')}</h2><span className="criterion-review-total">{reviews.length}</span></div>
     {error && <p role="alert">{t('Criterion coverage unavailable.')}</p>}
     {!data && !error && <p role="status">{t('Loading criterion coverage…')}</p>}
-    {data && !reviews.length && <p>{t('No unclear criteria awaiting review.')}</p>}
-    <ul>{reviews.map(item=><li key={`${item.hospital_key}-${item.step}`}>
-      <a href={localHref(`?hospital=${item.hospital_key}#criterion-${item.step}`)}>{item.hospital_name} · {item.step.toUpperCase()} · {t(item.title)}</a>
-      <span> · {t('Unclear')} · {t('Last updated')}: {new Date(item.updated_at).toLocaleString(language)}</span>
-    </li>)}</ul>
+    {data && !reviews.length && <p className="criterion-review-empty">{t('No unclear criteria awaiting review.')}</p>}
+    {!!reviews.length && <ul className="criterion-review-groups">{[...groups].map(([key,items])=><li className="criterion-review-group" key={key}>
+      <h3>{items[0].hospital_name}</h3>
+      <ul className="criterion-review-rows">{items.map(item=><li className="criterion-review-row" key={item.step}>
+        <div className="criterion-review-content">
+          <div className="criterion-review-title"><span className="criterion-review-code">{item.step.toUpperCase()}</span><span>{t(item.title)}</span></div>
+          <div className="criterion-review-meta"><span className="criterion-review-badge">{t('Unclear')}</span><span>{t('Last updated')}: <time dateTime={item.updated_at}>{new Date(item.updated_at).toLocaleString(language)}</time></span></div>
+        </div>
+        <a className="criterion-review-action" href={localHref(`?hospital=${item.hospital_key}#criterion-${item.step}`)} aria-label={`${t('Review requirement')} ${item.step.toUpperCase()} · ${t(item.title)} · ${item.hospital_name}`}>{t('Review →')}</a>
+      </li>)}</ul>
+    </li>)}</ul>}
   </section>;
 }
