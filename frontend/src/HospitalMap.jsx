@@ -1,4 +1,4 @@
-import React, { memo, useRef, useState } from "react";
+import React, { memo, useEffect, useRef, useState } from "react";
 import { countyPath, metro, metroFull, metroCounties, statewide } from "./geometry.js";
 import { ratingByStars } from "./ratings.js";
 import { useLocale } from './locale.jsx';
@@ -38,9 +38,10 @@ function Labels({ items, className, project = statewide }) {
   });
 }
 
-function Points({ hospitals, project, zoom = 1, selected, onSelect, setHover }) {
+function Points({ hospitals, project, zoom = 1, markerScale = 1, selected, onSelect, setHover }) {
   const { t, language } = useLocale();
   const {data,error}=useCriterionCoverage();
+  const size=markerScale/zoom;
   return hospitals.map((hospital) => {
     const [cx, cy] = project(hospital.geometry.coordinates);
     const { stars, name } = hospital.properties;
@@ -50,12 +51,12 @@ function Points({ hospitals, project, zoom = 1, selected, onSelect, setHover }) 
     const label = name + " · " + (hospital.markerLabel ?? (stars==null ? t('Not rated') : stars + ' ' + t(stars === 1 ? 'star' : 'stars'))) + ' · ' + (stars==null ? t('Not rated in September 2025.') : t('Published September 2025; confirmed-criterion count not recorded.')) + ' · ' + (error ? t('Criterion coverage unavailable.') : data ? coverageText(data.hospitals[hospital.id] ?? emptyCoverage,t,language) : t('Loading criterion coverage…'));
     return (
       <g key={hospital.id} data-audit-status={activity??'idle'}>
-      <circle cx={cx} cy={cy} r={9/zoom} fill="transparent" aria-hidden="true" onClick={()=>onSelect(hospital)} style={{cursor:'pointer'}}/>
+      <circle cx={cx} cy={cy} r={16*size} fill="transparent" aria-hidden="true" onClick={()=>onSelect(hospital)} style={{cursor:'pointer'}}/>
       <circle
         key={hospital.id}
         cx={cx}
         cy={cy}
-        r={(active ? 6.5 : 5.2) / zoom}
+        r={(active ? 12 : 10) * size}
         className={active ? "dot active" : "dot"}
         fill={activity==='error'?'transparent':hospital.markerColor ?? ratingByStars.get(stars).color}
         style={activity==='error'?{stroke:'transparent'}:undefined}
@@ -76,9 +77,9 @@ function Points({ hospitals, project, zoom = 1, selected, onSelect, setHover }) 
       >
         <title>{label}</title>
       </circle>
-      {activity==='running'&&<circle className="hospital-audit-spinner" cx={cx} cy={cy} r={8/zoom} fill="none" stroke="#7e22ce" strokeWidth={2/zoom} strokeDasharray={`${12/zoom} ${7/zoom}`} pointerEvents="none" aria-hidden="true"/>}
-      {activity==='error'&&<path className="hospital-error-cross" d={`M${cx-5/zoom},${cy-5/zoom}l${10/zoom},${10/zoom}m0,${-10/zoom}l${-10/zoom},${10/zoom}`} stroke="#b91c1c" strokeWidth={3/zoom} fill="none" pointerEvents="none" aria-hidden="true"/>}
-      {!hospital.markerStatus&&['queued','completed','attention'].includes(activity)&&<circle cx={cx+7/zoom} cy={cy-6/zoom} r={3/zoom} fill={activity==='attention'?'#2563eb':activity==='completed'?'#15803d':'#6b7280'} pointerEvents="none" aria-hidden="true"/>}
+      {activity==='running'&&<circle className="hospital-audit-spinner" cx={cx} cy={cy} r={14*size} fill="none" stroke="#7e22ce" strokeWidth={2*size} strokeDasharray={`${16*size} ${9*size}`} pointerEvents="none" aria-hidden="true"/>}
+      {activity==='error'&&<path className="hospital-error-cross" d={`M${cx-8*size},${cy-8*size}l${16*size},${16*size}m0,${-16*size}l${-16*size},${16*size}`} stroke="#b91c1c" strokeWidth={4*size} fill="none" pointerEvents="none" aria-hidden="true"/>}
+      {!hospital.markerStatus&&['queued','completed','attention'].includes(activity)&&<circle cx={cx+11*size} cy={cy-10*size} r={4*size} fill={activity==='attention'?'#2563eb':activity==='completed'?'#15803d':'#6b7280'} pointerEvents="none" aria-hidden="true"/>}
       </g>
     );
   });
@@ -91,6 +92,13 @@ export default function HospitalMap({ hospitals, counties, selected, onSelect })
   const [region, setRegion] = useState("statewide");
   const [hover, setHover] = useState(null);
   const svg = useRef(null);
+  const [markerScale,setMarkerScale]=useState(1);
+  useEffect(()=>{
+    // SVG viewBox scaling otherwise shrinks the dots to a few pixels on phones.
+    const resize=()=>{const {width,height}=svg.current.getBoundingClientRect();if(width&&height)setMarkerScale(1/Math.min(width/900,height/555));};
+    resize();const observer=new ResizeObserver(resize);observer.observe(svg.current);
+    return()=>observer.disconnect();
+  },[]);
   const drag = useRef(null);
   const moved = useRef(false);
   function switchRegion(nextRegion) {
@@ -134,7 +142,7 @@ export default function HospitalMap({ hospitals, counties, selected, onSelect })
     setHover(null);
     onSelect(hospital);
   }
-  const props = { selected, onSelect: choose, setHover };
+  const props = { selected, onSelect: choose, setHover, markerScale };
   const isMetro = region === "metro";
   const metroHospitals = hospitals.filter((h) => metroCounties.has(h.properties.county));
   const metroLand = counties.filter((c) => metroCounties.has(c.properties.NAME));
