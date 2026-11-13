@@ -115,7 +115,7 @@ export function regionalStats(db){
  const hospitals=current.map(f=>{
   const status=criterionStatus(db,f.id,{readOnly:true});
   return {hospital_key:f.id,name:f.properties.name,region:f.properties.region,summary:status.summary,active:status.active,
-    items:status.items.map(i=>({id:i.id,title:i.title,effective:i.effective,technical_error:i.technical_error,updated_at:i.updated_at,saved:!!i.saved}))};
+    items:status.items.map(i=>({id:i.id,title:i.title,effective:i.effective,technical_error:i.technical_error,updated_at:i.updated_at,saved:!!i.saved,agent_outcome:i.saved?(i.saved.value===true?'met':i.saved.value===false?'unmet':'unclear'):null,agent_updated_at:i.saved?.completed??null}))};
  });
  const regions=Object.keys(reference.regions).map(region=>{
   const rows=hospitals.filter(h=>h.region===region);

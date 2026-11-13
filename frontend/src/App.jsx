@@ -12,6 +12,7 @@ import {CriterionCoverageProvider, CriterionReviewNotifications, useCriterionCov
 import RegionalAudits from './RegionalAudits.jsx';
 import CurrentCriteriaMap from './CurrentCriteriaMap.jsx';
 import RegionPicker,{regionsFromUrl} from './RegionPicker.jsx';
+import Statistics from './Statistics.jsx';
 
 async function getFeatures(path, signal) {
   const response = await fetch(path, { signal });
@@ -46,6 +47,7 @@ function Header({ onReview, reviewOpen, pending }) {
         <span className="brand-unit">{t('Health equity atlas')}</span>
       </a>
       <div className="header-actions">
+       <a href={localHref('?view=statistics')}>{t('Statistics')}</a>
       <a className="overview-link" href={localHref('?view=overview')}>{t('Audit overview')}</a>
       <a className="changes-link" href={localHref('?view=operations')}>{t('Audit operations')}</a>
        <button className="review-nav" onClick={onReview} aria-pressed={reviewOpen}>{t('Review inbox')} <span>{typeof pending==='number' ? pending+humanTasks+(coverage?.pending ?? 0) : pending ?? "…"}</span></button>
@@ -178,7 +180,7 @@ function Atlas() {
     <div className="page">
       <Header onReview={() => reviewOpen ? setReviewOpen(false) : openReviews()} reviewOpen={reviewOpen} pending={reviewError ? "!" : inbox?.pending} />
       <main>
-        {reviewOpen ? <>
+        {!reviewOpen && !selected && new URLSearchParams(location.search).get('view')==='statistics' ? <Statistics /> : reviewOpen ? <>
           <button className="back plain" onClick={() => setReviewOpen(false)}>{t(selected ? '← Back to hospital record' : '← Back to hospital map')}</button>
           <HumanInterventionInbox />
           <CriterionReviewNotifications hospitalKey={reviewHospital} />

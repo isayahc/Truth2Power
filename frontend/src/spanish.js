@@ -1,6 +1,16 @@
 // Main-page translation draft for #45. Fluent-reader approval is tracked separately.
 import {plainLanguage} from './plain-language.js';
 export const spanish = {
+  'Statistics': 'Estadísticas',
+  'Requirement met': 'Requisito cumplido',
+  'Requirement not met': 'Requisito incumplido',
+  'Clear answers': 'Respuestas claras',
+  'Selected regions total': 'Total de las regiones seleccionadas',
+  'Latest saved agent answers, before human decisions. Clear answers = met + unmet. Rates exclude checks without a valid finding; a failed retry keeps its previous valid answer.': 'Últimas respuestas guardadas de los agentes, antes de las decisiones humanas. Respuestas claras = cumplido + incumplido. Las tasas excluyen revisiones sin un resultado válido; un reintento fallido conserva la respuesta válida anterior.',
+  'Statistics could not be refreshed.': 'No se pudieron actualizar las estadísticas.',
+  'Loading statistics…': 'Cargando estadísticas…',
+  'Technical errors, unfinished checks and last updated': 'Errores técnicos, revisiones pendientes y última actualización',
+  'Without a valid finding': 'Sin un resultado válido',
   'Overview sections': 'Secciones del resumen',
   'Coverage by region': 'Cobertura por región',
   'Hospital directory': 'Directorio de hospitales',
