@@ -87,19 +87,20 @@ export function criterionStatus(db, hospital, {readOnly = false} = {}) {
       const saved = results.find(r => r.step === id);
        const latest = jobs.find(j => j.status!=='cancelled' && (requestedSteps(j).includes(id) || ['running','failed','succeeded'].includes(JSON.parse(j.progress)[id]?.status)));
       const result = saved ? { job: saved.job, completed: saved.completed, ...JSON.parse(saved.output) } : null;
-      const failed = latest?.status === 'failed' && JSON.parse(latest.progress)[id]?.status !== 'succeeded' &&
+       const progressStatus = latest && JSON.parse(latest.progress)[id]?.status;
+       const failed = (progressStatus === 'failed' || latest?.status === 'failed' && !['succeeded','reused'].includes(progressStatus)) &&
         (!saved || latest.created >= saved.completed || latest.id === saved.job);
-      const revision = saved || failed ? createHash('sha256').update(JSON.stringify([saved?.job, saved?.output, failed ? latest.id : null])).digest('hex') : null;
+       const revision = saved || failed ? createHash('sha256').update(JSON.stringify([saved?.job, saved?.output, failed && !saved ? latest.id : null])).digest('hex') : null;
       const currentId = decisions.find(d => d.step === id && d.revision === revision)?.id;
       const history = decisions.filter(d => d.step === id).map(d => ({ id:d.id, decision:d.decision, reason:d.reason, evidence:d.evidence,
         decided_at:d.decided_at, current:d.id === currentId, reviewed_result:JSON.parse(d.snapshot) }));
       const decision = history.find(d => d.current) ?? null;
-      const effective = decision?.decision ?? (failed ? 'unclear' : result ? (result.value === true ? 'met' : result.value === false ? 'unmet' : 'unclear') : 'unrun');
+       const effective = decision?.decision ?? (result ? (result.value === true ? 'met' : result.value === false ? 'unmet' : 'unclear') : failed ? 'error' : 'unrun');
       const updated_at = decision?.decided_at ?? (failed ? latest.completed : saved?.completed) ?? null;
       return { id, title: titles.get(steps[id].criterion), criterion: steps[id].criterion,
-        latest: publicJob(latest), saved:result, revision, effective, updated_at, decision, history };
+         latest: publicJob(latest), saved:result, revision, effective, technical_error:!!failed, updated_at, decision, history };
     });
-  const summary = { met:0, unmet:0, unclear:0, unrun:0, confirmed:0, total:17, updated_at:null };
+   const summary = { met:0, unmet:0, unclear:0, unrun:0, error:0, confirmed:0, total:17, updated_at:null };
   for (const item of items) {
     summary[item.effective]++;
     if (item.updated_at && (!summary.updated_at || item.updated_at > summary.updated_at)) summary.updated_at = item.updated_at;
@@ -218,10 +219,10 @@ export function criterionOverview(db) {
     const status = criterionStatus(db,hospital);
     hospitals[hospital] = status.summary;
     const latest=db.prepare('SELECT status,completed FROM criterion_jobs WHERE hospital=? ORDER BY created DESC,rowid DESC LIMIT 1').get(hospital);
-    activity[hospital]={status:status.active?.status ?? (latest?.status==='failed'||status.summary.unclear ? 'attention' : latest?.status==='completed' ? 'completed' : latest?.status ?? 'idle'),updated_at:latest?.completed??null};
-    for (const item of status.items.filter(i => i.effective === 'unclear')) reviews.push({
+    activity[hospital]={status:status.active?.status ?? (status.items.some(i=>i.technical_error) ? 'error' : status.summary.unclear ? 'attention' : latest?.status==='completed' ? 'completed' : latest?.status ?? 'idle'),updated_at:latest?.completed??null};
+    for (const item of status.items.filter(i => i.effective === 'unclear' || i.technical_error && !i.decision)) reviews.push({
       hospital_key:hospital, hospital_name:criterionHospital(hospital).name, step:item.id, title:item.title,
-      updated_at:item.updated_at, revision:item.revision,
+      updated_at:item.updated_at, revision:item.revision, technical_error:item.technical_error, effective:item.effective,
     });
   }
   return {hospitals, reviews, pending:reviews.length, activity};

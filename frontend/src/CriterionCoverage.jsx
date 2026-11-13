@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { useLocale } from './locale.jsx';
+import {StatusBadge} from './CriterionStatus.jsx';
 
 const Context = createContext({data:null,error:false});
 export const emptyCoverage = {met:0,unmet:0,unclear:0,unrun:17,confirmed:0,total:17,updated_at:null};
@@ -53,7 +54,7 @@ export function CriterionReviewNotifications({hospitalKey=''}) {
       <ul className="criterion-review-rows">{items.map(item=><li className="criterion-review-row" key={item.step}>
         <div className="criterion-review-content">
           <div className="criterion-review-title"><span className="criterion-review-code">{item.step.toUpperCase()}</span><span>{t(item.title)}</span></div>
-          <div className="criterion-review-meta"><span className="criterion-review-badge">{t('Unclear')}</span><span>{t('Last updated')}: <time dateTime={item.updated_at}>{new Date(item.updated_at).toLocaleString(language)}</time></span></div>
+          <div className="criterion-review-meta"><StatusBadge status={item.technical_error?'error':'unclear'} label={item.technical_error&&item.effective!=='error'?'Latest attempt failed; previous finding retained':undefined}/><span>{t('Last updated')}: <time dateTime={item.updated_at}>{new Date(item.updated_at).toLocaleString(language)}</time></span></div>
         </div>
         <a className="criterion-review-action" href={localHref(`?hospital=${item.hospital_key}#criterion-${item.step}`)} aria-label={`${t('Review requirement')} ${item.step.toUpperCase()} · ${t(item.title)} · ${item.hospital_name}`}>{t('Review →')}</a>
       </li>)}</ul>

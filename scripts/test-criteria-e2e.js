@@ -81,14 +81,15 @@ try {
     await target.locator(':scope > details:not(.criterion-human-review) > summary').click();
     await target.locator(':scope > details:not(.criterion-human-review) blockquote').waitFor();
     assert.match(await target.innerText(), /SYNTHETIC <script> text stays text/);
-    assert.match(await target.innerText(), language==='en'?/Needs review/:/Necesita revisión/);
+    assert.match(await target.innerText(), language==='en'?/Needs evidence review/:/Necesita revisión/);
     assert.equal(await target.locator('script').count(),0);
     assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);
     await target.screenshot({path:join(root,`result-${language}-${width}.png`)});
     await page.waitForFunction(()=>document.querySelector('.criterion-coverage')?.textContent.includes('1/17'));
     await page.locator('header .review-nav').click();
+    await page.locator('.criterion-review-group > details > summary').click();
     await page.locator('.criterion-review-inbox li a').waitFor();
-    assert.equal(await page.locator('.criterion-review-inbox li').count(),1);
+    assert.equal(await page.locator('.criterion-review-row').count(),1);
     await page.locator('.criterion-review-inbox li a').click();
     await target.locator('.criterion-human-review > summary').click();
     await target.locator('select').selectOption('met');
@@ -127,15 +128,16 @@ try {
       const result = await (await route.fetch()).json();
       const saved = value => ({value,completed:new Date().toISOString(),explanation:'SYNTHETIC status fixture',evidence:[],limitations:[]});
       result.active={step:'k5',status:'running',progress:{k5:{status:'running'}}};
-      result.items=result.items.map((item,i)=>({...item,effective:['met','unmet','unclear','unclear','unrun'][i] ?? 'unrun',latest:i===3?{status:'failed'}:null,saved:i<4?saved([true,false,null,false][i]):null}));
+      result.items=result.items.map((item,i)=>({...item,effective:['met','unmet','unclear','error','unrun'][i] ?? 'unrun',technical_error:i===3,latest:i===3?{status:'failed'}:null,saved:i<3?saved([true,false,null][i]):null}));
       await route.fulfill({json:result});
     });
     await page.reload({waitUntil:'domcontentloaded'});
-    for (const [index,state] of ['met','unmet','unclear','unclear','running','unrun'].entries()) {
+    for (const [index,state] of ['met','unmet','unclear','error','running','unrun'].entries()) {
       await page.locator('.criterion-card').nth(index).locator(`.criterion-status--${state}`).waitFor();
     }
-    const colors = await page.locator('.criterion-dot').evaluateAll(nodes=>nodes.slice(0,6).map(n=>getComputedStyle(n).backgroundColor));
-    assert.notEqual(colors[0],colors[1]); assert.equal(colors[2],colors[3]); assert.notEqual(colors[2],colors[5]);
+    const colors = await page.locator('.criterion-card .criterion-dot').evaluateAll(nodes=>nodes.slice(0,6).map(n=>getComputedStyle(n).backgroundColor));
+    assert.notEqual(colors[0],colors[1]); assert.equal(colors[2],'rgb(37, 99, 235)'); assert.notEqual(colors[2],colors[5]);
+    assert.equal(await page.locator('.criterion-card').nth(3).locator('.criterion-dot').innerText(),'✕');
     await page.locator('.criterion-card').first().scrollIntoViewIfNeeded();
     await page.screenshot({path:join(root,`status-dots-${language}-${width}.png`)});
     scenarios++; await context.close();

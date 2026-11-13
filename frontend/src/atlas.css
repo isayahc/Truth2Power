@@ -1220,6 +1220,13 @@ h2 {
 .regional-audits button.regional-primary { background:#17463f; color:#fff; border:1px solid #17463f; border-radius:6px; font-weight:600; }
 .regional-audits button.regional-primary:disabled { background:#d8e0dd; border-color:#b6c5bf; color:#465b52; }
 .regional-findings { display:flex; flex-wrap:wrap; gap:.7rem 1.5rem; margin:1rem 0; }
-.regional-findings span { background:white; border-radius:6px; padding:.6rem .8rem; }
+.regional-findings > span { background:white; border-radius:6px; padding:.6rem .8rem; }
 .regional-batch h3 { margin:0 0 .6rem; }
 .regional-unclear li { margin:.6rem 0; }
+.criterion-legend { padding:12px; margin:12px 0; border:1px solid #cbd5e1; border-radius:8px; }
+.criterion-legend ul { display:flex; flex-wrap:wrap; gap:12px 20px; padding:0; list-style:none; }
+.criterion-legend p { margin-bottom:0; }
+.criterion-status--unclear .criterion-dot { background:#2563eb; border-color:#2563eb; }
+.criterion-status--error .criterion-dot { display:inline-flex; align-items:center; justify-content:center; background:transparent; border:0; border-radius:0; color:#b91c1c; font-size:18px; font-weight:800; }
+.criterion-status.criterion-status--running .criterion-dot { border-color:#7e22ce; border-top-color:transparent; }
+.map-activity-legend { padding:0 12px; font-size:13px; }

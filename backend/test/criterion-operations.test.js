@@ -40,7 +40,7 @@ test('operations reads requirement checks and decisions from the same database w
   db.prepare('UPDATE criterion_jobs SET lease=1 WHERE id=?').run(interrupted.id);
   const before=db.prepare('SELECT * FROM criterion_jobs WHERE id=?').get(interrupted.id);
   row=(await get()).items.find(h=>h.hospital_key==='1002');
-  assert.equal(row.latest.status,'failed');assert.equal(row.criterion.summary.unclear,1);
+  assert.equal(row.latest.status,'failed');assert.equal(row.criterion.summary.unclear,0);assert.equal(row.criterion.summary.confirmed,2);
   assert.deepEqual(db.prepare('SELECT * FROM criterion_jobs WHERE id=?').get(interrupted.id),before);
   assert.equal(JSON.stringify(row).includes(root),false);
   assert.equal((await get()).items.find(h=>h.hospital_key==='739').criterion,null);
