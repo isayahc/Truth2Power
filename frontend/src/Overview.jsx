@@ -68,7 +68,7 @@ export default function Overview({ features, counties }) {
     frequent.set(m.column,entry);
   }
   function select(r, s = "") { setRegion(r); setStatus(s); setMeasure(""); setBucket(""); setDraft(""); }
-  const filterCount = (r, s, count) => <button className="plain" aria-label={`${r || t('Statewide')} · ${t(statuses[s] || 'All')} · ${count}`} onClick={() => select(r,s)}>{count}</button>;
+  const filterCount = (r, s, count) => <button className="plain" aria-label={`${r ? t(r) : t('Statewide')} · ${t(statuses[s] || 'All')} · ${count}`} onClick={() => select(r,s)}>{count}</button>;
   return <section className="overview" aria-labelledby="overview-title" lang={language}>
     <a href={localHref('?')}>{t('← Back to hospital map')}</a>
     <div className="overview-heading"><h1 id="overview-title">{t('Audit overview')}</h1><button onClick={() => setRequest(request + 1)}>{t('Refresh overview')}</button></div>
@@ -87,11 +87,11 @@ export default function Overview({ features, counties }) {
     <section id="overview-panel-coverage" role="tabpanel" aria-labelledby="overview-tab-coverage" hidden={tab!=='coverage'} tabIndex={0}>
     <h2 lang={language}>{t('Coverage by region')}</h2>
     <div className="overview-scroll"><table><thead><tr><th>{t('Region')}</th><th>{t('Hospitals')}</th>{Object.values(statuses).map((label) => <th key={label}>{t(label)}</th>)}</tr></thead>
-      <tbody>{areas.map((a) => <tr key={a.region}><th scope="row">{a.region || t('Statewide')}</th><td>{filterCount(a.region,"",a.total)}</td>
+      <tbody>{areas.map((a) => <tr key={a.region}><th scope="row">{a.region ? t(a.region) : t('Statewide')}</th><td>{filterCount(a.region,"",a.total)}</td>
         {Object.keys(statuses).map((s) => <td key={s}>{filterCount(a.region,s,a.freshness[s])}</td>)}</tr>)}</tbody></table></div>
     </section>
     <section id="overview-panel-findings" role="tabpanel" aria-labelledby="overview-tab-findings" hidden={tab!=='findings'} tabIndex={0}>
-    <h2 lang={language}>{region || t('Statewide')} · {t('Findings')}</h2>
+    <h2 lang={language}>{region ? t(region) : t('Statewide')} · {t('Findings')}</h2>
     <p>{t('Requirements marked not met in the saved reviews. A hospital is counted once for each requirement, even if several documents were checked.')}</p>
     {[...frequent.values()].sort((a,b) => b.count-a.count || a.column.localeCompare(b.column)).map((m) => <p key={m.column}>
       <button className="plain" onClick={() => {setMeasure(m.column);setStatus("");setBucket("");setDraft("");}}>{m.column} · {t(m.title)} ({m.count})</button> — {t(impacts[m.column])}</p>)}
@@ -99,7 +99,7 @@ export default function Overview({ features, counties }) {
     </section>
     <h2 lang={language}>{t('Hospital directory')}</h2>
     <div className="overview-controls">
-      <label>{t('Region')}<select value={region} onChange={(e) => select(e.target.value)}>{areas.map((a) => <option key={a.region} value={a.region}>{a.region || t('Statewide')}</option>)}</select></label>
+      <label>{t('Region')}<select value={region} onChange={(e) => select(e.target.value)}>{areas.map((a) => <option key={a.region} value={a.region}>{a.region ? t(a.region) : t('Statewide')}</option>)}</select></label>
       <label>{t('Check status')}<select value={status} onChange={(e) => setStatus(e.target.value)}><option value="">{t('All')}</option>{Object.entries(statuses).map(([s,label]) => <option key={s} value={s}>{t(label)}</option>)}</select></label>
       <label>{t('Draft findings')}<select value={draft} onChange={(e) => {setDraft(e.target.value);setMeasure("");}}>
         <option value="">{t('All')}</option><option value="flagged">{t('Has a requirement marked not met')} ({area.findings.flagged})</option>
@@ -113,7 +113,7 @@ export default function Overview({ features, counties }) {
     <p aria-live="polite">{visible.length} {t('of')} {area.total} {t('hospitals')}{measure && ` · ${measure} · ${t('Condition not met')}`}</p>
     {map && <><p>{t('Green: recently checked. Orange: check overdue. Gray: never checked.')}</p><HospitalMap hospitals={points} counties={counties} onSelect={(f) => window.location.assign(localHref(urlFor(byKey.get(String(f.id)),measure)))} /></>}
     <div className="overview-scroll"><table aria-label={t('Hospital directory')}><thead><tr>{['Hospital','September 2025 grade','Current institutional grade','Check status','Last successful check (UTC)'].map(label=><th key={label}>{t(label)}</th>)}</tr></thead>
-       <tbody>{pageRows.map((h) => <tr key={h.hospital_key}><th scope="row"><a href={localHref(urlFor(h,measure))}>{h.name}</a></th><td>{h.historical_grade ?? t('Not rated')}</td>
+       <tbody>{pageRows.map((h) => <tr key={h.hospital_key}><th scope="row"><a href={localHref(urlFor(h,measure))}>{h.name}</a><small className="ops-check-source">{t('County')}: {h.county} · {t('Region')} {h.region_number} · {t(h.region)}</small></th><td>{h.historical_grade ?? t('Not rated')}</td>
         <td>{h.current_grade ?? t(h.last_successful_assessment_at ? 'Pending' : 'Unassessed')}<CriterionCoverage hospitalKey={h.hospital_key} historical /></td><td>{t(statuses[h.freshness])}</td>
         <td>{h.last_successful_assessment_at ? new Date(h.last_successful_assessment_at).toISOString().slice(0,10) : "—"}</td></tr>)}</tbody></table></div>
     <nav className="overview-pagination" aria-label={t('Hospital directory pages')} lang={language}>

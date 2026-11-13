@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import ratingRegions from '../../references/ny-rating-regions-v1.json';
 import { useLocale } from "./locale.jsx";
 import { HumanIntervention } from './HumanIntervention.jsx';
 import AgentReview from "./AgentReview.jsx";
@@ -140,13 +141,14 @@ export function AuditOperations() {
   const { t, language, localHref } = useLocale(),
     [tick, bump] = useState(0),
     [query, search] = useState(""),
+    [region,setRegion]=useState(''),
     [sort, setSort] = useState("name"),
     [offset, setOffset] = useState(0);
   const r = useJson(api + "/operations", tick),
     totals = useJson(api + "/summary", tick);
   useEffect(()=>{const timer=setInterval(()=>bump(n=>n+1),5000);return()=>clearInterval(timer);},[]);
   const rows = (r.data?.items ?? []).filter((h) =>
-    (h.name + " " + h.hospital_key + " " + h.region)
+    (!region || h.region===region) && (h.name + " " + h.hospital_key + " " + h.county + " " + t(h.region))
       .toLowerCase()
       .includes(query.trim().toLowerCase()),
   );
@@ -221,6 +223,7 @@ export function AuditOperations() {
             ))}
           </select>
         </label>
+        <label>{t('Region')} <select value={region} onChange={e=>{setRegion(e.target.value);setOffset(0);}}><option value="">{t('All regions')}</option>{Object.keys(ratingRegions.regions).map(name=><option key={name} value={name}>{ratingRegions.region_numbers[name]} · {t(name)}</option>)}</select></label>
         <button onClick={() => bump((n) => n + 1)}>{t("Refresh")}</button>
       </div>
       <Notice resource={r} retry={() => bump((n) => n + 1)} />
@@ -267,6 +270,7 @@ export function AuditOperations() {
                       >
                         {h.name}
                       </a>
+                      <small className="ops-check-source">{t('County')}: {h.county} · {t('Region')} {h.region_number} · {t(h.region)}</small>
                     </th>
                     <td>
                       {t(statusNames[h.latest?.status] ?? "Not recorded")}

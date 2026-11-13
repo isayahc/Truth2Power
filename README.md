@@ -4,6 +4,14 @@
 
 The main screens call criteria **requirements**, runs **checks**, and unclear results **Needs review**. Viewing results is free; starting AI checks may incur charges. These wording changes do not change verdicts, job behavior or published grades. Technical API names and message keys remain stable. `frontend/src/plain-language.js` keeps paired English/Spanish wording; `locale.jsx` and the Spanish catalog use it for UI labels only, never source quotations. Remaining older English-only report content is labeled as such. Spanish wording is a translation draft, not fluent-reader approved.
 
+### County and rating regions
+
+All current and historical hospital identities carry `county`, `region`, `region_number` and `region_scheme`. The nine-region mapping in `references/ny-rating-regions-v1.json` is transcribed from the user-provided **Revised Attachment G — New York Standardized Rating Regions — Basic Health Plan** image. No publication date or source URL was supplied. These are rating regions, replacing economic-development regions in the current web directory and reporting; assignments follow the hospital's location county, not its service area.
+
+Run `node scripts/assign-hospital-regions.js` to validate the 62-county mapping and regenerate GeoJSON/CSV assignments. Roster reconciliation also runs this step. The map's region dropdown filters markers and search; star filters further narrow both, while rating totals describe the selected region. The selected region is retained in the URL across reloads and language changes. Overview and Operations use the same nine-region mapping, and hospital pages show county and region.
+
+**Next deliverable: NYC Metro (Region 1) vs. Central (Region 7)** comparison. This change prepares the group assignments and filtering; comparative analysis is a later deliverable.
+
 ### Current hospital directory
 
 The web directory is reconciled one-to-one against the [NYS directory of 218 hospitals](https://profiles.health.ny.gov/directory/hospitals). `data/maps/directory-reconciliation.json` records the retrieval date, all matches, and state facility records for the seven additions. `node scripts/reconcile-hospital-directory.js` reproduces the reconciliation, stopping on ambiguous matches or a changed directory count.

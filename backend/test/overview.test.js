@@ -22,10 +22,10 @@ test("all roster entries contribute once statewide and by region, including neve
   assert.equal(r.statewide.historical.unrated,7);
   assert.equal(r.statewide.current_grades.pending,2);
   assert.equal(r.statewide.current_grades.unassessed,216);
-  assert.equal(r.regions.length,10);
+  assert.equal(r.regions.length,9);
   assert.equal(r.regions.reduce((n,g) => n+g.total,0),218);
   for (const g of r.regions) assert.deepEqual(summarize(r.hospitals.filter((h) => h.region===g.region)).freshness,g.freshness);
-  assert.equal(row(r).region,"Mohawk Valley");
+  assert.equal(row(r).region,"Utica-Adirondack");
   assert.equal(r.hospitals.find((h) => h.hospital_key === "1002").region,"Mid-Hudson");
 });
 

@@ -1,6 +1,14 @@
 // Stable message keys keep data/API terminology separate from patient-facing copy.
 // These mappings apply only through t(); source quotations are never rewritten.
 export const plainLanguage = {
+  'All regions': ['All regions', 'Todas las regiones'],
+  'NYC Metro': ['NYC Metro', 'Área metropolitana de NYC'],
+  'Northern Metro': ['Northern Metro', 'Área metropolitana norte'],
+  'Northeast': ['Northeast', 'Noreste'],
+  'Utica-Adirondack': ['Utica-Adirondack', 'Utica-Adirondack'],
+  'Central': ['Central', 'Central'],
+  'Western': ['Western', 'Oeste'],
+  'Regions follow Attachment G and use the hospital’s county, not its service area.': ['Regions follow Attachment G and use the hospital’s county, not its service area.', 'Las regiones siguen el Anexo G y se asignan según el condado del hospital, no su área de servicio.'],
   'Not rated': ['Not rated', 'Sin calificación'],
   'Not rated in September 2025.': ['Not rated in September 2025.', 'Sin calificación en septiembre de 2025.'],
   'Historical record; not listed separately in the current state directory.': ['Historical record; not listed separately in the current state directory.', 'Registro histórico; no aparece por separado en el directorio estatal actual.'],

@@ -7,14 +7,14 @@ import React from "react";
 import { ratings, ratingByStars } from "./ratings.js";
 import { useLocale } from './locale.jsx';
 
-export function Ratings({ hospitals, filter, onFilter }) {
+export function Ratings({ hospitals, filter, onFilter, region = '' }) {
   const { t } = useLocale();
   const counts = new Map(ratings.map((r) => [r.stars, 0]));
   for (const h of hospitals) {const key=h.properties.stars ?? 'unrated';counts.set(key, counts.get(key) + 1);}
   let stop = 0;
   const slices = ratings.map((r) => {
     const start = stop;
-    stop += (counts.get(r.stars) / hospitals.length) * 100;
+    stop += hospitals.length ? (counts.get(r.stars) / hospitals.length) * 100 : 0;
     return `${r.color} ${start}% ${stop}%`;
   });
   return (
@@ -27,7 +27,7 @@ export function Ratings({ hospitals, filter, onFilter }) {
           style={{ background: "conic-gradient(" + slices.join(",") + ")" }}
         />
         <div>
-          <h2>{t('Statewide ratings')}</h2>
+          <h2>{region ? `${t('Region')}: ${t(region)}` : t('Statewide ratings')}</h2>
           <p>{t('September 2025 audit')}</p>
         </div>
       </div>
@@ -83,6 +83,7 @@ export function HospitalDetail({ hospital, onClose, onReview, pendingReviews }) 
         <h1>{p.name}</h1>
         {p.current_directory===false && <p>{t('Historical record; not listed separately in the current state directory.')}</p>}
         <p>{p.address}, {p.city} · {t('County')}: {p.county}</p>
+        <p>{t('Region')} {p.region_number} · {t(p.region)}</p>
         <p className="pill">
           <span className="swatch" style={{ background: ratingByStars.get(p.stars).color }} />
            {p.grade ? <>{t('Published rating')} · {p.stars} ★ · {t('Grade')} {p.grade} · {t('September 2025')}<CriterionCoverage hospitalKey={hospital.id} historical /></> : <>{t('Not rated')} · {t('September 2025')}</>}

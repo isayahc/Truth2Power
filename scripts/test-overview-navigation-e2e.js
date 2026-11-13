@@ -41,11 +41,12 @@ try {
     await next.click();
     const region=page.locator('.overview-controls select').nth(0);
     const selected=await region.locator('option').nth(1).getAttribute('value');
+    const selectedLabel=await region.locator('option').nth(1).innerText();
     await region.selectOption(selected);
     await page.waitForFunction(()=>document.querySelector('.overview-pagination [role=status]').textContent.includes('1–'));
     assert.match(await pagination.innerText(),/1–/);
     await findings.click();
-    assert.ok((await page.locator('#overview-panel-findings h2').innerText()).includes(selected));
+    assert.ok((await page.locator('#overview-panel-findings h2').innerText()).includes(selectedLabel));
     await page.getByRole('button',{name:language==='en'?'Clear filters':'Quitar filtros',exact:true}).click();
     await page.getByRole('button',{name:language==='en'?'Show checked hospitals on map':'Mostrar hospitales revisados en el mapa',exact:true}).click();
     const mapPoints=await page.locator('circle.dot').count();
