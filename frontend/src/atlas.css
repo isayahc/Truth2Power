@@ -1230,3 +1230,6 @@ h2 {
 .criterion-status--error .criterion-dot { display:inline-flex; align-items:center; justify-content:center; background:transparent; border:0; border-radius:0; color:#b91c1c; font-size:18px; font-weight:800; }
 .criterion-status.criterion-status--running .criterion-dot { border-color:#7e22ce; border-top-color:transparent; }
 .map-activity-legend { padding:0 12px; font-size:13px; }
+.regional-run-mode label { display:flex; flex-direction:column; gap:8px; }
+.regional-run-mode select { width:100%; max-width:40rem; min-width:0; padding:8px; }
+.regional-preview button { max-width:100%; white-space:normal; }

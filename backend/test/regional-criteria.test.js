@@ -12,6 +12,39 @@ import {fileURLToPath} from 'node:url';
 import {workCriterion} from '../audit/criterion-worker.js';
 const input={regions:['NYC Metro','Central'],steps:['k12','k5'],hospitals:['1169','739']};
 const planner=async(root,hospital,requested)=>({run:requested.length?['k1',...requested]:[],reuse:[]});
+test('fully saved regions support explicit retry and all-selected reruns without spending at preview',async t=>{
+ const {db,root}=setup(t),selection={regions:['NYC Metro','Central'],steps:['k1']};
+ const keys=regionalStats(db).hospitals.filter(h=>selection.regions.includes(h.region)).map(h=>h.hospital_key);
+ for(const [index,key] of keys.entries()){
+  for(const step of ['k1','k5'])db.prepare('INSERT INTO criterion_results VALUES(?,?,?,?,?)').run(key,step,'SYN-prior','2026-01-01T00:00:00Z',JSON.stringify({value:step==='k1'&&index<8?null:index%2===0,evidence:[]}));
+ }
+ const savedBefore=db.prepare('SELECT * FROM criterion_results ORDER BY hospital,step').all();
+ const missing=await previewRegional(db,root,selection,planner);
+ assert.equal(missing.selection.mode,'missing');assert.equal(missing.plan.jobs,0);
+ const retry=await previewRegional(db,root,{...selection,mode:'retry'},planner);
+ assert.equal(retry.plan.jobs,8);assert.equal(retry.plan.checks,8);
+ const all=await previewRegional(db,root,{...selection,mode:'all'},planner);
+ assert.equal(all.plan.jobs,82);assert.equal(all.plan.checks,82);assert.equal(all.plan.max_model_calls,3280);
+ assert.equal(db.prepare('SELECT count(*) n FROM criterion_jobs').get().n,0);
+ const started=await startRegional(db,root,all.id,planner);
+ assert.equal(started.jobs.length,82);assert.ok(started.jobs.every(j=>JSON.stringify(j.requested)==='["k1"]'));
+ assert.deepEqual((await startRegional(db,root,all.id,planner)).jobs,started.jobs);
+ assert.deepEqual(db.prepare('SELECT * FROM criterion_results ORDER BY hospital,step').all(),savedBefore);
+ assert.equal(cancelRegional(db,all.id).jobs.filter(j=>j.status==='cancelled').length,82);
+ await assert.rejects(previewRegional(db,root,{...selection,mode:'anything'},planner),/Invalid check mode/);
+});
+test('retry includes technical failures with prior findings and rejects changed human-review previews',async t=>{
+ const {db,root}=setup(t),selection={...input,steps:['k12'],hospitals:['1169'],mode:'all'};
+ db.prepare('INSERT INTO criterion_results VALUES(?,?,?,?,?)').run('1169','k12','SYN-prior','2026-01-01T00:00:00Z',JSON.stringify({value:true,evidence:[]}));
+ const first=await previewRegional(db,root,selection,planner);await startRegional(db,root,first.id,planner);
+ const job=claimCriterion(db);db.prepare("UPDATE criterion_jobs SET status='failed',completed=?,lease=NULL WHERE id=?").run(new Date().toISOString(),job.id);
+ const retry=await previewRegional(db,root,{...selection,mode:'retry'},planner);
+ assert.equal(retry.plan.jobs,1);assert.deepEqual(retry.plan.hospitals[0].requested,['k12']);
+ const item=criterionStatus(db,'1169').items.find(i=>i.id==='k12');
+ decideCriterion(db,'1169','k12',{request_key:randomUUID(),revision:item.revision,decision:'met',reason:'SYN review',evidence:'SYN page 1'});
+ await assert.rejects(startRegional(db,root,retry.id,planner),/changed/);
+ assert.equal(db.prepare("SELECT count(*) n FROM criterion_jobs WHERE status='queued'").get().n,0);
+});
 function setup(t){const root=mkdtempSync(join(tmpdir(),'SYN-regional-'));const db=openStore(root);installCriteria(db);installRegional(db);t.after(()=>db.close());return {db,root};}
 test('regional preview is free of jobs; atomic approval is durable, idempotent, selected-only and bounded',async t=>{
  const {db,root}=setup(t);

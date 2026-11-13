@@ -1,6 +1,21 @@
 // Stable message keys keep data/API terminology separate from patient-facing copy.
 // These mappings apply only through t(); source quotations are never rewritten.
 export const plainLanguage = {
+  'What should run?': ['What should run?', '¿Qué se debe revisar?'],
+  'Check mode': ['Check mode', 'Modo de revisión'],
+  'Missing checks only': ['Missing checks only', 'Solo revisiones sin resultados guardados'],
+  'Retry technical errors and unclear results': ['Retry technical errors and unclear results', 'Reintentar errores técnicos y resultados sin resolver'],
+  'Rerun all selected requirements': ['Rerun all selected requirements', 'Repetir todos los requisitos seleccionados'],
+  'Keep saved results and run only missing checks.': ['Keep saved results and run only missing checks.', 'Conservar los resultados guardados y ejecutar solo las revisiones que faltan.'],
+  'Retry selected requirements with technical errors or unclear findings. Other results are kept.': ['Retry selected requirements with technical errors or unclear findings. Other results are kept.', 'Reintentar los requisitos seleccionados con errores técnicos o resultados sin resolver. Se conservan los demás resultados.'],
+  'Run the selected requirements again for every included hospital, even when results are saved.': ['Run the selected requirements again for every included hospital, even when results are saved.', 'Repetir los requisitos seleccionados para cada hospital incluido, aunque ya haya resultados guardados.'],
+  'Reruns may incur new AI charges. Saved documents and intact prerequisites may be reused; this does not force a fresh website download.': ['Reruns may incur new AI charges. Saved documents and intact prerequisites may be reused; this does not force a fresh website download.', 'Las nuevas revisiones pueden generar cargos de IA. Se pueden reutilizar documentos guardados y pasos previos válidos; esto no obliga a descargar otra vez el sitio web.'],
+  'Hospitals to check': ['Hospitals to check', 'Hospitales por revisar'],
+  'Hospitals skipped in this mode': ['Hospitals skipped in this mode', 'Hospitales omitidos en este modo'],
+  'Selected checks to run': ['Selected checks to run', 'Revisiones seleccionadas por ejecutar'],
+  'No checks match this mode. You can prepare an explicit rerun below; approval is still required.': ['No checks match this mode. You can prepare an explicit rerun below; approval is still required.', 'No hay revisiones para este modo. Puede preparar una nueva revisión abajo; aún se requiere su aprobación.'],
+  'Preview retry of errors and unclear results': ['Preview retry of errors and unclear results', 'Ver plan para reintentar errores y resultados sin resolver'],
+  'Preview rerun of all selected requirements': ['Preview rerun of all selected requirements', 'Ver plan para repetir todos los requisitos seleccionados'],
   'Status legend': ['Status legend', 'Leyenda de estados'],
   'Needs evidence review': ['Needs evidence review', 'Necesita revisión de evidencia'],
   'Technical error — not assessed': ['Technical error — not assessed', 'Error técnico — sin evaluar'],
