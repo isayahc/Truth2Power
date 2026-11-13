@@ -88,3 +88,22 @@ test('cancelling a queued retry preserves the earlier failed finding and review 
  const after=criterionStatus(db,'739').items.find(i=>i.id==='k12');
  assert.equal(after.effective,'unclear');assert.equal(after.revision,original.revision);
 });
+test('all hospitals in both regions are included by default with one approval and saved results skipped',async t=>{
+ const {db,root}=setup(t),selection={regions:['NYC Metro','Central'],steps:['k1']};
+ const all=await previewRegional(db,root,selection,planner);
+ assert.equal(all.selection.scope,'all');assert.equal(all.selection.hospitals.length,82);
+ assert.equal(all.plan.jobs,82);assert.equal(all.plan.max_model_calls,3280);
+ assert.equal(all.plan.hospitals.filter(h=>h.region==='NYC Metro').length,62);
+ assert.equal(all.plan.hospitals.filter(h=>h.region==='Central').length,20);
+ // Already-saved results, including unclear findings, must not cause paid reruns.
+ for(const key of all.selection.hospitals.slice(0,10))db.prepare('INSERT INTO criterion_results VALUES(?,?,?,?,?)').run(key,'k1','SYN-existing','2026-11-01T00:00:00Z',JSON.stringify({value:null,evidence:[]}));
+ const preview=await previewRegional(db,root,selection,planner);
+ assert.equal(preview.plan.hospitals.length,82);assert.equal(preview.plan.jobs,72);
+ const started=await startRegional(db,root,preview.id,planner);
+ assert.equal(started.jobs.length,72);
+ assert.equal(db.prepare("SELECT count(*) n FROM criterion_jobs WHERE status='queued'").get().n,72);
+ assert.equal((await startRegional(db,root,preview.id,planner)).jobs.length,72);
+ assert.equal(cancelRegional(db,preview.id).jobs.filter(j=>j.status==='cancelled').length,72);
+ const custom=await previewRegional(db,root,{...selection,hospitals:all.selection.hospitals.slice(0,20)},planner);
+ assert.equal(custom.selection.scope,'custom');assert.equal(custom.selection.hospitals.length,20);
+});

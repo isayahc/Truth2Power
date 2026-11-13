@@ -1214,3 +1214,12 @@ h2 {
 @keyframes hospital-audit-spin { to { transform:rotate(360deg); } }
 @media(prefers-reduced-motion:reduce) { .hospital-audit-spinner { animation:none; } }
 @media(max-width:600px) { .regional-selectors,.regional-hospitals,.regional-checklist { grid-template-columns:1fr; } }
+.regional-scope { padding:.8rem 1rem; background:#edf3f0; border-radius:8px; margin:1rem 0; }
+.regional-custom-selection { margin:.75rem 0 1rem; }
+.regional-custom-selection>summary, .regional-preview summary, .regional-batch summary { cursor:pointer; padding:.6rem 0; font-weight:600; }
+.regional-audits button.regional-primary { background:#17463f; color:#fff; border:1px solid #17463f; border-radius:6px; font-weight:600; }
+.regional-audits button.regional-primary:disabled { background:#d8e0dd; border-color:#b6c5bf; color:#465b52; }
+.regional-findings { display:flex; flex-wrap:wrap; gap:.7rem 1.5rem; margin:1rem 0; }
+.regional-findings span { background:white; border-radius:6px; padding:.6rem .8rem; }
+.regional-batch h3 { margin:0 0 .6rem; }
+.regional-unclear li { margin:.6rem 0; }
