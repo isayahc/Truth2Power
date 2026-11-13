@@ -1,11 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useLocale } from './locale.jsx';
 import CriterionDecision from './CriterionDecision.jsx';
+import CriterionLegend,{StatusBadge} from './CriterionStatus.jsx';
 import {coverageText, notifyCriterionChange} from './CriterionCoverage.jsx';
 
-const states = { queued: 'Queued', running: 'Running', completed: 'Completed', failed: 'Needs review' };
-const progressStates = { running: 'Running', succeeded: 'Completed', reused: 'Saved evidence reused', failed: 'Needs review' };
-const outcomeLabels = { met: 'Condition met', unmet: 'Condition not met', unclear: 'Unclear', unrun: 'Not run', running: 'Running', queued: 'Queued' };
+const states = { queued: 'Queued', running: 'Running', completed: 'Completed', failed: 'Technical error — not assessed' };
+const progressStates = { running: 'Running', succeeded: 'Completed', reused: 'Saved evidence reused', failed: 'Technical error — not assessed' };
 const safeLink = value => { try { const url = new URL(value); return url.protocol === 'https:' ? url.href : null; } catch { return null; } };
 
 export default function CriterionAudits({ hospitalKey }) {
@@ -77,13 +77,14 @@ export default function CriterionAudits({ hospitalKey }) {
   const formatDate = value => new Date(value).toLocaleString(language);
   return <section id="audit-runs" className="criterion-audits ops" aria-labelledby="criterion-audits-title">
     <h2 id="criterion-audits-title">{t('Criterion audits')}</h2>
+    <CriterionLegend/>
     <p>{t('Run one criterion or all missing criteria. Viewing results makes no model calls. Saved documents and prerequisites are reused when available.')}</p>
     <p>{t('These are draft findings, separate from the published rating. Unreadable sources or model errors require review, not a hospital failure.')}</p>
     <button type="button" onClick={() => refresh(n => n + 1)}>{t('Refresh')}</button>
     <button type="button" disabled={!data || busy || !!intent || !!data.active || error || !data.items.some(item=>!item.saved)} onClick={() => choose({id:'all'})}>{t('Run all missing')}</button>
     {data?.summary && <div className="criterion-summary">
       <p>{coverageText(data.summary,t,language)}</p>
-      <p>{data.summary.met}/17 {t('Condition met')} · {data.summary.unmet}/17 {t('Condition not met')} · {data.summary.unclear}/17 {t('Unclear')} · {data.summary.unrun}/17 {t('Not run')}</p>
+      <p>{data.summary.met}/17 {t('Condition met')} · {data.summary.unmet}/17 {t('Condition not met')} · {data.summary.unclear}/17 {t('Needs evidence review')} · {data.summary.unrun}/17 {t('Not run')} · {data.summary.error??0}/17 {t('Technical error — not assessed')}</p>
     </div>}
     {intent?.step === 'all' && <div ref={confirmation} tabIndex={-1} className="criterion-confirm">
       <h3>{t('Run all missing')}</h3>
@@ -105,9 +106,8 @@ export default function CriterionAudits({ hospitalKey }) {
       return <li key={item.id} id={`criterion-${item.id}`} className="criterion-card" data-criterion={item.id}>
         <div className="criterion-card-heading">
           <h3 tabIndex={-1}>{item.id.toUpperCase()} · {t(item.title)}</h3>
-          <span className={`criterion-status criterion-status--${outcome}`}>
-            <span className="criterion-dot" aria-hidden="true" />{t(outcomeLabels[outcome])}
-          </span>
+          <StatusBadge status={outcome}/>
+          {item.technical_error && outcome!=='error' && <StatusBadge status="error" label="Latest attempt failed; previous finding retained"/>}
           <button type="button" disabled={busy || !!intent || !!data.active || error} onClick={() => choose(item)}
             aria-expanded={intent?.step === item.id} aria-controls={`criterion-request-${item.id}`}
             aria-label={`${t(item.saved || item.latest ? 'Run again' : 'Run criterion')} ${item.id.toUpperCase()}`}>

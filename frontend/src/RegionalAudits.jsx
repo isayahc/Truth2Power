@@ -3,6 +3,7 @@ import {useLocale} from './locale.jsx';
 import {notifyCriterionChange} from './CriterionCoverage.jsx';
 import HospitalMap from './HospitalMap.jsx';
 import HospitalSearch from './HospitalSearch.jsx';
+import CriterionLegend,{StatusBadge,statusLabels as findingLabels} from './CriterionStatus.jsx';
 import reference from '../../references/ny-rating-regions-v1.json';
 
 const endpoint='/api/criteria/regions';
@@ -29,7 +30,11 @@ export default function RegionalAudits({features,counties}){
  const rows=data?.hospitals.filter(h=>regions.includes(h.region))??[];
  const requirements=data?.hospitals[0]?.items??[];
  const chosen=selected??rows.map(h=>h.hospital_key);
- const points=features.filter(f=>regions.includes(f.properties.region));
+  const points=features.filter(f=>regions.includes(f.properties.region)).map(f=>{
+   const row=rows.find(h=>h.hospital_key===f.id),items=row?.items.filter(i=>steps.includes(i.id))??[];
+   const state=row?.active?.status??(items.some(i=>i.technical_error)?'error':items.some(i=>i.effective==='unmet')?'unmet':items.some(i=>i.effective==='unclear')?'unclear':!items.length||items.some(i=>i.effective==='unrun')?'unrun':'met');
+   return {...f,markerStatus:state,markerLabel:t(findingLabels[state]),markerColor:{met:'#15803d',unmet:'#b91c1c',unclear:'#2563eb',running:'#7e22ce',queued:'#6b7280',unrun:'#6b7280',error:'#b91c1c'}[state]};
+  });
  const date=value=>value?new Date(value).toLocaleString(language):t('Not checked');
  return <section className="regional-audits" lang={language}>
   <a href={localHref('?')}>{t('← Back to hospital map')}</a>
@@ -44,7 +49,8 @@ export default function RegionalAudits({features,counties}){
   </fieldset>
   <div className="toolbar"><HospitalSearch hospitals={points} onSelect={f=>window.location.assign(localHref(`?hospital=${f.id}`))}/></div>
   <HospitalMap hospitals={points} counties={counties} onSelect={f=>window.location.assign(localHref(`?hospital=${f.id}`))}/>
-  <p className="regional-map-legend">{t('Map activity: clock = queued; spinning ring = running; check = finished; warning = needs attention. Dot colors remain September 2025 ratings.')}</p>
+   <CriterionLegend/>
+   <p>{t('Map circles summarize selected requirements: active checks first, then technical errors, not met, needs review, not checked, or all met. These are current checks, not historical ratings.')}</p>
   <fieldset disabled={busy||!!preview||!data} className="regional-requirements"><legend>{t('Choose requirements')}</legend>
    <div className="regional-actions"><button onClick={()=>setSteps(requirements.map(i=>i.id))}>{t('Select all requirements')}</button><button onClick={()=>setSteps([])}>{t('Clear requirements')}</button></div>
    <div className="regional-checklist">{requirements.map(item=><label key={item.id}><input type="checkbox" checked={steps.includes(item.id)} onChange={e=>setSteps(e.target.checked?[...steps,item.id]:steps.filter(s=>s!==item.id))}/>{item.id.toUpperCase()} · {t(item.title)}</label>)}</div>
@@ -78,23 +84,25 @@ export default function RegionalAudits({features,counties}){
    const stopped=batch.jobs.filter(j=>j.status==='cancelled').length;
    const scope=new Set(batch.selection.hospitals);
    const outcomes=rows.filter(h=>scope.has(h.hospital_key)).flatMap(h=>h.items.filter(i=>batch.selection.steps.includes(i.id)).map(i=>({...i,hospital:h})));
-   const counts={met:0,unmet:0,unclear:0,unrun:0};for(const i of outcomes)counts[i.effective]++;
+   const counts={met:0,unmet:0,unclear:0,unrun:0,error:0};for(const i of outcomes)counts[i.effective]++;
    return <div className="regional-batch" key={batch.id}>
     <h3>{t(pending?'Checks in progress':stopped?'Checks stopped':failures?'Finished with execution errors':'All checks finished')} · {batch.jobs.length-pending}/{batch.jobs.length}</h3>
     <p>{date(batch.created)} · {batch.selection.steps.join(', ')}</p>
     <p>{t('Current findings for included hospitals and selected requirements')}</p>
-    <p className="regional-findings"><span>{t('Condition met')}: <strong>{counts.met}</strong></span><span>{t('Condition not met')}: <strong>{counts.unmet}</strong></span><span>{t('Unclear')}: <strong>{counts.unclear}</strong></span><span>{t('Not checked')}: <strong>{counts.unrun}</strong></span></p>
+    <div className="regional-findings">{Object.entries(counts).map(([state,count])=><span key={state}><StatusBadge status={state}/>: <strong>{count}</strong></span>)}</div>
     <p>{batch.selection.hospitals.length} {t('Hospitals included')} · {t('Execution errors')}: {failures}</p>
+    {outcomes.some(i=>i.technical_error)&&<details className="regional-errors"><summary><StatusBadge status="error"/></summary><ul>{outcomes.filter(i=>i.technical_error).map(i=><li key={`${i.hospital.hospital_key}-${i.id}`}><a href={localHref(`?hospital=${i.hospital.hospital_key}#criterion-${i.id}`)}>{i.hospital.name} · {i.id.toUpperCase()}</a>{i.effective!=='error'&&<> · {t('Latest attempt failed; previous finding retained')}</>}</li>)}</ul></details>}
     {!!counts.unclear&&<details className="regional-unclear"><summary>{t('Review unclear results')} ({counts.unclear})</summary><ul>{outcomes.filter(i=>i.effective==='unclear').map(i=><li key={`${i.hospital.hospital_key}-${i.id}`}><a href={localHref(`?hospital=${i.hospital.hospital_key}#criterion-${i.id}`)}>{i.hospital.name} · {i.id.toUpperCase()} · {t(i.title)}</a></li>)}</ul></details>}
     <a href="#regional-statistics-title">{t('View regional comparison')}</a>
     <details><summary>{t('Execution details')}</summary>{regions.map(region=>{const keys=new Set(batch.plan.hospitals.filter(h=>h.region===region).map(h=>h.hospital_key));const jobs=batch.jobs.filter(j=>keys.has(j.hospital));return <p key={region}><strong>{t(region)}</strong>: {Object.entries(statusLabels).map(([state,label])=>`${t(label)}: ${jobs.filter(j=>j.status===state).length}`).join(' · ')}</p>;})}</details>
     {!batch.cancelled&&batch.jobs.some(j=>j.status==='queued')&&<><p>{t('Cancel stops queued hospitals only. A hospital already running finishes its bounded check.')}</p><button disabled={busy} onClick={()=>act(()=>post(`/${batch.id}/cancel`,{}))}>{t('Stop remaining checks')}</button></>}
    </div>;
   })}
-  <h2 id="regional-statistics-title">{t('Regional requirement statistics')}</h2>
+   <h2 id="regional-statistics-title">{t('Regional requirement statistics')}</h2>
+   <p>{t('Technical errors are excluded from checked and confirmed totals. They do not count as unmet requirements.')}</p>
   <p>{t('Current saved findings only. Unchecked hospitals are not failures. Historical grades stay separate. Counts include the entire region, not just this batch.')}</p>
   <div className="regional-stats-scroll" tabIndex={0} role="region" aria-label={t('Regional requirement statistics')}><table className="regional-statistics"><thead><tr><th>{t('Requirement')}</th>{regions.map(region=><th key={region}>{t(region)}</th>)}</tr></thead>
-   <tbody>{requirements.filter(i=>steps.includes(i.id)).map(item=><tr key={item.id}><th>{item.id.toUpperCase()} · {t(item.title)}</th>{regions.map(region=>{const r=data.regions.find(r=>r.region===region),s=r.items.find(i=>i.id===item.id);return <td key={region}><div>{t('Condition met')}: {s.met} · {t('Condition not met')}: {s.unmet}</div><div>{t('Unclear')}: {s.unclear} · {t('Not checked')}: {s.unrun}</div><div>{t('Checked')}: {s.checked}/{r.total} · {t('Confirmed requirements')}: {s.confirmed}/{r.total}</div><small>{t('Last updated')}: {date(s.updated_at)}</small></td>;})}</tr>)}</tbody>
+    <tbody>{requirements.filter(i=>steps.includes(i.id)).map(item=><tr key={item.id}><th>{item.id.toUpperCase()} · {t(item.title)}</th>{regions.map(region=>{const r=data.regions.find(r=>r.region===region),s=r.items.find(i=>i.id===item.id);return <td key={region}>{['met','unmet','unclear','unrun','error'].map(state=><div key={state}><StatusBadge status={state}/>: {s[state]}</div>)}<div>{t('Checked')}: {s.checked}/{r.total} · {t('Confirmed requirements')}: {s.confirmed}/{r.total}</div><small>{t('Last updated')}: {date(s.updated_at)}</small></td>;})}</tr>)}</tbody>
   </table></div>
  </section>;
 }

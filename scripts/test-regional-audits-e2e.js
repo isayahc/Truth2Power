@@ -40,7 +40,7 @@ try{
   assert.equal(await page.locator('.regional-custom-selection').getAttribute('open'),null);
   const completed=page.locator('.regional-batch').filter({has:page.getByRole('heading',{name:language==='en'?'All checks finished · 10/10':'Todas las revisiones finalizaron · 10/10'})});
   await completed.waitFor();assert.equal(await completed.locator('button').count(),0);
-  assert.deepEqual(await completed.locator('.regional-findings strong').allTextContents(),['2','0','8','0']);
+  assert.deepEqual(await completed.locator('.regional-findings strong').allTextContents(),['2','0','8','0','0']);
   await completed.locator('.regional-unclear summary').click();assert.equal(await completed.locator('.regional-unclear li').count(),8);
   await completed.screenshot({path:`.audit/ui/regional-audits/completed-${language}-${width}.png`});
   // Optional selection is hidden until requested; customize then restore the all-hospital default.
@@ -97,7 +97,12 @@ try{
   // Simulate a failed local worker to verify attention state and regional statistics without model calls.
   db.prepare("UPDATE criterion_jobs SET status='failed',completed=?,error='SYN-execution-failed',lease=NULL WHERE id=?").run(new Date().toISOString(),job.id);
   await page.evaluate(()=>window.dispatchEvent(new Event('criterion-change')));
-  await page.waitForFunction(()=>document.querySelectorAll('[data-audit-status="attention"]').length>0);
+  await page.waitForFunction(()=>document.querySelectorAll('[data-audit-status="error"] .hospital-error-cross').length>0);
+  assert.equal(await page.locator('.criterion-legend').count(),1);
+  assert.equal(await page.locator('.criterion-legend .criterion-status--error .criterion-dot').innerText(),'✕');
+  assert.equal(await page.locator('.criterion-legend .criterion-status--unclear .criterion-dot').evaluate(e=>getComputedStyle(e).backgroundColor),'rgb(37, 99, 235)');
+  await page.locator('.criterion-legend').screenshot({path:`.audit/ui/regional-audits/error-legend-${language}-${width}.png`});
+  await page.locator('.map-panel').screenshot({path:`.audit/ui/regional-audits/error-map-${language}-${width}.png`});
   await page.locator('.regional-statistics').scrollIntoViewIfNeeded();
   assert.equal(await page.locator('.regional-statistics tbody tr').count(),2);
   await page.screenshot({path:`.audit/ui/regional-audits/statistics-${language}-${width}.png`});

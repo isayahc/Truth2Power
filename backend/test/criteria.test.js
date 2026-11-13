@@ -14,6 +14,22 @@ import { steps } from '../../agents/steps.ts';
 import { workCriterion } from '../audit/criterion-worker.js';
 
 const hospitalKey = '1002';
+test('technical failures preserve earlier findings and human decisions, including failed steps in completed jobs',async t=>{
+ const {db}=await store(t);
+ db.prepare('INSERT INTO criterion_results VALUES(?,?,?,?,?)').run(hospitalKey,'k1','SYN-prior','2026-01-01T00:00:00Z',JSON.stringify({value:true,evidence:[]}));
+ const before=criterionStatus(db,hospitalKey).items[0];
+ decideCriterion(db,hospitalKey,'k1',{request_key:randomUUID(),revision:before.revision,decision:'met',reason:'SYN review',evidence:'SYN public source page 1'});
+ enqueueCriterion(db,hospitalKey,'all',request(['k1','k2']),{requested:['k1','k2'],run:['k1','k2']});
+ const job=claimCriterion(db);
+ db.prepare('UPDATE criterion_jobs SET progress=? WHERE id=?').run(JSON.stringify({k1:{status:'failed'},k2:{status:'failed'}}),job.id);
+ finishCriterion(db,job); // A faulty producer reports success despite failed steps.
+ const result=criterionStatus(db,hospitalKey);
+ assert.equal(result.items[0].effective,'met');assert.equal(result.items[0].revision,before.revision);
+ assert.equal(result.items[0].decision.decision,'met');assert.equal(result.items[0].technical_error,true);
+ assert.equal(result.items[1].effective,'error');assert.equal(result.summary.unmet,0);
+ assert.equal(result.summary.error,1);assert.equal(result.summary.confirmed,1);
+ assert.equal(criterionOverview(db).activity[hospitalKey].status,'error');
+});
 const hospital = criterionHospital(hospitalKey);
 const request = (approved_steps, rerun = false) => ({ request_key: randomUUID(), approved_steps, rerun });
 async function store(t) {
@@ -149,7 +165,7 @@ test('batch scope, partial failure, immutable decisions and reopened notificatio
   finishCriterion(db,job,'execution_failed');
   let status=criterionStatus(db,hospitalKey);
   assert.equal(status.items[0].effective,'met');assert.equal(status.summary.confirmed,2);
-  assert.equal(status.summary.unclear,15);
+  assert.equal(status.summary.error,15);assert.equal(status.summary.unclear,0);
   const item=status.items[1], decision={request_key:randomUUID(),revision:item.revision,decision:'met',reason:'SYN-reviewed',evidence:'https://example.org/SYN page 1'};
   const saved=decideCriterion(db,hospitalKey,'k2',decision);
   assert.ok(Number.isFinite(Date.parse(saved.decided_at)));

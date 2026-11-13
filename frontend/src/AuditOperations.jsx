@@ -251,6 +251,7 @@ export function AuditOperations() {
                     "Confirmed requirements",
                     "Requirements needing review",
                     "Not checked",
+                    "Technical error — not assessed",
                     "Cost availability",
                   ].map((l) => (
                     <th key={l} scope="col">
@@ -297,6 +298,7 @@ export function AuditOperations() {
                     <td>{h.criterion ? `${h.criterion.summary.confirmed}/17` : t('Not checked')}</td>
                     <td>{h.criterion ? h.criterion.summary.unclear : t('Not checked')}</td>
                     <td>{h.criterion ? h.criterion.summary.unrun : 17}</td>
+                    <td>{h.criterion?.summary.error ?? 0}</td>
                     <td>{t(h.cost_status==='unknown' ? 'Not recorded' : statusNames[h.cost_status] ?? 'Not recorded')}</td>
                   </tr>
                 ))}

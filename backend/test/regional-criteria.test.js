@@ -52,9 +52,11 @@ test('regional counts match hospital verdicts including human decisions, untouch
  const stats=regionalStats(db),central=stats.regions.find(r=>r.region==='Central'),metro=stats.regions.find(r=>r.region==='NYC Metro');
  assert.equal(central.items.find(i=>i.id==='k5').unmet,1);
  assert.equal(central.items.find(i=>i.id==='k5').unrun,central.total-1);
- assert.equal(metro.items.find(i=>i.id==='k12').unclear,1);
- for(const r of stats.regions)for(const i of r.items)assert.equal(i.met+i.unmet+i.unclear+i.unrun,r.total);
- assert.equal(criterionOverview(db).activity['1169'].status,'attention');
+   assert.equal(metro.items.find(i=>i.id==='k12').error,1);
+   assert.equal(metro.items.find(i=>i.id==='k12').checked,0);
+   assert.equal(metro.items.find(i=>i.id==='k12').unmet,0);
+  for(const r of stats.regions)for(const i of r.items)assert.equal(i.met+i.unmet+i.unclear+i.unrun+i.error,r.total);
+  assert.equal(criterionOverview(db).activity['1169'].status,'error');
 });
 test('invalid scopes, over-limit requests, cancelled and expired previews cannot enqueue',async t=>{
  const {db,root}=setup(t);
@@ -86,7 +88,7 @@ test('cancelling a queued retry preserves the earlier failed finding and review 
  const original=criterionStatus(db,'739').items.find(i=>i.id==='k12');
  const retry=await previewRegional(db,root,selection,planner);await startRegional(db,root,retry.id,planner);cancelRegional(db,retry.id);
  const after=criterionStatus(db,'739').items.find(i=>i.id==='k12');
- assert.equal(after.effective,'unclear');assert.equal(after.revision,original.revision);
+  assert.equal(after.effective,'error');assert.equal(after.revision,original.revision);
 });
 test('all hospitals in both regions are included by default with one approval and saved results skipped',async t=>{
  const {db,root}=setup(t),selection={regions:['NYC Metro','Central'],steps:['k1']};

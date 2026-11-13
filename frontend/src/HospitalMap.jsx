@@ -45,8 +45,8 @@ function Points({ hospitals, project, zoom = 1, selected, onSelect, setHover }) 
     const [cx, cy] = project(hospital.geometry.coordinates);
     const { stars, name } = hospital.properties;
     const active = selected?.id === hospital.id;
-    const activity=error ? null : data?.activity?.[hospital.id]?.status;
-    const activityLabel={queued:'Queued',running:'Running',completed:'Completed',attention:'Needs review',cancelled:'Cancelled'}[activity];
+    const activity=hospital.markerStatus ?? (error ? null : data?.activity?.[hospital.id]?.status);
+    const activityLabel={queued:'Queued',running:'Running',completed:'Completed',attention:'Needs evidence review',error:'Technical error — not assessed',cancelled:'Cancelled'}[activity];
     const label = name + " · " + (hospital.markerLabel ?? (stars==null ? t('Not rated') : stars + ' ' + t(stars === 1 ? 'star' : 'stars'))) + ' · ' + (stars==null ? t('Not rated in September 2025.') : t('Published September 2025; confirmed-criterion count not recorded.')) + ' · ' + (error ? t('Criterion coverage unavailable.') : data ? coverageText(data.hospitals[hospital.id] ?? emptyCoverage,t,language) : t('Loading criterion coverage…'));
     return (
       <g key={hospital.id} data-audit-status={activity??'idle'}>
@@ -57,7 +57,8 @@ function Points({ hospitals, project, zoom = 1, selected, onSelect, setHover }) 
         cy={cy}
         r={(active ? 6.5 : 5.2) / zoom}
         className={active ? "dot active" : "dot"}
-        fill={hospital.markerColor ?? ratingByStars.get(stars).color}
+        fill={activity==='error'?'transparent':hospital.markerColor ?? ratingByStars.get(stars).color}
+        style={activity==='error'?{stroke:'transparent'}:undefined}
         role="button"
         aria-label={label+(activityLabel?' · '+t(activityLabel):'')}
         tabIndex={0}
@@ -75,8 +76,9 @@ function Points({ hospitals, project, zoom = 1, selected, onSelect, setHover }) 
       >
         <title>{label}</title>
       </circle>
-      {activity==='running'&&<circle className="hospital-audit-spinner" cx={cx} cy={cy} r={8/zoom} fill="none" stroke="#135b94" strokeWidth={2/zoom} strokeDasharray={`${12/zoom} ${7/zoom}`} pointerEvents="none" aria-hidden="true"/>}
-      {['queued','completed','attention'].includes(activity)&&<text x={cx+7/zoom} y={cy-6/zoom} className="hospital-audit-symbol" fontSize={12/zoom} pointerEvents="none" aria-hidden="true">{activity==='queued'?'◷':activity==='completed'?'✓':'!'}</text>}
+      {activity==='running'&&<circle className="hospital-audit-spinner" cx={cx} cy={cy} r={8/zoom} fill="none" stroke="#7e22ce" strokeWidth={2/zoom} strokeDasharray={`${12/zoom} ${7/zoom}`} pointerEvents="none" aria-hidden="true"/>}
+      {activity==='error'&&<path className="hospital-error-cross" d={`M${cx-5/zoom},${cy-5/zoom}l${10/zoom},${10/zoom}m0,${-10/zoom}l${-10/zoom},${10/zoom}`} stroke="#b91c1c" strokeWidth={3/zoom} fill="none" pointerEvents="none" aria-hidden="true"/>}
+      {!hospital.markerStatus&&['queued','completed','attention'].includes(activity)&&<circle cx={cx+7/zoom} cy={cy-6/zoom} r={3/zoom} fill={activity==='attention'?'#2563eb':activity==='completed'?'#15803d':'#6b7280'} pointerEvents="none" aria-hidden="true"/>}
       </g>
     );
   });
@@ -139,6 +141,7 @@ export default function HospitalMap({ hospitals, counties, selected, onSelect })
   const mapHospitals = isMetro ? metroHospitals : hospitals;
   return (
     <div className="map-panel" lang={language}>
+      {!hospitals.some(h=>h.markerStatus)&&<p className="map-activity-legend">{t('Map activity: gray circle = queued; purple ring = running; green circle = completed; blue circle = needs evidence review; red X = technical error. Main dot colors show the map rating, not execution success.')}</p>}
       <div className="map-view-bar">
         <div className="map-view-switch" role="group" aria-label={t('Map view')}>
           <button type="button" aria-pressed={!isMetro} onClick={() => switchRegion("statewide")}>{t('Statewide')}</button>

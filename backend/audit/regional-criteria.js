@@ -87,14 +87,14 @@ export function regionalStats(db){
  const hospitals=current.map(f=>{
   const status=criterionStatus(db,f.id,{readOnly:true});
   return {hospital_key:f.id,name:f.properties.name,region:f.properties.region,summary:status.summary,active:status.active,
-   items:status.items.map(i=>({id:i.id,title:i.title,effective:i.effective,updated_at:i.updated_at,saved:!!i.saved}))};
+    items:status.items.map(i=>({id:i.id,title:i.title,effective:i.effective,technical_error:i.technical_error,updated_at:i.updated_at,saved:!!i.saved}))};
  });
  const regions=Object.keys(reference.regions).map(region=>{
   const rows=hospitals.filter(h=>h.region===region);
   return {region,total:rows.length,items:ids.map(id=>{
-   const counts={met:0,unmet:0,unclear:0,unrun:0,updated_at:null};
+    const counts={met:0,unmet:0,unclear:0,unrun:0,error:0,updated_at:null};
    for(const h of rows){const item=h.items.find(i=>i.id===id);counts[item.effective]++;if(item.updated_at&&(!counts.updated_at||item.updated_at>counts.updated_at))counts.updated_at=item.updated_at;}
-   return {id,...counts,confirmed:counts.met+counts.unmet,checked:rows.length-counts.unrun};
+    return {id,...counts,confirmed:counts.met+counts.unmet,checked:rows.length-counts.unrun-counts.error};
   })};
  });
  return {regions,hospitals,max_hospitals_per_batch:regionalLimit,batches:db.prepare('SELECT id FROM criterion_batches WHERE started IS NOT NULL ORDER BY created DESC LIMIT 20').all().map(r=>regionalBatch(db,r.id))};
