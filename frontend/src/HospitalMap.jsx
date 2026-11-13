@@ -56,7 +56,7 @@ function Points({ hospitals, project, zoom = 1, markerScale = 1, selected, onSel
         key={hospital.id}
         cx={cx}
         cy={cy}
-        r={(active ? 12 : 10) * size}
+        r={(active ? 6.5 : 4.5) * size}
         className={active ? "dot active" : "dot"}
         fill={activity==='error'?'transparent':hospital.markerColor ?? ratingByStars.get(stars).color}
         style={activity==='error'?{stroke:'transparent'}:undefined}
