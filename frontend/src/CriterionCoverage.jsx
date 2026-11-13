@@ -37,13 +37,19 @@ export function CriterionReviewNotifications({hospitalKey=''}) {
   const {data,error}=useCriterionCoverage(), {t,language,localHref}=useLocale();
   const reviews=(data?.reviews ?? []).filter(item=>!hospitalKey || item.hospital_key===hospitalKey);
   const groups=Map.groupBy(reviews,item=>item.hospital_key);
+  const [page,setPage]=useState(0);
+  const pageCount=Math.max(1,Math.ceil(groups.size/10));
+  const currentPage=Math.min(page,pageCount-1),start=currentPage*10;
+  useEffect(()=>setPage(0),[hospitalKey]);
+  useEffect(()=>setPage(previous=>Math.min(previous,pageCount-1)),[pageCount]);
   return <section className="criterion-review-inbox" lang={language} aria-labelledby="criterion-review-heading">
     <div className="criterion-review-heading"><h2 id="criterion-review-heading">{t('Requirements needing review')}</h2><span className="criterion-review-total">{reviews.length}</span></div>
     {error && <p role="alert">{t('Criterion coverage unavailable.')}</p>}
     {!data && !error && <p role="status">{t('Loading criterion coverage…')}</p>}
     {data && !reviews.length && <p className="criterion-review-empty">{t('No unclear criteria awaiting review.')}</p>}
-    {!!reviews.length && <ul className="criterion-review-groups">{[...groups].map(([key,items])=><li className="criterion-review-group" key={key}>
-      <h3>{items[0].hospital_name}</h3>
+    {!!reviews.length && <><ul className="criterion-review-groups">{[...groups].slice(start,start+10).map(([key,items])=><li className="criterion-review-group" key={key}>
+      <details>
+      <summary><span className="criterion-review-hospital-name">{items[0].hospital_name}</span><span className="criterion-review-total" aria-label={`${items.length} · ${t('Requirements needing review')}`}>{items.length}</span></summary>
       <ul className="criterion-review-rows">{items.map(item=><li className="criterion-review-row" key={item.step}>
         <div className="criterion-review-content">
           <div className="criterion-review-title"><span className="criterion-review-code">{item.step.toUpperCase()}</span><span>{t(item.title)}</span></div>
@@ -51,6 +57,12 @@ export function CriterionReviewNotifications({hospitalKey=''}) {
         </div>
         <a className="criterion-review-action" href={localHref(`?hospital=${item.hospital_key}#criterion-${item.step}`)} aria-label={`${t('Review requirement')} ${item.step.toUpperCase()} · ${t(item.title)} · ${item.hospital_name}`}>{t('Review →')}</a>
       </li>)}</ul>
-    </li>)}</ul>}
+      </details>
+    </li>)}</ul>
+    <nav className="overview-pagination criterion-review-pagination" aria-label={t('Review inbox pages')}>
+      <p role="status">{t('Showing')} {start+1}–{Math.min(start+10,groups.size)} {t('of')} {groups.size} {t('hospitals')} · {t('Page')} {currentPage+1} {t('of')} {pageCount}</p>
+      <button disabled={currentPage===0} onClick={()=>setPage(currentPage-1)}>{t('Previous page')}</button>
+      <button disabled={currentPage===pageCount-1} onClick={()=>setPage(currentPage+1)}>{t('Next page')}</button>
+    </nav></>}
   </section>;
 }

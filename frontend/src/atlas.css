@@ -1167,7 +1167,13 @@ h2 {
 .criterion-review-groups, .criterion-review-rows { list-style:none; padding:0; margin:0; }
 .criterion-review-groups { display:grid; gap:1rem; }
 .criterion-review-group { border:1px solid #cbdad6; border-radius:10px; overflow:hidden; background:#fff; }
-.criterion-review-group h3 { margin:0; padding:1rem 1.25rem; background:#edf3f0; font-size:1rem; line-height:1.45; }
+.criterion-review-group summary { display:flex; align-items:center; gap:.75rem; padding:1rem 1.25rem; background:#edf3f0; font-size:1rem; line-height:1.45; cursor:pointer; list-style:none; }
+.criterion-review-group summary::-webkit-details-marker { display:none; }
+.criterion-review-group summary::before { content:'▸'; flex-shrink:0; }
+.criterion-review-group details[open]>summary::before { transform:rotate(90deg); }
+.criterion-review-hospital-name { flex:1; min-width:0; font-weight:700; }
+.criterion-review-group summary:focus-visible { outline:3px solid #087652; outline-offset:-3px; }
+.criterion-review-pagination button { min-height:44px; padding:.5rem .8rem; }
 .criterion-review-row { display:flex; align-items:center; justify-content:space-between; gap:1.25rem; padding:1.1rem 1.25rem; }
 .criterion-review-row + .criterion-review-row { border-top:1px solid #e0e8e5; }
 .criterion-review-content { min-width:0; }
@@ -1181,7 +1187,7 @@ h2 {
 .criterion-review-empty { padding:1.25rem; background:#edf3f0; border-radius:8px; }
 @media(max-width:600px) {
   .criterion-review-row { align-items:flex-start; flex-direction:column; gap:.75rem; padding:1rem; }
-  .criterion-review-group h3 { padding:1rem; }
+  .criterion-review-group summary { padding:1rem; }
   .criterion-review-action { align-self:flex-end; }
 }
 .regional-audits { max-width:100%; }
