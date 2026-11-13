@@ -38,6 +38,8 @@ try{
   assert.equal(await page.locator('.regional-checklist input:checked').count(),1);
   assert.match(await page.locator('.regional-scope').innerText(),/82 \/ 82/);
   assert.equal(await page.locator('.regional-custom-selection').getAttribute('open'),null);
+  const older=page.locator('.regional-history-nav button').last();
+  while(await older.isEnabled())await older.click();
   const completed=page.locator('.regional-batch').filter({has:page.getByRole('heading',{name:language==='en'?'All checks finished · 10/10':'Todas las revisiones finalizaron · 10/10'})});
   await completed.waitFor();assert.equal(await completed.locator('button').count(),0);
   assert.deepEqual(await completed.locator('.regional-findings strong').allTextContents(),['2','0','8','0','0']);

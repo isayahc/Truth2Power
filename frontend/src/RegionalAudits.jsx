@@ -17,6 +17,7 @@ export default function RegionalAudits({features,counties}){
  const [regions,setRegions]=useState(initial?.selection.regions??['NYC Metro','Central']);
   const [steps,setSteps]=useState(initial?.selection.steps??['k1']);
   const [mode,setMode]=useState(initial?.selection.mode??'missing');
+  const [historyId,setHistoryId]=useState(null);
  const [selected,setSelected]=useState(initial&&initial.selection.scope!=='all'?initial.selection.hospitals:null);
  const [preview,setPreview]=useState(initial),[data,setData]=useState(null),[error,setError]=useState(false),[actionError,setActionError]=useState(false),[busy,setBusy]=useState(false),[tick,setTick]=useState(0);
  const lock=useRef(false);
@@ -30,7 +31,11 @@ export default function RegionalAudits({features,counties}){
  async function act(fn){if(lock.current)return;lock.current=true;setBusy(true);setActionError(false);try{await fn();setTick(n=>n+1);notifyCriterionChange();}catch{setActionError(true);}finally{lock.current=false;setBusy(false);}}
   function closePreview(){sessionStorage.removeItem(storage);setPreview(null);setActionError(false);}
   function prepare(nextMode=mode){return act(async()=>{const value=await post('/preview',{regions,steps,mode:nextMode,...(selected===null?{}:{hospitals:selected})});sessionStorage.setItem(storage,JSON.stringify(value));setMode(nextMode);setPreview(value);});}
- const rows=data?.hospitals.filter(h=>regions.includes(h.region))??[];
+  const rows=data?.hospitals.filter(h=>regions.includes(h.region))??[];
+  const batches=data?.batches.filter(b=>b.selection.regions.every(r=>regions.includes(r)))??[];
+  const historyIndex=Math.max(0,batches.findIndex(b=>b.id===historyId));
+  const historyBatch=batches[historyIndex];
+  useEffect(()=>{setHistoryId(id=>batches.some(b=>b.id===id)?id:batches[0]?.id??null);},[data,regions.join('|')]);
  const requirements=data?.hospitals[0]?.items??[];
  const chosen=selected??rows.map(h=>h.hospital_key);
   const points=features.filter(f=>regions.includes(f.properties.region)).map(f=>{
@@ -86,12 +91,17 @@ export default function RegionalAudits({features,counties}){
      <button disabled={busy} onClick={()=>prepare('retry')}>{t('Preview retry of errors and unclear results')}</button>
      <button disabled={busy} onClick={()=>prepare('all')}>{t('Preview rerun of all selected requirements')}</button>
     </>}
-   <button className="regional-primary" disabled={busy||!preview.plan.jobs} onClick={()=>act(async()=>{await post(`/${preview.id}/start`,{confirm:true});closePreview();})}>{t(actionError?'Retry same request':'Approve and check all included hospitals')}</button>
+    <button className="regional-primary" disabled={busy||!preview.plan.jobs} onClick={()=>act(async()=>{await post(`/${preview.id}/start`,{confirm:true});setHistoryId(null);closePreview();})}>{t(actionError?'Retry same request':'Approve and check all included hospitals')}</button>
    <button disabled={busy} onClick={closePreview}>{t('Close run request')}</button>
   </section>}
   {actionError&&<p role="alert">{t('Regional request not confirmed. Retry the same approval safely. If preparation changed, close it and create a new preview.')}</p>}
-  <h2>{t('Check progress and findings')}</h2>
-  {data?.batches.filter(b=>b.selection.regions.every(r=>regions.includes(r))).map(batch=>{
+   <h2>{t('Check progress and findings')}</h2>
+   {!!batches.length&&<nav className="regional-history-nav" aria-label={t('Run history')}>
+    <button disabled={historyIndex===0} onClick={()=>setHistoryId(batches[historyIndex-1].id)}>{t('← Newer run')}</button>
+    <span role="status">{t('Run')} {historyIndex+1} {t('of')} {batches.length}</span>
+    <button disabled={historyIndex===batches.length-1} onClick={()=>setHistoryId(batches[historyIndex+1].id)}>{t('Older run →')}</button>
+   </nav>}
+   {(historyBatch?[historyBatch]:[]).map(batch=>{
    const pending=batch.jobs.filter(j=>['queued','running'].includes(j.status)).length;
    const failures=batch.jobs.filter(j=>j.status==='failed').length;
    const stopped=batch.jobs.filter(j=>j.status==='cancelled').length;

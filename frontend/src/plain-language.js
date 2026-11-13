@@ -1,6 +1,10 @@
 // Stable message keys keep data/API terminology separate from patient-facing copy.
 // These mappings apply only through t(); source quotations are never rewritten.
 export const plainLanguage = {
+  'Run history': ['Run history', 'Historial de ejecuciones'],
+  'Run': ['Run', 'Ejecución'],
+  '← Newer run': ['← Newer run', '← Más reciente'],
+  'Older run →': ['Older run →', 'Más antigua →'],
   'What should run?': ['What should run?', '¿Qué se debe revisar?'],
   'Check mode': ['Check mode', 'Modo de revisión'],
   'Missing checks only': ['Missing checks only', 'Solo revisiones sin resultados guardados'],

@@ -1233,3 +1233,5 @@ h2 {
 .regional-run-mode label { display:flex; flex-direction:column; gap:8px; }
 .regional-run-mode select { width:100%; max-width:40rem; min-width:0; padding:8px; }
 .regional-preview button { max-width:100%; white-space:normal; }
+.regional-history-nav { display:grid; grid-template-columns:minmax(0,1fr) auto minmax(0,1fr); align-items:center; gap:8px; margin:12px 0; }
+.regional-history-nav button { white-space:normal; min-width:0; }
