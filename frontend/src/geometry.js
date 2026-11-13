@@ -9,6 +9,7 @@ function projection([west, south, east, north], [x, y, width, height]) {
 
 export const statewide = projection([-79.83, 40.46, -71.8, 45.05], [20, 12, 852, 523]);
 export const metro = projection([-74.28, 40.47, -71.8, 41.18], [38, 415, 391, 111]);
+export const metroFull = projection([-74.28, 40.47, -71.8, 41.18], [35, 65, 830, 420]);
 export const metroCounties = new Set([
   "Bronx",
   "Kings",

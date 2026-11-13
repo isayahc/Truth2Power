@@ -1,20 +1,16 @@
 import React, { memo, useRef, useState } from "react";
-import { countyPath, metro, metroCounties, statewide } from "./geometry.js";
+import { countyPath, metro, metroFull, metroCounties, statewide } from "./geometry.js";
 import { ratingByStars } from "./ratings.js";
 import { useLocale } from './locale.jsx';
+import {useCriterionCoverage, coverageText, emptyCoverage} from './CriterionCoverage.jsx';
 
-const regions = [
-  ["Western NY", -78.75, 42.46],
-  ["Finger Lakes", -77.15, 42.8],
-  ["North Country", -74.4, 44.46],
-  ["Mohawk Valley", -74.7, 43.39],
-  ["Southern Tier", -76.7, 42.17],
-  ["Capital Region", -73.89, 42.83],
-  ["Mid-Hudson", -74.27, 41.79],
-];
 const waters = [
   ["Lake Ontario", -77.72, 43.54],
   ["Lake Erie", -79.45, 42.73],
+];
+const metroLabels = [
+  ["New York City", -74.03, 40.98],
+  ["Long Island", -72.78, 40.65],
 ];
 const initialView = { zoom: 1, x: 0, y: 0 };
 const limit = (value, min, max) => Math.max(min, Math.min(max, value));
@@ -30,10 +26,10 @@ const Land = memo(function Land({ counties, project }) {
   ));
 });
 
-function Labels({ items, className }) {
+function Labels({ items, className, project = statewide }) {
   const { t } = useLocale();
   return items.map(([name, longitude, latitude]) => {
-    const [x, y] = statewide([longitude, latitude]);
+    const [x, y] = project([longitude, latitude]);
     return (
       <text key={name} x={x} y={y} className={className}>
         {t(name)}
@@ -43,26 +39,32 @@ function Labels({ items, className }) {
 }
 
 function Points({ hospitals, project, zoom = 1, selected, onSelect, setHover }) {
-  const { t } = useLocale();
+  const { t, language } = useLocale();
+  const {data,error}=useCriterionCoverage();
   return hospitals.map((hospital) => {
     const [cx, cy] = project(hospital.geometry.coordinates);
     const { stars, name } = hospital.properties;
     const active = selected?.id === hospital.id;
-    const label = name + " · " + (hospital.markerLabel ?? stars + ' ' + t(stars === 1 ? 'star' : 'stars'));
+    const activity=hospital.markerStatus ?? (error ? null : data?.activity?.[hospital.id]?.status);
+    const activityLabel={queued:'Queued',running:'Running',completed:'Completed',attention:'Needs evidence review',error:'Technical error — not assessed',cancelled:'Cancelled'}[activity];
+    const label = name + " · " + (hospital.markerLabel ?? (stars==null ? t('Not rated') : stars + ' ' + t(stars === 1 ? 'star' : 'stars'))) + ' · ' + (stars==null ? t('Not rated in September 2025.') : t('Published September 2025; confirmed-criterion count not recorded.')) + ' · ' + (error ? t('Criterion coverage unavailable.') : data ? coverageText(data.hospitals[hospital.id] ?? emptyCoverage,t,language) : t('Loading criterion coverage…'));
     return (
+      <g key={hospital.id} data-audit-status={activity??'idle'}>
+      <circle cx={cx} cy={cy} r={9/zoom} fill="transparent" aria-hidden="true" onClick={()=>onSelect(hospital)} style={{cursor:'pointer'}}/>
       <circle
         key={hospital.id}
         cx={cx}
         cy={cy}
-        r={(active ? 5.4 : 3.65) / zoom}
+        r={(active ? 6.5 : 5.2) / zoom}
         className={active ? "dot active" : "dot"}
-        fill={hospital.markerColor ?? ratingByStars.get(stars).color}
+        fill={activity==='error'?'transparent':hospital.markerColor ?? ratingByStars.get(stars).color}
+        style={activity==='error'?{stroke:'transparent'}:undefined}
         role="button"
-        aria-label={label}
+        aria-label={label+(activityLabel?' · '+t(activityLabel):'')}
         tabIndex={0}
-        onMouseEnter={() => setHover(label)}
+        onMouseEnter={() => setHover(label+(activityLabel?' · '+t(activityLabel):''))}
         onMouseLeave={() => setHover(null)}
-        onFocus={() => setHover(label)}
+        onFocus={() => setHover(label+(activityLabel?' · '+t(activityLabel):''))}
         onBlur={() => setHover(null)}
         onClick={() => onSelect(hospital)}
         onKeyDown={(event) => {
@@ -74,18 +76,31 @@ function Points({ hospitals, project, zoom = 1, selected, onSelect, setHover }) 
       >
         <title>{label}</title>
       </circle>
+      {activity==='running'&&<circle className="hospital-audit-spinner" cx={cx} cy={cy} r={8/zoom} fill="none" stroke="#7e22ce" strokeWidth={2/zoom} strokeDasharray={`${12/zoom} ${7/zoom}`} pointerEvents="none" aria-hidden="true"/>}
+      {activity==='error'&&<path className="hospital-error-cross" d={`M${cx-5/zoom},${cy-5/zoom}l${10/zoom},${10/zoom}m0,${-10/zoom}l${-10/zoom},${10/zoom}`} stroke="#b91c1c" strokeWidth={3/zoom} fill="none" pointerEvents="none" aria-hidden="true"/>}
+      {!hospital.markerStatus&&['queued','completed','attention'].includes(activity)&&<circle cx={cx+7/zoom} cy={cy-6/zoom} r={3/zoom} fill={activity==='attention'?'#2563eb':activity==='completed'?'#15803d':'#6b7280'} pointerEvents="none" aria-hidden="true"/>}
+      </g>
     );
   });
 }
 
-/** Draw both views from the same WGS 84 points and keep pan and zoom local to the map. */
+/** Switch between statewide and full-size metro maps using the same source coordinates. */
 export default function HospitalMap({ hospitals, counties, selected, onSelect }) {
   const { t, language } = useLocale();
   const [view, setView] = useState(initialView);
+  const [region, setRegion] = useState("statewide");
   const [hover, setHover] = useState(null);
   const svg = useRef(null);
   const drag = useRef(null);
   const moved = useRef(false);
+  function switchRegion(nextRegion) {
+    if (nextRegion === region) return;
+    setRegion(nextRegion);
+    setView(initialView);
+    setHover(null);
+    drag.current = null;
+    moved.current = false;
+  }
   function point(event) {
     return new DOMPoint(event.clientX, event.clientY).matrixTransform(
       svg.current.getScreenCTM().inverse(),
@@ -120,14 +135,27 @@ export default function HospitalMap({ hospitals, counties, selected, onSelect })
     onSelect(hospital);
   }
   const props = { selected, onSelect: choose, setHover };
+  const isMetro = region === "metro";
+  const metroHospitals = hospitals.filter((h) => metroCounties.has(h.properties.county));
+  const metroLand = counties.filter((c) => metroCounties.has(c.properties.NAME));
+  const mapHospitals = isMetro ? metroHospitals : hospitals;
   return (
-    <div className="viewport" lang={language}>
+    <div className="map-panel" lang={language}>
+      {!hospitals.some(h=>h.markerStatus)&&<p className="map-activity-legend">{t('Map activity: gray circle = queued; purple ring = running; green circle = completed; blue circle = needs evidence review; red X = technical error. Main dot colors show the map rating, not execution success.')}</p>}
+      <div className="map-view-bar">
+        <div className="map-view-switch" role="group" aria-label={t('Map view')}>
+          <button type="button" aria-pressed={!isMetro} onClick={() => switchRegion("statewide")}>{t('Statewide')}</button>
+          <button type="button" aria-pressed={isMetro} onClick={() => switchRegion("metro")}>{t('NYC & Long Island')}</button>
+        </div>
+        <span className="map-view-count" role="status">{mapHospitals.length} {t('hospitals in this view')}</span>
+      </div>
+      <div className="viewport">
       <svg
         id="map"
         viewBox="0 0 900 555"
         ref={svg}
         className={view.zoom > 1 ? "zoomed" : ""}
-        aria-label={t('New York hospital map with New York City and Long Island inset')}
+        aria-label={t(isMetro ? 'New York City and Long Island hospital map' : 'New York hospital map with New York City and Long Island inset')}
         onPointerDown={(event) => {
           moved.current = false;
           if (view.zoom > 1 && event.button === 0) drag.current = { start: point(event), view };
@@ -143,13 +171,14 @@ export default function HospitalMap({ hospitals, counties, selected, onSelect })
           moved.current = false;
         }}
       >
-        <g id="state-view" transform={`translate(${view.x} ${view.y}) scale(${view.zoom})`}>
-          <Land counties={counties} project={statewide} />
-          <Labels items={regions} className="region" />
-          <Labels items={waters} className="water" />
-          <Points {...props} hospitals={hospitals} project={statewide} zoom={view.zoom} />
+        <g id={isMetro ? "metro-view" : "state-view"} transform={`translate(${view.x} ${view.y}) scale(${view.zoom})`}>
+          <Land counties={isMetro ? metroLand : counties} project={isMetro ? metroFull : statewide} />
+          {isMetro ? <Labels items={metroLabels} className="region" project={metroFull} /> : <>
+            <Labels items={waters} className="water" />
+          </>}
+          <Points {...props} hospitals={mapHospitals} project={isMetro ? metroFull : statewide} zoom={view.zoom} />
         </g>
-        {view.zoom === 1 && (
+        {!isMetro && view.zoom === 1 && (
           <g id="metro-inset">
             <rect x="24" y="377" width="420" height="158" rx="4" className="inset-frame" />
             <text x="40" y="398" className="inset-title">
@@ -165,12 +194,12 @@ export default function HospitalMap({ hospitals, counties, selected, onSelect })
             </defs>
             <g clipPath="url(#inset-clip)">
               <Land
-                counties={counties.filter((c) => metroCounties.has(c.properties.NAME))}
+                counties={metroLand}
                 project={metro}
               />
               <Points
                 {...props}
-                hospitals={hospitals.filter((h) => metroCounties.has(h.properties.county))}
+                hospitals={metroHospitals}
                 project={metro}
               />
             </g>
@@ -201,6 +230,7 @@ export default function HospitalMap({ hospitals, counties, selected, onSelect })
         </button>
       </div>
       {hover && <div className="pin-tip">{hover}</div>}
+      </div>
     </div>
   );
 }

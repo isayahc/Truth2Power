@@ -23,9 +23,8 @@ try {
     failPipeline(db,claim(db),{code:'website_verification_required',diagnostic:{http_status:403,source_url:'https://public.example/SYN-financial-assistance'}});
     const p=await browser.newPage({viewport:{width,height:900}});
     for(let n=0;;n++) {try{await p.goto(`http://127.0.0.1:${port}/?hospital=798&lang=${language}#audit-runs`);break}catch(e){if(n===40)throw e;await new Promise(r=>setTimeout(r,250))}}
-    const form=p.locator('.hospital-runs .human-intervention');
-    await form.locator('form').waitFor();
-    assert.equal(await p.locator('.hospital-runs > .ops-controls button').nth(1).isDisabled(),true);
+    await p.locator('.criterion-card').nth(16).waitFor();
+    assert.equal(await p.locator('.hospital-runs').count(),0);
     await p.locator('header .review-nav').click();
     const task=p.locator('details').filter({has:p.locator('summary',{hasText:`audit-run-${id}`})}).first();
     await task.locator('summary').click();

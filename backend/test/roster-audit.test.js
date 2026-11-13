@@ -32,7 +32,7 @@ function offlineCollection(root, request) {
 const options = (mode, request_key) => ({ mode, request_key, year: 2026, review_date: "2026-11-09",
   discovery_bounds: { pages: 4, documents: 3, depth: 2 } });
 
-test("all 212 roster keys queue bounded full audits and arbitrary PFI/URL/limits cannot enter the worker", () => {
+test("current and historical roster keys queue bounded full audits and arbitrary PFI/URL/limits cannot enter the worker", () => {
   for (const h of roster) {
     const job = options("full_audit", "SYN-validate-" + h.id);
     assert.equal(route("hospitals/" + h.id, job).statusCode, 202);

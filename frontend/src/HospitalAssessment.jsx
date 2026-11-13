@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { AgentFinding } from "./AgentReview.jsx";
+import {CriterionCoverage} from './CriterionCoverage.jsx';
 
 const labels = { yes: "Yes", no: "No", unclear: "Unclear", n_a: "Not applicable" };
 const date = (value) => value ? new Date(value).toISOString().replace("T", " ").replace(/\.\d+Z$/, " UTC") : "Unknown";
@@ -39,6 +40,7 @@ export default function HospitalAssessment({ hospitalKey, hospitalName, publishe
     {report.integrated_report_url && <p><a href={report.integrated_report_url}>Inspect immutable 17-measure assessment</a> · revision {report.revision.slice(0, 12)}</p>}
     {report.integrated_report_url && <p>Evidence coverage: {report.evidence_complete ? "complete for this scope" : "partial — see blockers"}. Source freshness clock: {date(report.monitoring_at)}. Replaying saved bytes does not reset their retrieval date.</p>}
     <p><strong>Current grade: pending</strong></p><p>{report.grade_note}</p>
+    <CriterionCoverage hospitalKey={hospitalKey} />
     <dl className="assessment-dates">
       <dt>Latest successful assessment</dt><dd>{date(report.latest_successful_assessment_at)}</dd>
       <dt>Hospital page retrieved</dt><dd>{date(report.landing_retrieved_at)}</dd>

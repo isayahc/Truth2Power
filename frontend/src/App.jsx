@@ -8,6 +8,9 @@ import { HospitalDetail, Ratings } from "./Ratings.jsx";
 import ReviewInbox, { reviewRequest } from "./ReviewInbox.jsx";
 import { LanguageSwitch, useLocale } from './locale.jsx';
 import { HumanInterventionInbox } from './HumanIntervention.jsx';
+import {CriterionCoverageProvider, CriterionReviewNotifications, useCriterionCoverage} from './CriterionCoverage.jsx';
+import ratingRegions from '../../references/ny-rating-regions-v1.json';
+import RegionalAudits from './RegionalAudits.jsx';
 
 async function getFeatures(path, signal) {
   const response = await fetch(path, { signal });
@@ -16,10 +19,11 @@ async function getFeatures(path, signal) {
   if (data.type !== "FeatureCollection" || !Array.isArray(data.features) || !data.features.length) {
     throw new Error("Empty or invalid map data.");
   }
-  return data.features;
+  return [...data.features,...(data.historical_features ?? [])];
 }
 
-function Header({ onReview, pending }) {
+function Header({ onReview, reviewOpen, pending }) {
+  const {data:coverage}=useCriterionCoverage();
   const { t, localHref } = useLocale();
   const [humanTasks,setHumanTasks]=useState(0);
   useEffect(()=>{let live=true;const load=()=>fetch('/api/pilot/v1/interventions').then(r=>r.ok?r.json():null).then(x=>{if(live&&x)setHumanTasks(x.items.length)}).catch(()=>{});load();const timer=setInterval(load,10000);return()=>{live=false;clearInterval(timer)}},[]);
@@ -43,8 +47,8 @@ function Header({ onReview, pending }) {
       <div className="header-actions">
       <a className="overview-link" href={localHref('?view=overview')}>{t('Audit overview')}</a>
       <a className="changes-link" href={localHref('?view=operations')}>{t('Audit operations')}</a>
-      <a className="changes-link" href={localHref('?view=changes')}>{t('Recent changes')}</a>
-      <button className="review-nav" onClick={onReview}>{t('Review inbox')} <span>{typeof pending==='number' ? pending+humanTasks : pending ?? "…"}</span></button>
+       <button className="review-nav" onClick={onReview} aria-pressed={reviewOpen}>{t('Review inbox')} <span>{typeof pending==='number' ? pending+humanTasks+(coverage?.pending ?? 0) : pending ?? "…"}</span></button>
+       <a href={localHref('?view=regional')}>{t('Compare two regions')}</a>
       <LanguageSwitch />
       </div>
     </header>
@@ -88,11 +92,18 @@ function Footer() {
 
 /** Load the public atlas from the Node API and coordinate filters, search and map selection. */
 export default function App() {
+  return <CriterionCoverageProvider><Atlas /></CriterionCoverageProvider>;
+}
+function Atlas() {
   const { t } = useLocale();
   const [data, setData] = useState(null);
   const [error, setError] = useState(false);
   const [attempt, setAttempt] = useState(0);
   const [filter, setFilter] = useState(null);
+  const [region,setRegion]=useState(()=>{
+    const value=new URLSearchParams(window.location.search).get('region');
+    return Object.hasOwn(ratingRegions.regions,value) ? value : '';
+  });
   const [selected, setSelected] = useState(null);
   const [reviewOpen, setReviewOpen] = useState(false);
   const [reviewHospital, setReviewHospital] = useState("");
@@ -124,6 +135,8 @@ export default function App() {
     if (!data) return;
     const restore = () => {
       const key = new URL(window.location.href).searchParams.get("hospital");
+      const value = new URL(window.location.href).searchParams.get('region');
+      setRegion(Object.hasOwn(ratingRegions.regions,value) ? value : '');
       setSelected(data.hospitals.find((h) => String(h.id) === key) || null);
       setReviewOpen(false);
     };
@@ -151,19 +164,22 @@ export default function App() {
     hospitalUrl(null);
     requestAnimationFrame(() => document.querySelector(".search-bar input")?.focus());
   }
-  const visible = data?.hospitals.filter((h) => filter === null || h.properties.stars === filter);
+  const current = data?.hospitals.filter(h=>h.properties.current_directory!==false);
+  const regional = current?.filter(h=>!region || h.properties.region===region);
+  const visible = regional?.filter((h) => filter === null || (h.properties.stars ?? 'unrated') === filter);
   return (
     <div className="page">
-      <Header onReview={() => openReviews()} pending={reviewError ? "!" : inbox?.pending} />
+      <Header onReview={() => reviewOpen ? setReviewOpen(false) : openReviews()} reviewOpen={reviewOpen} pending={reviewError ? "!" : inbox?.pending} />
       <main>
         {reviewOpen ? <>
           <button className="back plain" onClick={() => setReviewOpen(false)}>{t(selected ? '← Back to hospital record' : '← Back to hospital map')}</button>
           <HumanInterventionInbox />
+          <CriterionReviewNotifications hospitalKey={reviewHospital} />
           <div lang="en"><ReviewInbox key={reviewHospital} inbox={inbox} error={reviewError} onRefresh={refreshReviews}
             hospitalKey={reviewHospital} hospitals={data?.hospitals ?? []} onHospital={(hospital) => {
               if (hospital) { selectHospital(hospital); setReviewOpen(false); }
             }} /></div>
-        </> : !selected && new URLSearchParams(window.location.search).get("view") === "operations" ? <AuditOperations /> : !selected && new URLSearchParams(window.location.search).get("view") === "changes" ? <div lang="en"><Changes /></div> : !selected && new URLSearchParams(window.location.search).get("view") === "overview" ?
+        </> : !selected && new URLSearchParams(window.location.search).get('view')==='regional' ? (data ? <RegionalAudits features={current} counties={data.counties}/> : <p role="status">{t('Loading hospital locations…')}</p>) : !selected && new URLSearchParams(window.location.search).get("view") === "operations" ? <AuditOperations /> : !selected && new URLSearchParams(window.location.search).get("view") === "changes" ? <div lang="en"><Changes /></div> : !selected && new URLSearchParams(window.location.search).get("view") === "overview" ?
           (data ? <div lang="en"><Overview features={data.hospitals} counties={data.counties} /></div> :
             <p role="status">{error ? <button onClick={() => setAttempt(attempt + 1)}>{t('Retry loading atlas')}</button> : t('Loading atlas…')}</p>) : <>
         <div className="intro" hidden={!!selected}>
@@ -176,7 +192,7 @@ export default function App() {
           </div>
           {data && (
             <div className="intro-stat">
-              <strong>{data.hospitals.length}</strong>
+              <strong>{regional.length}</strong>
                <span>{t('Hospitals mapped')}</span>
             </div>
           )}
@@ -190,12 +206,24 @@ export default function App() {
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
                     <path d="m3 6 6-2 6 3 6-2v14l-6 2-6-3-6 2zM9 4v14m6-11v14" />
                   </svg>
-                  {t('Statewide map')}
+                  {t('Hospital map')}
                 </div>
                 <HospitalSearch
-                  hospitals={data.hospitals}
+                  hospitals={visible}
                   onSelect={selectHospital}
                 />
+              </div>
+              <div className="map-region-filter">
+                <label htmlFor="map-region">{t('Region')}</label>
+                <select id="map-region" value={region} onChange={event=>{
+                  const value=event.target.value;setRegion(value);
+                  const url=new URL(window.location.href);if(value)url.searchParams.set('region',value);else url.searchParams.delete('region');
+                  window.history.replaceState(null,'',url);
+                }}>
+                  <option value="">{t('All regions')}</option>
+                  {Object.keys(ratingRegions.regions).map(name=><option key={name} value={name}>{t('Region')} {ratingRegions.region_numbers[name]} · {t(name)}</option>)}
+                </select>
+                <p>{t('Regions follow Attachment G and use the hospital’s county, not its service area.')}</p>
               </div>
               <HospitalMap
                 hospitals={visible}
@@ -206,15 +234,15 @@ export default function App() {
               <div className="map-footer">
                 <strong aria-live="polite">
                   {filter === null
-                    ? data.hospitals.length
-                    : visible.length + ' ' + t('of') + ' ' + data.hospitals.length}{" "}
+                     ? regional.length
+                     : visible.length + ' ' + t('of') + ' ' + regional.length}{" "}
                   {t('hospital locations')}
                 </strong>
                 <span className="hint">{t('Select a hospital for its coordinates and audit record.')}</span>
               </div>
             </section>
             <aside>
-              <Ratings hospitals={data.hospitals} filter={filter} onFilter={setFilter} />
+              <Ratings hospitals={regional} filter={filter} onFilter={setFilter} region={region} />
             </aside>
           </div>
           {selected && <HospitalDetail key={selected.id} hospital={selected} onClose={closeDetail} onReview={() => openReviews(String(selected.id))}

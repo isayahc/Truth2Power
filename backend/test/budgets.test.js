@@ -153,7 +153,7 @@ test("paid reservation uses pinned prices and does not reset on retry or duplica
   );
 });
 
-test("monthly preview covers all 212 without creating a store", (t) => {
+test("monthly preview covers all 218 current facilities without creating a store", (t) => {
   const root = mkdtempSync(join(tmpdir(), "SYN-preview-"));
   t.after(() => rmSync(root, { recursive: true, force: true }));
   const plan = JSON.parse(
@@ -168,7 +168,7 @@ test("monthly preview covers all 212 without creating a store", (t) => {
       { env: { ...process.env, AUDIT_DIR: root } },
     ),
   );
-  assert.equal(plan.due.length, 212);
+  assert.equal(plan.due.length, 218);
   assert.equal(plan.selected.length, 2);
   assert.equal(plan.per_run.local_cost_usd, null);
   assert.equal(existsSync(join(root, "audit.sqlite")), false);

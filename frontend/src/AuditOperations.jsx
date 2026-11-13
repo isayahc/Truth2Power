@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import ratingRegions from '../../references/ny-rating-regions-v1.json';
 import { useLocale } from "./locale.jsx";
 import { HumanIntervention } from './HumanIntervention.jsx';
 import AgentReview from "./AgentReview.jsx";
@@ -23,6 +24,7 @@ const statusNames = {
   completed: "Completed",
   cancelled: "Cancelled",
   unknown: "Unknown",
+  not_recorded: 'Not recorded',
   complete: "Complete",
   started: "Started",
   stage: "Stage",
@@ -139,12 +141,14 @@ export function AuditOperations() {
   const { t, language, localHref } = useLocale(),
     [tick, bump] = useState(0),
     [query, search] = useState(""),
+    [region,setRegion]=useState(''),
     [sort, setSort] = useState("name"),
     [offset, setOffset] = useState(0);
   const r = useJson(api + "/operations", tick),
     totals = useJson(api + "/summary", tick);
+  useEffect(()=>{const timer=setInterval(()=>bump(n=>n+1),5000);return()=>clearInterval(timer);},[]);
   const rows = (r.data?.items ?? []).filter((h) =>
-    (h.name + " " + h.hospital_key + " " + h.region)
+    (!region || h.region===region) && (h.name + " " + h.hospital_key + " " + h.county + " " + t(h.region))
       .toLowerCase()
       .includes(query.trim().toLowerCase()),
   );
@@ -164,11 +168,13 @@ export function AuditOperations() {
     <section className="ops ops-dashboard">
       <a href={localHref("?")}>{t("← Back to hospital map")}</a>
       <h1>{t("Audit operations")}</h1>
+      <p>{t('This table includes requirement checks and older audits. Requirement counts match the hospital page. Cost totals below cover older audits only; requirement-check costs are not recorded here.')}</p>
+      {r.data && <p>{t('Recorded requirement checks')}: {r.data.criterion_runs}</p>}
       <Notice resource={totals} retry={() => bump((n) => n + 1)} />
       {totals.data && (
         <dl className="ops-totals">
           {Object.entries({
-            runs: "Recorded runs",
+            runs: "Recorded older audits",
             known_billed_usd: "Known billed",
             estimated_local_usd: "Local estimate",
             calculated_provider_usd: "Provider estimate",
@@ -217,6 +223,7 @@ export function AuditOperations() {
             ))}
           </select>
         </label>
+        <label>{t('Region')} <select value={region} onChange={e=>{setRegion(e.target.value);setOffset(0);}}><option value="">{t('All regions')}</option>{Object.keys(ratingRegions.regions).map(name=><option key={name} value={name}>{ratingRegions.region_numbers[name]} · {t(name)}</option>)}</select></label>
         <button onClick={() => bump((n) => n + 1)}>{t("Refresh")}</button>
       </div>
       <Notice resource={r} retry={() => bump((n) => n + 1)} />
@@ -239,10 +246,12 @@ export function AuditOperations() {
                     "Run status",
                     "Last attempt",
                     "Last source fetch",
-                    "Last eligible assessment",
+                    "Last completed check",
                     "Next due",
-                    "Unresolved measures",
-                    "Coverage gaps",
+                    "Confirmed requirements",
+                    "Requirements needing review",
+                    "Not checked",
+                    "Technical error — not assessed",
                     "Cost availability",
                   ].map((l) => (
                     <th key={l} scope="col">
@@ -262,27 +271,35 @@ export function AuditOperations() {
                       >
                         {h.name}
                       </a>
+                      <small className="ops-check-source">{t('County')}: {h.county} · {t('Region')} {h.region_number} · {t(h.region)}</small>
                     </th>
                     <td>
                       {t(statusNames[h.latest?.status] ?? "Not recorded")}
+                      {h.latest && <small className="ops-check-source">{t(h.latest.source==='criterion'?'Requirement check':'Older audit')}</small>}
+                      {h.legacy?.latest && <details><summary>{t('Older audit record')}</summary>
+                        <p>{t(statusNames[h.legacy.latest.status] ?? 'Not recorded')} · {date(h.legacy.latest.completed_at,language,t)}</p>
+                        <a href={h.legacy.latest.timeline}>{t('Technical history (JSON)')}</a>
+                      </details>}
                     </td>
                     {[
                       "last_attempted",
                       "last_successful_source_retrieval",
-                      "last_eligible_assessment",
+                      "last_completed_execution",
                       "next_due_at",
                     ].map((k) => (
                       <td key={k}>
-                        {date(h.clocks[k], language, t)}{" "}
+                        {k==='next_due_at'&&!h.clocks[k] ? t('Not scheduled') : date(h.clocks[k], language, t)}{" "}
                         {k === "next_due_at" &&
                           h.clocks[k] &&
                           Date.parse(h.clocks[k]) < Date.now() &&
                           t("Overdue")}
                       </td>
                     ))}
-                    <td>{h.latest?.unresolved_measures ?? t("Unknown")}</td>
-                    <td>{h.latest?.coverage_gaps ?? t("Unknown")}</td>
-                    <td>{t(statusNames[h.cost_status])}</td>
+                    <td>{h.criterion ? `${h.criterion.summary.confirmed}/17` : t('Not checked')}</td>
+                    <td>{h.criterion ? h.criterion.summary.unclear : t('Not checked')}</td>
+                    <td>{h.criterion ? h.criterion.summary.unrun : 17}</td>
+                    <td>{h.criterion?.summary.error ?? 0}</td>
+                    <td>{t(h.cost_status==='unknown' ? 'Not recorded' : statusNames[h.cost_status] ?? 'Not recorded')}</td>
                   </tr>
                 ))}
               </tbody>
@@ -615,7 +632,8 @@ export function HospitalRuns({ hospitalKey, onAssessment }) {
     [acceptedJob, setAcceptedJob] = useState(0),
     [intent, setIntent] = useState(() => {
       try {
-        return JSON.parse(sessionStorage.getItem(storageKey));
+        const saved = JSON.parse(sessionStorage.getItem(storageKey));
+        return saved?.mode === 'full_audit' || saved?.mode === 'live' ? null : saved;
       } catch {
         return null;
       }
@@ -730,7 +748,7 @@ export function HospitalRuns({ hospitalKey, onAssessment }) {
         {latest && <a href={`${api}/runs/${latest.audit_run_id}/log.json`} download={`${latest.audit_run_id}-log.json`}>{t("Download run log (JSON)")}</a>}
       </div>}
       <div className="ops-controls">
-        {["discovery_only", "full_audit", "replay"].map((m) => (
+        {["discovery_only", "replay"].map((m) => (
           <button
             disabled={busy || !!intent || active(latest?.status) || latest?.status === 'needs_human' || !r.data || acceptedJob > (latest?.job_id ?? 0)}
             key={m}

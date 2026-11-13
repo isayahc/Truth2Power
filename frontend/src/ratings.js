@@ -5,6 +5,8 @@ export const ratings = [
   { stars: 2, color: "#d03e3a", label: "7–9 errors" },
   { stars: 1, color: "#802c50", label: "Failing grade" },
   { stars: 0, color: "#232c37", label: "No application posted" },
+  { stars: 'unrated', color: '#747b81', label: 'Not rated' },
 ];
 
 export const ratingByStars = new Map(ratings.map((rating) => [rating.stars, rating]));
+ratingByStars.set(null,ratingByStars.get('unrated'));

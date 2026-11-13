@@ -1,0 +1,144 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {mkdtempSync} from 'node:fs';
+import {tmpdir} from 'node:os';
+import {join} from 'node:path';
+import {openStore} from '../audit/store.js';
+import {installCriteria,claimCriterion,criterionOverview,criterionStatus,decideCriterion} from '../audit/criterion-service.js';
+import {installRegional,previewRegional,startRegional,cancelRegional,regionalStats} from '../audit/regional-criteria.js';
+import {randomUUID} from 'node:crypto';
+import {fork} from 'node:child_process';
+import {fileURLToPath} from 'node:url';
+import {workCriterion} from '../audit/criterion-worker.js';
+const input={regions:['NYC Metro','Central'],steps:['k12','k5'],hospitals:['1169','739']};
+const planner=async(root,hospital,requested)=>({run:requested.length?['k1',...requested]:[],reuse:[]});
+test('fully saved regions support explicit retry and all-selected reruns without spending at preview',async t=>{
+ const {db,root}=setup(t),selection={regions:['NYC Metro','Central'],steps:['k1']};
+ const keys=regionalStats(db).hospitals.filter(h=>selection.regions.includes(h.region)).map(h=>h.hospital_key);
+ for(const [index,key] of keys.entries()){
+  for(const step of ['k1','k5'])db.prepare('INSERT INTO criterion_results VALUES(?,?,?,?,?)').run(key,step,'SYN-prior','2026-01-01T00:00:00Z',JSON.stringify({value:step==='k1'&&index<8?null:index%2===0,evidence:[]}));
+ }
+ const savedBefore=db.prepare('SELECT * FROM criterion_results ORDER BY hospital,step').all();
+ const missing=await previewRegional(db,root,selection,planner);
+ assert.equal(missing.selection.mode,'missing');assert.equal(missing.plan.jobs,0);
+ const retry=await previewRegional(db,root,{...selection,mode:'retry'},planner);
+ assert.equal(retry.plan.jobs,8);assert.equal(retry.plan.checks,8);
+ const all=await previewRegional(db,root,{...selection,mode:'all'},planner);
+ assert.equal(all.plan.jobs,82);assert.equal(all.plan.checks,82);assert.equal(all.plan.max_model_calls,3280);
+ assert.equal(db.prepare('SELECT count(*) n FROM criterion_jobs').get().n,0);
+ const started=await startRegional(db,root,all.id,planner);
+ assert.equal(started.jobs.length,82);assert.ok(started.jobs.every(j=>JSON.stringify(j.requested)==='["k1"]'));
+ assert.deepEqual((await startRegional(db,root,all.id,planner)).jobs,started.jobs);
+ assert.deepEqual(db.prepare('SELECT * FROM criterion_results ORDER BY hospital,step').all(),savedBefore);
+ assert.equal(cancelRegional(db,all.id).jobs.filter(j=>j.status==='cancelled').length,82);
+ await assert.rejects(previewRegional(db,root,{...selection,mode:'anything'},planner),/Invalid check mode/);
+});
+test('retry includes technical failures with prior findings and rejects changed human-review previews',async t=>{
+ const {db,root}=setup(t),selection={...input,steps:['k12'],hospitals:['1169'],mode:'all'};
+ db.prepare('INSERT INTO criterion_results VALUES(?,?,?,?,?)').run('1169','k12','SYN-prior','2026-01-01T00:00:00Z',JSON.stringify({value:true,evidence:[]}));
+ const first=await previewRegional(db,root,selection,planner);await startRegional(db,root,first.id,planner);
+ const job=claimCriterion(db);db.prepare("UPDATE criterion_jobs SET status='failed',completed=?,lease=NULL WHERE id=?").run(new Date().toISOString(),job.id);
+ const retry=await previewRegional(db,root,{...selection,mode:'retry'},planner);
+ assert.equal(retry.plan.jobs,1);assert.deepEqual(retry.plan.hospitals[0].requested,['k12']);
+ const item=criterionStatus(db,'1169').items.find(i=>i.id==='k12');
+ decideCriterion(db,'1169','k12',{request_key:randomUUID(),revision:item.revision,decision:'met',reason:'SYN review',evidence:'SYN page 1'});
+ await assert.rejects(startRegional(db,root,retry.id,planner),/changed/);
+ assert.equal(db.prepare("SELECT count(*) n FROM criterion_jobs WHERE status='queued'").get().n,0);
+});
+function setup(t){const root=mkdtempSync(join(tmpdir(),'SYN-regional-'));const db=openStore(root);installCriteria(db);installRegional(db);t.after(()=>db.close());return {db,root};}
+test('regional preview is free of jobs; atomic approval is durable, idempotent, selected-only and bounded',async t=>{
+ const {db,root}=setup(t);
+ const a=await previewRegional(db,root,input,planner),b=await previewRegional(db,root,input,planner);
+ assert.equal(db.prepare('SELECT count(*) n FROM criterion_jobs').get().n,0);
+ assert.equal(a.plan.checks,4);assert.equal(a.plan.max_model_calls,80);
+ const [started,concurrent]=await Promise.all([startRegional(db,root,a.id,planner),startRegional(db,root,a.id,planner)]);assert.equal(started.jobs.length,2);
+ assert.deepEqual(started.jobs,concurrent.jobs);
+ assert.deepEqual(started.jobs.map(j=>j.requested),[['k5','k12'],['k5','k12']]);
+ assert.deepEqual((await startRegional(db,root,a.id,planner)).jobs,started.jobs);
+ await assert.rejects(startRegional(db,root,b.id,planner),/active check/);
+ assert.equal(db.prepare('SELECT count(*) n FROM criterion_jobs').get().n,2);
+ const overview=criterionOverview(db);assert.equal(overview.activity['1169'].status,'queued');
+ const running=claimCriterion(db);assert.equal(criterionOverview(db).activity[running.hospital].status,'running');
+ const cancelled=cancelRegional(db,a.id);assert.equal(cancelled.jobs.filter(j=>j.status==='cancelled').length,1);assert.equal(cancelled.jobs.filter(j=>j.status==='running').length,1);
+ assert.equal(claimCriterion(db),null);
+ assert.ok(cancelRegional(db,a.id).cancelled);
+});
+test('stale result/preparation previews cannot run and saved selected criteria are skipped',async t=>{
+ const {db,root}=setup(t);
+ db.prepare('INSERT INTO criterion_results VALUES(?,?,?,?,?)').run('739','k5','SYN-saved','2026-11-01T00:00:00Z',JSON.stringify({value:true,evidence:[]}));
+ const preview=await previewRegional(db,root,input,planner);
+ assert.deepEqual(preview.plan.hospitals.find(h=>h.hospital_key==='739').requested,['k12']);
+ const changed=async()=>({run:['k1','k2','k5','k12'],reuse:[]});
+ await assert.rejects(startRegional(db,root,preview.id,changed),/changed/);
+ db.prepare('INSERT INTO criterion_results VALUES(?,?,?,?,?)').run('1169','k12','SYN-new','2026-11-02T00:00:00Z',JSON.stringify({value:false,evidence:[]}));
+ await assert.rejects(startRegional(db,root,preview.id,planner),/changed/);
+ assert.equal(db.prepare('SELECT count(*) n FROM criterion_jobs').get().n,0);
+});
+test('regional counts match hospital verdicts including human decisions, untouched hospitals and failures',async t=>{
+ const {db,root}=setup(t);
+ db.prepare('INSERT INTO criterion_results VALUES(?,?,?,?,?)').run('739','k5','SYN-saved','2026-11-01T00:00:00Z',JSON.stringify({value:null,evidence:[]}));
+ const item=criterionStatus(db,'739').items.find(i=>i.id==='k5');
+ decideCriterion(db,'739','k5',{request_key:randomUUID(),revision:item.revision,decision:'unmet',reason:'SYN reviewed',evidence:'SYN page 1'});
+ const preview=await previewRegional(db,root,{...input,hospitals:['1169']},planner);
+ await startRegional(db,root,preview.id,planner);const job=claimCriterion(db);
+ db.prepare('UPDATE criterion_jobs SET lease=1 WHERE id=?').run(job.id);
+ const stats=regionalStats(db),central=stats.regions.find(r=>r.region==='Central'),metro=stats.regions.find(r=>r.region==='NYC Metro');
+ assert.equal(central.items.find(i=>i.id==='k5').unmet,1);
+ assert.equal(central.items.find(i=>i.id==='k5').unrun,central.total-1);
+   assert.equal(metro.items.find(i=>i.id==='k12').error,1);
+   assert.equal(metro.items.find(i=>i.id==='k12').checked,0);
+   assert.equal(metro.items.find(i=>i.id==='k12').unmet,0);
+  for(const r of stats.regions)for(const i of r.items)assert.equal(i.met+i.unmet+i.unclear+i.unrun+i.error,r.total);
+  assert.equal(criterionOverview(db).activity['1169'].status,'error');
+});
+test('invalid scopes, over-limit requests, cancelled and expired previews cannot enqueue',async t=>{
+ const {db,root}=setup(t);
+ for(const bad of [{...input,regions:['Central','Central']},{...input,steps:['k18']},{...input,hospitals:['t2p-0001']},{...input,hospitals:['1002']},{...input,hospitals:Array(11).fill('739')}])await assert.rejects(previewRegional(db,root,bad,planner));
+ const p=await previewRegional(db,root,input,planner);cancelRegional(db,p.id);
+ await assert.rejects(startRegional(db,root,p.id,planner),/cancelled/);
+ const expired=await previewRegional(db,root,input,planner);db.prepare('UPDATE criterion_batches SET created=? WHERE id=?').run('2000-01-01',expired.id);
+ await assert.rejects(startRegional(db,root,expired.id,planner),/expired/);
+ assert.equal(db.prepare('SELECT count(*) n FROM criterion_jobs').get().n,0);
+});
+test('approved regional selection runs through the existing worker with synthetic checkpoints only',async t=>{
+ const {db,root}=setup(t);
+ const preview=await previewRegional(db,root,{...input,hospitals:['739'],steps:['k5','k12']});
+ assert.deepEqual(preview.plan.hospitals[0].run,['k1','k2','k3','k5','k12']);
+ await startRegional(db,root,preview.id);
+ const launch=(_path,args,options)=>fork(fileURLToPath(new URL('./fixtures/criterion-child.js',import.meta.url)),args,options);
+ assert.equal(await workCriterion(db,root,{launch}),true);
+ const status=criterionStatus(db,'739');
+ assert.equal(status.active,null);assert.equal(status.summary.met,5);
+ assert.deepEqual(status.items.find(i=>i.id==='k5').latest.requested,['k5','k12']);
+ assert.equal(status.items.find(i=>i.id==='k4').saved,null);
+ assert.equal(criterionOverview(db).activity['739'].status,'completed');
+ assert.equal(await workCriterion(db,root,{launch}),false);
+});
+test('cancelling a queued retry preserves the earlier failed finding and review revision',async t=>{
+ const {db,root}=setup(t),selection={...input,hospitals:['739'],steps:['k12']};
+ const first=await previewRegional(db,root,selection,planner);await startRegional(db,root,first.id,planner);
+ const job=claimCriterion(db);db.prepare("UPDATE criterion_jobs SET status='failed',completed=?,lease=NULL WHERE id=?").run(new Date().toISOString(),job.id);
+ const original=criterionStatus(db,'739').items.find(i=>i.id==='k12');
+ const retry=await previewRegional(db,root,selection,planner);await startRegional(db,root,retry.id,planner);cancelRegional(db,retry.id);
+ const after=criterionStatus(db,'739').items.find(i=>i.id==='k12');
+  assert.equal(after.effective,'error');assert.equal(after.revision,original.revision);
+});
+test('all hospitals in both regions are included by default with one approval and saved results skipped',async t=>{
+ const {db,root}=setup(t),selection={regions:['NYC Metro','Central'],steps:['k1']};
+ const all=await previewRegional(db,root,selection,planner);
+ assert.equal(all.selection.scope,'all');assert.equal(all.selection.hospitals.length,82);
+ assert.equal(all.plan.jobs,82);assert.equal(all.plan.max_model_calls,3280);
+ assert.equal(all.plan.hospitals.filter(h=>h.region==='NYC Metro').length,62);
+ assert.equal(all.plan.hospitals.filter(h=>h.region==='Central').length,20);
+ // Already-saved results, including unclear findings, must not cause paid reruns.
+ for(const key of all.selection.hospitals.slice(0,10))db.prepare('INSERT INTO criterion_results VALUES(?,?,?,?,?)').run(key,'k1','SYN-existing','2026-11-01T00:00:00Z',JSON.stringify({value:null,evidence:[]}));
+ const preview=await previewRegional(db,root,selection,planner);
+ assert.equal(preview.plan.hospitals.length,82);assert.equal(preview.plan.jobs,72);
+ const started=await startRegional(db,root,preview.id,planner);
+ assert.equal(started.jobs.length,72);
+ assert.equal(db.prepare("SELECT count(*) n FROM criterion_jobs WHERE status='queued'").get().n,72);
+ assert.equal((await startRegional(db,root,preview.id,planner)).jobs.length,72);
+ assert.equal(cancelRegional(db,preview.id).jobs.filter(j=>j.status==='cancelled').length,72);
+ const custom=await previewRegional(db,root,{...selection,hospitals:all.selection.hospitals.slice(0,20)},planner);
+ assert.equal(custom.selection.scope,'custom');assert.equal(custom.selection.hospitals.length,20);
+});

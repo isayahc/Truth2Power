@@ -1,21 +1,20 @@
-import { HospitalRuns } from "./AuditOperations.jsx";
+import CriterionAudits from './CriterionAudits.jsx';
+import {CriterionCoverage, useCriterionCoverage} from './CriterionCoverage.jsx';
 import GradingPanel from "./GradingPanel.jsx";
 import ReportingContext from "./ReportingContext.jsx";
 import HospitalAssessment from "./HospitalAssessment.jsx";
-import PilotAudit from "./PilotAudit.jsx";
-import AuditPanel from "./AuditPanel.jsx";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { ratings, ratingByStars } from "./ratings.js";
 import { useLocale } from './locale.jsx';
 
-export function Ratings({ hospitals, filter, onFilter }) {
+export function Ratings({ hospitals, filter, onFilter, region = '' }) {
   const { t } = useLocale();
   const counts = new Map(ratings.map((r) => [r.stars, 0]));
-  for (const h of hospitals) counts.set(h.properties.stars, counts.get(h.properties.stars) + 1);
+  for (const h of hospitals) {const key=h.properties.stars ?? 'unrated';counts.set(key, counts.get(key) + 1);}
   let stop = 0;
   const slices = ratings.map((r) => {
     const start = stop;
-    stop += (counts.get(r.stars) / hospitals.length) * 100;
+    stop += hospitals.length ? (counts.get(r.stars) / hospitals.length) * 100 : 0;
     return `${r.color} ${start}% ${stop}%`;
   });
   return (
@@ -28,7 +27,7 @@ export function Ratings({ hospitals, filter, onFilter }) {
           style={{ background: "conic-gradient(" + slices.join(",") + ")" }}
         />
         <div>
-          <h2>{t('Statewide ratings')}</h2>
+          <h2>{region ? `${t('Region')}: ${t(region)}` : t('Statewide ratings')}</h2>
           <p>{t('September 2025 audit')}</p>
         </div>
       </div>
@@ -44,7 +43,7 @@ export function Ratings({ hospitals, filter, onFilter }) {
           onClick={() => onFilter(filter === r.stars ? null : r.stars)}
         >
           <span className="swatch" style={{ background: r.color }} />
-          <span className="stars">{r.stars} ★</span>
+          <span className="stars">{r.stars==='unrated' ? '—' : `${r.stars} ★`}</span>
           <span className="rating-label">{t(r.label)}</span>
           <span className="quantity">{counts.get(r.stars)}</span>
         </button>
@@ -54,7 +53,7 @@ export function Ratings({ hospitals, filter, onFilter }) {
           t('Select a rating to filter the map.')
         ) : (
           <>
-            {t('Showing')} {filter} {t(filter === 1 ? 'star' : 'stars')} ·{" "}
+            {t('Showing')} {filter==='unrated' ? t('Not rated') : `${filter} ${t(filter === 1 ? 'star' : 'stars')}`} ·{" "}
             <button className="plain" onClick={() => onFilter(null)}>
               {t('Show all')}
             </button>
@@ -69,15 +68,8 @@ export function Ratings({ hospitals, filter, onFilter }) {
 }
 
 export function HospitalDetail({ hospital, onClose, onReview, pendingReviews }) {
+  const {data:coverage}=useCriterionCoverage();
   const { t, language, localHref } = useLocale();
-  const [publishedRevision, setPublishedRevision] = useState(null);
-  const [panel, setPanel] = useState(window.location.hash === '#audit-runs' ? 'audits' : 'findings');
-  useEffect(() => {
-    const sync = () => setPanel(window.location.hash === '#audit-runs' ? 'audits' : 'findings');
-    sync();
-    window.addEventListener('hashchange', sync);
-    return () => window.removeEventListener('hashchange', sync);
-  }, [hospital.id]);
   const p = hospital.properties;
   const [longitude, latitude] = hospital.geometry.coordinates;
   return (
@@ -89,37 +81,29 @@ export function HospitalDetail({ hospital, onClose, onReview, pendingReviews }) 
       </button>
       <div className="hospital-summary">
         <h1>{p.name}</h1>
+        {p.current_directory===false && <p>{t('Historical record; not listed separately in the current state directory.')}</p>}
         <p>{p.address}, {p.city} · {t('County')}: {p.county}</p>
+        <p>{t('Region')} {p.region_number} · {t(p.region)}</p>
         <p className="pill">
           <span className="swatch" style={{ background: ratingByStars.get(p.stars).color }} />
-          {t('Published rating')} · {p.stars} ★ · {t('Grade')} {p.grade} · {t('September 2025')}
+           {p.grade ? <>{t('Published rating')} · {p.stars} ★ · {t('Grade')} {p.grade} · {t('September 2025')}<CriterionCoverage hospitalKey={hospital.id} historical /></> : <>{t('Not rated')} · {t('September 2025')}</>}
         </p>
         <div className="record-actions">
           {p.assistance_url && <a href={p.assistance_url} target="_blank" rel="noreferrer">{t('Get hospital financial assistance (HFA) ↗')}</a>}
-          <a href={p.audit_url}>{t('Audit row ↗')}</a>
+          {p.audit_url && <a href={p.audit_url}>{t('Audit row ↗')}</a>}
         </div>
       </div>
+      <CriterionAudits key={hospital.id} hospitalKey={hospital.id} />
       <section className="hospital-findings">
-        <nav className="hospital-panel-nav" aria-label={t('Hospital workspace')}>
-          <button aria-pressed={panel === 'findings'} onClick={() => setPanel('findings')}>{t('Findings')}</button>
-          <button aria-pressed={panel === 'audits'} onClick={() => setPanel('audits')}>{t('Audits and history')}</button>
-        </nav>
-        <div hidden={panel !== 'findings'}>
           <h2>{t('Audit findings')}</h2>
           {language === 'es' && <p className="translation-scope">{t('Detailed audit and review panels below are in English. Quotations retain the original document language.')}</p>}
           <div lang="en">
-            <HospitalAssessment hospitalKey={hospital.id} hospitalName={p.name} publishedRevision={publishedRevision} />
+            <HospitalAssessment hospitalKey={hospital.id} hospitalName={p.name} />
             <ReportingContext hospitalKey={hospital.id} />
             <GradingPanel hospitalKey={hospital.id} />
-            <PilotAudit hospitalKey={hospital.id} />
-            {hospital.id === "362" && <AuditPanel />}
           </div>
-        </div>
-        <div hidden={panel !== 'audits'}>
-          <HospitalRuns hospitalKey={hospital.id} onAssessment={setPublishedRevision} />
-        </div>
       </section>
-      <button className="review-nav" onClick={onReview}>{t('Review notifications')} ({pendingReviews ?? "…"})</button>
+       <button className="review-nav" onClick={onReview}>{t('Review notifications')} ({typeof pendingReviews==='number' ? pendingReviews+(coverage?.hospitals[hospital.id]?.unclear ?? 0) : '…'})</button>
       <details className="location-details">
         <summary>{t('Location details')}</summary>
         <dl>

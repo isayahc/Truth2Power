@@ -129,7 +129,7 @@ test("synthetic publications are excluded from normal public views and stale clo
   assert.equal(publications(undefined, { includeSynthetic: false }).bundles.length, 0);
   const inputs = pageInputs();
   const aged = overview({ inputs, asOf: new Date("2027-01-01T00:00:00Z") });
-  assert.equal(aged.hospitals.length, 212);
+  assert.equal(aged.hospitals.length, 218);
   assert.equal(aged.hospitals.find((r) => r.hospital_key === "1002").freshness, "overdue");
   assert.ok(aged.statewide.freshness.never >= 210);
 });

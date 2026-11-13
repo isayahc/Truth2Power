@@ -3,9 +3,12 @@
   "private": true,
   "type": "module",
   "engines": {
-    "node": ">=22.13.0"
+    "node": ">=26.0.0"
   },
   "scripts": {
+    "audit": "node agents/cli.ts",
+    "test:agents-cli": "node --test agents/cli.test.ts",
+    "test:criteria": "npm run build && node --test backend/test/criteria.test.js && node scripts/test-criteria-e2e.js",
     "dev": "node backend/src/local-server.js --dev",
     "build": "vite build",
     "start": "node backend/src/local-server.js",
@@ -18,11 +21,13 @@
     "test:review": "node scripts/test-review-e2e.js"
   },
   "dependencies": {
+    "@opencode/sdk": "^2.2.7",
     "playwright": "1.65.0",
     "react": "19.3.1",
     "react-dom": "19.3.1"
   },
   "devDependencies": {
+    "@types/node": "22.20.5",
     "vite": "8.3.6"
   }
 }

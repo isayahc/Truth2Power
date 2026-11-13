@@ -1,5 +1,70 @@
 # Truth2Power
 
+### Plain-language interface
+
+The main screens call criteria **requirements**, runs **checks**, and unclear results **Needs review**. Viewing results is free; starting AI checks may incur charges. These wording changes do not change verdicts, job behavior or published grades. Technical API names and message keys remain stable. `frontend/src/plain-language.js` keeps paired English/Spanish wording; `locale.jsx` and the Spanish catalog use it for UI labels only, never source quotations. Remaining older English-only report content is labeled as such. Spanish wording is a translation draft, not fluent-reader approved.
+
+### Two-region requirement checks
+
+Open **Compare two regions** (`?view=regional`) to choose two Attachment G regions, select any K1–K17 requirements, and view current per-requirement outcomes side by side. Counts cover each entire region and distinguish met, unmet, needs review and not checked, with coverage and last-result/decision dates. They do not replace September 2025 grades.
+
+**All hospitals in both selected regions are included by default** (82 for NYC Metro plus Central). No hospital-picking step or manual ten-hospital batches are required. A collapsed optional section allows a custom subset, clearly displays its size, and offers Reset to all hospitals. The server derives the full regional roster when the request omits hospital IDs; custom selections are validated against the selected regions. Selected requirements with stored results are skipped; missing prerequisites may also run, and intact prerequisites are reused. A single preview and explicit approval queue all necessary hospital jobs, which the existing worker processes automatically. The preview distinguishes included hospitals from hospitals requiring new checks, and lists execution/reuse details under an expandable section. Reading statistics and preparing previews make no model calls. Each hospital retains the 40-model-task/20-minute limit: the preview shows the aggregate bound (up to 3,280 tasks for 82 new hospital jobs), not a dollar guarantee.
+
+`criterion_batches` and `criterion_batch_jobs` retain approvals and job associations in SQLite. Preview IDs are idempotency keys: retrying a lost approval response returns the same jobs. Conflicting hospital jobs or changed plans/results reject the whole submission before any jobs are inserted. Previews expire after 15 minutes. Cancellation only stops queued hospitals; already-running jobs finish within their existing limits. Cancelling a queued retry preserves the preceding finding/revision.
+
+Progress cards clearly state whether checks are running, finished, stopped or finished with execution errors. Execution status is separate from current met/unmet/unclear/unrun findings for the included hospitals and selected requirements. Unclear results have direct review links. Finished cards have no stop button; Stop remaining checks appears only while queued work exists. Findings are current saved outcomes and human decisions, not an immutable historical batch assessment.
+
+Technical failures now have their own `error` outcome when no valid finding exists, excluded from checked/confirmed totals and never counted as unmet. Failed retries retain previous saved findings and evidence-bound human decisions, with a separate error badge. Failed step checkpoints are recognized even when a job reports completion; succeeded/reused steps in a partially failed job keep their findings. This classifies recorded execution failures, not arbitrary words in agent prose or recoverable log errors. A successful, evidence-based unmet result remains unmet.
+
+Regional check modes: **Missing checks only** (default) skips saved results; **Retry technical errors and unclear results** targets selected requirements with recorded failures or current unclear findings; **Rerun all selected requirements** deliberately reruns the selection, including saved met/unmet results. Empty previews offer direct retry/all-rerun preview buttons. Every mode still requires explicit approval. Reruns execute requested assessments while reusing saved documents and intact prerequisites where possible; they do not force fresh website downloads. Preview fingerprints include job and human-decision changes so stale selections cannot be approved. Existing findings are retained until new results are saved.
+
+The bilingual legend uses circles for met (green), unmet (red), evidence review (blue), running (purple), and queued/not checked (gray); technical errors use a red X. The regional map summarizes selected requirements with active work first, then technical errors, unmet, unclear, unchecked, and all-met. Historical maps retain their rating colors with separate activity indicators. Technical errors also appear in the hospital review inbox.
+
+Map dots are larger, with enlarged pointer targets and keyboard labels. Queue clocks, running rings, completion checks and attention marks come from database job states; stale activity is hidden if refreshing fails. Historical rating colors remain intact. Running rings stop animating under reduced-motion preferences. Use map zoom or hospital search to distinguish dense NYC locations.
+
+Verification: `node --test backend/test/regional-criteria.test.js backend/test/criteria.test.js` and `node scripts/test-regional-audits-e2e.js`. Tests use synthetic checkpoints or a local queue with **no live audit worker**, never paid model calls.
+
+### County and rating regions
+
+All current and historical hospital identities carry `county`, `region`, `region_number` and `region_scheme`. The nine-region mapping in `references/ny-rating-regions-v1.json` is transcribed from the user-provided **Revised Attachment G — New York Standardized Rating Regions — Basic Health Plan** image. No publication date or source URL was supplied. These are rating regions, replacing economic-development regions in the current web directory and reporting; assignments follow the hospital's location county, not its service area.
+
+Run `node scripts/assign-hospital-regions.js` to validate the 62-county mapping and regenerate GeoJSON/CSV assignments. Roster reconciliation also runs this step. The map's region dropdown filters markers and search; star filters further narrow both, while rating totals describe the selected region. The selected region is retained in the URL across reloads and language changes. Overview and Operations use the same nine-region mapping, and hospital pages show county and region.
+
+**NYC Metro (Region 1) vs. Central (Region 7)** is the default pair on Compare two regions. Its current saved requirement statistics are available without running new checks; regional results should be interpreted alongside their coverage.
+
+### Current hospital directory
+
+The web directory is reconciled one-to-one against the [NYS directory of 218 hospitals](https://profiles.health.ny.gov/directory/hospitals). `data/maps/directory-reconciliation.json` records the retrieval date, all matches, and state facility records for the seven additions. `node scripts/reconcile-hospital-directory.js` reproduces the reconciliation, stopping on ambiguous matches or a changed directory count.
+
+The seven new campuses have no September 2025 grade, star count, application-posting finding, or audit row. They display **Not rated / Sin calificación**, independently of current requirement checks. Their assistance starting URLs are inherited from the state-identified parent hospital; campus applicability still needs evidence review. No parent rating or saved finding is copied.
+
+Cohen Children's (`t2p-0001`) is retained as a historical-only record, with its original link, grade and saved history. The canonical GeoJSON contains 219 identities: 218 current and one historical-only. `/api/hospitals` returns 218 `features` and one `historical_features` entry. The CSV, current map, Overview and Operations directory use the current 218. All 212 published historical ratings remain intact; the standalone `maps/index.html` remains the September 2025 historical atlas.
+
+### Connected check history
+
+The Operations table reads both older audit records and `criterion_jobs` / `criterion_results` / human decisions from SQLite. It refreshes every five seconds. Requirement counts use the same calculation as hospital pages; dates come from recorded starts, completions and source retrievals, not the time the dashboard was opened. Requirement checks have no automatic schedule or recorded cost ledger, so those fields show **Not scheduled** and **Not recorded**. Cost totals are explicitly labeled as older-audit totals. Older records and their technical history remain available. Reporting is read-only and tolerates databases created before requirement checks were introduced.
+
+## On-demand criterion agents
+
+Each hospital page now lists **K1–K17** with a **Run criterion** button. Opening a page or expanding a saved result makes no model calls. Before execution, the confirmation shows the requested criterion plus any missing prerequisites. For example, K12 requires K1; K16 requires K2, which may require K1. Intact prerequisite artifacts are reused rather than rerun. Choosing one criterion never queues the other unrelated criteria.
+
+The existing `npm run audit:worker` also processes these requests through the OpenCode SDK runner (`agents/runner.ts`). Both web and worker processes require **Node 26+** and the same `AUDIT_DIR`. Roster-verified hospital names and assistance URLs are supplied server-side; browsers cannot supply arbitrary source URLs or model choices. The default is Bedrock `us.amazon.nova-micro-v1:0`, using the server's existing AWS credential chain.
+
+- Requests are durable SQLite jobs, with one active criterion request per hospital and idempotent submission keys (including duplicate tabs and lost responses).
+- The UI polls active jobs and shows saved draft results, original source quotations, URLs, retrieval dates and unresolved findings. **Run again** is an explicit new request. Source reuse retains the original retrieval dates; rerunning does not certify that a saved PDF is still current.
+- Each hosted criterion job has a 20-minute timeout and a maximum of 40 model tasks across its requested criterion and prerequisites, with the existing 2048-output-token limit per task. These are work limits, **not a dollar spending guarantee**. Internal validation/repair tasks count toward the task limit.
+- Worker interruption or timeout never automatically retries a criterion job. Already saved results remain visible. Reapprove a new request to try again.
+- Results live in `criterion_jobs`, `criterion_requests` and `criterion_results` in `AUDIT_DIR/audit.sqlite`; full run manifests, task graphs, session IDs, PDFs and evidence remain under `AUDIT_DIR/hospitals` and `AUDIT_DIR/agents`.
+- These SDK findings are a separate draft view. They do not overwrite the published 2025 ratings or automatically publish into the legacy assessment/review-inbox/operations-cost ledger. Older CLI artifacts can supply prerequisites; historical CLI results are not automatically imported into the new UI result table.
+- The criterion panel is the only audit execution UI on hospital pages. The old hospital-runs panel, its tabs, and demo audit launchers are removed; saved assessment views and legacy records/APIs remain available. Existing `#audit-runs` links lead to the criterion panel. K9 still requires the verified uniform-application reference files under `AUDIT_DIR/live/snapshots`; missing reference material produces a review gap.
+- **Run all missing** previews the remaining criteria and prerequisites before queuing one background job. Saved results require explicit individual reruns; missing prerequisite artifacts may need regeneration, shown in the preview. Partial failures retain completed results. The 40-task/20-minute caps are not price guarantees.
+- Grade displays include a separate current criterion coverage count and last-update time. Confirmed means met or unmet; unclear and not-run do not count. The published September 2025 rating has no recorded historical confirmed count or precise timestamp and remains separate.
+- Unclear criteria appear once per hospital/criterion in the Review inbox. Human decisions require a reason and supporting evidence for met/unmet, receive a server timestamp, and preserve the original finding plus immutable decision history. No reviewer identity is collected in the demo. Still-unclear remains open; a new unclear audit reopens review and invalidates old decisions for the changed evidence.
+
+Read-only endpoints: `GET /api/hospitals/:key/criteria` and `GET /api/hospitals/:key/criteria/:step/plan`. Explicit execution: `POST /api/hospitals/:key/criteria/:step` with `X-Review-Request: 1` and `{request_key, rerun, approved_steps}`. The worker rechecks scope and stops if missing prerequisites would require unapproved work.
+
+Run `npm run test:criteria` for offline synthetic queue, subprocess, and English/Spanish desktop/mobile browser checks. The tests do not invoke a paid model. UI translations are implementation drafts, not fluent-reader approval. Live model quality and provider access must be checked separately before relying on a hosted finding.
+
 ## Integrated 17-measure pilot
 
 The persistent audit worker now publishes one immutable assessment revision across hospital pages, grading, overview, review inbox and changes. See the [offline demo and operating guide](docs/validation/pilot-operations.md), [release-readiness report](docs/validation/pilot-readiness.md), and [reproducible Wave 1 results](docs/validation/wave-one-pilot-results.md). Run `npm run test:pilot` with the existing Python grading dependencies configured. Real Wave 1 evidence remains partial; institutional grades and subject-matter approval remain pending.
@@ -14,7 +79,7 @@ Truth2Power maps how 212 New York hospitals scored in the Community Service Soci
 
 ## Run the React app
 
-Install Git and Node.js 22.13 or newer with npm. Run these commands in a terminal (including WSL2 on Windows).
+Install Git and Node.js 26 or newer with npm. Run these commands in a terminal (including WSL2 on Windows).
 
 ```bash
 git clone https://github.com/isayahc/Truth2Power.git
@@ -63,7 +128,7 @@ Open http://127.0.0.1:5180/. On Linux/WSL, use `PORT=5180 npm run dev` and `PORT
 
 Both processes must use the same `AUDIT_DIR` (default: `.audit/`) and `PORT`. Starting the worker processes existing queued jobs; do not submit duplicate scans just because a job is waiting. Press **Ctrl+C** in the worker terminal to stop processing.
 
-In **Audits and history**, the status above the buttons distinguishes **Queued** (not started), **Running**, and finished runs. Active runs are checked every five seconds, for up to 120 checks; use **Refresh** to resume after polling pauses or a connection fails. Disabled audit buttons prevent another run while the current one is pending.
+The criterion panel distinguishes **Queued** (not started), **Running**, and saved findings. Active jobs are checked every three seconds; use **Refresh** if the connection fails. Disabled audit buttons prevent another criterion run while the current one is pending.
 
 If a run stays queued, check the worker terminal first. A successful page/API response only confirms the web server is running. Check for worker startup errors, matching `AUDIT_DIR` values, and missing Python dependencies. The UI's last status-check time confirms a response from the backend, not a worker heartbeat.
 
@@ -206,7 +271,7 @@ The demo uses public hospital-level audit data and facility coordinates. It requ
 
 ### Replay the 17-measure compliance assessment
 
-Use Node 22.13+ and Python 3.10+ with the live-audit dependencies. These commands grade saved synthetic evidence offline. Set `T2P_PYTHON` if your interpreter is named `python3` or lives in a virtual environment.
+Use Node 26+ and Python 3.10+ with the live-audit dependencies. These commands grade saved synthetic evidence offline. Set `T2P_PYTHON` if your interpreter is named `python3` or lives in a virtual environment.
 
 ```bash
 python -m pip install -r tools/live-audit/requirements.txt
@@ -311,6 +376,8 @@ python tools/live-audit/human_review.py <result-file> --decision needs_changes -
 ```
 
 This CLI is not an MCP tool. Its role label is self-attested, not authenticated. No agent should invoke it to manufacture human approval.
+
+**K5 disclosure rule:** In new SDK criterion runs, reviewed materials must explicitly identify primary-service counties or ZIP codes for non-emergency financial assistance. When all saved sources are readable and reviewed, including a policy statement, omission is **not met** in that reviewed scope. Emergency-only geography, broad regions, and mailing addresses do not satisfy disclosure. Missing or failed source reviews and ambiguous readings remain **unclear**. The bounded website-discovery caveat remains visible but does not prevent a scoped omission finding. Saved results are not retroactively reclassified; explicitly rerun K5 to apply this rule.
 
 **Service-area question remains open:** [NYS Public Health Law §2807-k(9-a)(f)](https://www.nysenate.gov/legislation/laws/PBH/2807-K), displayed revision May 29, 2026, distinguishes emergency coverage for New York residents from medically necessary services in the hospital's primary service area under commissioner criteria. We still need the applicable commissioner criteria, their effective date, and Ellenville's filed/approved boundaries for the review date. The statute and a county list alone do not establish boundary compliance. Rule approval and subject-matter review remain pending.
 

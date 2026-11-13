@@ -260,6 +260,31 @@ p {
   overflow: hidden;
   border-radius: 6px;
 }
+.criterion-audits { margin: 20px 0; }
+.criterion-list { list-style: none; padding: 0; display: grid; gap: 6px; }
+.criterion-card { border: 1px solid var(--line); border-radius: 6px; padding: 10px 12px; min-width: 0; }
+.criterion-card-heading { display: grid; grid-template-columns: minmax(0, 1fr) 155px 145px; align-items: center; gap: 8px 14px; }
+.criterion-audits .criterion-card-heading h3 { margin: 0; font-size: 14px; line-height: 1.4; }
+.criterion-audits .criterion-card-heading button { font-size: 12px; padding: 6px 9px; }
+.criterion-status { display: inline-flex; align-items: center; gap: 7px; font-size: 12px; font-weight: 650; }
+.criterion-dot { width: 11px; height: 11px; flex: 0 0 11px; border-radius: 50%; background: #69747c; border: 2px solid #69747c; }
+.criterion-status--met .criterion-dot { background: #15803d; border-color: #15803d; }
+.criterion-status--unmet .criterion-dot { background: #b91c1c; border-color: #b91c1c; }
+.criterion-status--unrun .criterion-dot, .criterion-status--queued .criterion-dot { background: transparent; }
+.criterion-status--running .criterion-dot { background: transparent; border-color: #bcc5c9; border-top-color: #385956; animation: criterion-spin .8s linear infinite; }
+@keyframes criterion-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .criterion-status--running .criterion-dot { animation: none; } }
+@media (max-width: 600px) {
+  .criterion-card-heading { grid-template-columns: minmax(0, 1fr) auto; gap: 8px; }
+  .criterion-card-heading h3 { grid-column: 1 / -1; }
+  .criterion-card-heading button { max-width: 150px; }
+}
+.criterion-audits button { min-height: 36px; white-space: normal; }
+.criterion-audits details { margin-top: 12px; }
+.criterion-audits summary { cursor: pointer; }
+.criterion-audits p, .criterion-audits a, .criterion-audits blockquote { overflow-wrap: anywhere; }
+.criterion-audits blockquote { margin: 8px 0; padding-left: 12px; border-left: 3px solid var(--line); }
+.criterion-confirm, .criterion-progress { margin: 12px 0; padding: 14px; background: #edf5f0; border: 1px solid var(--line); border-radius: 6px; }
 .map-block {
   min-width: 0;
   display: flex;
@@ -355,6 +380,48 @@ p {
 .results p {
   padding: 10px;
   font-size: 12px;
+}
+.map-panel {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  min-width: 0;
+}
+.map-view-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  flex-shrink: 0;
+  gap: 8px 12px;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--line);
+  background: #f8faf7;
+}
+.map-view-switch {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.map-view-switch button {
+  min-height: 36px;
+  padding: 7px 12px;
+  border: 1px solid #b3c9c1;
+  border-radius: 4px;
+  background: #fffefa;
+  color: #385956;
+  font-size: 12px;
+  font-weight: 650;
+}
+.map-view-switch button[aria-pressed="true"] {
+  background: #173c39;
+  border-color: #173c39;
+  color: white;
+}
+.map-view-count {
+  font-size: 11px;
+  color: var(--muted);
 }
 .viewport {
   position: relative;
@@ -840,10 +907,14 @@ h2 {
   .controls {
     top: 7px;
     left: 7px;
+    max-width: calc(100% - 14px);
   }
   .controls button {
-    width: 24px;
-    height: 24px;
+    width: auto;
+    height: auto;
+    min-height: 32px;
+    padding: 5px 7px;
+    font-size: 11px;
   }
   .map-footer {
     padding: 7px 10px;
@@ -942,7 +1013,9 @@ h2 {
 .overview th, .overview td { padding:8px 12px; text-align:left; border-bottom:1px solid var(--line); }
 .overview thead { background:#edf3ef; }
 .overview-controls { display:flex; flex-wrap:wrap; align-items:end; gap:12px; }
-.overview-controls label { display:grid; gap:5px; }
+.overview-controls label { display:grid; gap:5px; min-width:0; max-width:100%; }
+.overview-controls select { min-width:0; max-width:100%; }
+.overview button { white-space:normal; overflow-wrap:anywhere; max-width:100%; }
 .overview button, .overview select { cursor:pointer; }
 @media (max-width:600px) { header { flex-wrap:wrap; gap:8px; } .overview-link { margin-right:0; } .overview td,.overview th {padding:6px;} }
 .correction-draft label { display:grid; gap:6px; margin:8px 0; }
@@ -1070,3 +1143,93 @@ h2 {
 .detail .hospital-runs { margin-block: 0; }
 .detail .review-nav { align-self: start; }
 .location-details summary { cursor: pointer; }
+.criterion-coverage { display: block; font-size: .78rem; font-weight: 400; line-height: 1.5; white-space: normal; overflow-wrap: anywhere; }
+.criterion-coverage > span { display: block; }
+.criterion-summary { padding: .6rem 0; }
+.criterion-human-review { margin: .5rem 0; }
+.criterion-human-review fieldset { display: grid; gap: .7rem; min-width: 0; }
+.criterion-human-review label { display: grid; gap: .3rem; }
+.criterion-human-review textarea { width: 100%; min-height: 5rem; box-sizing: border-box; }
+.criterion-human-review blockquote, .criterion-review-inbox li { overflow-wrap: anywhere; }
+.criterion-updated { font-size: .78rem; }
+.criterion-card { scroll-margin-top: 1rem; }
+.overview-tabs, .overview-pagination { display: flex; flex-wrap: wrap; gap: .6rem; align-items: center; margin: 1rem 0; }
+.overview-tabs [aria-selected="true"] { background: #123e3b; color: white; }
+.overview-pagination p { flex-basis: 100%; }
+.ops-check-source { display:block; margin-top:.3rem; }
+.map-region-filter { padding: 1rem; display:flex; flex-wrap:wrap; align-items:center; gap:.6rem; }
+.map-region-filter select { max-width:100%; min-width:0; padding:.5rem; font:inherit; }
+.map-region-filter p { flex-basis:100%; margin:0; font-size:.85rem; }
+.criterion-review-inbox { margin:1.5rem 0 2rem; }
+.criterion-review-heading { display:flex; align-items:center; gap:.75rem; margin-bottom:1rem; }
+.criterion-review-heading h2 { margin:0; font-size:1.4rem; line-height:1.3; }
+.criterion-review-total { background:#e5eeeb; color:#254b47; border-radius:999px; padding:.25rem .65rem; font-weight:700; font-variant-numeric:tabular-nums; }
+.criterion-review-groups, .criterion-review-rows { list-style:none; padding:0; margin:0; }
+.criterion-review-groups { display:grid; gap:1rem; }
+.criterion-review-group { border:1px solid #cbdad6; border-radius:10px; overflow:hidden; background:#fff; }
+.criterion-review-group summary { display:flex; align-items:center; gap:.75rem; padding:1rem 1.25rem; background:#edf3f0; font-size:1rem; line-height:1.45; cursor:pointer; list-style:none; }
+.criterion-review-group summary::-webkit-details-marker { display:none; }
+.criterion-review-group summary::before { content:'▸'; flex-shrink:0; }
+.criterion-review-group details[open]>summary::before { transform:rotate(90deg); }
+.criterion-review-hospital-name { flex:1; min-width:0; font-weight:700; }
+.criterion-review-group summary:focus-visible { outline:3px solid #087652; outline-offset:-3px; }
+.criterion-review-pagination button { min-height:44px; padding:.5rem .8rem; }
+.criterion-review-row { display:flex; align-items:center; justify-content:space-between; gap:1.25rem; padding:1.1rem 1.25rem; }
+.criterion-review-row + .criterion-review-row { border-top:1px solid #e0e8e5; }
+.criterion-review-content { min-width:0; }
+.criterion-review-title { display:flex; align-items:baseline; gap:.65rem; font-weight:600; line-height:1.5; }
+.criterion-review-code { flex-shrink:0; font-size:.8rem; letter-spacing:.04em; color:#49615d; }
+.criterion-review-meta { display:flex; align-items:center; flex-wrap:wrap; gap:.5rem .9rem; margin-top:.55rem; color:#536760; font-size:.8rem; line-height:1.6; }
+.criterion-review-badge { display:inline-block; padding:.15rem .55rem; border-radius:999px; background:#fff0d2; color:#77500c; font-weight:600; }
+.criterion-review-action { flex-shrink:0; display:inline-flex; align-items:center; justify-content:center; min-height:44px; padding:.5rem .8rem; border:1px solid #aac6bb; border-radius:6px; text-decoration:none; font-weight:600; }
+.criterion-review-action:hover { background:#edf3f0; }
+.criterion-review-action:focus-visible { outline:3px solid #087652; outline-offset:3px; }
+.criterion-review-empty { padding:1.25rem; background:#edf3f0; border-radius:8px; }
+@media(max-width:600px) {
+  .criterion-review-row { align-items:flex-start; flex-direction:column; gap:.75rem; padding:1rem; }
+  .criterion-review-group summary { padding:1rem; }
+  .criterion-review-action { align-self:flex-end; }
+}
+.regional-audits { max-width:100%; }
+.regional-audits fieldset { margin:1rem 0; padding:1rem; border:1px solid #cadbd5; border-radius:8px; min-width:0; }
+.regional-audits legend { font-weight:700; }
+.regional-audits button { min-height:44px; padding:.5rem .8rem; margin:.25rem; }
+.regional-selectors, .regional-hospitals { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+.regional-selectors label { display:flex; flex-direction:column; gap:.5rem; min-width:0; }
+.regional-selectors select { max-width:100%; font:inherit; padding:.5rem; }
+.regional-checklist { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:.6rem; }
+.regional-checklist label, .regional-hospitals label { display:flex; gap:.6rem; align-items:flex-start; padding:.35rem; }
+.regional-audits input[type=checkbox] { flex-shrink:0; width:1.1rem; height:1.1rem; }
+.regional-hospitals details { min-width:0; }
+.regional-hospitals small { display:block; }
+.regional-preview, .regional-batch { background:#edf3f0; border:1px solid #cadbd5; border-radius:8px; padding:1rem; margin:1rem 0; overflow-wrap:anywhere; }
+.regional-preview li { margin-bottom:1rem; }
+.regional-preview li p { margin:.3rem 0; }
+.regional-stats-scroll { max-width:100%; overflow-x:auto; }
+.regional-statistics { width:100%; border-collapse:collapse; min-width:650px; }
+.regional-statistics th, .regional-statistics td { padding:.8rem; border-bottom:1px solid #cadbd5; text-align:left; vertical-align:top; line-height:1.5; }
+.regional-map-legend { font-size:.9rem; line-height:1.5; }
+.hospital-audit-spinner { transform-box:fill-box; transform-origin:center; animation:hospital-audit-spin 1.2s linear infinite; }
+.hospital-audit-symbol { fill:#183e47; stroke:#fff; stroke-width:2px; paint-order:stroke; font-weight:900; }
+@keyframes hospital-audit-spin { to { transform:rotate(360deg); } }
+@media(prefers-reduced-motion:reduce) { .hospital-audit-spinner { animation:none; } }
+@media(max-width:600px) { .regional-selectors,.regional-hospitals,.regional-checklist { grid-template-columns:1fr; } }
+.regional-scope { padding:.8rem 1rem; background:#edf3f0; border-radius:8px; margin:1rem 0; }
+.regional-custom-selection { margin:.75rem 0 1rem; }
+.regional-custom-selection>summary, .regional-preview summary, .regional-batch summary { cursor:pointer; padding:.6rem 0; font-weight:600; }
+.regional-audits button.regional-primary { background:#17463f; color:#fff; border:1px solid #17463f; border-radius:6px; font-weight:600; }
+.regional-audits button.regional-primary:disabled { background:#d8e0dd; border-color:#b6c5bf; color:#465b52; }
+.regional-findings { display:flex; flex-wrap:wrap; gap:.7rem 1.5rem; margin:1rem 0; }
+.regional-findings > span { background:white; border-radius:6px; padding:.6rem .8rem; }
+.regional-batch h3 { margin:0 0 .6rem; }
+.regional-unclear li { margin:.6rem 0; }
+.criterion-legend { padding:12px; margin:12px 0; border:1px solid #cbd5e1; border-radius:8px; }
+.criterion-legend ul { display:flex; flex-wrap:wrap; gap:12px 20px; padding:0; list-style:none; }
+.criterion-legend p { margin-bottom:0; }
+.criterion-status--unclear .criterion-dot { background:#2563eb; border-color:#2563eb; }
+.criterion-status--error .criterion-dot { display:inline-flex; align-items:center; justify-content:center; background:transparent; border:0; border-radius:0; color:#b91c1c; font-size:18px; font-weight:800; }
+.criterion-status.criterion-status--running .criterion-dot { border-color:#7e22ce; border-top-color:transparent; }
+.map-activity-legend { padding:0 12px; font-size:13px; }
+.regional-run-mode label { display:flex; flex-direction:column; gap:8px; }
+.regional-run-mode select { width:100%; max-width:40rem; min-width:0; padding:8px; }
+.regional-preview button { max-width:100%; white-space:normal; }

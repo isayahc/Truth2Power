@@ -7,8 +7,11 @@ import { promisify } from "node:util";
 import { setTimeout as sleep } from "node:timers/promises";
 import { directory, openStore, claim, finish, now } from "./store.js";
 import { runPipeline } from "./pipeline.js";
+import { installCriteria } from './criterion-service.js';
+import { workCriterion } from './criterion-worker.js';
 
 const db = openStore();
+installCriteria(db);
 const origin = "http://127.0.0.1:" + (process.env.PORT || 8000);
 const run = promisify(execFile);
 async function snapshot(bytes, type, url) {
@@ -170,6 +173,7 @@ async function audit(job) {
   }
 }
 do {
+  if (await workCriterion(db, directory)) continue;
   const job = claim(db);
   if (job) {
     const heartbeat = setInterval(

@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import {useLocale} from './locale.jsx';
 
 export const reviewStatus = (value) => ({ pending: "Needs review", needs_information: "More information needed", resolved: "Reviewed" }[value] ?? value);
 const outcome = (value) => value === "n_a" ? "N/A" : value ?? "Not recorded";
@@ -49,6 +50,7 @@ function WholeFormReview({ review }) {
 }
 
 function DecisionForm({ item, onSaved }) {
+  const {t,language}=useLocale();
   const [action, setAction] = useState("confirm");
   const [result, setResult] = useState(item.draft_result);
   const [role, setRole] = useState("");
@@ -66,23 +68,23 @@ function DecisionForm({ item, onSaved }) {
       onSaved(updated);
     } catch (e) { setError(e.message); } finally { setBusy(false); }
   }
-  return <form className="review-form" onSubmit={submit}>
-    <h3>Record a human decision</h3>
-    <p>Confirming an unclear finding records agreement with its uncertainty. It does not turn it into a pass.</p>
-    <label>Decision<select aria-label="Decision" value={action} onChange={(e) => setAction(e.target.value)} disabled={busy}>
-      <option value="confirm">Confirm draft finding ({outcome(item.draft_result)})</option>
-      <option value="correct">Correct the finding</option>
-      <option value="request_information">Request information / leave unresolved</option>
+  return <form className="review-form" onSubmit={submit} lang={language}>
+    <h3>{t('Record a human decision')}</h3>
+    <p>{t('Agreeing that a result needs review does not mark the requirement as met.')}</p>
+    <label>{t('Decision')}<select aria-label={t('Decision')} value={action} onChange={(e) => setAction(e.target.value)} disabled={busy}>
+      <option value="confirm">{t('Agree with the saved result')} ({t(outcome(item.draft_result))})</option>
+      <option value="correct">{t('Correct the result')}</option>
+      <option value="request_information">{t('Ask for more information')}</option>
     </select></label>
-    {action === "correct" && <label>Corrected result<select aria-label="Corrected result" value={result} onChange={(e) => setResult(e.target.value)} disabled={busy}>
-      {["yes", "no", "unclear", "n_a"].map((r) => <option key={r} value={r}>{outcome(r)}</option>)}
+    {action === "correct" && <label>{t('Corrected result')}<select aria-label={t('Corrected result')} value={result} onChange={(e) => setResult(e.target.value)} disabled={busy}>
+      {["yes", "no", "unclear", "n_a"].map((r) => <option key={r} value={r}>{t(outcome(r))}</option>)}
     </select></label>}
-    <label>Reviewer role<input required maxLength={100} value={role} onChange={(e) => setRole(e.target.value)} placeholder="e.g. Policy reviewer" disabled={busy} /></label>
-    <label>Reason / information needed<textarea required maxLength={2000} rows={4} value={notes} onChange={(e) => setNotes(e.target.value)} disabled={busy}
-      placeholder="Explain the interpretation and cite the document/page. For N/A, identify the rubric exemption. Do not include patient information." /></label>
-    <p className="review-meta">Local review: role is self-attested. This updates the reviewed finding, not the original draft or statewide rating.</p>
-    {error && <p role="alert">{error} <button type="button" className="plain" onClick={() => onSaved(null)}>Reload item</button></p>}
-    <button className="review-primary" disabled={busy || !role.trim() || !notes.trim()}>{busy ? "Saving…" : "Save review decision"}</button>
+    <label>{t('Your role in this review')}<input required maxLength={100} value={role} onChange={(e) => setRole(e.target.value)} placeholder={t('For example: policy reviewer')} disabled={busy} /></label>
+    <label>{t('Reason or information needed')}<textarea required maxLength={2000} rows={4} value={notes} onChange={(e) => setNotes(e.target.value)} disabled={busy}
+      placeholder={t('Explain your decision and name the document and page. If the requirement does not apply, explain why. Do not include patient information.')} /></label>
+    <p className="review-meta">{t('We do not verify the role you enter. Your decision is saved separately from the original result and published rating.')}</p>
+    {error && <p role="alert">{t('Could not save your decision. Reload this item and try again.')} <button type="button" className="plain" onClick={() => onSaved(null)}>{t('Reload item')}</button></p>}
+    <button className="review-primary" disabled={busy || !role.trim() || !notes.trim()}>{t(busy ? 'Saving…' : 'Save review decision')}</button>
   </form>;
 }
 
