@@ -7,7 +7,8 @@ import {criterionStatus,criterionHospital,criterionPlan,expireCriteria,validateS
 const reference=JSON.parse(readFileSync(new URL('../../references/ny-rating-regions-v1.json',import.meta.url)));
 const current=roster.filter(f=>f.properties.current_directory!==false);
 const ids=Array.from({length:17},(_,i)=>`k${i+1}`);
-export const regionalLimit=10;
+// Bound requests to the known roster, not an arbitrary ten-hospital slice.
+export const regionalLimit=current.length;
 const fail=(status,message)=>{throw Object.assign(Error(message),{status});};
 export function installRegional(db){
  db.exec(`CREATE TABLE IF NOT EXISTS criterion_batches(id TEXT PRIMARY KEY,created TEXT NOT NULL,selection TEXT NOT NULL,plan TEXT NOT NULL,started TEXT,cancelled TEXT);
@@ -15,11 +16,12 @@ export function installRegional(db){
 }
 function selectionFor(input){
  if(!input || !Array.isArray(input.regions)||input.regions.length!==2||new Set(input.regions).size!==2||input.regions.some(r=>!Object.hasOwn(reference.regions,r))||
- !Array.isArray(input.steps)||!input.steps.length||input.steps.length>17||new Set(input.steps).size!==input.steps.length||
- !Array.isArray(input.hospitals)||!input.hospitals.length||input.hospitals.length>regionalLimit||new Set(input.hospitals).size!==input.hospitals.length)fail(400,'Invalid regional selection.');
+ !Array.isArray(input.steps)||!input.steps.length||input.steps.length>17||new Set(input.steps).size!==input.steps.length)fail(400,'Invalid regional selection.');
+ const hospitals=input.hospitals===undefined ? current.filter(f=>input.regions.includes(f.properties.region)).map(f=>f.id) : input.hospitals;
+ if(!Array.isArray(hospitals)||!hospitals.length||hospitals.length>regionalLimit||new Set(hospitals).size!==hospitals.length)fail(400,'Invalid hospital selection.');
  input.steps.forEach(validateStep);
- for(const key of input.hospitals)if(!current.some(f=>f.id===key&&input.regions.includes(f.properties.region)))fail(400,'Hospital is outside the selected regions.');
- return {regions:input.regions,steps:ids.filter(id=>input.steps.includes(id)),hospitals:[...input.hospitals].sort()};
+ for(const key of hospitals)if(!current.some(f=>f.id===key&&input.regions.includes(f.properties.region)))fail(400,'Hospital is outside the selected regions.');
+ return {regions:input.regions,steps:ids.filter(id=>input.steps.includes(id)),hospitals:[...hospitals].sort(),scope:input.hospitals===undefined?'all':'custom'};
 }
 const signature=(db,key)=>createHash('sha256').update(JSON.stringify(db.prepare('SELECT step,job,completed,output FROM criterion_results WHERE hospital=? ORDER BY step').all(key))).digest('hex');
 function busy(db,key){return db.prepare("SELECT id FROM criterion_jobs WHERE hospital=? AND status IN ('queued','running')").get(key)||db.prepare("SELECT id FROM jobs WHERE hospital=? AND status IN ('queued','running')").get(key);}
