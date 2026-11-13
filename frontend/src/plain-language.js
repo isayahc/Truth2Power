@@ -1,6 +1,7 @@
 // Stable message keys keep data/API terminology separate from patient-facing copy.
 // These mappings apply only through t(); source quotations are never rewritten.
 export const plainLanguage = {
+  'Review inbox pages': ['Review inbox pages', 'Páginas de la bandeja de revisión'],
   'Compare two regions': ['Compare two regions', 'Comparar dos regiones'],
   'Choose two regions, select requirements, then preview a batch of up to 10 hospitals. Selected requirements with saved results are skipped. Missing prerequisites may also run.': ['Choose two regions, select requirements, then preview a batch of up to 10 hospitals. Selected requirements with saved results are skipped. Missing prerequisites may also run.', 'Elija dos regiones y los requisitos. Después, revise un lote de hasta 10 hospitales antes de iniciarlo. Se omiten los requisitos seleccionados que ya tienen resultados guardados. También pueden ejecutarse los pasos previos que falten.'],
   'Regional results unavailable. Refresh to try again.': ['Regional results unavailable. Refresh to try again.', 'Los resultados regionales no están disponibles. Actualice para volver a intentarlo.'],
