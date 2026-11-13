@@ -20,10 +20,16 @@ function selectionFor(input){
  const hospitals=input.hospitals===undefined ? current.filter(f=>input.regions.includes(f.properties.region)).map(f=>f.id) : input.hospitals;
  if(!Array.isArray(hospitals)||!hospitals.length||hospitals.length>regionalLimit||new Set(hospitals).size!==hospitals.length)fail(400,'Invalid hospital selection.');
  input.steps.forEach(validateStep);
+ const mode=input.mode??'missing';
+ if(!['missing','retry','all'].includes(mode))fail(400,'Invalid check mode.');
  for(const key of hospitals)if(!current.some(f=>f.id===key&&input.regions.includes(f.properties.region)))fail(400,'Hospital is outside the selected regions.');
- return {regions:input.regions,steps:ids.filter(id=>input.steps.includes(id)),hospitals:[...hospitals].sort(),scope:input.hospitals===undefined?'all':'custom'};
+  return {regions:input.regions,steps:ids.filter(id=>input.steps.includes(id)),hospitals:[...hospitals].sort(),scope:input.hospitals===undefined?'all':'custom',mode};
 }
-const signature=(db,key)=>createHash('sha256').update(JSON.stringify(db.prepare('SELECT step,job,completed,output FROM criterion_results WHERE hospital=? ORDER BY step').all(key))).digest('hex');
+const signature=(db,key)=>createHash('sha256').update(JSON.stringify([
+ db.prepare('SELECT step,job,completed,output FROM criterion_results WHERE hospital=? ORDER BY step').all(key),
+ db.prepare('SELECT id,status,progress,completed FROM criterion_jobs WHERE hospital=? ORDER BY rowid').all(key),
+ db.prepare('SELECT id FROM criterion_decisions WHERE hospital=? ORDER BY id').all(key),
+])).digest('hex');
 function busy(db,key){return db.prepare("SELECT id FROM criterion_jobs WHERE hospital=? AND status IN ('queued','running')").get(key)||db.prepare("SELECT id FROM jobs WHERE hospital=? AND status IN ('queued','running')").get(key);}
 async function planSelection(db,root,selection,planner){
  expireCriteria(db);
@@ -31,8 +37,11 @@ async function planSelection(db,root,selection,planner){
  for(const key of selection.hospitals){
   if(busy(db,key))fail(409,'A selected hospital already has an active check.');
   const version=signature(db,key);
-  const saved=new Set(db.prepare('SELECT step FROM criterion_results WHERE hospital=?').all(key).map(r=>r.step));
-  const requested=selection.steps.filter(id=>!saved.has(id));
+   const items=criterionStatus(db,key,{readOnly:true}).items;
+   const requested=selection.steps.filter(id=>{
+    const item=items.find(i=>i.id===id);
+    return selection.mode==='all'||(selection.mode==='retry'?(item.technical_error||item.effective==='unclear'):!item.saved);
+   });
   const plan=await planner(root,criterionHospital(key),requested);
   const feature=current.find(f=>f.id===key);
   hospitals.push({hospital_key:key,name:feature.properties.name,region:feature.properties.region,requested,run:plan.run,reuse:plan.reuse,version});
@@ -64,7 +73,7 @@ export async function startRegional(db,root,id,planner=criterionPlan){
   batch=regionalBatch(db,id);if(batch.started)return batch;
   if(batch.cancelled)fail(409,'Batch was cancelled.');
   for(const h of fresh.hospitals)if(busy(db,h.hospital_key)||signature(db,h.hospital_key)!==h.version)fail(409,'Hospital state changed. Prepare a new preview.');
-  if(!fresh.jobs)fail(409,'No unchecked requirements remain.');
+   if(!fresh.jobs)fail(409,'No requirements match this check mode.');
   for(const h of fresh.hospitals.filter(h=>h.requested.length)){
    const job=randomUUID();
    db.prepare("INSERT INTO criterion_jobs(id,request_key,hospital,step,approved,status,created,requested) VALUES(?,?,?,'all',?,'queued',?,?)")
