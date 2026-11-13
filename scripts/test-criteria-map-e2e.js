@@ -53,11 +53,20 @@ try{
   assert.equal(await page.locator('#state-view [data-audit-status="met"]').count(),2);
   const filter=page.locator('.criteria-status-filters button').filter({has:page.locator('.criterion-status--unmet')});
   await filter.click();assert.equal(await page.locator('#state-view .dot').count(),1);
-  await page.locator('.region-picker-menu summary').click();
+  const toggle=page.locator('.region-picker-menu summary');await toggle.scrollIntoViewIfNeeded();
+  const beforeToggle=await toggle.boundingBox();
+  await toggle.click();
   const checkboxes=page.locator('.region-picker-options input');
   await checkboxes.nth(3).check(); // Northern Metro in Attachment G order.
   await checkboxes.nth(7).check(); // Central.
   assert.equal(await page.locator('.region-chip').count(),2);
+  const afterToggle=await toggle.boundingBox();
+  assert.ok(Math.abs(beforeToggle.x-afterToggle.x)<1&&Math.abs(beforeToggle.y-afterToggle.y)<1,`Region toggle must not move after selection: ${lang}/${width} ${JSON.stringify({beforeToggle,afterToggle})}`);
+  await toggle.click();assert.equal(await page.locator('.region-picker-menu').getAttribute('open'),null);
+  await toggle.click();assert.equal(await page.locator('.region-picker-menu').getAttribute('open'),'');
+  const dropdown=await page.locator('.region-picker-options').boundingBox();
+  assert.ok(dropdown.x>=0&&dropdown.x+dropdown.width<=width,'Open region dropdown stays inside the screen');
+  await page.screenshot({path:`.audit/ui/criteria-map/fixed-region-toggle-${lang}-${width}.png`});
   await page.locator('.region-picker-menu summary').click();
   await page.locator('.map-run-jobs').click();await page.locator('.map-job-status[role="alert"]').waitFor();
   assert.equal(await page.locator('#map-requirement').isDisabled(),true);

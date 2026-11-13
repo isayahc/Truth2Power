@@ -1262,11 +1262,11 @@ h2 {
 .current-criteria-map .map-view-switch button { min-height:28px; padding:4px 8px; }
 .atlas-toolbar .atlas-run-scope { display:contents; }
 .atlas-toolbar .region-picker { display:flex; align-items:center; gap:5px; min-width:0; font-size:12px; position:relative; flex-basis:270px; }
-.region-chips { display:flex; gap:4px; overflow-x:auto; min-width:0; flex:1; scrollbar-width:thin; }
+.region-chips { display:flex; align-items:center; height:30px; gap:4px; overflow-x:auto; min-width:0; flex:1; scrollbar-width:none; }
 .region-chip { display:inline-flex; align-items:center; gap:3px; white-space:nowrap; flex-shrink:0; background:#e1eee8; border:1px solid #acc3b7; border-radius:4px; padding:2px 4px; max-width:100%; box-sizing:border-box; }
 .region-chip-name { min-width:0; max-width:150px; overflow:hidden; text-overflow:ellipsis; }
 .region-chip button { border:0; background:transparent; padding:2px 4px; font-size:16px; cursor:pointer; }
-.region-picker-menu { flex-shrink:0; }
+.region-picker-menu { position:relative; flex-shrink:0; }
 .region-picker-menu summary { cursor:pointer; list-style:none; white-space:nowrap; padding:6px; border:1px solid #b7c8c1; border-radius:4px; background:white; }
 .region-picker-options { position:absolute; top:100%; left:0; min-width:210px; padding:6px; z-index:20; background:white; border:1px solid #b7c8c1; border-radius:4px; box-shadow:0 4px 12px #0002; }
 .atlas-toolbar .region-picker-options label { display:flex; padding:6px; font-size:13px; }
@@ -1276,6 +1276,7 @@ h2 {
 .map-run-note { font-size:12px; }
 @media (max-width:600px) {
  .atlas-toolbar .atlas-region-control { flex-basis:160px; }
+ .region-picker-options { left:auto; right:0; }
  .atlas-toolbar .atlas-requirement-control { flex-basis:100%; }
  .toolbar.atlas-toolbar .search-box { flex-basis:150px; }
  .current-map-legend .criterion-status { font-size:11px; }

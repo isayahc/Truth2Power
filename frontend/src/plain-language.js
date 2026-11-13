@@ -1,6 +1,7 @@
 // Stable message keys keep data/API terminology separate from patient-facing copy.
 // These mappings apply only through t(); source quotations are never rewritten.
 export const plainLanguage = {
+  'Select': ['Select', 'Seleccionar'],
   'Regions': ['Regions', 'Regiones'],
   'Remove region': ['Remove region', 'Quitar región'],
   '+ Add': ['+ Add', '+ Añadir'],
