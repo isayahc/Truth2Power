@@ -1248,4 +1248,21 @@ h2 {
 .criteria-status-filters { display:grid; gap:6px; }
 .criteria-status-filters button { text-align:left; border:1px solid #b7c8c1; background:white; padding:8px; border-radius:4px; cursor:pointer; }
 .criteria-status-filters button[aria-pressed="true"] { outline:2px solid #173e3a; background:#e9f2ee; }
-.current-map-legend { display:flex; flex-wrap:wrap; align-items:center; gap:8px 14px; padding:10px 16px; background:#fff; border-block:1px solid #cbd5e1; }
+.current-map-legend { display:flex; flex-wrap:wrap; align-items:center; gap:4px 10px; padding:5px 8px; background:#fff; border-block:1px solid #cbd5e1; flex-shrink:0; }
+.toolbar.atlas-toolbar { height:auto; min-height:42px; padding:5px 8px; gap:8px; flex-wrap:wrap; justify-content:flex-start; }
+.atlas-toolbar .map-year-switch { margin:0; gap:2px; flex-wrap:nowrap; }
+.atlas-toolbar .map-year-switch button { padding:5px 8px; min-height:30px; font-size:12px; }
+.atlas-toolbar label { display:flex; align-items:center; gap:5px; min-width:0; font-size:12px; }
+.atlas-toolbar .atlas-region-control { flex:1 1 170px; }
+.atlas-toolbar .atlas-requirement-control { flex:2 1 250px; }
+.atlas-toolbar select { min-width:0; width:100%; height:30px; padding:3px 5px; font:inherit; text-overflow:ellipsis; }
+.toolbar.atlas-toolbar .search-box { flex:1 1 180px; width:auto; min-width:0; }
+.atlas-toolbar .search-bar { height:30px; }
+.current-criteria-map .map-view-bar { padding:4px 8px; gap:4px 8px; }
+.current-criteria-map .map-view-switch button { min-height:28px; padding:4px 8px; }
+@media (max-width:600px) {
+ .atlas-toolbar .atlas-region-control { flex-basis:160px; }
+ .atlas-toolbar .atlas-requirement-control { flex-basis:100%; }
+ .toolbar.atlas-toolbar .search-box { flex-basis:100%; }
+ .current-map-legend .criterion-status { font-size:11px; }
+}

@@ -171,6 +171,14 @@ function Atlas() {
   const current = data?.hospitals.filter(h=>h.properties.current_directory!==false);
   const regional = current?.filter(h=>!region || h.properties.region===region);
   const visible = regional?.filter((h) => filter === null || (h.properties.stars ?? 'unrated') === filter);
+  const mapControls=<>
+   <div className="map-year-switch" role="group" aria-label={t('Map year')}>
+    {['2025','2026'].map(value=><button key={value} aria-pressed={year===value} aria-label={t(value==='2025'?'2025 — Published ratings':'2026 — Current requirement checks')} title={t(value==='2025'?'2025 — Published ratings':'2026 — Current requirement checks')} onClick={()=>{setYear(value);setFilter(null);const url=new URL(location.href);url.searchParams.set('year',value);history.pushState(null,'',url);}}>{value}</button>)}
+   </div>
+   <label className="atlas-region-control" htmlFor="map-region">{t('Region')}<select id="map-region" value={region} onChange={event=>{const value=event.target.value;setRegion(value);const url=new URL(location.href);if(value)url.searchParams.set('region',value);else url.searchParams.delete('region');history.replaceState(null,'',url);}}>
+    <option value="">{t('All regions')}</option>{Object.keys(ratingRegions.regions).map(name=><option key={name} value={name}>{t(name)}</option>)}
+   </select></label>
+  </>;
   return (
     <div className="page">
       <Header onReview={() => reviewOpen ? setReviewOpen(false) : openReviews()} reviewOpen={reviewOpen} pending={reviewError ? "!" : inbox?.pending} />
@@ -203,26 +211,10 @@ function Atlas() {
         </div>
         {data ? (
           <>
-          {!selected&&<>
-           <div className="map-year-switch" role="group" aria-label={t('Map year')}>
-            {['2025','2026'].map(value=><button key={value} aria-pressed={year===value} onClick={()=>{setYear(value);setFilter(null);const url=new URL(location.href);url.searchParams.set('year',value);history.pushState(null,'',url);}}>{t(value==='2025'?'2025 — Published ratings':'2026 — Current requirement checks')}</button>)}
-           </div>
-           <div className="map-region-filter">
-            <label htmlFor="map-region">{t('Region')}</label>
-            <select id="map-region" value={region} onChange={event=>{const value=event.target.value;setRegion(value);const url=new URL(location.href);if(value)url.searchParams.set('region',value);else url.searchParams.delete('region');history.replaceState(null,'',url);}}>
-             <option value="">{t('All regions')}</option>{Object.keys(ratingRegions.regions).map(name=><option key={name} value={name}>{t('Region')} {ratingRegions.region_numbers[name]} · {t(name)}</option>)}
-            </select><p>{t('Regions follow Attachment G and use the hospital’s county, not its service area.')}</p>
-           </div>
-          </>}
-          {year==='2026'?(!selected&&<CurrentCriteriaMap hospitals={regional} counties={data.counties} onSelect={selectHospital} region={region}/>):<div className="content" hidden={!!selected}>
+          {year==='2026'?(!selected&&<CurrentCriteriaMap hospitals={regional} counties={data.counties} onSelect={selectHospital} region={region} controls={mapControls}/>):<div className="content" hidden={!!selected}>
             <section className="map-block" aria-label={t('Hospital locations')}>
-              <div className="toolbar">
-                <div className="geo-label">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
-                    <path d="m3 6 6-2 6 3 6-2v14l-6 2-6-3-6 2zM9 4v14m6-11v14" />
-                  </svg>
-                  {t('Hospital map')}
-                </div>
+              <div className="toolbar atlas-toolbar">
+                {mapControls}
                 <HospitalSearch
                   hospitals={visible}
                   onSelect={selectHospital}
@@ -246,6 +238,7 @@ function Atlas() {
             </section>
             <aside>
               <Ratings hospitals={regional} filter={filter} onFilter={setFilter} region={region} />
+              <p>{t('Regions follow Attachment G and use the hospital’s county, not its service area.')}</p>
             </aside>
           </div>}
           {selected && <HospitalDetail key={selected.id} hospital={selected} onClose={closeDetail} onReview={() => openReviews(String(selected.id))}

@@ -7,7 +7,7 @@ import {criteriaMapState,criterionColors} from './criteria-map.js';
 import rubric from '../../rubrics/css-17-v1.json';
 
 const valid=value=>/^k([1-9]|1[0-7])$/.test(value)?value:'all';
-export default function CurrentCriteriaMap({hospitals,counties,onSelect,region}){
+export default function CurrentCriteriaMap({hospitals,counties,onSelect,region,controls}){
  const {t,language}=useLocale();
  const [requirement,setRequirement]=useState(()=>valid(new URLSearchParams(location.search).get('requirement')));
  const [filter,setFilter]=useState(null),[data,setData]=useState(null),[error,setError]=useState(false);
@@ -42,10 +42,12 @@ export default function CurrentCriteriaMap({hospitals,counties,onSelect,region})
  function choose(value){setRequirement(value);setFilter(null);const url=new URL(location.href);url.searchParams.set('year','2026');url.searchParams.set('requirement',value);history.replaceState(null,'',url);}
  return <div className="content current-criteria-map" lang={language}>
   <section className="map-block" aria-label={t('Hospital locations')}>
-   <div className="toolbar"><strong>{t('2026 — Current requirement checks')}</strong><HospitalSearch hospitals={visible} onSelect={onSelect}/></div>
-   <div className="map-region-filter"><label htmlFor="map-requirement">{t('Requirement')}</label><select id="map-requirement" value={requirement} onChange={e=>choose(e.target.value)}>
+   <div className="toolbar atlas-toolbar">
+    {controls}
+    <label className="atlas-requirement-control" htmlFor="map-requirement">{t('Requirement')}<select id="map-requirement" value={requirement} onChange={e=>choose(e.target.value)}>
     <option value="all">{t('All requirements')}</option>{rubric.measures.map((m,index)=><option key={m.measure_id} value={`k${index+1}`}>K{index+1} · {t(m.title)}</option>)}
-   </select></div>
+    </select></label><HospitalSearch hospitals={visible} onSelect={onSelect}/>
+   </div>
    <div className="current-map-legend" aria-label={t('Status legend')}><strong>{t('Status legend')}</strong>{Object.keys(statusLabels).map(state=><StatusBadge key={state} status={state} label={labels[state]}/>)}</div>
    {error?<p role="alert">{t('Current results unavailable. Waiting to reconnect.')}</p>:!data?<p role="status">{t('Loading criterion results…')}</p>:<>
     <HospitalMap hospitals={visible} counties={counties} onSelect={onSelect}/>
@@ -66,6 +68,7 @@ export default function CurrentCriteriaMap({hospitals,counties,onSelect,region})
    <p>{t('A red circle means not met. A red X means a technical error, not a hospital failure. Previous valid findings remain available.')}</p>
    {requirement==='all'&&<p>{t('All-requirement colors: green means all 17 met; red means at least one unmet; blue means evidence needs review; gray means assessment incomplete. Running checks and technical errors are shown separately.')}</p>}
    <p>{t('A small red X beside a circle means the latest attempt failed; the circle keeps the previous finding.')}</p>
+   <p>{t('Regions follow Attachment G and use the hospital’s county, not its service area.')}</p>
   </aside>
  </div>;
 }

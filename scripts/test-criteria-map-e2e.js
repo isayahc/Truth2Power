@@ -33,6 +33,10 @@ try{
   assert.equal(await page.locator('#map-requirement option').count(),18);
   await page.locator('#map-requirement').selectOption('k1');
   assert.equal(await page.locator('.criteria-percent strong').innerText(),'67%');
+  if(width===1440){
+   assert.ok((await page.locator('.atlas-toolbar').boundingBox()).height<=60,'Desktop controls fit in one compact row');
+   assert.ok((await page.locator('.viewport').boundingBox()).height>=500,'Map keeps at least half the 1000px desktop viewport');
+  }
   assert.equal(await page.locator('#state-view [data-audit-status="unmet"]').count(),1);
   assert.equal(await page.locator('#state-view .hospital-error-cross').count(),1);
   assert.equal(await page.locator('#state-view .hospital-error-badge').count(),1);
