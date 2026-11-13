@@ -14,8 +14,8 @@ export function installRegional(db){
  db.exec(`CREATE TABLE IF NOT EXISTS criterion_batches(id TEXT PRIMARY KEY,created TEXT NOT NULL,selection TEXT NOT NULL,plan TEXT NOT NULL,started TEXT,cancelled TEXT);
  CREATE TABLE IF NOT EXISTS criterion_batch_jobs(batch TEXT NOT NULL,job TEXT UNIQUE NOT NULL,hospital TEXT NOT NULL,PRIMARY KEY(batch,hospital));`);
 }
-function selectionFor(input){
- if(!input || !Array.isArray(input.regions)||input.regions.length!==2||new Set(input.regions).size!==2||input.regions.some(r=>!Object.hasOwn(reference.regions,r))||
+function selectionFor(input,multiple=false){
+ if(!input || !Array.isArray(input.regions)||(multiple?input.regions.length<1||input.regions.length>Object.keys(reference.regions).length:input.regions.length!==2)||new Set(input.regions).size!==input.regions.length||input.regions.some(r=>!Object.hasOwn(reference.regions,r))||
  !Array.isArray(input.steps)||!input.steps.length||input.steps.length>17||new Set(input.steps).size!==input.steps.length)fail(400,'Invalid regional selection.');
  const hospitals=input.hospitals===undefined ? current.filter(f=>input.regions.includes(f.properties.region)).map(f=>f.id) : input.hospitals;
  if(!Array.isArray(hospitals)||!hospitals.length||hospitals.length>regionalLimit||new Set(hospitals).size!==hospitals.length)fail(400,'Invalid hospital selection.');
@@ -53,6 +53,25 @@ export async function previewRegional(db,root,input,planner=criterionPlan){
  const selection=selectionFor(input),plan=await planSelection(db,root,selection,planner),id=randomUUID();
  db.prepare('INSERT INTO criterion_batches(id,created,selection,plan) VALUES(?,?,?,?)').run(id,now(),JSON.stringify(selection),JSON.stringify(plan));
  return {id,selection,plan};
+}
+// A map Run jobs click is approval. Persist its key before queuing so a lost
+// response or concurrent retry cannot create a second paid batch.
+export async function runMapJobs(db,root,input,planner=criterionPlan){
+ if(input?.confirm!==true||typeof input.request_key!=='string'||!/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/.test(input.request_key))fail(400,'Explicit run approval and request key required.');
+ if(input.hospitals!==undefined)fail(400,'Map runs include all hospitals in the selected regions.');
+ const selection=selectionFor({regions:input.regions,steps:input.steps,mode:'all'},true);
+ selection.regions.sort();
+ const encoded=JSON.stringify(selection),id=input.request_key;
+ let row=db.prepare('SELECT selection FROM criterion_batches WHERE id=?').get(id);
+ if(!row){
+  try{
+   const plan=await planSelection(db,root,selection,planner);
+   db.prepare('INSERT OR IGNORE INTO criterion_batches(id,created,selection,plan) VALUES(?,?,?,?)').run(id,now(),encoded,JSON.stringify(plan));
+  }catch(error){if(!db.prepare('SELECT id FROM criterion_batches WHERE id=?').get(id))throw error;}
+  row=db.prepare('SELECT selection FROM criterion_batches WHERE id=?').get(id);
+ }
+ if(row.selection!==encoded)fail(409,'Request key already used for a different selection.');
+ return startRegional(db,root,id,planner);
 }
 export function regionalBatch(db,id){
  const row=db.prepare('SELECT * FROM criterion_batches WHERE id=?').get(id);if(!row)fail(404,'Batch not found.');

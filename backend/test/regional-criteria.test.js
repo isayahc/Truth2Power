@@ -5,13 +5,32 @@ import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 import {openStore} from '../audit/store.js';
 import {installCriteria,claimCriterion,criterionOverview,criterionStatus,decideCriterion} from '../audit/criterion-service.js';
-import {installRegional,previewRegional,startRegional,cancelRegional,regionalStats} from '../audit/regional-criteria.js';
+import {installRegional,previewRegional,startRegional,cancelRegional,regionalStats,runMapJobs} from '../audit/regional-criteria.js';
 import {randomUUID} from 'node:crypto';
 import {fork} from 'node:child_process';
 import {fileURLToPath} from 'node:url';
 import {workCriterion} from '../audit/criterion-worker.js';
 const input={regions:['NYC Metro','Central'],steps:['k12','k5'],hospitals:['1169','739']};
 const planner=async(root,hospital,requested)=>({run:requested.length?['k1',...requested]:[],reuse:[]});
+test('one-click map runs derive all hospitals across one, multiple or all regions and deduplicate retries',async t=>{
+ const {db,root}=setup(t),stats=regionalStats(db);
+ for(const h of stats.hospitals)db.prepare('INSERT INTO criterion_results VALUES(?,?,?,?,?)').run(h.hospital_key,'k1','SYN-saved','2026-01-01T00:00:00Z',JSON.stringify({value:true,evidence:[]}));
+ for(const [regions,count] of [[['Northern Metro'],20],[['Northern Metro','Central'],40],[stats.regions.map(r=>r.region),218]]){
+  const input={request_key:randomUUID(),confirm:true,regions,steps:['k1']};
+  const [first,retry]=await Promise.all([runMapJobs(db,root,input,planner),runMapJobs(db,root,input,planner)]);
+  assert.equal(first.jobs.length,count);assert.deepEqual(first.jobs,retry.jobs);
+  assert.equal(first.selection.mode,'all');assert.equal(first.selection.hospitals.length,count);
+  assert.ok(first.jobs.every(j=>JSON.stringify(j.requested)==='["k1"]'));
+  assert.equal(db.prepare("SELECT count(*) n FROM criterion_jobs WHERE status='queued'").get().n,count);
+  await assert.rejects(runMapJobs(db,root,{...input,steps:['k2']},planner),/different selection/);
+  await assert.rejects(runMapJobs(db,root,{...input,request_key:randomUUID()},planner),/active check/);
+  cancelRegional(db,first.id);
+  assert.deepEqual((await runMapJobs(db,root,input,planner)).jobs,cancelRegional(db,first.id).jobs);
+ }
+ const input={request_key:randomUUID(),confirm:true,regions:['Northern Metro'],steps:['k1']};
+ for(const invalid of [{...input,confirm:false},{...input,request_key:'bad'},{...input,regions:[]},{...input,regions:['Northern Metro','Northern Metro']},{...input,hospitals:['1169']}])await assert.rejects(runMapJobs(db,root,invalid,planner));
+ assert.equal(db.prepare("SELECT count(*) n FROM criterion_jobs WHERE status='queued'").get().n,0);
+});
 test('fully saved regions support explicit retry and all-selected reruns without spending at preview',async t=>{
  const {db,root}=setup(t),selection={regions:['NYC Metro','Central'],steps:['k1']};
  const keys=regionalStats(db).hospitals.filter(h=>selection.regions.includes(h.region)).map(h=>h.hospital_key);

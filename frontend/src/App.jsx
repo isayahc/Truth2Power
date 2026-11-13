@@ -9,9 +9,9 @@ import ReviewInbox, { reviewRequest } from "./ReviewInbox.jsx";
 import { LanguageSwitch, useLocale } from './locale.jsx';
 import { HumanInterventionInbox } from './HumanIntervention.jsx';
 import {CriterionCoverageProvider, CriterionReviewNotifications, useCriterionCoverage} from './CriterionCoverage.jsx';
-import ratingRegions from '../../references/ny-rating-regions-v1.json';
 import RegionalAudits from './RegionalAudits.jsx';
 import CurrentCriteriaMap from './CurrentCriteriaMap.jsx';
+import RegionPicker,{regionsFromUrl} from './RegionPicker.jsx';
 
 async function getFeatures(path, signal) {
   const response = await fetch(path, { signal });
@@ -102,10 +102,8 @@ function Atlas() {
   const [attempt, setAttempt] = useState(0);
   const [filter, setFilter] = useState(null);
   const [year,setYear]=useState(()=>new URLSearchParams(location.search).get('year')==='2025'?'2025':'2026');
-  const [region,setRegion]=useState(()=>{
-    const value=new URLSearchParams(window.location.search).get('region');
-    return Object.hasOwn(ratingRegions.regions,value) ? value : '';
-  });
+  const [mapRegions,setMapRegions]=useState(regionsFromUrl);
+  const region=mapRegions.map(name=>t(name)).join(', ');
   const [selected, setSelected] = useState(null);
   const [reviewOpen, setReviewOpen] = useState(false);
   const [reviewHospital, setReviewHospital] = useState("");
@@ -137,8 +135,7 @@ function Atlas() {
     if (!data) return;
     const restore = () => {
       const key = new URL(window.location.href).searchParams.get("hospital");
-      const value = new URL(window.location.href).searchParams.get('region');
-      setRegion(Object.hasOwn(ratingRegions.regions,value) ? value : '');
+      setMapRegions(regionsFromUrl());
       setYear(new URL(location.href).searchParams.get('year')==='2025'?'2025':'2026');
       setSelected(data.hospitals.find((h) => String(h.id) === key) || null);
       setReviewOpen(false);
@@ -169,15 +166,13 @@ function Atlas() {
     requestAnimationFrame(() => document.querySelector(".search-bar input")?.focus());
   }
   const current = data?.hospitals.filter(h=>h.properties.current_directory!==false);
-  const regional = current?.filter(h=>!region || h.properties.region===region);
+  const regional = current?.filter(h=>!mapRegions.length || mapRegions.includes(h.properties.region));
   const visible = regional?.filter((h) => filter === null || (h.properties.stars ?? 'unrated') === filter);
   const mapControls=<>
    <div className="map-year-switch" role="group" aria-label={t('Map year')}>
     {['2025','2026'].map(value=><button key={value} aria-pressed={year===value} aria-label={t(value==='2025'?'2025 — Published ratings':'2026 — Current requirement checks')} title={t(value==='2025'?'2025 — Published ratings':'2026 — Current requirement checks')} onClick={()=>{setYear(value);setFilter(null);const url=new URL(location.href);url.searchParams.set('year',value);history.pushState(null,'',url);}}>{value}</button>)}
    </div>
-   <label className="atlas-region-control" htmlFor="map-region">{t('Region')}<select id="map-region" value={region} onChange={event=>{const value=event.target.value;setRegion(value);const url=new URL(location.href);if(value)url.searchParams.set('region',value);else url.searchParams.delete('region');history.replaceState(null,'',url);}}>
-    <option value="">{t('All regions')}</option>{Object.keys(ratingRegions.regions).map(name=><option key={name} value={name}>{t(name)}</option>)}
-   </select></label>
+   <RegionPicker values={mapRegions} onChange={values=>{setMapRegions(values);const url=new URL(location.href);url.searchParams.delete('region');for(const value of values)url.searchParams.append('region',value);history.replaceState(null,'',url);}}/>
   </>;
   return (
     <div className="page">
@@ -211,7 +206,7 @@ function Atlas() {
         </div>
         {data ? (
           <>
-          {year==='2026'?(!selected&&<CurrentCriteriaMap hospitals={regional} counties={data.counties} onSelect={selectHospital} region={region} controls={mapControls}/>):<div className="content" hidden={!!selected}>
+          {year==='2026'?(!selected&&<CurrentCriteriaMap hospitals={regional} counties={data.counties} onSelect={selectHospital} region={region} regions={mapRegions} controls={mapControls}/>):<div className="content" hidden={!!selected}>
             <section className="map-block" aria-label={t('Hospital locations')}>
               <div className="toolbar atlas-toolbar">
                 {mapControls}

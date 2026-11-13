@@ -59,7 +59,7 @@ function Points({ hospitals, project, zoom = 1, markerScale = 1, selected, onSel
         r={(active ? 6.5 : 4.5) * size}
         className={active ? "dot active" : "dot"}
         fill={activity==='error'?'transparent':hospital.markerColor ?? ratingByStars.get(stars).color}
-        style={activity==='error'?{stroke:'transparent'}:undefined}
+        style={activity==='error'?{stroke:'transparent'}:activity==='unclear'?{stroke:'#a16207',strokeWidth:1.25*size}:undefined}
         role="button"
         aria-label={label+(activityLabel?' · '+t(activityLabel):'')}
         tabIndex={0}
@@ -80,7 +80,7 @@ function Points({ hospitals, project, zoom = 1, markerScale = 1, selected, onSel
       {activity==='running'&&<circle className="hospital-audit-spinner" cx={cx} cy={cy} r={14*size} fill="none" stroke="#7e22ce" strokeWidth={2*size} strokeDasharray={`${16*size} ${9*size}`} pointerEvents="none" aria-hidden="true"/>}
       {activity==='error'&&<path className="hospital-error-cross" d={`M${cx-8*size},${cy-8*size}l${16*size},${16*size}m0,${-16*size}l${-16*size},${16*size}`} stroke="#b91c1c" strokeWidth={4*size} fill="none" pointerEvents="none" aria-hidden="true"/>}
       {hospital.markerError&&activity!=='error'&&<path className="hospital-error-badge" d={`M${cx+6*size},${cy-12*size}l${6*size},${6*size}m0,${-6*size}l${-6*size},${6*size}`} stroke="#b91c1c" strokeWidth={2*size} fill="none" pointerEvents="none" aria-hidden="true"/>}
-      {!hospital.markerStatus&&['queued','completed','attention'].includes(activity)&&<circle cx={cx+11*size} cy={cy-10*size} r={4*size} fill={activity==='attention'?'#2563eb':activity==='completed'?'#15803d':'#6b7280'} pointerEvents="none" aria-hidden="true"/>}
+      {!hospital.markerStatus&&['queued','completed','attention'].includes(activity)&&<circle cx={cx+11*size} cy={cy-10*size} r={4*size} fill={activity==='attention'?'#facc15':activity==='completed'?'#15803d':'#6b7280'} stroke={activity==='attention'?'#a16207':'none'} pointerEvents="none" aria-hidden="true"/>}
       </g>
     );
   });
@@ -150,7 +150,7 @@ export default function HospitalMap({ hospitals, counties, selected, onSelect })
   const mapHospitals = isMetro ? metroHospitals : hospitals;
   return (
     <div className="map-panel" lang={language}>
-      {!hospitals.some(h=>h.markerStatus)&&<p className="map-activity-legend">{t('Map activity: gray circle = queued; purple ring = running; green circle = completed; blue circle = needs evidence review; red X = technical error. Main dot colors show the map rating, not execution success.')}</p>}
+      {!hospitals.some(h=>h.markerStatus)&&<p className="map-activity-legend">{t('Map activity: gray circle = queued; purple ring = running; green circle = completed; yellow circle = needs evidence review; red X = technical error. Main dot colors show the map rating, not execution success.')}</p>}
       <div className="map-view-bar">
         <div className="map-view-switch" role="group" aria-label={t('Map view')}>
           <button type="button" aria-pressed={!isMetro} onClick={() => switchRegion("statewide")}>{t('Statewide')}</button>

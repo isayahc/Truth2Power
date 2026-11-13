@@ -22,10 +22,13 @@ try{
     const unrated=language==='en'?'Not rated':'Sin calificación';
     await page.goto(`${origin}/?year=2025&lang=${language}`);
     await page.locator('.intro-stat strong').waitFor({state:'attached'});assert.equal(await page.locator('.intro-stat strong').innerText(),'218');
-    const regionSelect=page.locator('#map-region');
-    assert.equal(await regionSelect.locator('option').count(),10);
+    const regionSelect=page.locator('.region-picker');
+    assert.equal(await regionSelect.locator('input').count(),10);
     for(const region of ['NYC Metro','Central']){
-      await regionSelect.selectOption(region);
+      await regionSelect.locator('summary').click();
+      await regionSelect.locator('input').first().check();
+      await regionSelect.locator('input').nth(region==='NYC Metro'?1:7).check();
+      await regionSelect.locator('summary').click();
       const regional=dataset.features.filter(f=>f.properties.region===region);
       assert.equal(await page.locator('.intro-stat strong').innerText(),String(regional.length));
       const counts=await page.locator('.legend-item .quantity').allTextContents();
@@ -37,10 +40,10 @@ try{
       assert.ok(names.length>0);assert.ok(names.every(name=>regional.some(f=>f.properties.name===name && f.properties.stars===rating)));
       await page.locator('.legend-item[aria-pressed=true]').click();
     }
-    await page.reload();await regionSelect.waitFor();assert.equal(await regionSelect.inputValue(),'Central');
+    await page.reload();await regionSelect.waitFor();assert.deepEqual(new URL(page.url()).searchParams.getAll('region'),['Central']);
     assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);
     await page.screenshot({path:`.audit/ui/directory/regions-${language}-${width}.png`});
-    await regionSelect.selectOption('');
+    await regionSelect.locator('.region-chip button').click();
     const filter=page.getByRole('button',{name:new RegExp(unrated+' 7')});await filter.click();
     assert.match(await page.locator('.map-footer strong').innerText(),/7.*218/);
     // Search uses names and keyboard selection, including the separate Glasgow campus.

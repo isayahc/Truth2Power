@@ -41,7 +41,7 @@ export default function RegionalAudits({features,counties}){
   const points=features.filter(f=>regions.includes(f.properties.region)).map(f=>{
    const row=rows.find(h=>h.hospital_key===f.id),items=row?.items.filter(i=>steps.includes(i.id))??[];
    const state=row?.active?.status??(items.some(i=>i.technical_error)?'error':items.some(i=>i.effective==='unmet')?'unmet':items.some(i=>i.effective==='unclear')?'unclear':!items.length||items.some(i=>i.effective==='unrun')?'unrun':'met');
-   return {...f,markerStatus:state,markerLabel:t(findingLabels[state]),markerColor:{met:'#15803d',unmet:'#b91c1c',unclear:'#2563eb',running:'#7e22ce',queued:'#6b7280',unrun:'#6b7280',error:'#b91c1c'}[state]};
+   return {...f,markerStatus:state,markerLabel:t(findingLabels[state]),markerColor:{met:'#15803d',unmet:'#b91c1c',unclear:'#facc15',running:'#7e22ce',queued:'#6b7280',unrun:'#6b7280',error:'#b91c1c'}[state]};
   });
  const date=value=>value?new Date(value).toLocaleString(language):t('Not checked');
  return <section className="regional-audits" lang={language}>

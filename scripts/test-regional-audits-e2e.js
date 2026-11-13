@@ -102,7 +102,7 @@ try{
   await page.waitForFunction(()=>document.querySelectorAll('[data-audit-status="error"] .hospital-error-cross').length>0);
   assert.equal(await page.locator('.criterion-legend').count(),1);
   assert.equal(await page.locator('.criterion-legend .criterion-status--error .criterion-dot').innerText(),'✕');
-  assert.equal(await page.locator('.criterion-legend .criterion-status--unclear .criterion-dot').evaluate(e=>getComputedStyle(e).backgroundColor),'rgb(37, 99, 235)');
+  assert.equal(await page.locator('.criterion-legend .criterion-status--unclear .criterion-dot').evaluate(e=>getComputedStyle(e).backgroundColor),'rgb(250, 204, 21)');
   await page.locator('.criterion-legend').screenshot({path:`.audit/ui/regional-audits/error-legend-${language}-${width}.png`});
   await page.locator('.map-panel').screenshot({path:`.audit/ui/regional-audits/error-map-${language}-${width}.png`});
   await page.locator('.regional-statistics').scrollIntoViewIfNeeded();

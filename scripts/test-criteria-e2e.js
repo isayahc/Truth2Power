@@ -136,7 +136,7 @@ try {
       await page.locator('.criterion-card').nth(index).locator(`.criterion-status--${state}`).waitFor();
     }
     const colors = await page.locator('.criterion-card .criterion-dot').evaluateAll(nodes=>nodes.slice(0,6).map(n=>getComputedStyle(n).backgroundColor));
-    assert.notEqual(colors[0],colors[1]); assert.equal(colors[2],'rgb(37, 99, 235)'); assert.notEqual(colors[2],colors[5]);
+    assert.notEqual(colors[0],colors[1]); assert.equal(colors[2],'rgb(250, 204, 21)'); assert.notEqual(colors[2],colors[5]);
     assert.equal(await page.locator('.criterion-card').nth(3).locator('.criterion-dot').innerText(),'✕');
     await page.locator('.criterion-card').first().scrollIntoViewIfNeeded();
     await page.screenshot({path:join(root,`status-dots-${language}-${width}.png`)});

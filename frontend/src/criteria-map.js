@@ -1,4 +1,4 @@
-export const criterionColors={met:'#15803d',unmet:'#b91c1c',unclear:'#2563eb',running:'#7e22ce',queued:'#6b7280',unrun:'#6b7280',error:'#b91c1c'};
+export const criterionColors={met:'#15803d',unmet:'#b91c1c',unclear:'#facc15',running:'#7e22ce',queued:'#6b7280',unrun:'#6b7280',error:'#b91c1c'};
 export function criteriaMapState(row,requirement='all'){
  const items=(row?.items??[]).filter(i=>requirement==='all'||i.id===requirement);
  const total=requirement==='all'?17:1;
