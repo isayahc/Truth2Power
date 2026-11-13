@@ -1,9 +1,30 @@
 import { directory, openStore } from './store.js';
 import { installCriteria, criterionHospital, criterionStatus, criterionPlan, enqueueCriterion, validateStep, missingCriteriaPlan, decideCriterion, criterionOverview } from './criterion-service.js';
+import {installRegional,regionalStats,previewRegional,startRegional,cancelRegional,regionalBatch} from './regional-criteria.js';
 
 const response = (statusCode, data) => ({ statusCode,
   headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' }, body: JSON.stringify(data) });
 export async function criterionRoute(event) {
+  if(event.rawPath.startsWith('/api/criteria/regions')){
+    const method=event.requestContext?.http?.method;
+    const match=/^\/api\/criteria\/regions(?:\/(preview|[a-f0-9-]{36})(?:\/(start|cancel))?)?$/.exec(event.rawPath);
+    if(!match)return response(404,{error:'Regional endpoint not found.'});
+    const db=openStore();
+    try{
+      installCriteria(db);installRegional(db);
+      if(method==='GET'&&!match[1])return response(200,regionalStats(db));
+      if(method==='GET'&&match[1]!=='preview'&&!match[2])return response(200,regionalBatch(db,match[1]));
+      if(method!=='POST')return response(405,{error:'Method not allowed.'});
+      if(event.headers?.['x-review-request']!=='1')return response(403,{error:'Request rejected.'});
+      if(typeof event.body!=='string'||Buffer.byteLength(event.body)>8192)return response(400,{error:'Invalid request.'});
+      let input;try{input=JSON.parse(event.body);}catch{return response(400,{error:'Invalid request.'});}
+      if(match[1]==='preview'&&!match[2])return response(200,await previewRegional(db,directory,input));
+      if(match[2]==='start'&&input?.confirm===true)return response(202,await startRegional(db,directory,match[1]));
+      if(match[2]==='cancel')return response(200,cancelRegional(db,match[1]));
+      return response(400,{error:'Explicit confirmation required.'});
+    }catch(error){return response(error.status??500,{error:error.status?error.message:'Regional checks unavailable.'});}
+    finally{db.close();}
+  }
   if (event.rawPath === '/api/criteria/summary') {
     if (event.requestContext?.http?.method !== 'GET') return response(405,{error:'Method not allowed.'});
     const db = openStore();

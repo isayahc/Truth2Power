@@ -85,7 +85,7 @@ export function criterionStatus(db, hospital, {readOnly = false} = {}) {
     ? db.prepare('SELECT * FROM criterion_decisions WHERE hospital=? ORDER BY id DESC').all(hospital) : [];
   const items = stepIds.map(id => {
       const saved = results.find(r => r.step === id);
-      const latest = jobs.find(j => requestedSteps(j).includes(id) || ['running','failed','succeeded'].includes(JSON.parse(j.progress)[id]?.status));
+       const latest = jobs.find(j => j.status!=='cancelled' && (requestedSteps(j).includes(id) || ['running','failed','succeeded'].includes(JSON.parse(j.progress)[id]?.status)));
       const result = saved ? { job: saved.job, completed: saved.completed, ...JSON.parse(saved.output) } : null;
       const failed = latest?.status === 'failed' && JSON.parse(latest.progress)[id]?.status !== 'succeeded' &&
         (!saved || latest.created >= saved.completed || latest.id === saved.job);
@@ -213,14 +213,16 @@ export function decideCriterion(db, hospital, step, input) {
 export function criterionOverview(db) {
   expireCriteria(db);
   const keys = db.prepare('SELECT hospital FROM criterion_jobs UNION SELECT hospital FROM criterion_results').all();
-  const hospitals = {}, reviews = [];
+  const hospitals = {}, reviews = [], activity = {};
   for (const {hospital} of keys) {
     const status = criterionStatus(db,hospital);
     hospitals[hospital] = status.summary;
+    const latest=db.prepare('SELECT status,completed FROM criterion_jobs WHERE hospital=? ORDER BY created DESC,rowid DESC LIMIT 1').get(hospital);
+    activity[hospital]={status:status.active?.status ?? (latest?.status==='failed'||status.summary.unclear ? 'attention' : latest?.status==='completed' ? 'completed' : latest?.status ?? 'idle'),updated_at:latest?.completed??null};
     for (const item of status.items.filter(i => i.effective === 'unclear')) reviews.push({
       hospital_key:hospital, hospital_name:criterionHospital(hospital).name, step:item.id, title:item.title,
       updated_at:item.updated_at, revision:item.revision,
     });
   }
-  return {hospitals, reviews, pending:reviews.length};
+  return {hospitals, reviews, pending:reviews.length, activity};
 }

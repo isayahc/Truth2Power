@@ -1184,3 +1184,27 @@ h2 {
   .criterion-review-group h3 { padding:1rem; }
   .criterion-review-action { align-self:flex-end; }
 }
+.regional-audits { max-width:100%; }
+.regional-audits fieldset { margin:1rem 0; padding:1rem; border:1px solid #cadbd5; border-radius:8px; min-width:0; }
+.regional-audits legend { font-weight:700; }
+.regional-audits button { min-height:44px; padding:.5rem .8rem; margin:.25rem; }
+.regional-selectors, .regional-hospitals { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+.regional-selectors label { display:flex; flex-direction:column; gap:.5rem; min-width:0; }
+.regional-selectors select { max-width:100%; font:inherit; padding:.5rem; }
+.regional-checklist { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:.6rem; }
+.regional-checklist label, .regional-hospitals label { display:flex; gap:.6rem; align-items:flex-start; padding:.35rem; }
+.regional-audits input[type=checkbox] { flex-shrink:0; width:1.1rem; height:1.1rem; }
+.regional-hospitals details { min-width:0; }
+.regional-hospitals small { display:block; }
+.regional-preview, .regional-batch { background:#edf3f0; border:1px solid #cadbd5; border-radius:8px; padding:1rem; margin:1rem 0; overflow-wrap:anywhere; }
+.regional-preview li { margin-bottom:1rem; }
+.regional-preview li p { margin:.3rem 0; }
+.regional-stats-scroll { max-width:100%; overflow-x:auto; }
+.regional-statistics { width:100%; border-collapse:collapse; min-width:650px; }
+.regional-statistics th, .regional-statistics td { padding:.8rem; border-bottom:1px solid #cadbd5; text-align:left; vertical-align:top; line-height:1.5; }
+.regional-map-legend { font-size:.9rem; line-height:1.5; }
+.hospital-audit-spinner { transform-box:fill-box; transform-origin:center; animation:hospital-audit-spin 1.2s linear infinite; }
+.hospital-audit-symbol { fill:#183e47; stroke:#fff; stroke-width:2px; paint-order:stroke; font-weight:900; }
+@keyframes hospital-audit-spin { to { transform:rotate(360deg); } }
+@media(prefers-reduced-motion:reduce) { .hospital-audit-spinner { animation:none; } }
+@media(max-width:600px) { .regional-selectors,.regional-hospitals,.regional-checklist { grid-template-columns:1fr; } }

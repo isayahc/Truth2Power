@@ -55,7 +55,7 @@ function errorResponse(statusCode, message) {
 
 /** Serve an API Gateway HTTP API v2 event with a response usable by Node or Lambda. */
 export async function handler(event) {
-  if (event.rawPath === '/api/criteria/summary' || /^\/api\/hospitals\/[^/]+\/criteria(?:\/|$)/.test(event.rawPath)) return criterionRoute(event);
+  if (event.rawPath.startsWith('/api/criteria/') || /^\/api\/hospitals\/[^/]+\/criteria(?:\/|$)/.test(event.rawPath)) return criterionRoute(event);
   if (event.rawPath.startsWith("/api/pilot/v1/")) return reportingRoute(event);
   if (event.rawPath.startsWith("/api/pilot/")) return pipelineRoute(event);
   if (event.rawPath === "/api/changes" || event.rawPath.startsWith("/api/changes/")) return changesRoute(event);
