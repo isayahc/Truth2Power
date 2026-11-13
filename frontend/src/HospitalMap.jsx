@@ -4,15 +4,6 @@ import { ratingByStars } from "./ratings.js";
 import { useLocale } from './locale.jsx';
 import {useCriterionCoverage, coverageText, emptyCoverage} from './CriterionCoverage.jsx';
 
-const regions = [
-  ["Western NY", -78.75, 42.46],
-  ["Finger Lakes", -77.15, 42.8],
-  ["North Country", -74.4, 44.46],
-  ["Mohawk Valley", -74.7, 43.39],
-  ["Southern Tier", -76.7, 42.17],
-  ["Capital Region", -73.89, 42.83],
-  ["Mid-Hudson", -74.27, 41.79],
-];
 const waters = [
   ["Lake Ontario", -77.72, 43.54],
   ["Lake Erie", -79.45, 42.73],
@@ -173,7 +164,6 @@ export default function HospitalMap({ hospitals, counties, selected, onSelect })
         <g id={isMetro ? "metro-view" : "state-view"} transform={`translate(${view.x} ${view.y}) scale(${view.zoom})`}>
           <Land counties={isMetro ? metroLand : counties} project={isMetro ? metroFull : statewide} />
           {isMetro ? <Labels items={metroLabels} className="region" project={metroFull} /> : <>
-            <Labels items={regions} className="region" />
             <Labels items={waters} className="water" />
           </>}
           <Points {...props} hospitals={mapHospitals} project={isMetro ? metroFull : statewide} zoom={view.zoom} />

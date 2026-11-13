@@ -18,7 +18,7 @@ const base = "/api/pilot/v1",
   version = "audit-reporting-v1";
 const regions = JSON.parse(
   readFileSync(
-    new URL("../../references/ny-economic-regions-v1.json", import.meta.url),
+    new URL("../../references/ny-rating-regions-v1.json", import.meta.url),
   ),
 ).regions;
 const countyKey = (s) => s.toLowerCase().replaceAll(".", "");
@@ -28,6 +28,8 @@ const hospitals = new Map(
     {
       hospital_key: id,
       pfi: p.pfi,
+      county: p.county,
+      region_number: p.region_number,
       current_directory: p.current_directory!==false,
       name: p.name,
       region: Object.keys(regions).find((region) =>

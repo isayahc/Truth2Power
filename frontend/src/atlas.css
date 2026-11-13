@@ -1157,3 +1157,6 @@ h2 {
 .overview-tabs [aria-selected="true"] { background: #123e3b; color: white; }
 .overview-pagination p { flex-basis: 100%; }
 .ops-check-source { display:block; margin-top:.3rem; }
+.map-region-filter { padding: 1rem; display:flex; flex-wrap:wrap; align-items:center; gap:.6rem; }
+.map-region-filter select { max-width:100%; min-width:0; padding:.5rem; font:inherit; }
+.map-region-filter p { flex-basis:100%; margin:0; font-size:.85rem; }

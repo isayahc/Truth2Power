@@ -14,7 +14,7 @@ test("218 current facilities retain all 212 historical identities and seven unra
   const all=[...features,...historical_features];
   for(const original of JSON.parse(embedded[1]).features){
     const updated=all.find(f=>f.id===original.id);
-    const {current_directory,...properties}=updated.properties;
+    const {current_directory,region,region_number,region_scheme,...properties}=updated.properties;
     assert.deepEqual({...updated,properties},original);
   }
   assert.equal(features.length, 218);

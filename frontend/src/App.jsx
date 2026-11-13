@@ -9,6 +9,7 @@ import ReviewInbox, { reviewRequest } from "./ReviewInbox.jsx";
 import { LanguageSwitch, useLocale } from './locale.jsx';
 import { HumanInterventionInbox } from './HumanIntervention.jsx';
 import {CriterionCoverageProvider, CriterionReviewNotifications, useCriterionCoverage} from './CriterionCoverage.jsx';
+import ratingRegions from '../../references/ny-rating-regions-v1.json';
 
 async function getFeatures(path, signal) {
   const response = await fetch(path, { signal });
@@ -97,6 +98,10 @@ function Atlas() {
   const [error, setError] = useState(false);
   const [attempt, setAttempt] = useState(0);
   const [filter, setFilter] = useState(null);
+  const [region,setRegion]=useState(()=>{
+    const value=new URLSearchParams(window.location.search).get('region');
+    return Object.hasOwn(ratingRegions.regions,value) ? value : '';
+  });
   const [selected, setSelected] = useState(null);
   const [reviewOpen, setReviewOpen] = useState(false);
   const [reviewHospital, setReviewHospital] = useState("");
@@ -128,6 +133,8 @@ function Atlas() {
     if (!data) return;
     const restore = () => {
       const key = new URL(window.location.href).searchParams.get("hospital");
+      const value = new URL(window.location.href).searchParams.get('region');
+      setRegion(Object.hasOwn(ratingRegions.regions,value) ? value : '');
       setSelected(data.hospitals.find((h) => String(h.id) === key) || null);
       setReviewOpen(false);
     };
@@ -156,7 +163,8 @@ function Atlas() {
     requestAnimationFrame(() => document.querySelector(".search-bar input")?.focus());
   }
   const current = data?.hospitals.filter(h=>h.properties.current_directory!==false);
-  const visible = current?.filter((h) => filter === null || (h.properties.stars ?? 'unrated') === filter);
+  const regional = current?.filter(h=>!region || h.properties.region===region);
+  const visible = regional?.filter((h) => filter === null || (h.properties.stars ?? 'unrated') === filter);
   return (
     <div className="page">
       <Header onReview={() => reviewOpen ? setReviewOpen(false) : openReviews()} reviewOpen={reviewOpen} pending={reviewError ? "!" : inbox?.pending} />
@@ -182,7 +190,7 @@ function Atlas() {
           </div>
           {data && (
             <div className="intro-stat">
-              <strong>{current.length}</strong>
+              <strong>{regional.length}</strong>
                <span>{t('Hospitals mapped')}</span>
             </div>
           )}
@@ -199,9 +207,21 @@ function Atlas() {
                   {t('Hospital map')}
                 </div>
                 <HospitalSearch
-                  hospitals={current}
+                  hospitals={visible}
                   onSelect={selectHospital}
                 />
+              </div>
+              <div className="map-region-filter">
+                <label htmlFor="map-region">{t('Region')}</label>
+                <select id="map-region" value={region} onChange={event=>{
+                  const value=event.target.value;setRegion(value);
+                  const url=new URL(window.location.href);if(value)url.searchParams.set('region',value);else url.searchParams.delete('region');
+                  window.history.replaceState(null,'',url);
+                }}>
+                  <option value="">{t('All regions')}</option>
+                  {Object.keys(ratingRegions.regions).map(name=><option key={name} value={name}>{t('Region')} {ratingRegions.region_numbers[name]} · {t(name)}</option>)}
+                </select>
+                <p>{t('Regions follow Attachment G and use the hospital’s county, not its service area.')}</p>
               </div>
               <HospitalMap
                 hospitals={visible}
@@ -212,15 +232,15 @@ function Atlas() {
               <div className="map-footer">
                 <strong aria-live="polite">
                   {filter === null
-                    ? current.length
-                    : visible.length + ' ' + t('of') + ' ' + current.length}{" "}
+                     ? regional.length
+                     : visible.length + ' ' + t('of') + ' ' + regional.length}{" "}
                   {t('hospital locations')}
                 </strong>
                 <span className="hint">{t('Select a hospital for its coordinates and audit record.')}</span>
               </div>
             </section>
             <aside>
-              <Ratings hospitals={current} filter={filter} onFilter={setFilter} />
+              <Ratings hospitals={regional} filter={filter} onFilter={setFilter} region={region} />
             </aside>
           </div>
           {selected && <HospitalDetail key={selected.id} hospital={selected} onClose={closeDetail} onReview={() => openReviews(String(selected.id))}

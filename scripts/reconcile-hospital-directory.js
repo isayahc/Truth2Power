@@ -51,3 +51,4 @@ const header='hospital_name,pfi,county,latitude,longitude,audit_grade,stars,revi
 const csv=collection.features.filter(f=>f.properties.current_directory).map(f=>{const p=f.properties;return [p.name,p.pfi,p.county,f.geometry.coordinates[1],f.geometry.coordinates[0],p.grade,p.stars,p.review_month,p.coordinate_source,p.coordinate_match,p.coordinate_source_url,p.audit_url,f.id].map(escape).join(',');});
 writeFileSync('data/maps/hospital-coordinates.csv',[header,...csv].join('\n')+'\n');
 console.log('Reconciled 218 current facilities; retained 212 historical ratings and seven unrated additions.');
+await import('./assign-hospital-regions.js');

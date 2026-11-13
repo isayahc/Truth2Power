@@ -1,0 +1,18 @@
+{
+  "scheme": "ny-standardized-rating-regions-v1",
+  "source": "User-provided image: Revised Attachment G — New York Standardized Rating Regions — Basic Health Plan",
+  "source_url": null,
+  "assignment_basis": "Hospital location county, not service area",
+  "regions": {
+    "NYC Metro": ["Bronx", "Kings", "New York", "Queens", "Richmond"],
+    "Long Island": ["Nassau", "Suffolk"],
+    "Northern Metro": ["Putnam", "Rockland", "Westchester"],
+    "Mid-Hudson": ["Dutchess", "Orange", "Sullivan", "Ulster"],
+    "Northeast": ["Albany", "Fulton", "Montgomery", "Rensselaer", "Saratoga", "Schenectady", "Warren", "Washington"],
+    "Utica-Adirondack": ["Clinton", "Essex", "Franklin", "Hamilton", "Herkimer", "Jefferson", "Lewis", "Oneida", "Oswego", "St. Lawrence"],
+    "Central": ["Cayuga", "Chenango", "Columbia", "Cortland", "Delaware", "Greene", "Madison", "Onondaga", "Otsego", "Schoharie", "Tompkins"],
+    "Finger Lakes": ["Allegany", "Broome", "Cattaraugus", "Chautauqua", "Chemung", "Livingston", "Ontario", "Schuyler", "Seneca", "Steuben", "Tioga", "Wayne", "Yates"],
+    "Western": ["Erie", "Genesee", "Monroe", "Niagara", "Orleans", "Wyoming"]
+  },
+  "region_numbers": {"NYC Metro": 1, "Long Island": 2, "Northern Metro": 3, "Mid-Hudson": 4, "Northeast": 5, "Utica-Adirondack": 6, "Central": 7, "Finger Lakes": 8, "Western": 9}
+}

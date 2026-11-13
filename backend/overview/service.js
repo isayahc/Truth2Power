@@ -3,7 +3,7 @@ import { hospitalPage, pageInputs } from "../hospital-page/service.js";
 
 const load = (file) => JSON.parse(readFileSync(new URL(file, import.meta.url)));
 const roster = load("../../data/maps/hospitals.geojson").features.filter(f=>f.properties.current_directory!==false);
-const { regions } = load("../../references/ny-economic-regions-v1.json");
+const { regions, region_numbers } = load("../../references/ny-rating-regions-v1.json");
 const countyKey = (name) => name.replaceAll(".", "").toLowerCase();
 const regionByCounty = new Map(Object.entries(regions).flatMap(([name, counties]) =>
   counties.map((county) => [countyKey(county), name])));
@@ -36,7 +36,7 @@ export function hospitalRow({ id, properties: p }, page, asOf) {
   if (!region) throw Error("Unmapped roster county: " + p.county);
   const failed = page?.measures.filter((m) => page.failed_measures.includes(m.measure_id)).map((m) =>
     ({ column: m.column, title: m.title })) ?? [];
-  return { hospital_key: key, name: p.name, county: p.county, region,
+  return { hospital_key: key, name: p.name, county: p.county, region, region_number:region_numbers[region],
     historical_grade: p.grade, current_grade: page?.current_grade ?? null,
     grade_bucket: page?.current_grade ?? (last ? "pending" : "unassessed"),
     last_successful_assessment_at: last, monitoring_at: monitoring, audit_mode: page?.audit_mode ?? "scoped_reviews", evidence_complete: page?.evidence_complete ?? false, next_due_at: due?.toISOString() ?? null,
